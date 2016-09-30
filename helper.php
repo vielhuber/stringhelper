@@ -90,14 +90,18 @@ function __date($format, $date) {
     if( !@__validate_date($date) ) { return null; }
     return date($format,strtotime($date));
 }
-// checks if a date is valid
+// checks if a date is valid (in english and german format)
 function __validate_date($date) {
     if( @__nx($date) ) { return false; }
-    $date = explode(" ",$date);
-    $date = $date[0];
-    if( substr_count($date,"-") != 2 ) { return false; }
-    $date = explode('-', $date);
-    if(checkdate($date[1], $date[2], $date[0])) { return true; }
+    $date = explode(" ",$date)[0];
+    if( substr_count($date,"-") == 2 ) {
+        $date = explode('-', $date);
+        if(checkdate($date[1], $date[2], $date[0])) { return true; }
+    }
+    else if( substr_count($date,".") == 2 ) {
+        $date = explode('.', $date);
+        if(checkdate($date[1], $date[0], $date[2])) { return true; }
+    }
     return false;
 }
 
