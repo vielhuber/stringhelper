@@ -90,6 +90,7 @@ function __date($format, $date) {
     if( !@__validate_date($date) ) { return null; }
     return date($format,strtotime($date));
 }
+
 // checks if a date is valid (in english and german format)
 function __validate_date($date) {
     if( @__nx($date) ) { return false; }
