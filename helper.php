@@ -97,11 +97,17 @@ function __validate_date($date) {
     $date = explode(" ",$date)[0];
     if( substr_count($date,"-") == 2 ) {
         $date = explode('-', $date);
-        if(checkdate($date[1], $date[2], $date[0])) { return true; }
+        if(checkdate($date[1], $date[2], $date[0])) {
+            if( $date[0] >= 2037 ) { return false; } // prevent 32-bit problem
+            return true;
+        }
     }
     else if( substr_count($date,".") == 2 ) {
         $date = explode('.', $date);
-        if(checkdate($date[1], $date[0], $date[2])) { return true; }
+        if(checkdate($date[1], $date[0], $date[2])) {
+            if( $date[2] >= 2037 ) { return false; } // prevent 32-bit problem
+            return true;
+        }
     }
     return false;
 }
