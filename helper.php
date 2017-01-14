@@ -164,3 +164,19 @@ function __slug($string) {
 	if(empty($string)) { return 'n-a'; }
 	return $string;
 }
+
+// check if key is first key in foreach loop
+function __fkey($array__key,$array) {
+	if( array_keys($array)[0] === $array__key ) {
+		return true;
+	}
+	return false;
+}
+
+// check if key is last key in foreach loop
+function __lkey($array__key,$array) {
+	if( array_keys($array)[count(array_keys($array))-1] === $array__key ) {
+		return true;
+	}
+	return false;
+}
