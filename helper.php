@@ -185,3 +185,8 @@ function __lkey($array__key,$array) {
 function __last($array) {
     return array_values(array_slice($array, -1))[0];
 }
+
+// get first item of array
+function __first($array) {
+    return $array[0];
+}
