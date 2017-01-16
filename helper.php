@@ -180,3 +180,8 @@ function __lkey($array__key,$array) {
 	}
 	return false;
 }
+
+// get last item of array
+function __last($array) {
+    return array_values(array_slice($array, -1))[0];
+}
