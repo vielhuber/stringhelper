@@ -193,3 +193,10 @@ function __first($array) {
 function __rand($array) {
     return $array[array_rand($array)];
 }
+
+// swap values
+function __swap(&$x, &$y) {
+    $tmp = $x;
+    $x = $y;
+    $y = $tmp;
+}
