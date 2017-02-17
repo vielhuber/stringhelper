@@ -188,3 +188,8 @@ function __last($array) {
 function __first($array) {
     return $array[0];
 }
+
+// get random element from array
+function __rand($array) {
+    return $array[array_rand($array)];
+}

@@ -4,6 +4,7 @@ composer require vielhuber/stringhelper
 ```
 
 hotload the functions in your composer.json:
+```
 ...
 "autoload": {
 	...
