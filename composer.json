@@ -1,13 +1,6 @@
-    ...
-    "autoload": {
-        "classmap": [
-            "database"
-        ],
-        "psr-4": {
-            "App\\": "app/"
-        }
-        "files": [
-            "app/Helpers/StringHelper.php"
-        ]
-    },
-    ...
+{
+    "name": "vielhuber/stringhelper",
+    "description": "Collection of useful shorthand string related functions in PHP.",
+    "require": { "php": "^7.0" },
+    "license": "MIT"
+}

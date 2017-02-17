@@ -1,6 +1,4 @@
 <?php
-/* string functions */
-
 // dynamic function to check if multiple variables exists
 function __mx() {
     for($i = 0 ; $i < func_num_args(); $i++) {
