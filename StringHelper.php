@@ -84,7 +84,7 @@ function __prg($url = null) {
 }
 
 // returns null if date is invalid, otherwise formatted date
-function __date($format, $date) {
+function __date($date, $format = 'Y-m-d') {
     if( !@__validate_date($date) ) { return null; }
     return date($format,strtotime($date));
 }
