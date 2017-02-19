@@ -194,6 +194,17 @@ function __rand($array) {
     return $array[array_rand($array)];
 }
 
+// generate random string
+function __random_string($length = 8, $chars = null) {
+	if( $chars === null ) { $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; }
+    $chars_length = strlen($chars);
+    $random_string = '';
+    for($i = 0; $i < $length; $i++) {
+        $random_string .= $chars[mt_rand(0, $chars_length-1)];
+    }
+    return $random_string;
+}
+
 // swap values
 function __swap(&$x, &$y) {
     $tmp = $x;
