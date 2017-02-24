@@ -51,12 +51,18 @@ function __amx($var) {
 }
 
 
-// return first non null value, otherwise null
+// return first existing value, otherwise null
 function __f(...$args) {
     foreach($args as $arg) {
         if( @__x($arg) ) { return trim($arg); }
     }
     return null;
+}
+
+// if first value exists, return second value, otherwise third
+function __xr($var,$return,$fallback = null) {
+    if( @__x($var) ) { return $return; }
+    return $fallback;
 }
 
 // debug output
