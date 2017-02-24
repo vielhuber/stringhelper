@@ -60,7 +60,7 @@ function __f(...$args) {
 }
 
 // if first value exists, return second value, otherwise third
-function __xr($var,$return,$fallback = null) {
+function __xe($var,$return,$fallback = null) {
     if( @__x($var) ) { return $return; }
     return $fallback;
 }
