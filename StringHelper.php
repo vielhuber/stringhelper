@@ -18,9 +18,9 @@ function __ox() {
 }
 
 // if string exists
-function __x($var) {
-    if( $var !== null && $var !== "" && $var !== " " && $var !== "  " && $var !== "   " && $var !== "    " && trim($var) !== "" ) { return true; }
-    return false;
+function __x($input) {
+    if( $input === null || $input === '' || trim($input) === '' || (is_array($input) && empty($input)) || (is_object($input) && empty((array)$obj)) ) { return false; }
+    return true;
 }
 
 // if string does not exist
