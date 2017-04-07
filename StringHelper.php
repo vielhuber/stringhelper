@@ -20,7 +20,7 @@ function __ox() {
 // if string exists
 function __x($input) {
     if( $input === null || $input === '' || trim($input) === '' || (is_array($input) && empty($input)) || (is_object($input) && empty((array)$input)) ) { return false; }
-    if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() > 0 ) { return false; }
+    if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0 ) { return false; }
     return true;
 }
 
