@@ -219,3 +219,12 @@ function __swap(&$x, &$y) {
     $x = $y;
     $y = $tmp;
 }
+
+// extract from string
+function __extract($string, $begin, $end) {
+	$pos1 = strpos($string,$begin)+strlen($begin);
+	if($pos1 === false) { return false; }
+	$pos2 = strpos($string, $end, $pos1);
+	if($pos2 === false) { return false; }
+	return substr($string, $pos1, $pos2-$pos1);
+}
