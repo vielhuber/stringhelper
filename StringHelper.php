@@ -17,11 +17,25 @@ function __ox() {
     return false;
 }
 
+// return empty model
+class __ignore_helper {
+    public function __call($name, $arguments) {
+        return new __ignore_helper();
+    }
+    public function count() {
+        return 0;
+    }
+}
+function __empty() {
+    return new __ignore_helper();
+}
+
 // if string exists
 function __x($input) {
     if( $input === null || $input === '' || trim($input) === '' || (is_array($input) && empty($input)) || (is_object($input) && empty((array)$input)) ) { return false; }
     if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0 ) { return false; }
     if($input instanceof Illuminate\Support\Collection && $input->count() === 0 ) { return false; }
+    if($input instanceof __ignore_helper) { return false; }
     return true;
 }
 
