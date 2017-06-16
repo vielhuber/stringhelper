@@ -27,3 +27,19 @@ echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
 
 echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
 ```
+
+## overview of __x
+
+| | === null | == null | is_null | isset | empty | if/else | ternary | count > 0 | == '' | === '' | @__x |
+| $a | true | true | true | false | true | false | false | false | true | false | false |
+| null | true | true | true | false | true | false | false | false | true | false | false |
+| [] | false | true | false | true | true | false | false | false | false | false | false |
+| 0 | false | true | false | true | true | false | false | true | true | false | true |
+| 1 | false | false | false | true | false | true | true | true | false | false | true |
+| -1 | false | false | false | true | false | true | true | true | false | false | true |
+| '' | false | true | false | true | true | false | false | true | true | true | false |
+| ' ' | false | false | false | true | false | true | true | true | false | false | false |
+| str | false | false | false | true | false | true | true | true | false | false | true |
+| [0,1] | false | false | false | true | false | true | true | true | false | false | true |
+| [0] | false | false | false | true | false | true | true | true | false | false | true |
+| new stdClass() | false | false | false | true | false | true | true | true | false | false | false |
