@@ -26,6 +26,8 @@ if( @__x($var) ) { ... }
 echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
 
 echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
+
+echo @__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12); // Lorem ipsum...
 ```
 
 ## overview of __x

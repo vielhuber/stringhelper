@@ -242,3 +242,9 @@ function __extract($string, $begin, $end) {
 	if($pos2 === false) { return false; }
 	return substr($string, $pos1, $pos2-$pos1);
 }
+
+// strip string
+function __strip($string, $length = 50, $dots = '...') {
+	if( mb_strlen($string) <= $length ) { return $string; }
+	return rtrim(mb_substr($string, 0, $length)).$dots;
+}
