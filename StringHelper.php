@@ -22,6 +22,9 @@ class __ignore_helper {
     public function __call($name, $arguments) {
         return new __ignore_helper();
     }
+	public function __toString() {
+		return '';
+	}
     public function count() {
         return 0;
     }
