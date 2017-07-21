@@ -252,3 +252,13 @@ function __strip($string, $length = 50, $dots = '...') {
 	if( mb_strlen($string) <= $length ) { return $string; }
 	return rtrim(mb_substr($string, 0, $length)).$dots;
 }
+
+// strip non numeric (all except 0-9, ., .)
+function __strip_nonnumeric($string) {
+	return preg_replace('/[^0-9,.]/', '', $string);	 
+}
+
+// strip non digit (all except 0-9)
+function __strip_nondigits($string) {
+	return preg_replace('/[^0-9]/', '', $string);
+}
