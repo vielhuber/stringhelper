@@ -259,6 +259,6 @@ function __strip_nonnumeric($string) {
 }
 
 // strip non digit (all except 0-9)
-function __strip_nondigits($string) {
+function __strip_nondigit($string) {
 	return preg_replace('/[^0-9]/', '', $string);
 }
