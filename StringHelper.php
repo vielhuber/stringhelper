@@ -262,3 +262,11 @@ function __strip_nonnumeric($string) {
 function __strip_nondigit($string) {
 	return preg_replace('/[^0-9]/', '', $string);
 }
+
+// checks if variable is an integer (works also for big integers)
+function __is_integer($input) {
+    if( @__nx($input) ) { return false; }
+    if( is_int($input) ) { return true; }
+    if( is_numeric($input) && ($input != (string)(float)$input) ) { return true; }
+    return false;
+}

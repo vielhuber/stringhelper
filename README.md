@@ -28,6 +28,8 @@ echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
 echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
 
 echo @__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12); // Lorem ipsum...
+
+echo @__is_integer(8372468764378627868742367883268); // true (in comparison to is_int())
 ```
 
 ## overview of __x
