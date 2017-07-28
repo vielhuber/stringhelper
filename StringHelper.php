@@ -36,6 +36,7 @@ function __empty() {
 // if string exists
 function __x($input) {
     if( $input === null || $input === '' || trim($input) === '' || (is_array($input) && empty($input)) || (is_object($input) && empty((array)$input)) ) { return false; }
+    if( is_array($input) && count($input) === 1 && array_values($input)[0] === '' ) { return false; }
     if($input instanceof Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0 ) { return false; }
     if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0 ) { return false; }
     if($input instanceof Illuminate\Support\Collection && $input->count() === 0 ) { return false; }

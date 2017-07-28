@@ -41,6 +41,7 @@ echo @__is_integer(8372468764378627868742367883268); // true (in comparison to i
 | $a | true | true | true | false | true | false | false | false | true | false | false |
 | null | true | true | true | false | true | false | false | false | true | false | false |
 | [] | false | true | false | true | true | false | false | false | false | false | false |
+| [[0]=>''] | false | true | false | true | true | false | false | false | false | false | false |
 | 0 | false | true | false | true | true | false | false | true | true | false | true |
 | 1 | false | false | false | true | false | true | true | true | false | false | true |
 | -1 | false | false | false | true | false | true | true | true | false | false | true |
