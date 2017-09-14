@@ -109,7 +109,7 @@ function __xe($var,$return,$fallback = null)
 // check equality of two values (weak check)
 function __eq($a, $b)
 {
-	if( @__nx($a) && @__nx($b) ) { return true; }
+	if( @__nx($a) && @__nx($b) ) { return false; }
 	if( @__nx($a) && @__x($b) ) { return false; }
 	if( @__x($a) && @__nx($b) ) { return false; }
 	if( $a == $b ) { return true; }
