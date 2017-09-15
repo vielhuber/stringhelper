@@ -117,12 +117,24 @@ function __eq($a, $b)
 }
 
 // debug output
-function __d($data = [], $die = false)
+function __d($data = [], $die = true)
 {
-    echo '<pre>';
-    print_r($data);
-    echo '</pre>';
-    if($die) { die(); }
+	if( @__x($data) )
+	{
+	    if( is_array($data) )
+	    {
+	    	echo '<pre>';
+		}
+	    print_r($data);
+	    if( is_array($data) )
+	    {
+	    	echo '</pre>';
+	    }
+	}
+    if($die)
+    {
+    	die();
+    }
 }
 
 // get nth element of concatenized array
