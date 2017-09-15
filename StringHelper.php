@@ -307,6 +307,19 @@ function __extract($string, $begin, $end)
 	return substr($string, $pos1, $pos2-$pos1);
 }
 
+// find all occurences of substring in string
+function __strposx($haystack, $needle)
+{
+	$positions = [];
+	$last_pos = 0;
+	while(($last_pos = strpos($haystack, $needle, $last_pos)) !== false)
+	{
+	    $positions[] = $last_pos;
+	    $last_pos += strlen($needle);
+	}
+	return $positions;
+}
+
 // strip string
 function __strip($string, $length = 50, $dots = '...')
 {
