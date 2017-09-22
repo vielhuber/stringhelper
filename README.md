@@ -20,7 +20,7 @@ hotload the functions in your composer.json:
 ```
 
 ## usage
-```
+```php
 // if you want to check if variable "exists" in a natural way:
 if( @__x($var) ) { ... }
 
@@ -36,10 +36,7 @@ echo @__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
 echo @__is_integer(8372468764378627868742367883268); // true (in comparison to is_int())
 
 // run the loop only if $input can be looped
-foreach(@__i($input) as $input__key=>$input__value)
-{
-
-}
+foreach(@__i($input) as $input__key=>$input__value) { }
 
 // get all occurences
 var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
