@@ -1,3 +1,7 @@
+## motivation
+despite is not recommened to use the @-operator in php,
+in some cases (where you know what you do and expect) it can be very helpful.
+
 ## installation
 ```
 composer require vielhuber/stringhelper
@@ -17,9 +21,6 @@ hotload the functions in your composer.json:
 
 ## usage
 ```
-despite is not recommened to use the @-operator in php,
-in some cases (where you know what you do and expect) it can be very helpful.
-
 // if you want to check if variable "exists" in a natural way:
 if( @__x($var) ) { ... }
 
