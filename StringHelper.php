@@ -1,7 +1,7 @@
 <?php
-<<<<<<< HEAD
-// function to allow iteration of any object
-function __i($var) {
+// allow iteration of any item
+function __i($var)
+{
     if(@__nx($var))
     {
         return [];
@@ -13,16 +13,11 @@ function __i($var) {
     return [];    
 }
 
-// dynamic function to check if multiple variables exists
-function __mx() {
-    for($i = 0 ; $i < func_num_args(); $i++) {
-=======
 // check if multiple variables exists
 function __mx()
 {
     for($i = 0 ; $i < func_num_args(); $i++)
     {
->>>>>>> cc5ede504e9bbdfea4ce4c90648bfa652246b67d
         $arg = func_get_arg($i);
         if( @__nx($arg) ) { return false; }
     }
@@ -47,10 +42,10 @@ class __ignore_helper
     {
         return new __ignore_helper();
     }
-	public function __toString()
-	{
-		return '';
-	}
+    public function __toString()
+    {
+        return '';
+    }
     public function count()
     {
         return 0;
@@ -128,31 +123,31 @@ function __xe($var,$return,$fallback = null)
 // check equality of two values (weak check)
 function __eq($a, $b)
 {
-	if( @__nx($a) && @__nx($b) ) { return false; }
-	if( @__nx($a) && @__x($b) ) { return false; }
-	if( @__x($a) && @__nx($b) ) { return false; }
-	if( $a == $b ) { return true; }
-	return false;
+    if( @__nx($a) && @__nx($b) ) { return false; }
+    if( @__nx($a) && @__x($b) ) { return false; }
+    if( @__x($a) && @__nx($b) ) { return false; }
+    if( $a == $b ) { return true; }
+    return false;
 }
 
 // debug output
 function __d($data = [], $die = true)
 {
-	if( @__x($data) )
-	{
-	    if( is_array($data) )
-	    {
-	    	echo '<pre>';
-		}
-	    print_r($data);
-	    if( is_array($data) )
-	    {
-	    	echo '</pre>';
-	    }
-	}
+    if( @__x($data) )
+    {
+        if( is_array($data) )
+        {
+            echo '<pre>';
+        }
+        print_r($data);
+        if( is_array($data) )
+        {
+            echo '</pre>';
+        }
+    }
     if($die)
     {
-    	die();
+        die();
     }
 }
 
@@ -253,40 +248,40 @@ function __flatten_values($array)
 // string to slug (sanitize string)
 function __slug($string)
 {
-	// replace non letter or digits by -
-	$string = preg_replace('~[^\pL\d]+~u', '-', $string);
-	// transliterate
-	$string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-	// remove unwanted characters
-	$string = preg_replace('~[^-\w]+~', '', $string);
-	// trim
-	$string = trim($string, '-');
-	// remove duplicate -
-	$string = preg_replace('~-+~', '-', $string);
-	// lowercase
-	$string = strtolower($string);
-	if(empty($string)) { return 'n-a'; }
-	return $string;
+    // replace non letter or digits by -
+    $string = preg_replace('~[^\pL\d]+~u', '-', $string);
+    // transliterate
+    $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
+    // remove unwanted characters
+    $string = preg_replace('~[^-\w]+~', '', $string);
+    // trim
+    $string = trim($string, '-');
+    // remove duplicate -
+    $string = preg_replace('~-+~', '-', $string);
+    // lowercase
+    $string = strtolower($string);
+    if(empty($string)) { return 'n-a'; }
+    return $string;
 }
 
 // check if key is first key in foreach loop
 function __fkey($array__key,$array)
 {
-	if( array_keys($array)[0] === $array__key )
-	{
-		return true;
-	}
-	return false;
+    if( array_keys($array)[0] === $array__key )
+    {
+        return true;
+    }
+    return false;
 }
 
 // check if key is last key in foreach loop
 function __lkey($array__key,$array)
 {
-	if( array_keys($array)[count(array_keys($array))-1] === $array__key )
-	{
-		return true;
-	}
-	return false;
+    if( array_keys($array)[count(array_keys($array))-1] === $array__key )
+    {
+        return true;
+    }
+    return false;
 }
 
 // get last item of array
@@ -310,7 +305,7 @@ function __rand($array)
 // generate random string
 function __random_string($length = 8, $chars = null)
 {
-	if( $chars === null ) { $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; }
+    if( $chars === null ) { $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; }
     $chars_length = strlen($chars);
     $random_string = '';
     for($i = 0; $i < $length; $i++)
@@ -331,43 +326,43 @@ function __swap(&$x, &$y)
 // extract from string
 function __extract($string, $begin, $end)
 {
-	$pos1 = strpos($string,$begin)+strlen($begin);
-	if($pos1 === false) { return false; }
-	$pos2 = strpos($string, $end, $pos1);
-	if($pos2 === false) { return false; }
-	return substr($string, $pos1, $pos2-$pos1);
+    $pos1 = strpos($string,$begin)+strlen($begin);
+    if($pos1 === false) { return false; }
+    $pos2 = strpos($string, $end, $pos1);
+    if($pos2 === false) { return false; }
+    return substr($string, $pos1, $pos2-$pos1);
 }
 
 // find all occurences of substring in string
 function __strposx($haystack, $needle)
 {
-	$positions = [];
-	$last_pos = 0;
-	while(($last_pos = strpos($haystack, $needle, $last_pos)) !== false)
-	{
-	    $positions[] = $last_pos;
-	    $last_pos += strlen($needle);
-	}
-	return $positions;
+    $positions = [];
+    $last_pos = 0;
+    while(($last_pos = strpos($haystack, $needle, $last_pos)) !== false)
+    {
+        $positions[] = $last_pos;
+        $last_pos += strlen($needle);
+    }
+    return $positions;
 }
 
 // strip string
 function __strip($string, $length = 50, $dots = '...')
 {
-	if( mb_strlen($string) <= $length ) { return $string; }
-	return rtrim(mb_substr($string, 0, $length)).$dots;
+    if( mb_strlen($string) <= $length ) { return $string; }
+    return rtrim(mb_substr($string, 0, $length)).$dots;
 }
 
 // strip non numeric (all except 0-9, ., .)
 function __strip_nonnumeric($string)
 {
-	return preg_replace('/[^0-9,.]/', '', $string);	 
+    return preg_replace('/[^0-9,.]/', '', $string);  
 }
 
 // strip non digit (all except 0-9)
 function __strip_nondigit($string)
 {
-	return preg_replace('/[^0-9]/', '', $string);
+    return preg_replace('/[^0-9]/', '', $string);
 }
 
 // checks if variable is an integer (works also for big integers)
