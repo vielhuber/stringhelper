@@ -38,8 +38,11 @@ echo @__is_integer(8372468764378627868742367883268); // true (in comparison to i
 // run the loop only if $input can be looped
 foreach(@__i($input) as $input__key=>$input__value)
 {
-	// ...
+
 }
+
+// get all occurences
+var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 ```
 
 ## overview of __x
