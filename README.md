@@ -17,6 +17,9 @@ hotload the functions in your composer.json:
 
 ## usage
 ```
+despite is not recommened to use the @-operator in php,
+in some cases (where you know what you do and expect) it can be very helpful.
+
 // if you want to check if variable "exists" in a natural way:
 if( @__x($var) ) { ... }
 
@@ -30,6 +33,12 @@ echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
 echo @__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12); // Lorem ipsum...
 
 echo @__is_integer(8372468764378627868742367883268); // true (in comparison to is_int())
+
+// run the loop only if $input can be looped
+foreach(@__i($input) as $input__key=>$input__value)
+{
+	// ...
+}
 ```
 
 ## overview of __x

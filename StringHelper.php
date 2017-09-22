@@ -1,4 +1,17 @@
 <?php
+// function to allow iteration of any object
+function __i($var) {
+    if(@__nx($var))
+    {
+        return [];
+    }
+    if(is_array($var) || $var instanceof Traversable)
+    {
+        return $var;
+    }
+    return [];    
+}
+
 // dynamic function to check if multiple variables exists
 function __mx() {
     for($i = 0 ; $i < func_num_args(); $i++) {
