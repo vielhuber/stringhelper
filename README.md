@@ -66,16 +66,16 @@ var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 
 | | !== null | != null | typeof input !== 'undefined' | if/else | ternary | length > 0 | != '' | !== '' | __x | 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| $a | true | | false | | false | | false | | false | | type error | | true | | true | | false | 
-| null | false | | false | | true | | false | | false | | type error | | true | | true | | false | 
-| [] | true | | true | | true | | true | | true | | false | | false | | true | | false | 
-| [''] | true | | true | | true | | true | | true | | true | | false | | true | | false | 
-| 0 | true | | true | | true | | false | | false | | false | | false | | true | | true | 
-| 1 | true | | true | | true | | true | | true | | false | | true | | true | | true | 
-| -1 | true | | true | | true | | true | | true | | false | | true | | true | | true | 
-| '' | true | | true | | true | | false | | false | | false | | false | | false | | false | 
-| ' ' | true | | true | | true | | true | | true | | true | | true | | true | | false | 
-| str | true | | true | | true | | true | | true | | true | | true | | true | | true | 
-| [0,1] | true | | true | | true | | true | | true | | true | | true | | true | | true | 
-| [0] | true | | true | | true | | true | | true | | true | | true | | true | | true | 
-| new Object() | true | | true | | true | | true | | true | | false | | true | | true | | false |
+| $a | true | false | false | false | false | type error | true | true | false | 
+| null | false | false | true | false | false | type error | true | true | false | 
+| [] | true | true | true | true | true | false | false | true | false | 
+| [''] | true | true | true | true | true | true | false | true | false | 
+| 0 | true | true | true | false | false | false | false | true | true | 
+| 1 | true | true | true | true | true | false | true | true | true | 
+| -1 | true | true | true | true | true | false | true | true | true | 
+| '' | true | true | true | false | false | false | false | false | false | 
+| ' ' | true | true | true | true | true | true | true | true | false | 
+| str | true | true | true | true | true | true | true | true | true | 
+| [0,1] | true | true | true | true | true | true | true | true | true | 
+| [0] | true | true | true | true | true | true | true | true | true | 
+| new Object() | true | true | true | true | true | false | true | true | false |

@@ -9,15 +9,16 @@
     <!--
 	function outputRow(input) {
 		var html = '';
-		html += ' | '; if( input !== null ) { html += 'true'; } else { html += 'false'; } html += ' | ';
-		html += ' | '; if( input != null ) { html += 'true'; } else { html += 'false'; } html += ' | ';
-		html += ' | '; if( typeof input !== 'undefined' ) { html += 'true'; } else { html += 'false'; } html += ' | ';
-		html += ' | '; if( input ) { html += 'true'; } else { html += 'false'; } html += ' | ';
-		html += ' | '; html += ((input)?('true'):('false')); html += ' | ';
-		html += ' | '; try { if( input.length > 0 ) { html += 'true'; } else { html += 'false'; } } catch(e) { html += 'type error'; } html += ' | ';
-		html += ' | '; if( input != '' ) { html += 'true'; } else { html += 'false'; } html += ' | ';
-		html += ' | '; if( input !== '' ) { html += 'true'; } else { html += 'false'; } html += ' | ';
-		html += ' | '; if( __x(input) ) { html += 'true'; } else { html += 'false'; } html += ' | ';
+		html += ' | '; if( input !== null ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( input != null ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( typeof input !== 'undefined' ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( input ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; html += ((input)?('true'):('false'));
+		html += ' | '; try { if( input.length > 0 ) { html += 'true'; } else { html += 'false'; } } catch(e) { html += 'type error'; }
+		html += ' | '; if( input != '' ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( input !== '' ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( __x(input) ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; 
 		return html;
 	}
 
