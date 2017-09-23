@@ -9,14 +9,14 @@
     <!--
 	function outputRow(input) {
 		var html = '';
-		html += '<td>'; if( input === null ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( input == null ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( typeof input === 'undefined' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
+		html += '<td>'; if( input !== null ) { html += 'true'; } else { html += 'false'; } html += '</td>';
+		html += '<td>'; if( input != null ) { html += 'true'; } else { html += 'false'; } html += '</td>';
+		html += '<td>'; if( typeof input !== 'undefined' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
 		html += '<td>'; if( input ) { html += 'true'; } else { html += 'false'; } html += '</td>';
 		html += '<td>'; html += ((input)?('true'):('false')); html += '</td>';
 		html += '<td>'; try { if( input.length > 0 ) { html += 'true'; } else { html += 'false'; } } catch(e) { html += 'type error'; } html += '</td>';
-		html += '<td>'; if( input == '' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( input === '' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
+		html += '<td>'; if( input != '' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
+		html += '<td>'; if( input !== '' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
 		html += '<td>'; if( __x(input) ) { html += 'true'; } else { html += 'false'; } html += '</td>';
 		return html;
 	}
@@ -42,14 +42,14 @@
 	]);
 	html += '<tr>';
 		html += '<td></td>';
-		html += '<td>=== null</td>';
-		html += '<td>== null</td>';
-		html += '<td>typeof input === \'undefined\'</td>';
+		html += '<td>!== null</td>';
+		html += '<td>!= null</td>';
+		html += '<td>typeof input !== \'undefined\'</td>';
 		html += '<td>if/else</td>';
 		html += '<td>ternary</td>';
 		html += '<td>length > 0</td>';
-		html += '<td>== \'\'</td>';
-		html += '<td>=== \'\'</td>';
+		html += '<td>!= \'\'</td>';
+		html += '<td>!== \'\'</td>';
 		html += '<td>__x</td>';
 	html += '</tr>';
 	items.forEach((items__value, items__key) => {
@@ -80,16 +80,16 @@
 	<?php
 	require_once('../StringHelper.php');
 	function outputRow($input) {
-		echo '<td>'; if( $input === null ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( $input == null ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( is_null($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
+		echo '<td>'; if( $input !== null ) { echo 'true'; } else { echo 'false'; } echo '</td>';
+		echo '<td>'; if( $input != null ) { echo 'true'; } else { echo 'false'; } echo '</td>';
+		echo '<td>'; if( !is_null($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
 		echo '<td>'; if( isset($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( empty($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
+		echo '<td>'; if( !empty($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
 		echo '<td>'; if( $input ) { echo 'true'; } else { echo 'false'; } echo '</td>';
 		echo '<td>'; echo (($input)?('true'):('false')); echo '</td>';
 		echo '<td>'; if( count($input) > 0 ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( $input == '' ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( $input === '' ) { echo 'true'; } else { echo 'false'; } echo '</td>';
+		echo '<td>'; if( $input != '' ) { echo 'true'; } else { echo 'false'; } echo '</td>';
+		echo '<td>'; if( $input !== '' ) { echo 'true'; } else { echo 'false'; } echo '</td>';
 		echo '<td>'; if( @__x($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
 	}
 	echo '<table>';
@@ -110,16 +110,16 @@
 	];
 	echo '<tr>';
 		echo '<td></td>';
-		echo '<td>=== null</td>';
-		echo '<td>== null</td>';
-		echo '<td>is_null</td>';
+		echo '<td>!== null</td>';
+		echo '<td>!= null</td>';
+		echo '<td>!is_null</td>';
 		echo '<td>isset</td>';
-		echo '<td>empty</td>';
+		echo '<td>!empty</td>';
 		echo '<td>if/else</td>';
 		echo '<td>ternary</td>';
 		echo '<td>count > 0</td>';
-		echo '<td>== \'\'</td>';
-		echo '<td>=== \'\'</td>';
+		echo '<td>!= \'\'</td>';
+		echo '<td>!== \'\'</td>';
 		echo '<td>@__x</td>';
 	echo '</tr>';
 	foreach($items as $items__key=>$items__value) {
