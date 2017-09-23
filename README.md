@@ -50,7 +50,7 @@ var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | $a | false | false | false | false | false | false | false | false | false | true | false |
 | null | false | false | false | false | false | false | false | false | false | true | false |
-| [] | true | false | true | true | true | true | false | false | true | true | false |
+| [] | true | false | true | true | true | false | false | false | true | true | false |
 | [''] | true | true | true | true | false | false | true | true | true | true | false |
 | 0 | true | false | true | true | true | true | false | true | false | true | true |
 | 1 | true | true | true | true | false | false | true | true | true | true | true |
