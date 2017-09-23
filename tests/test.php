@@ -9,21 +9,20 @@
     <!--
 	function outputRow(input) {
 		var html = '';
-		html += '<td>'; if( input !== null ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( input != null ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( typeof input !== 'undefined' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( input ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; html += ((input)?('true'):('false')); html += '</td>';
-		html += '<td>'; try { if( input.length > 0 ) { html += 'true'; } else { html += 'false'; } } catch(e) { html += 'type error'; } html += '</td>';
-		html += '<td>'; if( input != '' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( input !== '' ) { html += 'true'; } else { html += 'false'; } html += '</td>';
-		html += '<td>'; if( __x(input) ) { html += 'true'; } else { html += 'false'; } html += '</td>';
+		html += ' | '; if( input !== null ) { html += 'true'; } else { html += 'false'; } html += ' | ';
+		html += ' | '; if( input != null ) { html += 'true'; } else { html += 'false'; } html += ' | ';
+		html += ' | '; if( typeof input !== 'undefined' ) { html += 'true'; } else { html += 'false'; } html += ' | ';
+		html += ' | '; if( input ) { html += 'true'; } else { html += 'false'; } html += ' | ';
+		html += ' | '; html += ((input)?('true'):('false')); html += ' | ';
+		html += ' | '; try { if( input.length > 0 ) { html += 'true'; } else { html += 'false'; } } catch(e) { html += 'type error'; } html += ' | ';
+		html += ' | '; if( input != '' ) { html += 'true'; } else { html += 'false'; } html += ' | ';
+		html += ' | '; if( input !== '' ) { html += 'true'; } else { html += 'false'; } html += ' | ';
+		html += ' | '; if( __x(input) ) { html += 'true'; } else { html += 'false'; } html += ' | ';
 		return html;
 	}
 
 	var html = '';
 
-	html += '<table>';
 	//var items = ['new stdClass' => new stdClass];
 	var items = new Map([
 		['$a', undefined],
@@ -40,25 +39,25 @@
 		['[0]', [0]],
 		['new Object()', new Object()]
 	]);
-	html += '<tr>';
-		html += '<td></td>';
-		html += '<td>!== null</td>';
-		html += '<td>!= null</td>';
-		html += '<td>typeof input !== \'undefined\'</td>';
-		html += '<td>if/else</td>';
-		html += '<td>ternary</td>';
-		html += '<td>length > 0</td>';
-		html += '<td>!= \'\'</td>';
-		html += '<td>!== \'\'</td>';
-		html += '<td>__x</td>';
-	html += '</tr>';
+	html += '<br/>';
+	html += ' |  ';
+	html += ' | !== null | ';
+	html += ' | != null | ';
+	html += ' | typeof input !== \'undefined\' | ';
+	html += ' | if/else | ';
+	html += ' | ternary | ';
+	html += ' | length > 0 | ';
+	html += ' | != \'\' | ';
+	html += ' | !== \'\' | ';
+	html += ' | __x | ';
+	html += '<br/>';
+	html += '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+
 	items.forEach((items__value, items__key) => {
-		html += '<tr>';
-			html += '<td>'+items__key+'</td>';
-			html += outputRow(items__value);
-		html += '</tr>';
+		html += '<br/>';
+		html += ' | '+items__key+' | ';
+		html += outputRow(items__value);
 	})
-	html += '</table>';
 	document.addEventListener("DOMContentLoaded", function() {
 		document.getElementById('js').innerHTML = html;
 	});
@@ -80,19 +79,18 @@
 	<?php
 	require_once('../StringHelper.php');
 	function outputRow($input) {
-		echo '<td>'; if( $input !== null ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( $input != null ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( !is_null($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( isset($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( !empty($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( $input ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; echo (($input)?('true'):('false')); echo '</td>';
-		echo '<td>'; if( count($input) > 0 ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( $input != '' ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( $input !== '' ) { echo 'true'; } else { echo 'false'; } echo '</td>';
-		echo '<td>'; if( @__x($input) ) { echo 'true'; } else { echo 'false'; } echo '</td>';
+		echo ' | '; if( $input !== null ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( $input != null ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( !is_null($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( isset($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( !empty($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( $input ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; echo (($input)?('true'):('false')); echo ' | ';
+		echo ' | '; if( count($input) > 0 ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( $input != '' ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( $input !== '' ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( @__x($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
 	}
-	echo '<table>';
 	$items = [
 		'$a' => @$a,
 		'null' => null,
@@ -108,27 +106,27 @@
 		'[0]' => [0],
 		'new stdClass' => new stdClass
 	];
-	echo '<tr>';
-		echo '<td></td>';
-		echo '<td>!== null</td>';
-		echo '<td>!= null</td>';
-		echo '<td>!is_null</td>';
-		echo '<td>isset</td>';
-		echo '<td>!empty</td>';
-		echo '<td>if/else</td>';
-		echo '<td>ternary</td>';
-		echo '<td>count > 0</td>';
-		echo '<td>!= \'\'</td>';
-		echo '<td>!== \'\'</td>';
-		echo '<td>@__x</td>';
-	echo '</tr>';
+	echo ' |  ';
+	echo ' | !== null | ';
+	echo ' | != null | ';
+	echo ' | !is_null | ';
+	echo ' | isset | ';
+	echo ' | !empty | ';
+	echo ' | if/else | ';
+	echo ' | ternary | ';
+	echo ' | count > 0 | ';
+	echo ' | != \'\' | ';
+	echo ' | !== \'\' | ';
+	echo ' | @__x | ';
+	echo '<br/>';
+	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+
 	foreach($items as $items__key=>$items__value) {
-		echo '<tr>';
-			echo '<td>'.$items__key.'</td>';
-			outputRow($items__value);
-		echo '</tr>';
+		echo '<br/>';
+		echo ' | '.$items__key.' | ';
+		outputRow($items__value);
 	}
-	echo '</table>';
+
 	?>
 	</div>
 
