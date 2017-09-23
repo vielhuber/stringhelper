@@ -60,7 +60,7 @@ var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 | str | true | true | true | true | false | false | true | true | true | true | true |
 | [0,1] | true | true | true | true | false | false | true | true | true | true | true |
 | [0] | true | true | true | true | false | false | true | true | true | true | true |
-| new stdClass() | true | true | true | false | false | true | true | true | true | true | false |
+| new stdClass() | true | true | true | true | true | true | true | true | true | true | false |
 
 ### js
 
