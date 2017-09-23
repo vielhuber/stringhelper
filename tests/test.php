@@ -40,22 +40,23 @@
 		['new Object()', new Object()]
 	]);
 	html += '<br/>';
-	html += ' |  ';
-	html += ' | !== null | ';
-	html += ' | != null | ';
-	html += ' | typeof input !== \'undefined\' | ';
-	html += ' | if/else | ';
-	html += ' | ternary | ';
-	html += ' | length > 0 | ';
-	html += ' | != \'\' | ';
-	html += ' | !== \'\' | ';
-	html += ' | __x | ';
+	html += ' | ';
+	html += ' | !== null ';
+	html += ' | != null ';
+	html += ' | typeof input !== \'undefined\' ';
+	html += ' | if/else ';
+	html += ' | ternary ';
+	html += ' | length > 0 ';
+	html += ' | != \'\' ';
+	html += ' | !== \'\' ';
+	html += ' | __x ';
+	html += ' | ';
 	html += '<br/>';
 	html += '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
 
 	items.forEach((items__value, items__key) => {
 		html += '<br/>';
-		html += ' | '+items__key+' | ';
+		html += ' | '+items__key+'';
 		html += outputRow(items__value);
 	})
 	document.addEventListener("DOMContentLoaded", function() {
@@ -79,17 +80,18 @@
 	<?php
 	require_once('../StringHelper.php');
 	function outputRow($input) {
-		echo ' | '; if( $input !== null ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( $input != null ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( !is_null($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( isset($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( !empty($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( $input ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; echo (($input)?('true'):('false')); echo ' | ';
-		echo ' | '; if( count($input) > 0 ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( $input != '' ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( $input !== '' ) { echo 'true'; } else { echo 'false'; } echo ' | ';
-		echo ' | '; if( @__x($input) ) { echo 'true'; } else { echo 'false'; } echo ' | ';
+		echo ' | '; if( $input !== null ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input != null ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( !is_null($input) ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( isset($input) ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( !empty($input) ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; echo (($input)?('true'):('false'));
+		echo ' | '; if( count($input) > 0 ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input != '' ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input !== '' ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( @__x($input) ) { echo 'true'; } else { echo 'false'; }
+		echo ' | ';
 	}
 	$items = [
 		'$a' => @$a,
@@ -106,24 +108,25 @@
 		'[0]' => [0],
 		'new stdClass' => new stdClass
 	];
-	echo ' |  ';
-	echo ' | !== null | ';
-	echo ' | != null | ';
-	echo ' | !is_null | ';
-	echo ' | isset | ';
-	echo ' | !empty | ';
-	echo ' | if/else | ';
-	echo ' | ternary | ';
-	echo ' | count > 0 | ';
-	echo ' | != \'\' | ';
-	echo ' | !== \'\' | ';
-	echo ' | @__x | ';
+	echo ' | ';
+	echo ' | !== null ';
+	echo ' | != null ';
+	echo ' | !is_null ';
+	echo ' | isset ';
+	echo ' | !empty ';
+	echo ' | if/else ';
+	echo ' | ternary ';
+	echo ' | count > 0 ';
+	echo ' | != \'\' ';
+	echo ' | !== \'\' ';
+	echo ' | @__x ';
+	echo ' | ';
 	echo '<br/>';
 	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
 
 	foreach($items as $items__key=>$items__value) {
 		echo '<br/>';
-		echo ' | '.$items__key.' | ';
+		echo ' | '.$items__key.'';
 		outputRow($items__value);
 	}
 
