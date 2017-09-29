@@ -135,12 +135,12 @@ function __d($data = [], $die = true)
 {
     if( @__x($data) )
     {
-        if( is_array($data) )
+        if( is_array($data) || $var instanceof Traversable )
         {
             echo '<pre>';
         }
         print_r($data);
-        if( is_array($data) )
+        if( is_array($data) || $var instanceof Traversable )
         {
             echo '</pre>';
         }
