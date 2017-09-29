@@ -203,7 +203,7 @@ function __validate_date($date)
     return false;
 }
 
-// checks if string is a valid url (also works with umlauts and without external libs like idna)
+// checks if string is a valid url (also works with umlauts and without external lib like idna)
 function __validate_url($value)
 {
     if( @__nx($value) ) { return false; }
@@ -216,7 +216,7 @@ function __validate_url($value)
     return true;
 }
 
-// check if string is a valid email (also works with umlauts and without external libs like idna)
+// check if string is a valid email (also works with umlauts and without external lib like idna)
 function __validate_email($value)
 {
     if(@__nx($value)) { return false; }
