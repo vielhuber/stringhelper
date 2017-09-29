@@ -203,15 +203,30 @@ function __validate_date($date)
     return false;
 }
 
-// check if email is valid
-function __validate_email($email)
+// checks if string is a valid url (also works with umlauts and without external libs like idna)
+function __validate_url($value)
 {
-    if(@__nx($email)) { return false; }
-    if(filter_var($email, FILTER_VALIDATE_EMAIL))
+    if( @__nx($value) ) { return false; }
+    $value = mb_strtolower($value);
+    $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
+    if( filter_var($value, FILTER_VALIDATE_URL) === false )
     {
-      return true;
+        return false;
     }
-    return false;
+    return true;
+}
+
+// check if string is a valid email (also works with umlauts and without external libs like idna)
+function __validate_email($value)
+{
+    if(@__nx($value)) { return false; }
+    $value = mb_strtolower($value);
+    $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
+    if( filter_var($value, FILTER_VALIDATE_EMAIL) === false )
+    {
+        return false;
+    }
+    return true;
 }
 
 // outputs a valid formatted value for input datetime-local
