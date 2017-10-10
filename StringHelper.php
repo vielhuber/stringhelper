@@ -130,6 +130,12 @@ function __eq($a, $b)
     return false;
 }
 
+// check inequality of two values (weak check)
+function __neq($a, $b)
+{
+	return !@__eq($a, $b);
+}
+
 // debug output
 function __d($data = [], $die = true)
 {
