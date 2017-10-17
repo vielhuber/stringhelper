@@ -63,7 +63,7 @@
 	html += ' | __x ';
 	html += ' | ';
 	html += '<br/>';
-	html += '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+	html += '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
 
 	items.forEach((items__value, items__key) => {
 		html += '<br/>';
@@ -87,7 +87,7 @@
 </head>
 <body>
 
-	<h2>### php</h2>
+	### php<br/><br/>
 	<div id="php">
 	<?php
 	require_once('../StringHelper.php');
@@ -144,7 +144,7 @@
 	echo ' | @__x ';
 	echo ' | ';
 	echo '<br/>';
-	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
 
 	foreach($items as $items__key=>$items__value) {
 		echo '<br/>';
@@ -155,7 +155,7 @@
 	?>
 	</div>
 
-	<h2>### js</h2>
+	<br/>### js<br/>
 	<div id="js"></div>
 
 </body>
