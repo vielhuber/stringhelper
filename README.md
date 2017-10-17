@@ -47,7 +47,7 @@ var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 ### php
 
 | | !== null | != null | !== false | != false | === true | == true | !is_null | isset | !empty | if/else | ternary | count > 0 | != '' | !== '' | @__x | 
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | $a | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | 
 | null | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | 
 | false | true | false | false | false | false | false | true | true | false | false | false | true | false | true | false | 
@@ -67,7 +67,7 @@ var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 ### js
 
 | | !== null | != null | !== false | != false | === true | == true | typeof input !== 'undefined' | if/else | ternary | length > 0 | != '' | !== '' | __x | 
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | $a | true | false | true | true | false | false | false | false | false | type error | true | true | false | 
 | null | false | false | true | true | false | false | true | false | false | type error | true | true | false | 
 | false | true | true | false | false | false | false | true | false | false | false | false | true | true | 
