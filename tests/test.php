@@ -11,6 +11,10 @@
 		var html = '';
 		html += ' | '; if( input !== null ) { html += 'true'; } else { html += 'false'; }
 		html += ' | '; if( input != null ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( input !== false ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( input != false ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( input === true ) { html += 'true'; } else { html += 'false'; }
+		html += ' | '; if( input == true ) { html += 'true'; } else { html += 'false'; }
 		html += ' | '; if( typeof input !== 'undefined' ) { html += 'true'; } else { html += 'false'; }
 		html += ' | '; if( input ) { html += 'true'; } else { html += 'false'; }
 		html += ' | '; html += ((input)?('true'):('false'));
@@ -28,6 +32,8 @@
 	var items = new Map([
 		['$a', undefined],
 		['null',null],
+		['false',false],
+		['true',true],
 		['[]',[]],
 		['[\'\']',['']],
 		['0', 0],
@@ -44,6 +50,10 @@
 	html += ' | ';
 	html += ' | !== null ';
 	html += ' | != null ';
+	html += ' | !== false ';
+	html += ' | != false ';
+	html += ' | === true ';
+	html += ' | == true ';
 	html += ' | typeof input !== \'undefined\' ';
 	html += ' | if/else ';
 	html += ' | ternary ';
@@ -77,12 +87,17 @@
 </head>
 <body>
 
+	<h2>### php</h2>
 	<div id="php">
 	<?php
 	require_once('../StringHelper.php');
 	function outputRow($input) {
 		echo ' | '; if( $input !== null ) { echo 'true'; } else { echo 'false'; }
 		echo ' | '; if( $input != null ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input !== false ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input != false ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input === true ) { echo 'true'; } else { echo 'false'; }
+		echo ' | '; if( $input == true ) { echo 'true'; } else { echo 'false'; }
 		echo ' | '; if( !is_null($input) ) { echo 'true'; } else { echo 'false'; }
 		echo ' | '; if( isset($input) ) { echo 'true'; } else { echo 'false'; }
 		echo ' | '; if( !empty($input) ) { echo 'true'; } else { echo 'false'; }
@@ -97,6 +112,8 @@
 	$items = [
 		'$a' => @$a,
 		'null' => null,
+		'false' => false,
+		'true' => true,
 		'[]' => [],
 		'[\'\']' => [''],
 		'0' => 0,
@@ -112,6 +129,10 @@
 	echo ' | ';
 	echo ' | !== null ';
 	echo ' | != null ';
+	echo ' | !== false ';
+	echo ' | != false ';
+	echo ' | === true ';
+	echo ' | == true ';
 	echo ' | !is_null ';
 	echo ' | isset ';
 	echo ' | !empty ';
@@ -134,6 +155,7 @@
 	?>
 	</div>
 
+	<h2>### js</h2>
 	<div id="js"></div>
 
 </body>
