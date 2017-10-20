@@ -36,7 +36,7 @@ function __ox()
 }
 
 // return empty model
-class __ignore_helper
+class __ignore_helper implements JsonSerializable
 {
     public function __call($name, $arguments)
     {
@@ -49,6 +49,10 @@ class __ignore_helper
     public function count()
     {
         return 0;
+    }
+    public function jsonSerialize()
+    {
+        return null;
     }
 }
 function __empty()
@@ -120,7 +124,7 @@ function __xe($var,$return,$fallback = null)
     return $fallback;
 }
 
-// check equality of two values (weak check)
+// check equality of two values (only if they both exist, weak check)
 function __eq($a, $b)
 {
     if( @__nx($a) && @__nx($b) ) { return false; }
@@ -130,7 +134,7 @@ function __eq($a, $b)
     return false;
 }
 
-// check inequality of two values (weak check)
+// check inequality of two values (only if they both exist, weak check)
 function __neq($a, $b)
 {
 	return !@__eq($a, $b);
