@@ -60,6 +60,63 @@ function __empty()
     return new __ignore_helper();
 }
 
+// removes recursively all items from array or object or collection that are considered empty
+function __remove_empty($a)
+{
+    if( ($a instanceof Illuminate\Database\Eloquent\Collection || $a instanceof Illuminate\Support\Collection) && $a->count() > 0 )
+    {
+        foreach($a as $a__key=>$a__value)
+        {
+            if(@__can_be_looped($a__value))
+            {
+                $a->put($a__key, @__remove_empty($a__value));
+            }
+            elseif( @__nx($a__value) )
+            {
+                $a->forget($a__key);
+            }
+        }
+    }
+    elseif( is_array($a) && !empty($a) )
+    {
+        foreach($a as $a__key=>$a__value)
+        {
+            if(@__can_be_looped($a__value))
+            {
+                $a[$a__key] = @__remove_empty($a__value);
+            }
+            elseif( @__nx($a__value) )
+            {
+                unset($a[$a__key]);
+            }
+        }
+    }
+    elseif( is_object($a) && !empty((array)$a) )
+    {
+        foreach($a as $a__key=>$a__value)
+        {
+            if(@__can_be_looped($a__value))
+            {
+                $a->{$a__key} = @__remove_empty($a__value);
+            }
+            elseif( @__nx($a__value) )
+            {
+                unset($a->{$a__key});
+            }
+        }
+    }
+    return $a;
+}
+
+// check if item can be looped (is a non empty array, object or collection)
+function __can_be_looped($a)
+{
+    if( is_array($a) && !empty($a) ) { return true; }
+    if( is_object($a) && !empty((array)$a) ) { return true; }
+    if( ($a instanceof Illuminate\Database\Eloquent\Collection || $a instanceof Illuminate\Support\Collection) && $a->count() > 0 ) { return true; }
+    return false;
+}
+
 // check if string exists
 function __x($input)
 {
