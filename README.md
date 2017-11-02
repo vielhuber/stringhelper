@@ -18,6 +18,9 @@ hotload the functions in your composer.json:
 },
 ...
 ```
+```
+composer dump-autoload
+```
 
 ## usage
 ```php
