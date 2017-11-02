@@ -13,7 +13,7 @@ hotload the functions in your composer.json:
 "autoload": {
 	...
     "files": [
-        "vendor/vielhuber/stringhelper/StringHelper.php"
+        "vendor/vielhuber/stringhelper/stringhelper.php"
     ]
 },
 ...

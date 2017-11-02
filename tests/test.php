@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
     <title>.</title>
-    <script src="../StringHelper.js"></script>
+    <script src="../stringhelper.js"></script>
     <script type="text/javascript">
     <!--
 	function outputRow(input) {
@@ -90,7 +90,7 @@
 	### php<br/><br/>
 	<div id="php">
 	<?php
-	require_once('../StringHelper.php');
+	require_once('../stringhelper.php');
 	function outputRow($input) {
 		echo ' | '; if( $input !== null ) { echo 'true'; } else { echo 'false'; }
 		echo ' | '; if( $input != null ) { echo 'true'; } else { echo 'false'; }
