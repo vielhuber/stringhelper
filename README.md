@@ -27,8 +27,11 @@ composer dump-autoload
 // if you want to check if variable "exists" in a natural way:
 if( @__x($var) ) { ... }
 
-// with the help of @__empty you can chain methods and check for final existence
+// with the help of @__empty() you can chain methods and check for final existence
 @__f( House::find(1337)->getRooms()->getBooks()->getToc(), 'default' )
+
+@__eq(@__empty(),true) // false
+@__eq(@__empty(),false) // false
 
 echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
 
