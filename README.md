@@ -46,6 +46,8 @@ foreach(@__i($input) as $input__key=>$input__value) { }
 
 // get all occurences
 var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
+
+@__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
 ```
 
 ## overview of __x
