@@ -428,6 +428,14 @@ function __strposx($haystack, $needle)
     return $positions;
 }
 
+// find nth occurence of substring in string
+function __strposnth($haystack, $needle, $index)
+{
+    $positions = __strposx($haystack, $needle);
+    if(empty($positions) || $index > (count($positions)-1)) { return null; }
+    return $positions[$index];
+}
+
 // strip string
 function __strip($string, $length = 50, $dots = '...')
 {
