@@ -4,6 +4,13 @@ function __x(input)
     if( Array.isArray(input) && input.length === 1 && input[0] === '' ) { return false; }
     return true;
 }
+function __o()
+{
+    for (var i = 0; i < arguments.length; i++)
+    {
+        console.log(arguments[i]);
+    }
+}
 function __cookie_exists(cookie)
 {
     if( document.cookie !== undefined && document.cookie.indexOf(cookie) > -1 )

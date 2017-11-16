@@ -218,6 +218,26 @@ function __d($data = [], $die = true)
     }
 }
 
+// output
+function __o(...$data)
+{
+    if( @__x($data) )
+    {
+        foreach($data as $data__value)
+        {
+            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
+            {
+                echo '<pre>';
+            }
+            print_r($data__value);
+            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
+            {
+                echo '</pre>';
+            }
+        }
+    }
+}
+
 // get nth element of concatenized array
 function __expl($separator = ' ', $array = [], $pos = 0)
 {

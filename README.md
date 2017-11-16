@@ -33,6 +33,9 @@ if( @__x($var) ) { ... }
 @__eq(@__empty(),true) // false
 @__eq(@__empty(),false) // false
 
+@__d(['arr']) // debug output of formatted array and die
+@__o('arg1', 'arg2') // debug output all items
+
 echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
 
 echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
