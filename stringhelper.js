@@ -6,10 +6,9 @@ function __x(input)
 }
 function __o()
 {
-    for (var i = 0; i < arguments.length; i++)
-    {
-        console.log(arguments[i]);
-    }
+    let args = Array.prototype.slice.call(arguments);
+    args = ['__o: '].concat(args);
+    console.log.apply(console, args);
 }
 function __cookie_exists(cookie)
 {
