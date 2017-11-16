@@ -235,6 +235,7 @@ function __o(...$data)
                 echo '</pre>';
             }
         }
+        echo '<br/>';
     }
 }
 
