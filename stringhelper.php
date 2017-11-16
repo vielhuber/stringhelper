@@ -206,7 +206,7 @@ function __d($data = [], $die = true)
         {
             echo '<pre>';
         }
-        print_r($data);
+        var_dump($data);
         if( is_array($data) || is_object($data) || ($data instanceof Traversable) )
         {
             echo '</pre>';
@@ -229,13 +229,13 @@ function __o(...$data)
             {
                 echo '<pre>';
             }
-            print_r($data__value);
+            var_dump($data__value);
             if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
             {
                 echo '</pre>';
             }
+            echo '<br/>';
         }
-        echo '<br/>';
     }
 }
 
