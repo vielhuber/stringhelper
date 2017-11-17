@@ -51,6 +51,12 @@ foreach(@__i($input) as $input__key=>$input__value) { }
 var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 
 @__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
+
+// cookies
+__cookie_exists($cookie_name)
+__cookie_get($cookie_name)
+__cookie_set($cookie_name, $cookie_value, $days)
+__cookie_delete($cookie_name)
 ```
 
 ## overview of __x
