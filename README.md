@@ -7,7 +7,7 @@ in some cases (where you know what you do and expect) it can be very helpful.
 composer require vielhuber/stringhelper
 ```
 
-hotload the functions in your composer.json:
+php: hotload the functions in your composer.json:
 ```
 ...
 "autoload": {
@@ -20,6 +20,11 @@ hotload the functions in your composer.json:
 ```
 ```
 composer dump-autoload
+```
+
+js: add this in your head-tag
+```
+<script type="text/javascript" src="/vendor/vielhuber/stringhelper/stringhelper.js"></script> 
 ```
 
 ## usage
