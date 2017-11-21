@@ -55,7 +55,13 @@ foreach(@__i($input) as $input__key=>$input__value) { }
 // get all occurences
 var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 
+// highlight strings
 @__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
+
+// check if string is serialized
+@__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'); // true
+@__is_serialized('idkfa'); // false
+@__is_serialized('b:0;'); // true
 
 // cookies
 __cookie_exists($cookie_name)

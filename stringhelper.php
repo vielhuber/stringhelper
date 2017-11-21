@@ -545,6 +545,21 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
     return $string;
 }
 
+// check if string is serialized
+function __is_serialized($string)
+{
+    if( @__nx($string) )
+    {
+        return false;
+    }
+    $data = @unserialize($string);
+    if( $string !== 'b:0;' && $data === false )
+    {
+        return false;
+    }
+    return true;
+}
+
 function __cookie_exists($cookie_name)
 {
     if( @__x($_COOKIE[$cookie_name]) )
