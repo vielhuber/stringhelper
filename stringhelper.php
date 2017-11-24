@@ -492,23 +492,26 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
     {
         // get all query begin positions in spot
         $lastPos = 0;
-        $positions = array();
-        while( ($lastPos = stripos($string, $query, $lastPos)) !== false )
+        $positions = [];
+        while( ($lastPos = mb_stripos($string, $query, $lastPos)) !== false )
         {
             $positions[] = $lastPos;
-            $lastPos = $lastPos + strlen($query);
+            $lastPos = $lastPos + mb_strlen($query);
         }
         // strip away parts
-        $placeholder = md5("♥");
+        $placeholder = md5('♥♥♥');
         for($i = 0; $i < mb_strlen($string); $i++)
         {
             $strip_now = true;
-            foreach($positions as $p) {
-                if( $i >= $p-$strip_length && $i <= $p+mb_strlen($query)+$strip_length ) {
+            foreach($positions as $p)
+            {
+                if( $i >= $p-$strip_length && $i <= $p+mb_strlen($query)+$strip_length )
+                {
                     $strip_now = false;
                 }
             }
-            if($strip_now === true) {
+            if($strip_now === true)
+            {
                 $string = mb_substr($string,0,$i-1).$placeholder.mb_substr($string,$i);
             }
         }
@@ -516,19 +519,19 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
         {
             $string = str_replace(($placeholder.$placeholder),$placeholder,$string);
         }
-        $string = str_replace($placeholder," ... ",$string);
+        $string = str_replace($placeholder,' ... ',$string);
         if( mb_strlen($string) > $strip_length )
         {
-            $string = mb_substr($string, 0, $strip_length)." ...";
+            $string = mb_substr($string, 0, $strip_length).' ...';
         }
     }
     // again: get all query begin positions in spot
     $lastPos = 0;
-    $positions = array();
-    while( ($lastPos = stripos($string, $query, $lastPos)) !== false )
+    $positions = [];
+    while( ($lastPos = mb_stripos($string, $query, $lastPos)) !== false )
     {
         $positions[] = $lastPos;
-        $lastPos = $lastPos + strlen($query);
+        $lastPos = $lastPos + mb_strlen($query);
     }
     // wrap span element around them
     $wrap_begin = '<strong class="highlight">';
@@ -539,7 +542,7 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
         // shift other positions
         for($y = $x+1; $y < count($positions); $y++)
         {
-            $positions[$y] = $positions[$y]+strlen($wrap_begin)+strlen($wrap_end);
+            $positions[$y] = $positions[$y]+mb_strlen($wrap_begin)+mb_strlen($wrap_end);
         }
     }
     return $string;
