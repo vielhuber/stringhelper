@@ -41,6 +41,9 @@ if( @__x($var) ) { ... }
 @__d(['arr']) // debug output of formatted array and die
 @__o('arg1', 'arg2') // debug output all items
 
+@__prg('https://tld.com') // redirect with prg pattern (via header)
+@__redirect('https://tld.com') // redirect with plan html meta tag
+
 echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
 
 echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
