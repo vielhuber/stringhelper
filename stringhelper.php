@@ -258,6 +258,19 @@ function __prg($url = null)
     die();
 }
 
+// html redirect via php
+function __redirect($url = null)
+{
+    if($url == null)
+    {
+        $url = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+        $url .= $_SERVER['HTTP_HOST'].strtok($_SERVER['REQUEST_URI'],'?');
+        if(@__x($_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
+    }
+    echo '<meta http-equiv="refresh" content="0; url=\''.$url.'\'">';
+    die();
+}
+
 // returns null if date is invalid, otherwise formatted date
 function __date($date, $format = 'Y-m-d')
 {
