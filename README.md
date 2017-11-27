@@ -42,10 +42,9 @@ if( @__x($var) ) { ... }
 @__o('arg1', 'arg2') // debug output all items
 
 @__prg('https://tld.com') // redirect with prg pattern (via header)
-@__redirect('https://tld.com') // redirect with plan html meta tag
+@__redirect('https://tld.com') // redirect with plain html meta tag
 
 echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
-
 echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
 
 echo @__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12); // Lorem ipsum...
