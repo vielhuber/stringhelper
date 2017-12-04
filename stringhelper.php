@@ -576,6 +576,27 @@ function __is_serialized($string)
     return true;
 }
 
+// clean up post/get
+function clean_up_get()
+{
+    if( @__x($_GET) )
+    {
+        filter_var_array($_GET, FILTER_SANITIZE_STRING);
+    }
+}
+function clean_up_post()
+{
+    if( @__x($_POST) )
+    {
+        filter_var_array($_POST, FILTER_SANITIZE_STRING);
+    }
+}
+function clean_up()
+{
+    clean_up_get();
+    clean_up_post();
+}
+
 function __cookie_exists($cookie_name)
 {
     if( @__x($_COOKIE[$cookie_name]) )
