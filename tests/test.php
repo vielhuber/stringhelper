@@ -1,162 +1,95 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-    <title>.</title>
-    <script src="../stringhelper.js"></script>
-    <script type="text/javascript">
-    <!--
-	function outputRow(input) {
-		var html = '';
-		html += ' | '; if( input !== null ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( input != null ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( input !== false ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( input != false ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( input === true ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( input == true ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( typeof input !== 'undefined' ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( input ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; html += ((input)?('true'):('false'));
-		html += ' | '; try { if( input.length > 0 ) { html += 'true'; } else { html += 'false'; } } catch(e) { html += 'type error'; }
-		html += ' | '; if( input != '' ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( input !== '' ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; if( __x(input) ) { html += 'true'; } else { html += 'false'; }
-		html += ' | '; 
-		return html;
-	}
+<?php
+class Test extends \PHPUnit\Framework\TestCase
+{
+  
+    function test__x()
+    {
+        $this->assertFalse(__x(null));
+        $this->assertFalse(__x(false));
+        $this->assertTrue(__x(true));
+        $this->assertFalse(__x([]));
+        $this->assertFalse(__x(['']));
+        $this->assertTrue(__x(0));
+        $this->assertTrue(__x(1));
+        $this->assertTrue(__x(-1));
+        $this->assertFalse(__x(''));
+        $this->assertFalse(__x(' '));
+        $this->assertTrue(__x('str'));
+        $this->assertTrue(__x([0,1]));
+        $this->assertTrue(__x([0]));
+        $this->assertFalse(__x(new stdClass));
+        $this->assertFalse(__x(@$a));
+        $this->assertFalse(__x(@$_GET['foo']));
+        $this->assertFalse(__x(@$arr['foo']['bar']['baz']));
+    }
 
-	var html = '';
+    function test__nx()
+    {
+        $this->assertTrue(__nx(null));
+        $this->assertTrue(__nx(false));
+        $this->assertFalse(__nx(true));
+        $this->assertTrue(__nx([]));
+        $this->assertTrue(__nx(['']));
+        $this->assertFalse(__nx(0));
+        $this->assertFalse(__nx(1));
+        $this->assertFalse(__nx(-1));
+        $this->assertTrue(__nx(''));
+        $this->assertTrue(__nx(' '));
+        $this->assertFalse(__nx('str'));
+        $this->assertFalse(__nx([0,1]));
+        $this->assertFalse(__nx([0]));
+        $this->assertTrue(__nx(new stdClass));
+        $this->assertTrue(__nx(@$a));
+        $this->assertTrue(__nx(@$_GET['foo']));
+        $this->assertTrue(__nx(@$arr['foo']['bar']['baz']));
+    }
 
-	//var items = ['new stdClass' => new stdClass];
-	var items = new Map([
-		['$a', undefined],
-		['null',null],
-		['false',false],
-		['true',true],
-		['[]',[]],
-		['[\'\']',['']],
-		['0', 0],
-		['1', 1],
-		['-1', -1],
-		['\'\'', ''],
-		['\' \'', ' '],
-		['str', 'str'],
-		['[0,1]', [0,1]],
-		['[0]', [0]],
-		['new Object()', new Object()]
-	]);
-	html += '<br/>';
-	html += ' | ';
-	html += ' | !== null ';
-	html += ' | != null ';
-	html += ' | !== false ';
-	html += ' | != false ';
-	html += ' | === true ';
-	html += ' | == true ';
-	html += ' | typeof input !== \'undefined\' ';
-	html += ' | if/else ';
-	html += ' | ternary ';
-	html += ' | length > 0 ';
-	html += ' | != \'\' ';
-	html += ' | !== \'\' ';
-	html += ' | __x ';
-	html += ' | ';
-	html += '<br/>';
-	html += '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+    function test__f()
+    {
+        $this->assertSame(__f(),null);
+        $this->assertSame(__f(null),null);
+        $this->assertSame(__f(null, 1),1);
+        $this->assertSame(__f('', 1),1);
+        $this->assertSame(__f('', [], 'str'),'str');
+        $this->assertSame(__f('foo', 'bar'),'foo');
+        $this->assertSame(__f(new stdClass, false, null, 0, 'str'), 0);
+        $this->assertSame(__f('', @$_POST['not_set'], null, 0, 'str'), 0);
+    }
 
-	items.forEach((items__value, items__key) => {
-		html += '<br/>';
-		html += ' | '+items__key+'';
-		html += outputRow(items__value);
-	})
-	document.addEventListener("DOMContentLoaded", function() {
-		document.getElementById('js').innerHTML = html;
-	});
-    -->
-    </script>
-    <style type='text/css'>
-    <!--
-	* { box-sizing: border-box;	}
-	body { font-size:10px; font-family:sans-serif; }
-	table { width:1200px;border-collapse:collapse;margin:20px; }
-	table td { width:100px; border:1px solid #000; }
-	#js table td:nth-child(4) { width:300px; }
-    -->
-    </style>
-</head>
-<body>
+    function test__swap()
+    {
+        $a = 1;
+        $b = 2;
+        __swap($a, $b);
+        $this->assertSame($a, 2);
+        $this->assertSame($b, 1);
+    }
 
-	### php<br/><br/>
-	<div id="php">
-	<?php
-	require_once('../stringhelper.php');
-	function outputRow($input) {
-		echo ' | '; if( $input !== null ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input != null ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input !== false ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input != false ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input === true ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input == true ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( !is_null($input) ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( isset($input) ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( !empty($input) ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; echo (($input)?('true'):('false'));
-		echo ' | '; if( count($input) > 0 ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input != '' ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( $input !== '' ) { echo 'true'; } else { echo 'false'; }
-		echo ' | '; if( @__x($input) ) { echo 'true'; } else { echo 'false'; }
-		echo ' | ';
-	}
-	$items = [
-		'$a' => @$a,
-		'null' => null,
-		'false' => false,
-		'true' => true,
-		'[]' => [],
-		'[\'\']' => [''],
-		'0' => 0,
-		'1' => 1,
-		'-1' => -1,
-		'\'\'' => '',
-		'\' \'' => ' ',
-		'str' => 'str',
-		'[0,1]' => [0,1],
-		'[0]' => [0],
-		'new stdClass' => new stdClass
-	];
-	echo ' | ';
-	echo ' | !== null ';
-	echo ' | != null ';
-	echo ' | !== false ';
-	echo ' | != false ';
-	echo ' | === true ';
-	echo ' | == true ';
-	echo ' | !is_null ';
-	echo ' | isset ';
-	echo ' | !empty ';
-	echo ' | if/else ';
-	echo ' | ternary ';
-	echo ' | count > 0 ';
-	echo ' | != \'\' ';
-	echo ' | !== \'\' ';
-	echo ' | @__x ';
-	echo ' | ';
-	echo '<br/>';
-	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+    function test__chain()
+    {
+        $class = new class
+        {
+            use returnEmpty;
+            function find($nr)
+            {
+                if( $nr == 1337 ) { return new static(); }
+                return @__empty();
+            }
+            function getFirst()
+            {
+                return new static();
+            }
+            function getSecond()
+            {
+                return new static();
+            }
+            function getThird()
+            {
+                return 'str';
+            }
+        };
+        //$this->assertSame( $class::find(1338)->getFirst()->getSecond()->getThird(), null );
+        $this->assertSame( $class::find(1337)->getFirst()->getSecond()->getThird(), 'str' );
+    }
 
-	foreach($items as $items__key=>$items__value) {
-		echo '<br/>';
-		echo ' | '.$items__key.'';
-		outputRow($items__value);
-	}
-
-	?>
-	</div>
-
-	<br/>### js<br/>
-	<div id="js"></div>
-
-</body>
-</html>
+}

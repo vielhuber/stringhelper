@@ -1,4 +1,40 @@
 <?php
+// check if string exists
+function __x($input)
+{
+    if( $input === null || $input === false || $input === '' || (is_string($input) && trim($input) === '') || (is_array($input) && empty($input)) || (is_object($input) && empty((array)$input)) ) { return false; }
+    if( is_array($input) && count($input) === 1 && array_values($input)[0] === '' ) { return false; }
+    if($input instanceof Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0 ) { return false; }
+    if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0 ) { return false; }
+    if($input instanceof Illuminate\Support\Collection && $input->count() === 0 ) { return false; }
+    if($input instanceof __ignore_helper) { return false; }
+    return true;
+}
+
+// check if string does not exist
+function __nx($var)
+{
+    return !@__x($var);
+}
+
+// return first existing value, otherwise null
+function __f(...$args)
+{
+    foreach($args as $arg)
+    {
+        if( @__x($arg) ) { return $arg; }
+    }
+    return null;
+}
+
+// swap values
+function __swap(&$x, &$y)
+{
+    $tmp = $x;
+    $x = $y;
+    $y = $tmp;
+}
+
 // allow iteration of any item
 function __i($var)
 {
@@ -55,9 +91,16 @@ class __ignore_helper implements JsonSerializable
         return null;
     }
 }
+
 function __empty()
 {
     return new __ignore_helper();
+}
+
+trait returnEmpty
+{
+    public function __call($method, $arguments) { return @__empty(); }
+    public static function __callStatic($method, $arguments) { return @__empty(); }
 }
 
 // removes recursively all items from array or object or collection that are considered empty
@@ -117,24 +160,6 @@ function __can_be_looped($a)
     return false;
 }
 
-// check if string exists
-function __x($input)
-{
-    if( $input === null || $input === '' || trim($input) === '' || (is_array($input) && empty($input)) || (is_object($input) && empty((array)$input)) ) { return false; }
-    if( is_array($input) && count($input) === 1 && array_values($input)[0] === '' ) { return false; }
-    if($input instanceof Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0 ) { return false; }
-    if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0 ) { return false; }
-    if($input instanceof Illuminate\Support\Collection && $input->count() === 0 ) { return false; }
-    if($input instanceof __ignore_helper) { return false; }
-    return true;
-}
-
-// check if string does not exist
-function __nx($var)
-{
-    return !@__x($var);
-}
-
 // check if array has minimum one variable that exists
 function __aox($var)
 {
@@ -161,17 +186,6 @@ function __amx($var)
         }
     }
     return true;
-}
-
-
-// return first existing value, otherwise null
-function __f(...$args)
-{
-    foreach($args as $arg)
-    {
-        if( @__x($arg) ) { return trim($arg); }
-    }
-    return null;
 }
 
 // if first value exists, return second value, otherwise third
@@ -429,14 +443,6 @@ function __random_string($length = 8, $chars = null)
         $random_string .= $chars[mt_rand(0, $chars_length-1)];
     }
     return $random_string;
-}
-
-// swap values
-function __swap(&$x, &$y)
-{
-    $tmp = $x;
-    $x = $y;
-    $y = $tmp;
 }
 
 // extract from string

@@ -29,11 +29,21 @@ js: add this in your head-tag
 
 ## usage
 ```php
-// if you want to check if variable "exists" in a natural way:
-if( @__x($var) ) { ... }
+// the problem with all sorts of functions in php is that 
+// there is no fast way to check if variable is set in a natural way
+// all solutions (isset, empty, count, ...) have there caveats (see table below)
+// this short helper method solves all sorts of problems
+if( __x($var) ) { ... }
+// if you are even unsure whether $var is set
+// (that is often the case when working with $_GET or $_POST variables)
+// use the stfu-operator @ to even suppress undefined variables (do not use @__x())
+if( __x(@$_GET['not_set']) ) { ... }
 
 // with the help of @__empty() you can chain methods and check for final existence
-@__f( House::find(1337)->getRooms()->getBooks()->getToc(), 'default' )
+@__f( Class::find(1337)->getFirst()->getSecond()->getThird(), 'default' )
+
+$a = 1; $b = 2;
+@__swap($a,$b); // $a = 2; $b = 1
 
 @__eq(@__empty(),true) // false
 @__eq(@__empty(),false) // false
@@ -78,7 +88,7 @@ __cookie_delete($cookie_name)
 
 | | !== null | != null | !== false | != false | === true | == true | !is_null | isset | !empty | if/else | ternary | count > 0 | != '' | !== '' | @__x | 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| $a | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | 
+| $a | error | error | error | error | error | error | error | false | false | error | error | error | error | error | false | 
 | null | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | 
 | false | true | false | false | false | false | false | true | true | false | false | false | true | false | true | false | 
 | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | 
