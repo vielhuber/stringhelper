@@ -1,6 +1,19 @@
 ## motivation
-despite is not recommened to use the @-operator in php,
-in some cases (where you know what you do and expect) it can be very helpful.
+tired of writing
+```php
+if( isset($_GET['foo']) && $_GET['foo'] === '1' )
+```
+or
+if( isset($a) && ($a || $a === 0) )
+or 
+if( !empty($a) )
+{
+    foreach($a as $value)
+    {
+
+    }
+}
+?
 
 ## installation
 ```
@@ -28,6 +41,53 @@ js: add this in your head-tag
 ```
 
 ## usage
+
+### existence
+```php
+// check existence
+if( __x(@$var) )
+{
+
+}
+// check non existence
+if( __nx(@$var) )
+{
+
+}
+```
+
+### equality
+```php
+// check equality (strict)
+if( @$var === '1' )
+{
+
+}
+```
+
+### value
+```php
+// get variable if exists, otherwise null
+__v(@$var)
+
+// get variable if exists, otherwise 'default'
+__v(@$var, 'default')
+
+// get first variable that exists, otherwise null
+__v(@$var1, @$var2, @$var3)
+```
+
+### loop (only if exists)
+```php
+foreach(__i($var) as $key=>$value)
+{
+
+}
+```
+
+
+###
+
 ```php
 // the problem with all sorts of functions in php is that 
 // there is no fast way to check if variable is set in a natural way

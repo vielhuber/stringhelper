@@ -18,6 +18,10 @@ function __nx($var)
 }
 
 // return first existing value, otherwise null
+function __val(...$args)
+{
+    return __f($args);
+}
 function __f(...$args)
 {
     foreach($args as $arg)
