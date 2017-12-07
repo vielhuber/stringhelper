@@ -8,7 +8,7 @@ if( isset($_GET['foo']) && $_GET['foo'] === '1' )
 ```
 or
 ```php
-if( isset($a) && ($a || $a === 0) )
+if( !empty($a) || (isset($a) && $a === 0) )
 {
 
 }
@@ -79,10 +79,10 @@ if( @$var === '1' )
 ### value
 ```php
 // get variable if exists, otherwise null
-__v(@$var)
+__v( @$var )
 
 // get variable if exists, otherwise 'default'
-__v(@$var, 'default')
+__v( @$var, 'default' )
 
 // get first variable that exists, otherwise null
 __v( @$var1, @$var2, @$var3 )
