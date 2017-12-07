@@ -87,7 +87,7 @@ __cookie_delete($cookie_name)
 ### php
 
 | | !== null</sub> | <sub>!= null</sub> | <sub>!== false</sub> | <sub>!= false</sub> | <sub>=== true</sub> | <sub>== true</sub> | <sub>!is_null()</sub> | <sub>isset()</sub> | <sub>!empty()</sub> | <sub>if/else</sub> | <sub>ternary</sub> | <sub>count() > 0</sub> | <sub>!= ''</sub> | <sub>!== ''</sub> | <sub>__x()</sub> | <sub>__x(@)</sub> |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> | <sub>---</sub> |
 | null | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | false |
 | false | true | false | false | false | false | false | true | true | false | false | false | true | false | true | false | false | 
 | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true |
