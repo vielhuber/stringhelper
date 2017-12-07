@@ -18,7 +18,7 @@ function __nx($var)
 }
 
 // return first existing value, otherwise null
-function __val(...$args)
+function __v(...$args)
 {
     return __f($args);
 }

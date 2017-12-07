@@ -17,7 +17,7 @@ or
 ```php
 if( !empty($a) )
 {
-    foreach($a as $value)
+    foreach( $a as $value )
     {
 
     }
@@ -59,6 +59,7 @@ if( __x(@$var) )
 {
 
 }
+
 // check non existence
 if( __nx(@$var) )
 {
@@ -84,12 +85,13 @@ __v(@$var)
 __v(@$var, 'default')
 
 // get first variable that exists, otherwise null
-__v(@$var1, @$var2, @$var3)
+__v( @$var1, @$var2, @$var3 )
 ```
 
-### loop (only if exists)
+### loop
 ```php
-foreach(__i($var) as $key=>$value)
+// loop only if exists
+foreach( __i(@$var) as $key=>$value )
 {
 
 }
