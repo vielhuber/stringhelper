@@ -86,8 +86,40 @@ __cookie_delete($cookie_name)
 
 ### php
 
-| | <sub>!== null</sub> | <sub>!= null</sub> | <sub>!== false</sub> | <sub>!= false</sub> | <sub>=== true</sub> | <sub>== true</sub> | <sub>!is_null()</sub> | <sub>isset()</sub> | <sub>!empty()</sub> | <sub>if/else</sub> | <sub>ternary</sub> | <sub>count() > 0</sub> | <sub>!= ''</sub> | <sub>!== ''</sub> | <sub>__x()</sub> | <sub>__x(@)</sub> |
-| | <sub>!== null</sub> | <sub>!= null</sub> | <sub>!== false</sub> | <sub>!= false</sub> | <sub>=== true</sub> | <sub>== true</sub> | <sub>!is_null()</sub> | <sub>isset()</sub> | <sub>!empty()</sub> | <sub>if/else</sub> | <sub>ternary</sub> | <sub>count() > 0</sub> | <sub>!= ''</sub> | <sub>!== ''</sub> | <sub>__x()</sub> | <sub>__x(@)</sub> |
+| | !== null</sub> | <sub>!= null</sub> | <sub>!== false</sub> | <sub>!= false</sub> | <sub>=== true</sub> | <sub>== true</sub> | <sub>!is_null()</sub> | <sub>isset()</sub> | <sub>!empty()</sub> | <sub>if/else</sub> | <sub>ternary</sub> | <sub>count() > 0</sub> | <sub>!= ''</sub> | <sub>!== ''</sub> | <sub>__x()</sub> | <sub>__x(@)</sub> |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| null | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | false |
+| false | true | false | false | false | false | false | true | true | false | false | false | true | false | true | false | false | 
+| true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true |
+| [] | true | false | true | false | false | false | true | true | false | false | false | false | true | true | false | false |
+| [''] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | false |
+| 0 | true | false | true | false | false | false | true | true | false | false | false | true | false | true | true | true |
+| 1 | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| -1 | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| '' | true | false | true | false | false | false | true | true | false | false | false | true | false | false | false | false |
+| ' ' | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | false |
+| str | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| [0,1] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| [0] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| new stdClass | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | false |
+| $_GET['not_set'] | error | error | error | error | error | error | error | false | false | error | error | error | error | error | error | false |
 
 ### js
 
+| | !== null | != null | !== false | != false | === true | == true | typeof input !== 'undefined' | if/else | ternary | length > 0 | != '' | !== '' | __x | 
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| $a | true | false | true | true | false | false | false | false | false | type error | true | true | false | 
+| null | false | false | true | true | false | false | true | false | false | type error | true | true | false | 
+| false | true | true | false | false | false | false | true | false | false | false | false | true | true | 
+| true | true | true | true | true | true | true | true | true | true | false | true | true | true | 
+| [] | true | true | true | false | false | false | true | true | true | false | false | true | false | 
+| [''] | true | true | true | false | false | false | true | true | true | true | false | true | false | 
+| 0 | true | true | true | false | false | false | true | false | false | false | false | true | true | 
+| 1 | true | true | true | true | false | true | true | true | true | false | true | true | true | 
+| -1 | true | true | true | true | false | false | true | true | true | false | true | true | true | 
+| '' | true | true | true | false | false | false | true | false | false | false | false | false | false | 
+| ' ' | true | true | true | false | false | false | true | true | true | true | true | true | false | 
+| str | true | true | true | true | false | false | true | true | true | true | true | true | true | 
+| [0,1] | true | true | true | true | false | false | true | true | true | true | true | true | true | 
+| [0] | true | true | true | false | false | false | true | true | true | true | true | true | true | 
+| new Object() | true | true | true | true | false | false | true | true | true | false | true | true | false |
