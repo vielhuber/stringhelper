@@ -86,23 +86,23 @@ __cookie_delete($cookie_name)
 
 ### php
 
-| | !== null | != null | !== false | != false | === true | == true | !is_null | isset | !empty | if/else | ternary | count > 0 | != '' | !== '' | @__x | 
+| | !== null | != null | !== false | != false | === true | == true | !is_null() | isset() | !empty() | if/else | ternary | count() > 0 | != '' | !== '' | __x() | __x(@)
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| $a | error | error | error | error | error | error | error | false | false | error | error | error | error | error | false | 
-| null | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | 
-| false | true | false | false | false | false | false | true | true | false | false | false | true | false | true | false | 
-| true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | 
-| [] | true | false | true | false | false | false | true | true | false | false | false | false | true | true | false | 
-| [''] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | 
-| 0 | true | false | true | false | false | false | true | true | false | false | false | true | false | true | true | 
-| 1 | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | 
-| -1 | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | 
-| '' | true | false | true | false | false | false | true | true | false | false | false | true | false | false | false | 
-| ' ' | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | 
-| str | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | 
-| [0,1] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | 
-| [0] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | 
-| new stdClass | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false |
+| null | false | false | true | false | false | false | false | false | false | false | false | false | false | true | false | false |
+| false | true | false | false | false | false | false | true | true | false | false | false | true | false | true | false | false | 
+| true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true | true |
+| [] | true | false | true | false | false | false | true | true | false | false | false | false | true | true | false | false |
+| [''] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | false |
+| 0 | true | false | true | false | false | false | true | true | false | false | false | true | false | true | true | true |
+| 1 | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| -1 | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| '' | true | false | true | false | false | false | true | true | false | false | false | true | false | false | false | false |
+| ' ' | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | false |
+| str | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| [0,1] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| [0] | true | true | true | true | false | true | true | true | true | true | true | true | true | true | true | true |
+| new stdClass | true | true | true | true | false | true | true | true | true | true | true | true | true | true | false | false |
+| $_GET['not_set'] | error | error | error | error | error | error | error | false | false | error | error | error | error | error | error | false |
 
 ### js
 
