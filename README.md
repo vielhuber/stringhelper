@@ -2,10 +2,19 @@
 tired of writing
 ```php
 if( isset($_GET['foo']) && $_GET['foo'] === '1' )
+{
+
+}
 ```
 or
+```php
 if( isset($a) && ($a || $a === 0) )
+{
+
+}
+```
 or 
+```php
 if( !empty($a) )
 {
     foreach($a as $value)
@@ -13,6 +22,7 @@ if( !empty($a) )
 
     }
 }
+```
 ?
 
 ## installation
