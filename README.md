@@ -216,8 +216,8 @@ if( __x(Person::find(1)->getAddress()->getCountry()->getName()) )
     
 }
 
-// ...check for equality...
-if( Person::find(1)->getAddress()->getCountry()->getName() == 'Germany' )
+// ...check for strict equality...
+if( Person::find(1)->getAddress()->getCountry()->getName() === 'Germany' )
 {
     
 }
@@ -225,7 +225,7 @@ if( Person::find(1)->getAddress()->getCountry()->getName() == 'Germany' )
 // ...get a value...
 echo __v( Person::find(1)->getAddress()->getCountry()->getName(), 'default' );
 
-// ...and loop whenever we want
+// ...and loop when possible
 foreach( Person::find(1)->getAddress()->getCountry() as $value )
 {
     
