@@ -232,7 +232,7 @@ foreach( Person::find(1)->getAddress()->getCountry() as $value )
 {
     
 }
-
+```
 
 
 ### helpers
