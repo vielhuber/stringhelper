@@ -30,7 +30,7 @@ if( !empty($a) )
 composer require vielhuber/stringhelper
 ```
 
-php: hotload the functions in your composer.json:
+hotload the functions in your composer.json:
 ```
 ...
 "autoload": {
@@ -43,11 +43,6 @@ php: hotload the functions in your composer.json:
 ```
 ```
 composer dump-autoload
-```
-
-js: add this in your head-tag
-```
-<script type="text/javascript" src="/vendor/vielhuber/stringhelper/stringhelper.js"></script> 
 ```
 
 ## usage
@@ -326,6 +321,14 @@ __cookie_delete($cookie_name)
 | <sub>[0]</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
 | <sub>new stdClass</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> |
 | <sub>$_GET['not_set']</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>false</sub> | <sub>false</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>false</sub> |
+
+
+
+js: add this in your head-tag
+```
+<script type="text/javascript" src="/vendor/vielhuber/stringhelper/stringhelper.js"></script> 
+```
+
 
 ### js
 
