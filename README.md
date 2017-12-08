@@ -25,9 +25,9 @@ if( !empty($a) )
 ```
 or
 ```php
-if( Person::find($id) !== null && Person::find(1)->getAddress() !== null && Person::find($id)->getAddress()->getCountry() !== null && Person::find($id)->getAddress()->getCountry()->getName() !== null )
+if( Person::find(1) !== null && Person::find(1)->getAddress() !== null && Person::find(1)->getAddress()->getCountry() !== null && Person::find(1)->getAddress()->getCountry()->getName() !== null )
 {
-    echo Person::find($id)->getAddress()->getCountry()->getName();
+    echo Person::find(1)->getAddress()->getCountry()->getName();
 }
 ```
 ?
