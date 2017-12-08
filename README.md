@@ -97,6 +97,143 @@ foreach( __i(@$var) as $key=>$value )
 }
 ```
 
+### classes
+// consider the following laravelish code
+class Person
+{
+    public $id;
+    
+    function __construct($id)
+    {
+        $this->id = $id;
+    }
+    
+    static function find($id)
+    {
+        // mock example (normally lookup in database)
+        if( $id === 1 || $id === 2 )
+        {
+            return new Person($id);
+        }
+        else
+        {
+            return null;
+        }
+    }
+    function getAddress()
+    {
+        if( $this->id === 1 )
+        {
+            return new Address();
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
+class Address
+{
+    function getCountry()
+    {
+        return new Country();
+    }
+}
+class Country
+{
+    function getName()
+    {
+        return 'Germany';
+    }
+}
+echo Person::find(1)->getAddress()->getCountry()->getName(); // 'Germany'
+echo Person::find(2)->getAddress()->getCountry()->getName(); // fails because person with id 2 has no address
+echo Person::find(3)->getAddress()->getCountry()->getName(); // fails because person with id 3 does not even exist
+// to be sure we instead have to write
+if( Person::find($id) !== null && Person::find(1)->getAddress() !== null && Person::find($id)->getAddress()->getCountry() !== null && Person::find($id)->getAddress()->getCountry()->getName() !== null )
+{
+    echo Person::find($id)->getAddress()->getCountry()->getName();
+}
+
+// due to the fact that the [null propagating method call operator](https://wiki.php.net/rfc/nullsafe_calls) is still a rfc, we cannot write
+echo Person::find(3)?->getAddress()?->getCountry()?->getName(); // null
+
+// we therefore return a null model object __empty()
+class Person
+{
+    public $id;
+    
+    function __construct($id)
+    {
+        $this->id = $id;
+    }
+    
+    static function find($id)
+    {
+        if( $id === 1 || $id === 2 )
+        {
+            return new Person($id);
+        }
+        else
+        {
+            return __empty();
+        }
+    }
+    function getAddress()
+    {
+        if( $this->id === 1 )
+        {
+            return new Address();
+        }
+        else
+        {
+            return __empty();
+        }
+    }
+}
+class Address
+{
+    function getCountry()
+    {
+        return new Country();
+    }
+}
+class Country
+{
+    function getName()
+    {
+        return 'Germany';
+    }
+}
+
+// we can no conveniently call those chains...
+//echo Person::find(1)->getAddress()->getCountry()->getName(); // 'Germany'
+//echo Person::find(2)->getAddress()->getCountry()->getName(); // ''
+//echo Person::find(3)->getAddress()->getCountry()->getName(); // ''
+
+// ...check for existence...
+if( __x(Person::find(1)->getAddress()->getCountry()->getName()) )
+{
+    
+}
+
+// ...check for equality...
+if( Person::find(1)->getAddress()->getCountry()->getName() == 'Germany' )
+{
+    
+}
+
+// ...get a value...
+echo __v( Person::find(1)->getAddress()->getCountry()->getName(), 'default' );
+
+// ...and loop whenever we want
+foreach( Person::find(1)->getAddress()->getCountry() as $value )
+{
+    
+}
+
+
+
 ### helpers
 ```
 // there are some other neat little helpers available

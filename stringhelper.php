@@ -20,7 +20,7 @@ function __nx($var)
 // return first existing value, otherwise null
 function __v(...$args)
 {
-    return __f($args);
+    return __f(...$args);
 }
 function __f(...$args)
 {
