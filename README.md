@@ -98,6 +98,7 @@ foreach( __i(@$var) as $key=>$value )
 ```
 
 ### classes
+```php
 // consider the following laravelish code
 class Person
 {
