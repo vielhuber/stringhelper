@@ -234,16 +234,16 @@ foreach( Person::find(1)->getAddress()->getCountry() as $value )
 
 
 ### helpers
-```
+```php
 // there are also some other neat little helpers available
 
 // output arguments in a reader friendly way
-__o(@var);
-__o(@var1, @var2, @var3);
+__o(@var)
+__o(@var1, @var2, @var3)
 
 // same as __o but die afterwards
-__d(@var);
-__d(@var1, @var2, @var3);
+__d(@var)
+__d(@var1, @var2, @var3)
 
 // checks if a date is valid (in english and german format)
 __validate_date('01.01.0200') // false
@@ -264,8 +264,6 @@ __random_string(8) // edPhi34d
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}'); // true
 __is_serialized('idkfa'); // false
 __is_serialized('b:0;'); // true
-
-
 ```
 
 ### @
