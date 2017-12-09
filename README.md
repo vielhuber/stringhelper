@@ -234,8 +234,8 @@ foreach( Person::find(1)->getAddress()->getCountry() as $value )
 
 
 ### helpers
+there are also some other neat little helpers available.
 ```php
-// there are also some other neat little helpers available
 
 // output arguments in a reader friendly way
 __o(@var)
