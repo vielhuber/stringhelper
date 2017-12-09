@@ -232,6 +232,21 @@ foreach( Person::find(1)->getAddress()->getCountry() as $value )
 }
 ```
 
+### cookies
+```php
+// set
+__cookie_set('cookie_name', 'cookie_value', 7) // set cookie for 7 days
+
+
+// existence
+__cookie_exists('cookie_name') // true
+
+// get
+__cookie_get('cookie_name') // 'cookie_value'
+
+// delete
+__cookie_delete('cookie_name')
+```
 
 ### helpers
 there are also some other neat little helpers available.
@@ -313,12 +328,6 @@ var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 
 // highlight strings
 @__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
-
-// cookies
-__cookie_exists($cookie_name)
-__cookie_get($cookie_name)
-__cookie_set($cookie_name, $cookie_value, $days)
-__cookie_delete($cookie_name)
 ```
 
 ## overview of __x

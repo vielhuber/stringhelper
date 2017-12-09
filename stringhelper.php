@@ -37,6 +37,34 @@ function __i($var)
     return [];    
 }
 
+function __cookie_exists($cookie_name)
+{
+    if( @__x($_COOKIE[$cookie_name]) )
+    {
+        return true;
+    }
+    return false;
+}
+function __cookie_get($cookie_name)
+{
+    if( !@__cookie_exists($cookie_name) )
+    {
+        return null;
+    }
+    return $_COOKIE[$cookie_name];
+}
+function __cookie_set($cookie_name, $cookie_value, $days)
+{
+    setcookie($cookie_name, $cookie_value, time()+60*60*24*$days, '/');
+    // immediately set it for current request
+    $_COOKIE[$cookie_name] = $cookie_value;
+}
+function __cookie_delete($cookie_name)
+{
+    unset($_COOKIE[$cookie_name]);
+    setcookie($cookie_name, '', time() - 3600, '/');
+}
+
 function __o(...$data)
 {
     if( __x(@$data) )
@@ -499,33 +527,7 @@ function clean_up()
     clean_up_post();
 }
 
-function __cookie_exists($cookie_name)
-{
-    if( @__x($_COOKIE[$cookie_name]) )
-    {
-        return true;
-    }
-    return false;
-}
-function __cookie_get($cookie_name)
-{
-    if( !@__cookie_exists($cookie_name) )
-    {
-        return null;
-    }
-    return $_COOKIE[$cookie_name];
-}
-function __cookie_set($cookie_name, $cookie_value, $days)
-{
-    setcookie($cookie_name, $cookie_value, time()+60*60*24*$days, '/');
-    // immediately set it for current request
-    $_COOKIE[$cookie_name] = $cookie_value;
-}
-function __cookie_delete($cookie_name)
-{
-    unset($_COOKIE[$cookie_name]);
-    setcookie($cookie_name, '', time() - 3600, '/');
-}
+
 
 
 
