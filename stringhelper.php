@@ -1,5 +1,4 @@
 <?php
-// check if string exists
 function __x($input)
 {
     if( $input === null || $input === false || $input === '' || (is_string($input) && trim($input) === '') || (is_array($input) && empty($input)) || (is_object($input) && empty((array)$input)) ) { return false; }
@@ -11,38 +10,23 @@ function __x($input)
     return true;
 }
 
-// check if string does not exist
 function __nx($var)
 {
-    return !@__x($var);
+    return !__x(@$var);
 }
 
-// return first existing value, otherwise null
 function __v(...$args)
-{
-    return __f(...$args);
-}
-function __f(...$args)
 {
     foreach($args as $arg)
     {
-        if( @__x($arg) ) { return $arg; }
+        if( __x(@$arg) ) { return $arg; }
     }
     return null;
 }
 
-// swap values
-function __swap(&$x, &$y)
-{
-    $tmp = $x;
-    $x = $y;
-    $y = $tmp;
-}
-
-// allow iteration of any item
 function __i($var)
 {
-    if(@__nx($var))
+    if(__nx(@$var))
     {
         return [];
     }
@@ -53,26 +37,123 @@ function __i($var)
     return [];    
 }
 
-// check if multiple variables exists
-function __mx()
+function __o(...$data)
 {
-    for($i = 0 ; $i < func_num_args(); $i++)
+    if( __x(@$data) )
     {
-        $arg = func_get_arg($i);
-        if( @__nx($arg) ) { return false; }
+        foreach($data as $data__value)
+        {
+            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
+            {
+                echo '<pre>';
+            }
+            var_dump($data__value);
+            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
+            {
+                echo '</pre>';
+            }
+            echo '<br/>';
+        }
+    }
+}
+
+function __d(...$data)
+{
+    __o(...$data);
+    die();
+}
+
+function __validate_date($date)
+{
+    if( @__nx($date) ) { return false; }
+    $date = explode(' ',$date)[0];
+    if( substr_count($date,'-') == 2 )
+    {
+        $date = explode('-', $date);
+        if(checkdate($date[1], $date[2], $date[0]))
+        {
+            if( $date[0] >= 2037 ) { return false; } // prevent 32-bit problem
+            return true;
+        }
+    }
+    else if( substr_count($date,'.') == 2 )
+    {
+        $date = explode('.', $date);
+        if(checkdate($date[1], $date[0], $date[2]))
+        {
+            if( $date[2] >= 2037 ) { return false; } // prevent 32-bit problem
+            return true;
+        }
+    }
+    return false;
+}
+
+function __validate_url($value)
+{
+    if( @__nx($value) ) { return false; }
+    $value = mb_strtolower($value);
+    $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
+    if( filter_var($value, FILTER_VALIDATE_URL) === false )
+    {
+        return false;
     }
     return true;
 }
 
-// check if at least one variable exists
-function __ox()
+function __validate_email($value)
 {
-    for($i = 0 ; $i < func_num_args(); $i++)
+    if(@__nx($value)) { return false; }
+    $value = mb_strtolower($value);
+    $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
+    if( filter_var($value, FILTER_VALIDATE_EMAIL) === false )
     {
-        $arg = func_get_arg($i);
-        if( @__x($arg) ) { return true; }
+        return false;
     }
-    return false;
+    return true;
+}
+
+function __slug($string)
+{
+    // replace non letter or digits by -
+    $string = preg_replace('~[^\pL\d]+~u', '-', $string);
+    // transliterate
+    $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
+    // remove unwanted characters
+    $string = preg_replace('~[^-\w]+~', '', $string);
+    // trim
+    $string = trim($string, '-');
+    // remove duplicate -
+    $string = preg_replace('~-+~', '-', $string);
+    // lowercase
+    $string = strtolower($string);
+    if(empty($string)) { return 'n-a'; }
+    return $string;
+}
+
+function __random_string($length = 8, $chars = null)
+{
+    if( $chars === null ) { $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; }
+    $chars_length = strlen($chars);
+    $random_string = '';
+    for($i = 0; $i < $length; $i++)
+    {
+        $random_string .= $chars[mt_rand(0, $chars_length-1)];
+    }
+    return $random_string;
+}
+
+function __is_serialized($string)
+{
+    if( __nx(@$string) )
+    {
+        return false;
+    }
+    $data = @unserialize($string);
+    if( $string !== 'b:0;' && $data === false )
+    {
+        return false;
+    }
+    return true;
 }
 
 // return empty model
@@ -164,98 +245,7 @@ function __can_be_looped($a)
     return false;
 }
 
-// check if array has minimum one variable that exists
-function __aox($var)
-{
-    if( !is_array($var) ) { return false; }
-    foreach($var as $key=>$value)
-    {
-        if( @__x($value) )
-        {
-            return true;
-        }
-    }
-    return false;
-}
 
-// check if every variable in array exists
-function __amx($var)
-{
-    if( !is_array($var) ) { return false; }
-    foreach($var as $key=>$value)
-    {
-        if( @__nx($value) )
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-// if first value exists, return second value, otherwise third
-function __xe($var,$return,$fallback = null)
-{
-    if( @__x($var) ) { return $return; }
-    return $fallback;
-}
-
-// check equality of two values (only if they both exist, weak check)
-function __eq($a, $b)
-{
-    if( @__nx($a) && @__nx($b) ) { return false; }
-    if( @__nx($a) && @__x($b) ) { return false; }
-    if( @__x($a) && @__nx($b) ) { return false; }
-    if( $a == $b ) { return true; }
-    return false;
-}
-
-// check inequality of two values (only if they both exist, weak check)
-function __neq($a, $b)
-{
-	return !@__eq($a, $b);
-}
-
-// debug output
-function __d($data = [], $die = true)
-{
-    if( @__x($data) )
-    {
-        if( is_array($data) || is_object($data) || ($data instanceof Traversable) )
-        {
-            echo '<pre>';
-        }
-        var_dump($data);
-        if( is_array($data) || is_object($data) || ($data instanceof Traversable) )
-        {
-            echo '</pre>';
-        }
-    }
-    if($die)
-    {
-        die();
-    }
-}
-
-// output
-function __o(...$data)
-{
-    if( @__x($data) )
-    {
-        foreach($data as $data__value)
-        {
-            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
-            {
-                echo '<pre>';
-            }
-            var_dump($data__value);
-            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
-            {
-                echo '</pre>';
-            }
-            echo '<br/>';
-        }
-    }
-}
 
 // get nth element of concatenized array
 function __expl($separator = ' ', $array = [], $pos = 0)
@@ -296,57 +286,6 @@ function __date($date, $format = 'Y-m-d')
     return date($format,strtotime($date));
 }
 
-// checks if a date is valid (in english and german format)
-function __validate_date($date)
-{
-    if( @__nx($date) ) { return false; }
-    $date = explode(' ',$date)[0];
-    if( substr_count($date,'-') == 2 )
-    {
-        $date = explode('-', $date);
-        if(checkdate($date[1], $date[2], $date[0]))
-        {
-            if( $date[0] >= 2037 ) { return false; } // prevent 32-bit problem
-            return true;
-        }
-    }
-    else if( substr_count($date,'.') == 2 )
-    {
-        $date = explode('.', $date);
-        if(checkdate($date[1], $date[0], $date[2]))
-        {
-            if( $date[2] >= 2037 ) { return false; } // prevent 32-bit problem
-            return true;
-        }
-    }
-    return false;
-}
-
-// checks if string is a valid url (also works with umlauts and without external lib like idna)
-function __validate_url($value)
-{
-    if( @__nx($value) ) { return false; }
-    $value = mb_strtolower($value);
-    $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
-    if( filter_var($value, FILTER_VALIDATE_URL) === false )
-    {
-        return false;
-    }
-    return true;
-}
-
-// check if string is a valid email (also works with umlauts and without external lib like idna)
-function __validate_email($value)
-{
-    if(@__nx($value)) { return false; }
-    $value = mb_strtolower($value);
-    $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
-    if( filter_var($value, FILTER_VALIDATE_EMAIL) === false )
-    {
-        return false;
-    }
-    return true;
-}
 
 // outputs a valid formatted value for input datetime-local
 function __datetime($datetime)
@@ -377,25 +316,6 @@ function __flatten_values($array)
     $return = [];
     array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
     return $return;
-}
-
-// string to slug (sanitize string)
-function __slug($string)
-{
-    // replace non letter or digits by -
-    $string = preg_replace('~[^\pL\d]+~u', '-', $string);
-    // transliterate
-    $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-    // remove unwanted characters
-    $string = preg_replace('~[^-\w]+~', '', $string);
-    // trim
-    $string = trim($string, '-');
-    // remove duplicate -
-    $string = preg_replace('~-+~', '-', $string);
-    // lowercase
-    $string = strtolower($string);
-    if(empty($string)) { return 'n-a'; }
-    return $string;
 }
 
 // check if key is first key in foreach loop
@@ -434,19 +354,6 @@ function __first($array)
 function __rand($array)
 {
     return $array[array_rand($array)];
-}
-
-// generate random string
-function __random_string($length = 8, $chars = null)
-{
-    if( $chars === null ) { $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; }
-    $chars_length = strlen($chars);
-    $random_string = '';
-    for($i = 0; $i < $length; $i++)
-    {
-        $random_string .= $chars[mt_rand(0, $chars_length-1)];
-    }
-    return $random_string;
 }
 
 // extract from string
@@ -571,21 +478,6 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
     return $string;
 }
 
-// check if string is serialized
-function __is_serialized($string)
-{
-    if( @__nx($string) )
-    {
-        return false;
-    }
-    $data = @unserialize($string);
-    if( $string !== 'b:0;' && $data === false )
-    {
-        return false;
-    }
-    return true;
-}
-
 // clean up post/get
 function clean_up_get()
 {
@@ -633,4 +525,99 @@ function __cookie_delete($cookie_name)
 {
     unset($_COOKIE[$cookie_name]);
     setcookie($cookie_name, '', time() - 3600, '/');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* LEGACY */
+// same as __v
+function __f(...$args)
+{
+    foreach($args as $arg)
+    {
+        if( @__x($arg) ) { return $arg; }
+    }
+    return null;
+}
+// swap variables
+function __swap(&$x, &$y)
+{
+    $tmp = $x;
+    $x = $y;
+    $y = $tmp;
+}
+// check if multiple variables exists
+function __mx()
+{
+    for($i = 0 ; $i < func_num_args(); $i++)
+    {
+        $arg = func_get_arg($i);
+        if( @__nx($arg) ) { return false; }
+    }
+    return true;
+}
+// check if at least one variable exists
+function __ox()
+{
+    for($i = 0 ; $i < func_num_args(); $i++)
+    {
+        $arg = func_get_arg($i);
+        if( @__x($arg) ) { return true; }
+    }
+    return false;
+}
+// check if array has minimum one variable that exists
+function __aox($var)
+{
+    if( !is_array($var) ) { return false; }
+    foreach($var as $key=>$value)
+    {
+        if( @__x($value) )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+// check if every variable in array exists
+function __amx($var)
+{
+    if( !is_array($var) ) { return false; }
+    foreach($var as $key=>$value)
+    {
+        if( @__nx($value) )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+// if first value exists, return second value, otherwise third
+function __xe($var,$return,$fallback = null)
+{
+    if( @__x($var) ) { return $return; }
+    return $fallback;
+}
+// check equality of two values (only if they both exist, weak check)
+function __eq($a, $b)
+{
+    if( @__nx($a) && @__nx($b) ) { return false; }
+    if( @__nx($a) && @__x($b) ) { return false; }
+    if( @__x($a) && @__nx($b) ) { return false; }
+    if( $a == $b ) { return true; }
+    return false;
+}
+// check inequality of two values (only if they both exist, weak check)
+function __neq($a, $b)
+{
+    return !@__eq($a, $b);
 }

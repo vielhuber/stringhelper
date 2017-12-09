@@ -235,9 +235,37 @@ foreach( Person::find(1)->getAddress()->getCountry() as $value )
 
 ### helpers
 ```
-// there are some other neat little helpers available
+// there are also some other neat little helpers available
 
-// ...
+// output arguments in a reader friendly way
+__o(@var);
+__o(@var1, @var2, @var3);
+
+// same as __o but die afterwards
+__d(@var);
+__d(@var1, @var2, @var3);
+
+// checks if a date is valid (in english and german format)
+__validate_date('01.01.0200') // false
+
+// checks if string is a valid url (also works with umlauts and without external lib like idna)
+__validate_url('https://vielhuber.de') // true
+
+// check if string is a valid email (also works with umlauts and without external lib like idna)
+__validate_email('david@vielhuber.de') // true
+
+// string to slug (sanitize string)
+__slug('This string will be sanitized!') // this-string-will-be-sanitized
+
+// generate a random string
+__random_string(8) // edPhi34d
+
+// check if string is serialized
+__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'); // true
+__is_serialized('idkfa'); // false
+__is_serialized('b:0;'); // true
+
+
 ```
 
 ### @
@@ -288,11 +316,6 @@ var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
 
 // highlight strings
 @__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
-
-// check if string is serialized
-@__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'); // true
-@__is_serialized('idkfa'); // false
-@__is_serialized('b:0;'); // true
 
 // cookies
 __cookie_exists($cookie_name)
