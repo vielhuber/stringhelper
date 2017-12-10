@@ -6,7 +6,7 @@ function __x($input)
     if($input instanceof Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0 ) { return false; }
     if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0 ) { return false; }
     if($input instanceof Illuminate\Support\Collection && $input->count() === 0 ) { return false; }
-    if($input instanceof __ignore_helper) { return false; }
+    if($input instanceof __empty_helper) { return false; }
     return true;
 }
 
@@ -37,6 +37,31 @@ function __i($var)
     return [];    
 }
 
+class __empty_helper implements JsonSerializable
+{
+    public function __call($name, $arguments)
+    {
+        return new __empty_helper();
+    }
+    public function __toString()
+    {
+        return '';
+    }
+    public function count()
+    {
+        return 0;
+    }
+    public function jsonSerialize()
+    {
+        return null;
+    }
+}
+
+function __empty()
+{
+    return new __empty_helper();
+}
+
 function __cookie_exists($cookie_name)
 {
     if( @__x($_COOKIE[$cookie_name]) )
@@ -45,6 +70,7 @@ function __cookie_exists($cookie_name)
     }
     return false;
 }
+
 function __cookie_get($cookie_name)
 {
     if( !@__cookie_exists($cookie_name) )
@@ -53,16 +79,34 @@ function __cookie_get($cookie_name)
     }
     return $_COOKIE[$cookie_name];
 }
+
 function __cookie_set($cookie_name, $cookie_value, $days)
 {
     setcookie($cookie_name, $cookie_value, time()+60*60*24*$days, '/');
     // immediately set it for current request
     $_COOKIE[$cookie_name] = $cookie_value;
 }
+
 function __cookie_delete($cookie_name)
 {
     unset($_COOKIE[$cookie_name]);
     setcookie($cookie_name, '', time() - 3600, '/');
+}
+
+function __strip($string, $length = 50, $dots = '...')
+{
+    if( mb_strlen($string) <= $length ) { return $string; }
+    return rtrim(mb_substr($string, 0, $length)).$dots;
+}
+
+function __strip_nonnumeric($string)
+{
+    return preg_replace('/[^0-9,.]/', '', $string);  
+}
+
+function __strip_nondigit($string)
+{
+    return preg_replace('/[^0-9]/', '', $string);
 }
 
 function __o(...$data)
@@ -184,39 +228,42 @@ function __is_serialized($string)
     return true;
 }
 
-// return empty model
-class __ignore_helper implements JsonSerializable
+function __is_integer($input)
 {
-    public function __call($name, $arguments)
-    {
-        return new __ignore_helper();
-    }
-    public function __toString()
-    {
-        return '';
-    }
-    public function count()
-    {
-        return 0;
-    }
-    public function jsonSerialize()
-    {
-        return null;
-    }
+    if( @__nx($input) ) { return false; }
+    if( is_int($input) ) { return true; }
+    if( is_numeric($input) && ($input != (string)(float)$input) ) { return true; }
+    return false;
 }
 
-function __empty()
+function __extract($string, $begin, $end)
 {
-    return new __ignore_helper();
+    $pos1 = strpos($string,$begin)+strlen($begin);
+    if($pos1 === false) { return false; }
+    $pos2 = strpos($string, $end, $pos1);
+    if($pos2 === false) { return false; }
+    return substr($string, $pos1, $pos2-$pos1);
 }
 
-trait returnEmpty
+function __strposx($haystack, $needle)
 {
-    public function __call($method, $arguments) { return @__empty(); }
-    public static function __callStatic($method, $arguments) { return @__empty(); }
+    $positions = [];
+    $last_pos = 0;
+    while(($last_pos = strpos($haystack, $needle, $last_pos)) !== false)
+    {
+        $positions[] = $last_pos;
+        $last_pos += strlen($needle);
+    }
+    return $positions;
 }
 
-// removes recursively all items from array or object or collection that are considered empty
+function __strposnth($haystack, $needle, $index)
+{
+    $positions = __strposx($haystack, $needle);
+    if(empty($positions) || $index <= 0 || $index > count($positions)) { return null; }
+    return $positions[$index-1];
+}
+
 function __remove_empty($a)
 {
     if( ($a instanceof Illuminate\Database\Eloquent\Collection || $a instanceof Illuminate\Support\Collection) && $a->count() > 0 )
@@ -264,7 +311,6 @@ function __remove_empty($a)
     return $a;
 }
 
-// check if item can be looped (is a non empty array, object or collection)
 function __can_be_looped($a)
 {
     if( is_array($a) && !empty($a) ) { return true; }
@@ -273,177 +319,6 @@ function __can_be_looped($a)
     return false;
 }
 
-
-
-// get nth element of concatenized array
-function __expl($separator = ' ', $array = [], $pos = 0)
-{
-    return current(array_slice(explode($separator,$array), $pos, 1));
-}
-
-// post/redirect/get-pattern
-function __prg($url = null)
-{
-    if($url == null)
-    {
-        $url = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-        $url .= $_SERVER['HTTP_HOST'].strtok($_SERVER['REQUEST_URI'],'?');
-        if(@__x($_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
-    }
-    header('Location: '.$url);
-    die();
-}
-
-// html redirect via php
-function __redirect($url = null)
-{
-    if($url == null)
-    {
-        $url = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-        $url .= $_SERVER['HTTP_HOST'].strtok($_SERVER['REQUEST_URI'],'?');
-        if(@__x($_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
-    }
-    echo '<meta http-equiv="refresh" content="0; url=\''.$url.'\'">';
-    die();
-}
-
-// returns null if date is invalid, otherwise formatted date
-function __date($date, $format = 'Y-m-d')
-{
-    if( !@__validate_date($date) ) { return null; }
-    return date($format,strtotime($date));
-}
-
-
-// outputs a valid formatted value for input datetime-local
-function __datetime($datetime)
-{
-    if( @__nx($datetime) ) { return null; }
-    return date('Y-m-d', strtotime($datetime)).'T'.date('H:i', strtotime($datetime));
-}
-
-
-// flatten multidimensional array (keys)
-function __flatten_keys($array)
-{
-    $return = [];
-    foreach($array as $key=>$value)
-    {
-        if(is_array($value))
-        {
-            $return = array_merge($return, __flatten_keys($value));
-        }
-        $return[] = $key;
-    }
-    return $return;
-}
-
-// flatten multidimensional array (values)
-function __flatten_values($array)
-{
-    $return = [];
-    array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
-    return $return;
-}
-
-// check if key is first key in foreach loop
-function __fkey($array__key,$array)
-{
-    if( array_keys($array)[0] === $array__key )
-    {
-        return true;
-    }
-    return false;
-}
-
-// check if key is last key in foreach loop
-function __lkey($array__key,$array)
-{
-    if( array_keys($array)[count(array_keys($array))-1] === $array__key )
-    {
-        return true;
-    }
-    return false;
-}
-
-// get last item of array
-function __last($array)
-{
-    return array_values(array_slice($array, -1))[0];
-}
-
-// get first item of array
-function __first($array)
-{
-    return $array[0];
-}
-
-// get random element from array
-function __rand($array)
-{
-    return $array[array_rand($array)];
-}
-
-// extract from string
-function __extract($string, $begin, $end)
-{
-    $pos1 = strpos($string,$begin)+strlen($begin);
-    if($pos1 === false) { return false; }
-    $pos2 = strpos($string, $end, $pos1);
-    if($pos2 === false) { return false; }
-    return substr($string, $pos1, $pos2-$pos1);
-}
-
-// find all occurences of substring in string
-function __strposx($haystack, $needle)
-{
-    $positions = [];
-    $last_pos = 0;
-    while(($last_pos = strpos($haystack, $needle, $last_pos)) !== false)
-    {
-        $positions[] = $last_pos;
-        $last_pos += strlen($needle);
-    }
-    return $positions;
-}
-
-// find nth occurence of substring in string
-function __strposnth($haystack, $needle, $index)
-{
-    $positions = __strposx($haystack, $needle);
-    if(empty($positions) || $index > (count($positions)-1)) { return null; }
-    return $positions[$index];
-}
-
-// strip string
-function __strip($string, $length = 50, $dots = '...')
-{
-    if( mb_strlen($string) <= $length ) { return $string; }
-    return rtrim(mb_substr($string, 0, $length)).$dots;
-}
-
-// strip non numeric (all except 0-9, ., .)
-function __strip_nonnumeric($string)
-{
-    return preg_replace('/[^0-9,.]/', '', $string);  
-}
-
-// strip non digit (all except 0-9)
-function __strip_nondigit($string)
-{
-    return preg_replace('/[^0-9]/', '', $string);
-}
-
-// checks if variable is an integer (works also for big integers)
-function __is_integer($input)
-{
-    if( @__nx($input) ) { return false; }
-    if( is_int($input) ) { return true; }
-    if( is_numeric($input) && ($input != (string)(float)$input) ) { return true; }
-    return false;
-}
-
-// highlight string
 function __highlight($string, $query, $strip = false, $strip_length = 500)
 {
     if( $strip === true )
@@ -506,7 +381,6 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
     return $string;
 }
 
-// clean up post/get
 function clean_up_get()
 {
     if( @__x($_GET) )
@@ -514,6 +388,7 @@ function clean_up_get()
         filter_var_array($_GET, FILTER_SANITIZE_STRING);
     }
 }
+
 function clean_up_post()
 {
     if( @__x($_POST) )
@@ -521,19 +396,107 @@ function clean_up_post()
         filter_var_array($_POST, FILTER_SANITIZE_STRING);
     }
 }
+
 function clean_up()
 {
     clean_up_get();
     clean_up_post();
 }
 
+function __expl($separator = ' ', $array = [], $pos = 0)
+{
+    return current(array_slice(explode($separator,$array), $pos, 1));
+}
 
+function __prg($url = null)
+{
+    if($url == null)
+    {
+        $url = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+        $url .= $_SERVER['HTTP_HOST'].strtok($_SERVER['REQUEST_URI'],'?');
+        if(@__x($_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
+    }
+    header('Location: '.$url);
+    die();
+}
 
+function __redirect($url = null)
+{
+    if($url == null)
+    {
+        $url = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+        $url .= $_SERVER['HTTP_HOST'].strtok($_SERVER['REQUEST_URI'],'?');
+        if(@__x($_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
+    }
+    echo '<meta http-equiv="refresh" content="0; url=\''.$url.'\'">';
+    die();
+}
 
+function __date($date, $format = 'Y-m-d')
+{
+    if( !@__validate_date($date) ) { return null; }
+    return date($format,strtotime($date));
+}
 
+function __datetime($datetime)
+{
+    if( @__nx($datetime) ) { return null; }
+    return date('Y-m-d', strtotime($datetime)).'T'.date('H:i', strtotime($datetime));
+}
 
+function __flatten_keys($array)
+{
+    $return = [];
+    foreach($array as $key=>$value)
+    {
+        if(is_array($value))
+        {
+            $return = array_merge($return, __flatten_keys($value));
+        }
+        $return[] = $key;
+    }
+    return $return;
+}
 
+function __flatten_values($array)
+{
+    $return = [];
+    array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+    return $return;
+}
 
+function __fkey($array__key,$array)
+{
+    if( array_keys($array)[0] === $array__key )
+    {
+        return true;
+    }
+    return false;
+}
+
+function __lkey($array__key,$array)
+{
+    if( array_keys($array)[count(array_keys($array))-1] === $array__key )
+    {
+        return true;
+    }
+    return false;
+}
+
+function __last($array)
+{
+    return array_values(array_slice($array, -1))[0];
+}
+
+function __first($array)
+{
+    return $array[0];
+}
+
+function __rand($array)
+{
+    return $array[array_rand($array)];
+}
 
 
 

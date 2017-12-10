@@ -237,7 +237,6 @@ foreach( Person::find(1)->getAddress()->getCountry() as $value )
 // set
 __cookie_set('cookie_name', 'cookie_value', 7) // set cookie for 7 days
 
-
 // existence
 __cookie_exists('cookie_name') // true
 
@@ -266,10 +265,71 @@ __slug('This string will be sanitized!') // this-string-will-be-sanitized
 // generate a random string
 __random_string(8) // edPhi34d
 
+// strip string
+echo __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12); // Lorem ipsum...
+
+// strip non numeric (all except 0-9.,)
+__strip_nonnumeric('the answer is 42.00') // 42.00
+
+// strip non digit (all except 0-9)
+__strip_nondigit('the answer is 42') // 42
+
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}'); // true
 __is_serialized('idkfa'); // false
 __is_serialized('b:0;'); // true
+
+// extract part from string
+__extract('<a href="#foo">bar</a>','href="','">'); // #foo
+__extract('<a href="#foo">bar</a>','">','</a'); // bar
+
+// find all occurences of substring in string
+__strposx('foo', 'bar foo baz foobar')) // [4,13]
+
+// find nth occurence of substring in string
+__strposnth('foo', 'bar foo baz foobar', 2)) // 13
+
+// clean up post/get
+clean_up_get()
+clean_up_post()
+clean_up()
+
+// check if key is first/last key in foreach loop
+$arr = ['foo','bar']
+foreach($arr as $arr__key=>$arr__value)
+{
+    if( __fkey($arr__key, $arr) )
+    {
+
+    }
+    if( __lkey($arr__key, $arr) )
+    {
+
+    }
+}
+
+// get last item of array
+__last(['foo', 'bar', 'baz']) // 'baz'
+
+// get first item of array
+__first(['foo', 'bar', 'baz']) // 'foo'
+
+// get random element from array
+__first(['foo', 'bar', 'baz']) // 'bar'
+
+// check if item can be looped (is a non empty array, object or collection)
+__can_be_looped([1,2]) // true
+__can_be_looped((object)[1,2]) // true
+__can_be_looped([]) // false
+
+// removes recursively all items from array or object or collection that are considered empty
+__remove_empty([0 => ['foo',null,''], null) // [0 => ['foo']]
+
+// highlight strings
+@__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
+
+// checks if variable is an integer (works also for big integers)
+__is_integer(8372468764378627868742367883268) // true (in comparison to is_int())
 
 // output arguments in a reader friendly way
 __o(@var)
@@ -278,6 +338,28 @@ __o(@var1, @var2, @var3)
 // same as __o but die afterwards
 __d(@var)
 __d(@var1, @var2, @var3)
+
+// TODO
+// get nth element of concatenized array
+function __expl($separator = ' ', $array = [], $pos = 0)
+
+// post/redirect/get-pattern
+function __prg($url = null)
+
+// html redirect via php
+function __redirect($url = null)
+
+// returns null if date is invalid, otherwise formatted date
+function __date($date, $format = 'Y-m-d')
+
+// outputs a valid formatted value for input datetime-local
+function __datetime($datetime)
+
+// flatten multidimensional array (keys)
+function __flatten_keys($array)
+
+// flatten multidimensional array (values)
+function __flatten_values($array)
 ```
 
 ### @
@@ -313,21 +395,8 @@ $a = 1; $b = 2;
 @__prg('https://tld.com') // redirect with prg pattern (via header)
 @__redirect('https://tld.com') // redirect with plain html meta tag
 
-echo @__extract('<a href="#foo">bar</a>','href="','">'); // #foo
-echo @__extract('<a href="#foo">bar</a>','">','</a'); // bar
-
-echo @__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12); // Lorem ipsum...
-
-echo @__is_integer(8372468764378627868742367883268); // true (in comparison to is_int())
-
 // run the loop only if $input can be looped
 foreach(@__i($input) as $input__key=>$input__value) { }
-
-// get all occurences
-var_dump(@__strposx('foo', 'bar foo baz foobar')); // [4,13]
-
-// highlight strings
-@__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
 ```
 
 ## overview of __x
