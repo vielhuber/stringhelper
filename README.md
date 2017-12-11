@@ -303,7 +303,7 @@ clean_up_post()
 clean_up()
 
 // check if key is first/last key in foreach loop
-$arr = ['foo','bar']
+$arr = ['foo','bar'];
 foreach($arr as $arr__key=>$arr__value)
 {
     if( __fkey($arr__key, $arr) ) { }
