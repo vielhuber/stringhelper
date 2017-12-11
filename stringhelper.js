@@ -35,3 +35,17 @@ function __cookie_delete(cookie_name)
 {
     document.cookie = cookie_name+'=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
 }
+
+function __get(variable) { 
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for(var i=0; i < vars.length; i++)
+    {
+        var pair = vars[i].split('=');
+        if(pair[0] == variable)
+        {
+            return pair[1];
+        }
+    }
+    return null;
+}

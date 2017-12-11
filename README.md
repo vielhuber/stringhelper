@@ -392,6 +392,14 @@ js: add this in your head-tag
 <script type="text/javascript" src="/vendor/vielhuber/stringhelper/stringhelper.js"></script> 
 ```
 
+```js
+
+// on https://tld.com/?foo=bar&bar=baz
+__get('foo') // foo
+__get('bar') // baz
+__get('baz') // null
+```
+
 
 ### js
 
