@@ -274,7 +274,7 @@ __slug('This string will be sanitized!') // this-string-will-be-sanitized
 __random_string(8) // edPhi34d
 
 // strip string
-echo __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12); // Lorem ipsum...
+__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12) // Lorem ipsum...
 
 // strip non numeric (all except 0-9.,)
 __strip_nonnumeric('the answer is 42.00') // 42.00
@@ -283,13 +283,13 @@ __strip_nonnumeric('the answer is 42.00') // 42.00
 __strip_nondigit('the answer is 42') // 42
 
 // check if string is serialized
-__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'); // true
-__is_serialized('idkfa'); // false
-__is_serialized('b:0;'); // true
+__is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
+__is_serialized('idkfa') // false
+__is_serialized('b:0;') // true
 
 // extract part from string
-__extract('<a href="#foo">bar</a>','href="','">'); // #foo
-__extract('<a href="#foo">bar</a>','">','</a'); // bar
+__extract('<a href="#foo">bar</a>','href="','">') // #foo
+__extract('<a href="#foo">bar</a>','">','</a') // bar
 
 // find all occurences of substring in string
 __strposx('foo', 'bar foo baz foobar')) // [4,13]
@@ -306,14 +306,8 @@ clean_up()
 $arr = ['foo','bar']
 foreach($arr as $arr__key=>$arr__value)
 {
-    if( __fkey($arr__key, $arr) )
-    {
-
-    }
-    if( __lkey($arr__key, $arr) )
-    {
-
-    }
+    if( __fkey($arr__key, $arr) ) { }
+    if( __lkey($arr__key, $arr) ) { }
 }
 
 // get last item of array
@@ -334,7 +328,7 @@ __can_be_looped([]) // false
 __remove_empty([0 => ['foo',null,''], null) // [0 => ['foo']]
 
 // highlight strings
-__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
+__highlight('that is a search string', 'is') // that <strong class="highlight">is</strong> a search string
 
 // checks if variable is an integer (works also for big integers)
 __is_integer(8372468764378627868742367883268) // true (in comparison to is_int())
