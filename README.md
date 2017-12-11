@@ -264,7 +264,8 @@ __date('2000-01-01', 'd.m.Y') // 01.01.2000
 __date('2001-02-29', 'd.m.Y') // null
 
 // outputs a valid formatted value for input datetime-local
-function __datetime($datetime)
+__datetime('01.01.2000') // 2000-01-01T00:00
+__datetime('01.01.2000 18:00') // 2000-01-01T18:00
 
 // string to slug (sanitize string)
 __slug('This string will be sanitized!') // this-string-will-be-sanitized
