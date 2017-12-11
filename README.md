@@ -250,14 +250,21 @@ __cookie_delete('cookie_name')
 ### helpers
 there are also some other neat little helpers available.
 ```php
-// checks if a date is valid (in english and german format)
-__validate_date('01.01.0200') // false
-
 // checks if string is a valid url (also works with umlauts and without external lib like idna)
 __validate_url('https://vielhuber.de') // true
 
 // check if string is a valid email (also works with umlauts and without external lib like idna)
 __validate_email('david@vielhuber.de') // true
+
+// checks if a date is valid (in english and german format)
+__validate_date('29.02.2001') // false
+
+// returns null if date is invalid, otherwise formatted date
+__date('2000-01-01', 'd.m.Y') // 01.01.2000
+__date('2001-02-29', 'd.m.Y') // null
+
+// outputs a valid formatted value for input datetime-local
+function __datetime($datetime)
 
 // string to slug (sanitize string)
 __slug('This string will be sanitized!') // this-string-will-be-sanitized
@@ -326,7 +333,7 @@ __can_be_looped([]) // false
 __remove_empty([0 => ['foo',null,''], null) // [0 => ['foo']]
 
 // highlight strings
-@__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
+__highlight('that is a search string', 'is'); // that <strong class="highlight">is</strong> a search string
 
 // checks if variable is an integer (works also for big integers)
 __is_integer(8372468764378627868742367883268) // true (in comparison to is_int())
@@ -339,27 +346,22 @@ __o(@var1, @var2, @var3)
 __d(@var)
 __d(@var1, @var2, @var3)
 
-// TODO
-// get nth element of concatenized array
-function __expl($separator = ' ', $array = [], $pos = 0)
-
-// post/redirect/get-pattern
-function __prg($url = null)
-
-// html redirect via php
-function __redirect($url = null)
-
-// returns null if date is invalid, otherwise formatted date
-function __date($date, $format = 'Y-m-d')
-
-// outputs a valid formatted value for input datetime-local
-function __datetime($datetime)
-
 // flatten multidimensional array (keys)
-function __flatten_keys($array)
+__flatten_keys(['foo' => ['bar' => 'baz']]) // ['foo','bar']
 
 // flatten multidimensional array (values)
-function __flatten_values($array)
+__flatten_values(['foo' => 'bar', 'bar' => ['baz', 'foo']]) // ['bar','baz','foo']
+
+// get nth element of concatenized array
+__expl(' ', 'foo bar baz', 1) // bar
+
+// redirect via php (following post/redirect/get-pattern)
+__prg()
+__prg('https://test.de')
+
+// redirect via html
+__redirect()
+__redirect('https://test.de')
 ```
 
 ### @
@@ -367,41 +369,8 @@ function __flatten_values($array)
 A short note on the usage of @: In this concept we use the "stfu" operator @ that hides errors. We are aware of its potential misuse and also of its benefits. When using @$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. In both cases, we intentionally prevent the parser from stopping and catch the resulting null value. But be aware: Don't use it before function calls (@__x($a['undefined']).
 
 
-###
 
-```php
-// the problem with all sorts of functions in php is that 
-// there is no fast way to check if variable is set in a natural way
-// all solutions (isset, empty, count, ...) have there caveats (see table below)
-// this short helper method solves all sorts of problems
-if( __x($var) ) { ... }
-// if you are even unsure whether $var is set
-// (that is often the case when working with $_GET or $_POST variables)
-// use the stfu-operator @ to even suppress undefined variables (do not use @__x())
-if( __x(@$_GET['not_set']) ) { ... }
-
-// with the help of @__empty() you can chain methods and check for final existence
-@__f( Class::find(1337)->getFirst()->getSecond()->getThird(), 'default' )
-
-$a = 1; $b = 2;
-@__swap($a,$b); // $a = 2; $b = 1
-
-@__eq(@__empty(),true) // false
-@__eq(@__empty(),false) // false
-
-@__d(['arr']) // debug output of formatted array and die
-@__o('arg1', 'arg2') // debug output all items
-
-@__prg('https://tld.com') // redirect with prg pattern (via header)
-@__redirect('https://tld.com') // redirect with plain html meta tag
-
-// run the loop only if $input can be looped
-foreach(@__i($input) as $input__key=>$input__value) { }
-```
-
-## overview of __x
-
-### php
+### overview of __x
 
 | | <sub>!== null</sub> | <sub>!= null</sub> | <sub>!== false</sub> | <sub>!= false</sub> | <sub>=== true</sub> | <sub>== true</sub> | <sub>!is_null()</sub> | <sub>isset()</sub> | <sub>!empty()</sub> | <sub>if/else</sub> | <sub>ternary</sub> | <sub>count() > 0</sub> | <sub>!= ''</sub> | <sub>!== ''</sub> | <sub>__x()</sub> | <sub>__x(@)</sub> |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

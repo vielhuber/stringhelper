@@ -64,7 +64,7 @@ function __empty()
 
 function __cookie_exists($cookie_name)
 {
-    if( @__x($_COOKIE[$cookie_name]) )
+    if( __x(@$_COOKIE[$cookie_name]) )
     {
         return true;
     }
@@ -73,7 +73,7 @@ function __cookie_exists($cookie_name)
 
 function __cookie_get($cookie_name)
 {
-    if( !@__cookie_exists($cookie_name) )
+    if( !__cookie_exists(@$cookie_name) )
     {
         return null;
     }
@@ -137,7 +137,7 @@ function __d(...$data)
 
 function __validate_date($date)
 {
-    if( @__nx($date) ) { return false; }
+    if( __nx(@$date) ) { return false; }
     $date = explode(' ',$date)[0];
     if( substr_count($date,'-') == 2 )
     {
@@ -148,7 +148,7 @@ function __validate_date($date)
             return true;
         }
     }
-    else if( substr_count($date,'.') == 2 )
+    elseif( substr_count($date,'.') == 2 )
     {
         $date = explode('.', $date);
         if(checkdate($date[1], $date[0], $date[2]))
@@ -162,7 +162,7 @@ function __validate_date($date)
 
 function __validate_url($value)
 {
-    if( @__nx($value) ) { return false; }
+    if( __nx(@$value) ) { return false; }
     $value = mb_strtolower($value);
     $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
     if( filter_var($value, FILTER_VALIDATE_URL) === false )
@@ -174,7 +174,7 @@ function __validate_url($value)
 
 function __validate_email($value)
 {
-    if(@__nx($value)) { return false; }
+    if(__nx(@$value)) { return false; }
     $value = mb_strtolower($value);
     $value = str_replace(['ä','ö','ü'], ['ae', 'oe', 'ue'], $value);
     if( filter_var($value, FILTER_VALIDATE_EMAIL) === false )
@@ -230,7 +230,7 @@ function __is_serialized($string)
 
 function __is_integer($input)
 {
-    if( @__nx($input) ) { return false; }
+    if( __nx(@$input) ) { return false; }
     if( is_int($input) ) { return true; }
     if( is_numeric($input) && ($input != (string)(float)$input) ) { return true; }
     return false;
@@ -270,11 +270,11 @@ function __remove_empty($a)
     {
         foreach($a as $a__key=>$a__value)
         {
-            if(@__can_be_looped($a__value))
+            if(__can_be_looped(@$a__value))
             {
-                $a->put($a__key, @__remove_empty($a__value));
+                $a->put($a__key, __remove_empty(@$a__value));
             }
-            elseif( @__nx($a__value) )
+            elseif( __nx(@$a__value) )
             {
                 $a->forget($a__key);
             }
@@ -284,11 +284,11 @@ function __remove_empty($a)
     {
         foreach($a as $a__key=>$a__value)
         {
-            if(@__can_be_looped($a__value))
+            if(__can_be_looped(@$a__value))
             {
-                $a[$a__key] = @__remove_empty($a__value);
+                $a[$a__key] = __remove_empty(@$a__value);
             }
-            elseif( @__nx($a__value) )
+            elseif( __nx(@$a__value) )
             {
                 unset($a[$a__key]);
             }
@@ -298,11 +298,11 @@ function __remove_empty($a)
     {
         foreach($a as $a__key=>$a__value)
         {
-            if(@__can_be_looped($a__value))
+            if(__can_be_looped(@$a__value))
             {
-                $a->{$a__key} = @__remove_empty($a__value);
+                $a->{$a__key} = __remove_empty(@$a__value);
             }
-            elseif( @__nx($a__value) )
+            elseif( __nx(@$a__value) )
             {
                 unset($a->{$a__key});
             }
@@ -383,7 +383,7 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
 
 function clean_up_get()
 {
-    if( @__x($_GET) )
+    if( __x(@$_GET) )
     {
         filter_var_array($_GET, FILTER_SANITIZE_STRING);
     }
@@ -391,7 +391,7 @@ function clean_up_get()
 
 function clean_up_post()
 {
-    if( @__x($_POST) )
+    if( __x(@$_POST) )
     {
         filter_var_array($_POST, FILTER_SANITIZE_STRING);
     }
@@ -414,7 +414,7 @@ function __prg($url = null)
     {
         $url = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
         $url .= $_SERVER['HTTP_HOST'].strtok($_SERVER['REQUEST_URI'],'?');
-        if(@__x($_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
+        if(__x(@$_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
     }
     header('Location: '.$url);
     die();
@@ -426,7 +426,7 @@ function __redirect($url = null)
     {
         $url = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
         $url .= $_SERVER['HTTP_HOST'].strtok($_SERVER['REQUEST_URI'],'?');
-        if(@__x($_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
+        if(__x(@$_GET['page_id'])) { $url .= '?page_id='.$_GET['page_id']; }
     }
     echo '<meta http-equiv="refresh" content="0; url=\''.$url.'\'">';
     die();
@@ -434,13 +434,13 @@ function __redirect($url = null)
 
 function __date($date, $format = 'Y-m-d')
 {
-    if( !@__validate_date($date) ) { return null; }
+    if( !__validate_date(@$date) ) { return null; }
     return date($format,strtotime($date));
 }
 
 function __datetime($datetime)
 {
-    if( @__nx($datetime) ) { return null; }
+    if( __nx(@$datetime) ) { return null; }
     return date('Y-m-d', strtotime($datetime)).'T'.date('H:i', strtotime($datetime));
 }
 
@@ -449,11 +449,11 @@ function __flatten_keys($array)
     $return = [];
     foreach($array as $key=>$value)
     {
+        $return[] = $key;
         if(is_array($value))
         {
             $return = array_merge($return, __flatten_keys($value));
         }
-        $return[] = $key;
     }
     return $return;
 }
@@ -509,7 +509,7 @@ function __f(...$args)
 {
     foreach($args as $arg)
     {
-        if( @__x($arg) ) { return $arg; }
+        if( __x(@$arg) ) { return $arg; }
     }
     return null;
 }
@@ -526,7 +526,7 @@ function __mx()
     for($i = 0 ; $i < func_num_args(); $i++)
     {
         $arg = func_get_arg($i);
-        if( @__nx($arg) ) { return false; }
+        if( __nx(@$arg) ) { return false; }
     }
     return true;
 }
@@ -536,7 +536,7 @@ function __ox()
     for($i = 0 ; $i < func_num_args(); $i++)
     {
         $arg = func_get_arg($i);
-        if( @__x($arg) ) { return true; }
+        if( __x(@$arg) ) { return true; }
     }
     return false;
 }
@@ -546,7 +546,7 @@ function __aox($var)
     if( !is_array($var) ) { return false; }
     foreach($var as $key=>$value)
     {
-        if( @__x($value) )
+        if( __x(@$value) )
         {
             return true;
         }
@@ -559,7 +559,7 @@ function __amx($var)
     if( !is_array($var) ) { return false; }
     foreach($var as $key=>$value)
     {
-        if( @__nx($value) )
+        if( __nx(@$value) )
         {
             return false;
         }
@@ -569,20 +569,20 @@ function __amx($var)
 // if first value exists, return second value, otherwise third
 function __xe($var,$return,$fallback = null)
 {
-    if( @__x($var) ) { return $return; }
+    if( __x(@$var) ) { return $return; }
     return $fallback;
 }
 // check equality of two values (only if they both exist, weak check)
 function __eq($a, $b)
 {
-    if( @__nx($a) && @__nx($b) ) { return false; }
-    if( @__nx($a) && @__x($b) ) { return false; }
-    if( @__x($a) && @__nx($b) ) { return false; }
+    if( __nx(@$a) && __nx(@$b) ) { return false; }
+    if( __nx(@$a) && __x(@$b) ) { return false; }
+    if( __x(@$a) && __nx(@$b) ) { return false; }
     if( $a == $b ) { return true; }
     return false;
 }
 // check inequality of two values (only if they both exist, weak check)
 function __neq($a, $b)
 {
-    return !@__eq($a, $b);
+    return !__eq(@$a, @$b);
 }
