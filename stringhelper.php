@@ -110,7 +110,7 @@ function __true($val)
     if( $val === ' ' ) { return false; }
     if( $val === 'null' ) { return false; }
     if( $val === 'false' ) { return false; }
-    if( $val === new stdClass ) { return false; }
+    if( is_object($val) && empty((array)$val) ) { return false; }
     return true;
 }
 

@@ -31,9 +31,6 @@
 
 	<?php
 	require_once('../stringhelper.php');
-
-var_dump(__false(null));
-
     $items = [
         'null' => null,
         'false' => false,
