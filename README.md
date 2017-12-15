@@ -71,13 +71,7 @@ if( __nx(@$var) )
 
 ### equality
 ```php
-the recommened way or comparing is to check for strict equality:
-if( @$var === 'foo' )
-{
-
-}
-
-php has a lot of pitfalls, when comparing loosely:
+// php has a lot of pitfalls, when comparing loosely:
 if( -1 == true ) // true
 if( '-1' == true ) // true
 if( 'false' == true ) // true
@@ -95,38 +89,36 @@ if( [''] == [0] ) // true
 if( 0 == '' ) // true
 if( 0 == ' ' ) // true
 
-the loose equality is symmetric, but not transitive:
+// this non-strict equality is symmetric, but not transitive:
 $a = ''; $b = 0; $c = 'oh';
 $a == $b; // true
 $b == $c; // true
 $c == $a; // false
 
-to overcome this issue, use...
+// to overcome this issue, use...
 
-...strict comparison when possible:
+// ...strict comparison when possible:
 if( @$val1 === 'foobar' )
 {
 
 }
 
-...check for truthness / falsiness with these helper methods:
+// ...check for truthness / falsiness with these helper methods:
 if( __true(@$val1) )
 {
 
 }
+
 if( __false(@$val1) )
 {
 
 }
 
-// loose comparison in all other cases:
+// ...use the loose comparison in all other cases:
 if( $_GET['digit'] == 1337 )
 {
 
 }
-
-
-
 ```
 
 ### value
