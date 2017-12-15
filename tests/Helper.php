@@ -58,6 +58,9 @@
     echo '<textarea>';
     	function outputRow($input)
         {
+            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __x($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
+            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __true($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
+            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __false($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input !== null ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input != null ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input !== false ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
@@ -72,12 +75,12 @@
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( count($input) > 0 ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input != '' ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input !== '' ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
-            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __x($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
-            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __true($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
-            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __false($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' |';
     	}
     	echo '| ';
+        echo '| <sub>__x()</sub> ';
+        echo '| <sub>__true()</sub> ';
+        echo '| <sub>__false()</sub> ';
     	echo '| <sub>!== null</sub> ';
     	echo '| <sub>!= null</sub> ';
     	echo '| <sub>!== false</sub> ';
@@ -92,9 +95,6 @@
     	echo '| <sub>count() > 0</sub> ';
     	echo '| <sub>!= \'\'</sub> ';
         echo '| <sub>!== \'\'</sub> ';
-        echo '| <sub>__x()</sub> ';
-        echo '| <sub>__true()</sub> ';
-        echo '| <sub>__false()</sub> ';
     	echo '|';
     	echo PHP_EOL;
     	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
