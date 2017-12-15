@@ -353,15 +353,17 @@ __datetime('01.01.2000 18:00') // 2000-01-01T18:00
 __slug('This string will be sanitized!') // this-string-will-be-sanitized
 
 // generate a random string
-__random_string(8) // edPhi34d
+__random_string() // edPhi34d
+__random_string(10) // abCa321aC6
+__random_string(16, 'idkfa') // idifafafifaifafk
 
 // strip string
-__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.', 12) // Lorem ipsum...
+__strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.', 12) // Lorem ipsum...
 
-// strip non numeric (all except 0-9.,)
+// strip non-numeric (all except 0-9.,)
 __strip_nonnumeric('the answer is 42.00') // 42.00
 
-// strip non digit (all except 0-9)
+// strip non-digit (all except 0-9)
 __strip_nondigit('the answer is 42') // 42
 
 // check if string is serialized
@@ -379,12 +381,14 @@ __strposx('foo', 'bar foo baz foobar')) // [4,13]
 // find nth occurence of substring in string
 __strposnth('foo', 'bar foo baz foobar', 2)) // 13
 
-// clean up post/get
+// clean up post/get using filter_var_array
 clean_up_get()
 clean_up_post()
 clean_up()
 
 // fetch post/get variables if they exist
+$_GET = ['page_id' => '13'];
+$_POST = ['foo' => 'bar'];
 __get('foo') // null (because not set)
 __get('page_id') // '13'
 __post('foo') // bar
