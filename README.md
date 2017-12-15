@@ -321,16 +321,16 @@ if( __x_all('foo', 'bar', null) ) // false
 if( __x_all(['foo', 'bar', null]) ) // false
 if( __x_all('foo', 'bar', 'baz') ) // true
 if( __x_all(['foo', 'bar', 'baz']) ) // true
-if( __nx_all(['foo', 'bar', null]) ) // true
-if( __nx_all(['foo', 'bar', 'baz']) ) // false
+if( __nx_all('foo', 'bar', null) ) // true
+if( __nx_all('foo', 'bar', 'baz') ) // false
 
 // check if one variable exists
 if( __x_one('foo', 'bar') ) // true
 if( __x_one('', null) ) // false
 if( __x_one(['foo', 'bar']) ) // true
 if( __x_one(['', null]) ) // false
-if( __nx_one(['foo', 'bar']) ) // false
-if( __nx_one(['', null]) ) // true
+if( __nx_one('foo', 'bar') ) // false
+if( __nx_one('', null) ) // true
 
 // checks if string is a valid url (also works with umlauts and without external lib like idna)
 __validate_url('https://vielhuber.de') // true
