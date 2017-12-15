@@ -31,6 +31,9 @@
 
 	<?php
 	require_once('../stringhelper.php');
+
+var_dump(__false(null));
+
     $items = [
         'null' => null,
         'false' => false,
@@ -92,9 +95,9 @@
     	echo '| <sub>count() > 0</sub> ';
     	echo '| <sub>!= \'\'</sub> ';
         echo '| <sub>!== \'\'</sub> ';
-        echo '| <sub>__true()</sub> ';
-    	echo '| <sub>__false()</sub> ';
         echo '| <sub>__x()</sub> ';
+        echo '| <sub>__true()</sub> ';
+        echo '| <sub>__false()</sub> ';
     	echo '|';
     	echo PHP_EOL;
     	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
