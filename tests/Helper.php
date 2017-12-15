@@ -73,6 +73,8 @@
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input != '' ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input !== '' ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
             echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __x($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
+            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __true($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
+            echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( __false($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' |';
     	}
     	echo '| ';
@@ -93,7 +95,7 @@
         echo '| <sub>__x()</sub> ';
     	echo '|';
     	echo PHP_EOL;
-    	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+    	echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
     	foreach($items as $items__key=>$items__value)
         {
     		echo PHP_EOL;

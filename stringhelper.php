@@ -98,6 +98,28 @@ function __nx_one(...$args)
     return !__x_one(...@$args);
 }
 
+function __true($val)
+{
+    if( __nx(@$val) ) { return false; }
+    if( $val === null ) { return false; }
+    if( $val === false ) { return false; }
+    if( $val === [] ) { return false; }
+    if( $val === [''] ) { return false; }
+    if( $val === 0 ) { return false; }
+    if( $val === '-1' ) { return false; }
+    if( $val === '' ) { return false; }
+    if( $val === ' ' ) { return false; }
+    if( $val === 'null' ) { return false; }
+    if( $val === 'false' ) { return false; }
+    if( $val === new stdClass ) { return false; }
+    return true;
+}
+
+function __false($val)
+{
+    return __true(@$val);
+}
+
 function __cookie_exists($cookie_name)
 {
     if( __x(@$_COOKIE[$cookie_name]) )
