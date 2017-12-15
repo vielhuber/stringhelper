@@ -73,6 +73,7 @@ if( __nx(@$var) )
 ```php
 // php has a lot of pitfalls, when comparing loosely:
 if( 0 == 'true' ) // true
+if( 0 == 'str' ) // true
 if( 'null' == null ) // false
 if( '0' == null ) // false
 if( '0' == true ) // false
