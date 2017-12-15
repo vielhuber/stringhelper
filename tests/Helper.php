@@ -52,8 +52,8 @@
         '[0,1]' => [0,1],
         '[0]' => [0],
         'new stdClass' => new stdClass,
-        '$_GET[\'not_set\']' => 'error',
-        '@$_GET[\'not_set\']' => @$_GET['not_set'],
+        '$_GET[\'undefined\']' => 'error',
+        '@$_GET[\'undefined\']' => @$_GET['undefined'],
     ];
     echo '<textarea>';
     	function outputRow($input)
