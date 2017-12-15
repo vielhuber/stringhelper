@@ -95,27 +95,37 @@ $a == $b; // true
 $b == $c; // true
 $c == $a; // false
 
-// to overcome this issue, use...
+// to overcome this issue, we...
 
-// ...strict comparison when possible:
-if( @$val1 === 'foobar' )
+// ...check for existence with the method introduced before:
+if( __x(@$var)
+{
+
+}
+if( __nx(@$var) )
 {
 
 }
 
 // ...check for truthness / falsiness with these helper methods:
-if( __true(@$val1) )
+if( __true(@$var) )
 {
 
 }
 
-if( __false(@$val1) )
+if( __false(@$var) )
+{
+
+}
+
+// ...use strict comparison when possible:
+if( @$var === 'foo' )
 {
 
 }
 
 // ...use the loose comparison in all other cases:
-if( $_GET['digit'] == 1337 )
+if( $_GET['number'] == 1337 )
 {
 
 }
