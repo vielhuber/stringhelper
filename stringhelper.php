@@ -100,13 +100,12 @@ function __nx_one(...$args)
 
 function __true($val)
 {
-    if( __nx(@$val) ) { return false; }
     if( $val === null ) { return false; }
     if( $val === false ) { return false; }
     if( $val === [] ) { return false; }
     if( $val === [''] ) { return false; }
     if( $val === 0 ) { return false; }
-    if( $val === '-1' ) { return false; }
+    if( $val === '0' ) { return false; }
     if( $val === '' ) { return false; }
     if( $val === ' ' ) { return false; }
     if( $val === 'null' ) { return false; }
@@ -117,7 +116,7 @@ function __true($val)
 
 function __false($val)
 {
-    return __true(@$val);
+    return !__true(@$val);
 }
 
 function __cookie_exists($cookie_name)
