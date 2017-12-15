@@ -457,9 +457,9 @@ there is also a javascript implemenation [stringhelperjs](https://github.com/vie
 | <sub>@$_GET['undefined']</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> |
 
 
-### loose comparison (==) matrix
+### loose comparison matrix
 
-| | <sub>null</sub> | <sub>false</sub> | <sub>true</sub> | <sub>[]</sub> | <sub>['']</sub> | <sub>0</sub> | <sub>1</sub> | <sub>-1</sub> | <sub>'0'</sub> | <sub>'1'</sub> | <sub>'-1'</sub> | <sub>''</sub> | <sub>' '</sub> | <sub>'null'</sub> | <sub>'false'</sub> | <sub>'true'</sub> | <sub>'str'</sub> | <sub>[0,1]</sub> | <sub>[0]</sub> | <sub>new stdClass</sub> | <sub>$_GET['undefined']</sub> | <sub>@$_GET['undefined']</sub> |
+| <sub>==</sub> | <sub>null</sub> | <sub>false</sub> | <sub>true</sub> | <sub>[]</sub> | <sub>['']</sub> | <sub>0</sub> | <sub>1</sub> | <sub>-1</sub> | <sub>'0'</sub> | <sub>'1'</sub> | <sub>'-1'</sub> | <sub>''</sub> | <sub>' '</sub> | <sub>'null'</sub> | <sub>'false'</sub> | <sub>'true'</sub> | <sub>'str'</sub> | <sub>[0,1]</sub> | <sub>[0]</sub> | <sub>new stdClass</sub> | <sub>$_GET['undefined']</sub> | <sub>@$_GET['undefined']</sub> |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | <sub>null</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>true</sub> |
 | <sub>false</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>true</sub> |

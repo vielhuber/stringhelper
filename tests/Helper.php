@@ -110,7 +110,7 @@
 
 
     echo '<textarea>';
-        echo '| ';
+        echo '| <sub>==</sub> ';
         foreach($items as $items__key=>$items__value)
         {
             echo '| <sub>'.$items__key.'</sub> ';
