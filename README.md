@@ -72,10 +72,25 @@ if( __nx(@$var) )
 ### equality
 ```php
 // check equality (strict)
-if( @$var === '1' )
+if( @$var === 'foo' )
 {
 
 }
+
+// COMPARISON TABLE FROM BELOW
+
+
+// be careful when comparing loosely
+if( -1 == true ) // true
+if( '-1' == true ) // true
+if( 'false' == true ) // true
+if( -1 == false ) // false
+if( '-1' == false ) // false
+if( null == false ) // false
+if( [] == false ) // true
+if( 0 == 'true' ) // true
+// TODO, COMPARISON TABLE
+
 ```
 
 ### value
@@ -250,6 +265,22 @@ __cookie_delete('cookie_name')
 ### helpers
 there are also some other neat little helpers available.
 ```php
+// check if all variables exist
+if( __x_all('foo', 'bar', null) ) // false
+if( __x_all(['foo', 'bar', null]) ) // false
+if( __x_all('foo', 'bar', 'baz') ) // true
+if( __x_all(['foo', 'bar', 'baz']) ) // true
+if( __nx_all(['foo', 'bar', null]) ) // true
+if( __nx_all(['foo', 'bar', 'baz']) ) // false
+
+// check if one variable exists
+if( __x_one('foo', 'bar') ) // true
+if( __x_one('', null) ) // false
+if( __x_one(['foo', 'bar']) ) // true
+if( __x_one(['', null]) ) // false
+if( __nx_one(['foo', 'bar']) ) // false
+if( __nx_one(['', null]) ) // true
+
 // checks if string is a valid url (also works with umlauts and without external lib like idna)
 __validate_url('https://vielhuber.de') // true
 

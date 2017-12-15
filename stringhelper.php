@@ -62,6 +62,42 @@ function __empty()
     return new __empty_helper();
 }
 
+function __x_all(...$args)
+{
+    if( __x(@$args[0]) && is_array($args[0]) && count($args) === 1 )
+    {
+        $args = $args[0];
+    }
+    foreach($args as $arg)
+    {
+        if( __nx(@$arg) ) { return false; }
+    }
+    return true;
+}
+
+function __nx_all(...$args)
+{
+    return !__x_all(...@$args);
+}
+
+function __x_one(...$args)
+{
+    if( __x(@$args[0]) && is_array($args[0]) && count($args) === 1 )
+    {
+        $args = $args[0];
+    }
+    foreach($args as $arg)
+    {
+        if( __x(@$arg) ) { return true; }
+    }
+    return false;
+}
+
+function __nx_one(...$args)
+{
+    return !__x_one(...@$args);
+}
+
 function __cookie_exists($cookie_name)
 {
     if( __x(@$_COOKIE[$cookie_name]) )
@@ -563,7 +599,7 @@ function __aox($var)
     }
     return false;
 }
-// check if every variable in array exists
+// check if every variable in an array exists
 function __amx($var)
 {
     if( !is_array($var) ) { return false; }
