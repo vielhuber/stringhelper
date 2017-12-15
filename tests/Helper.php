@@ -106,11 +106,11 @@
         echo '| ';
         foreach($items as $items__key=>$items__value)
         {
-            echo '| <sub>'.$items__key.'</sub>';
+            echo '| <sub>'.$items__key.'</sub> ';
         }
         echo '|';
         echo PHP_EOL;
-        echo str_repeat('| --- ', count($items)).'|';
+        echo '| --- '.str_repeat('| --- ', count($items)).'|';
         foreach($items as $items1__key=>$items1__value)
         {
             echo PHP_EOL;
