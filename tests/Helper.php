@@ -118,7 +118,7 @@
             foreach($items as $items2__key=>$items2__value)
             {
                 echo '| <sub>';
-                if( is_object($items1__value) || is_object($items2__value) )
+                if( (is_object($items1__value) && is_integer($items2__value)) || (is_object($items2__value) && is_integer($items1__value)) )
                 {
                     echo 'error';
                 }
