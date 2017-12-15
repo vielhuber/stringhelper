@@ -64,7 +64,7 @@ if( __x($var) )
 
 }
 
-// check non existence
+// check non-existence
 if( __nx($var) )
 {
 
@@ -117,7 +117,7 @@ if( $var === 'foo' )
 
 }
 
-// ...use the loose comparison in all other cases
+// ...use loose comparison when appropriate
 if( $_GET['number'] == 1337 )
 {
 
@@ -149,7 +149,7 @@ foreach( __i($array) as $array__key=>$array__value )
 ### @
 
 ```php
-If you are unsure, if a variable exists beforehand, simply prefix it with the stfu-operator @:
+// If you are unsure, if a variable is even set before checking its existence, simply prefix it with the stfu-operator @:
 if( __x(@var) )
 if( __nx(@var) )
 if( __true(@var) )
