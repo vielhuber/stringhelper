@@ -120,7 +120,7 @@
                 echo '| <sub>';
                 if( (is_object($items1__value) && is_integer($items2__value)) || (is_object($items2__value) && is_integer($items1__value)) )
                 {
-                    echo 'error';
+                    echo 'error'.$items1__key.$items2__key;
                 }
                 elseif( $items1__value == 'error' || $items2__value == 'error' )
                 {
