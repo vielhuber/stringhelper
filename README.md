@@ -72,22 +72,22 @@ if( __nx(@$var) )
 ### equality
 ```php
 // php has a lot of pitfalls, when comparing loosely:
-if( -1 == true ) // true
-if( '-1' == true ) // true
-if( 'false' == true ) // true
-if( [] == false ) // true
 if( 0 == 'true' ) // true
-if( [] == null ) // true
-if( '0' == null ) // false
 if( 'null' == null ) // false
-if( 'false' == false ) // false
-if( '0' == false ) // true
+if( '0' == null ) // false
 if( '0' == true ) // false
+if( '0' == false ) // true
+if( 'false' == true ) // true
+if( 'false' == false ) // false
 if( new stdClass == true ) // true
+if( [] == false ) // true
+if( [] == null ) // true
 if( [''] == [] ) // false
 if( [''] == [0] ) // true
 if( 0 == '' ) // true
 if( 0 == ' ' ) // true
+if( -1 == true ) // true
+if( '-1' == true ) // true
 
 // this non-strict equality is symmetric, but not transitive:
 $a = ''; $b = 0; $c = 'oh';
