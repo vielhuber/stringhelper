@@ -71,7 +71,7 @@ if( __nx(@$var) )
 
 ### equality
 ```php
-// php has a lot of pitfalls, when comparing loosely:
+// php has a lot of pitfalls, when comparing loosely
 if( 0 == 'true' ) // true
 if( 0 == 'str' ) // true
 if( 'null' == null ) // false
@@ -90,7 +90,7 @@ if( 0 == ' ' ) // true
 if( -1 == true ) // true
 if( '-1' == true ) // true
 
-// this non-strict equality is symmetric, but not transitive:
+// this non-strict equality is symmetric, but not transitive
 $a = ''; $b = 0; $c = 'oh';
 $a == $b; // true
 $b == $c; // true
@@ -98,7 +98,7 @@ $c == $a; // false
 
 // to overcome this issue, we...
 
-// ...check for truthness / falsiness with these helper methods:
+// ...check for truthness / falsiness with these helper methods
 if( __true(@$var) )
 {
 
@@ -109,13 +109,13 @@ if( __false(@$var) )
 
 }
 
-// ...use strict comparison when possible:
+// ...use strict comparison when possible
 if( @$var === 'foo' )
 {
 
 }
 
-// ...use the loose comparison in all other cases:
+// ...use the loose comparison in all other cases
 if( $_GET['number'] == 1337 )
 {
 
