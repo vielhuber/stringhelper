@@ -1,7 +1,7 @@
 ## motivation
 tired of writing
 ```php
-if( isset($_GET['foo']) && $_GET['foo'] === '1' )
+if( isset($_POST['foo']) && $_POST['foo'] === '1' )
 {
 
 }
@@ -32,6 +32,8 @@ if( Person::find(1) !== null && Person::find(1)->getAddress() !== null && Person
 ```
 ?
 
+
+
 ## installation
 ```
 composer require vielhuber/stringhelper
@@ -57,13 +59,13 @@ composer dump-autoload
 ### existence
 ```php
 // check existence
-if( __x(@$var) )
+if( __x($var) )
 {
 
 }
 
 // check non existence
-if( __nx(@$var) )
+if( __nx($var) )
 {
 
 }
@@ -99,18 +101,18 @@ $c == $a; // false
 // to overcome this issue, we...
 
 // ...check for truthness / falsiness with these helper methods
-if( __true(@$var) )
+if( __true($var) )
 {
 
 }
 
-if( __false(@$var) )
+if( __false($var) )
 {
 
 }
 
 // ...use strict comparison when possible
-if( @$var === 'foo' )
+if( $var === 'foo' )
 {
 
 }
@@ -125,23 +127,42 @@ if( $_GET['number'] == 1337 )
 ### value
 ```php
 // get variable if exists, otherwise null
-__v( @$var )
+__v( $var )
 
 // get variable if exists, otherwise 'default'
-__v( @$var, 'default' )
+__v( $var, 'default' )
 
 // get first variable that exists, otherwise null
-__v( @$var1, @$var2, @$var3 )
+__v( $var1, $var2, $var3 )
 ```
 
 ### loop
 ```php
 // loop only if exists
-foreach( __i(@$array) as $array__key=>$array__value )
+foreach( __i($array) as $array__key=>$array__value )
 {
 
 }
 ```
+
+
+### @
+
+```php
+If you are unsure, if a variable exists beforehand, simply prefix it with the stfu-operator @:
+if( __x(@var) )
+if( __nx(@var) )
+if( __true(@var) )
+if( __false(@var) )
+if( @$var === 'foo' )
+if( @$_GET['number'] == 1337 )
+echo __v(@$var)
+foreach( __i(@$array) as $array__key=>$array__value)
+
+```
+<sub>A short note on the usage of @: In this concept we use @-operator that hides errors. We are aware of its potential misuse and also of its benefits. When using @$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. In both cases, we intentionally prevent the parser from stopping and catch the resulting null value. But be aware: Don't use it before function calls (@__x($a['undefined']).</sub>
+
+
 
 ### classes
 ```php
@@ -362,6 +383,11 @@ clean_up_get()
 clean_up_post()
 clean_up()
 
+// fetch post/get variables if they exist
+__get('foo') // null (because not set)
+__get('page_id') // '13'
+__post('foo') // bar
+
 // check if key is first/last key in foreach loop
 $arr = ['foo','bar'];
 foreach($arr as $arr__key=>$arr__value)
@@ -394,12 +420,12 @@ __highlight('that is a search string', 'is') // that <strong class="highlight">i
 __is_integer(8372468764378627868742367883268) // true (in comparison to is_int())
 
 // output arguments in a reader friendly way
-__o(@var)
-__o(@var1, @var2, @var3)
+__o(var)
+__o(var1, var2, var3)
 
 // same as __o but die afterwards
-__d(@var)
-__d(@var1, @var2, @var3)
+__d(var)
+__d(var1, var2, var3)
 
 // flatten multidimensional array (keys)
 __flatten_keys(['foo' => ['bar' => 'baz']]) // ['foo','bar']
@@ -418,10 +444,6 @@ __prg('https://test.de')
 __redirect()
 __redirect('https://test.de')
 ```
-
-### @
-
-A short note on the usage of @: In this concept we use the "stfu" operator @ that hides errors. We are aware of its potential misuse and also of its benefits. When using @$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. In both cases, we intentionally prevent the parser from stopping and catch the resulting null value. But be aware: Don't use it before function calls (@__x($a['undefined']).
 
 
 

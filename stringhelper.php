@@ -469,6 +469,24 @@ function clean_up()
     clean_up_post();
 }
 
+function __get($var)
+{
+    if( __nx(@$_GET[$var]) )
+    {
+        return null;
+    }
+    return $_GET[$var];
+}
+
+function __post($var)
+{
+    if( __nx(@$_POST[$var]) )
+    {
+        return null;
+    }
+    return $_POST[$var];
+}
+
 function __expl($separator = ' ', $array = [], $pos = 0)
 {
     return current(array_slice(explode($separator,$array), $pos, 1));
