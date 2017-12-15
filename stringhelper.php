@@ -230,9 +230,18 @@ function __is_serialized($string)
 
 function __is_integer($input)
 {
-    if( __nx(@$input) ) { return false; }
-    if( is_int($input) ) { return true; }
-    if( is_numeric($input) && ($input != (string)(float)$input) ) { return true; }
+    if( __nx(@$input) )
+    {
+        return false;
+    }
+    if( is_int($input) )
+    {
+        return true;
+    }
+    if( is_numeric($input) && ($input != (string)(float)$input) )
+    {
+        return true;
+    }
     return false;
 }
 
@@ -503,7 +512,8 @@ function __rand($array)
 
 
 
-/* LEGACY */
+/* LEGACY CODE */
+
 // same as __v
 function __f(...$args)
 {
