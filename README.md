@@ -149,7 +149,8 @@ foreach( __i($array) as $array__key=>$array__value )
 ### @
 
 ```php
-// If you are unsure, if a variable is even set before checking its existence, simply prefix it with the stfu-operator @:
+// if you are unsure, if a variable is even set before checking its existence,
+// simply prefix it with the stfu-operator @
 if( __x(@var) )
 if( __nx(@var) )
 if( __true(@var) )
