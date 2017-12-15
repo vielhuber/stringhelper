@@ -381,7 +381,7 @@ __strposx('foo', 'bar foo baz foobar')) // [4,13]
 // find nth occurence of substring in string
 __strposnth('foo', 'bar foo baz foobar', 2)) // 13
 
-// clean up post/get using filter_var_array
+// clean up post/get from malicious content using filter_var_array
 clean_up_get()
 clean_up_post()
 clean_up()
@@ -395,10 +395,10 @@ __post('foo') // bar
 
 // check if key is first/last key in foreach loop
 $arr = ['foo','bar'];
-foreach($arr as $arr__key=>$arr__value)
+foreach($array as $array__key=>$array__value)
 {
-    if( __fkey($arr__key, $arr) ) { }
-    if( __lkey($arr__key, $arr) ) { }
+    if( __fkey($array__key, $array) ) { }
+    if( __lkey($array__key, $array) ) { }
 }
 
 // get last item of array
@@ -425,12 +425,12 @@ __highlight('that is a search string', 'is') // that <strong class="highlight">i
 __is_integer(8372468764378627868742367883268) // true (in comparison to is_int())
 
 // output arguments in a reader friendly way
-__o(var)
-__o(var1, var2, var3)
+__o($var)
+__o($var1, $var2, $var3)
 
 // same as __o but die afterwards
-__d(var)
-__d(var1, var2, var3)
+__d($var)
+__d($var1, $var2, $var3)
 
 // flatten multidimensional array (keys)
 __flatten_keys(['foo' => ['bar' => 'baz']]) // ['foo','bar']
