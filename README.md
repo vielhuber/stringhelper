@@ -97,16 +97,6 @@ $c == $a; // false
 
 // to overcome this issue, we...
 
-// ...check for existence with the method introduced before:
-if( __x(@$var)
-{
-
-}
-if( __nx(@$var) )
-{
-
-}
-
 // ...check for truthness / falsiness with these helper methods:
 if( __true(@$var) )
 {
@@ -146,7 +136,7 @@ __v( @$var1, @$var2, @$var3 )
 ### loop
 ```php
 // loop only if exists
-foreach( __i(@$var) as $key=>$value )
+foreach( __i(@$array) as $array__key=>$array__value )
 {
 
 }
