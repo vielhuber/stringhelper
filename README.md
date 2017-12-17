@@ -151,10 +151,10 @@ foreach( __i($array) as $array__key=>$array__value )
 ```php
 // if you are unsure, if a variable is even set before checking its existence,
 // simply prefix it with the stfu-operator @
-if( __x(@var) )
-if( __nx(@var) )
-if( __true(@var) )
-if( __false(@var) )
+if( __x(@$var) )
+if( __nx(@$var) )
+if( __true(@$var) )
+if( __false(@$var) )
 if( @$var === 'foo' )
 if( @$_GET['number'] == 1337 )
 echo __v(@$var)
@@ -376,25 +376,13 @@ __extract('<a href="#foo">bar</a>','href="','">') // #foo
 __extract('<a href="#foo">bar</a>','">','</a') // bar
 
 // find all occurences of substring in string
-__strposx('foo', 'bar foo baz foobar')) // [4,13]
+__strposx('bar foo baz foobar', 'foo') // [4,12]
 
 // find nth occurence of substring in string
-__strposnth('foo', 'bar foo baz foobar', 2)) // 13
-
-// clean up post/get from malicious content using filter_var_array
-clean_up_get()
-clean_up_post()
-clean_up()
-
-// fetch post/get variables if they exist
-$_GET = ['page_id' => '13'];
-$_POST = ['foo' => 'bar'];
-__get('foo') // null (because not set)
-__get('page_id') // '13'
-__post('foo') // bar
+__strposnth('bar foo baz foobar', 'foo', 2) // 12
 
 // check if key is first/last key in foreach loop
-$arr = ['foo','bar'];
+$array = ['foo','bar'];
 foreach($array as $array__key=>$array__value)
 {
     if( __fkey($array__key, $array) ) { }
@@ -408,7 +396,7 @@ __last(['foo', 'bar', 'baz']) // 'baz'
 __first(['foo', 'bar', 'baz']) // 'foo'
 
 // get random element from array
-__first(['foo', 'bar', 'baz']) // 'bar'
+__rand(['foo', 'bar', 'baz']) // 'bar'
 
 // check if item can be looped (is a non empty array, object or collection)
 __can_be_looped([1,2]) // true
@@ -416,7 +404,7 @@ __can_be_looped((object)[1,2]) // true
 __can_be_looped([]) // false
 
 // removes recursively all items from array or object or collection that are considered empty
-__remove_empty([0 => ['foo',null,''], null) // [0 => ['foo']]
+__remove_empty([0 => ['foo',null,''], null]) // [0 => ['foo']]
 
 // highlight strings
 __highlight('that is a search string', 'is') // that <strong class="highlight">is</strong> a search string
@@ -448,6 +436,19 @@ __prg('https://test.de')
 // redirect via html
 __redirect() // to current url without get arguments
 __redirect('https://test.de')
+
+$_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
+$_POST = ['foo' => 'bar', 42 => "\0"];
+
+// fetch post/get variables if they exist
+__get('foo') // null (because not set)
+__get('page_id') // '13'
+__post('foo') // bar
+
+// clean up post/get from malicious content using filter_var_array
+clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
+clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
+clean_up() // same as clean_up_get() and clean_up_post()
 ```
 
 

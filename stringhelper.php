@@ -451,7 +451,10 @@ function clean_up_get()
 {
     if( __x(@$_GET) )
     {
-        filter_var_array($_GET, FILTER_SANITIZE_STRING);
+        foreach($_GET as $key=>$value)
+        {
+            $_GET[$key] = filter_var($value, FILTER_SANITIZE_STRING);
+        }
     }
 }
 
@@ -459,7 +462,10 @@ function clean_up_post()
 {
     if( __x(@$_POST) )
     {
-        filter_var_array($_POST, FILTER_SANITIZE_STRING);
+        foreach($_POST as $key=>$value)
+        {
+            $_POST[$key] = filter_var($value, FILTER_SANITIZE_STRING);
+        }
     }
 }
 
