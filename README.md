@@ -302,12 +302,14 @@ foreach( Person::find(1)->getAddress()->getCountry() as $value )
 ```php
 // set
 __cookie_set('cookie_name', 'cookie_value', 7) // set cookie for 7 days
+__cookie_set('cookie_name2', ['can also', 'store', 'arrays'], 7);
 
 // existence
 __cookie_exists('cookie_name') // true
 
 // get
 __cookie_get('cookie_name') // 'cookie_value'
+__cookie_get('cookie_name2') // ['can also', 'store', 'arrays']
 
 // delete
 __cookie_delete('cookie_name')

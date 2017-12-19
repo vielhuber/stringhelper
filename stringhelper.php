@@ -130,15 +130,27 @@ function __cookie_exists($cookie_name)
 
 function __cookie_get($cookie_name)
 {
+    $return = null;
     if( !__cookie_exists(@$cookie_name) )
     {
-        return null;
+        return $return;
     }
-    return $_COOKIE[$cookie_name];
+    $return = $_COOKIE[$cookie_name];
+    $return = stripslashes($return);
+    if( __is_serialized($return) )
+    {
+        $return = unserialize($return);
+
+    }
+    return $return;
 }
 
 function __cookie_set($cookie_name, $cookie_value, $days)
 {
+    if( is_array($cookie_value) )
+    {
+        $cookie_value = serialize($cookie_value);
+    }
     setcookie($cookie_name, $cookie_value, time()+60*60*24*$days, '/');
     // immediately set it for current request
     $_COOKIE[$cookie_name] = $cookie_value;

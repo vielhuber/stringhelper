@@ -165,6 +165,9 @@ class Test extends \PHPUnit\Framework\TestCase
         @__cookie_delete('cookie_name');
         $this->assertSame( __cookie_exists('cookie_name'), false );
         $this->assertSame( __cookie_get('cookie_name'), null );
+        @__cookie_set('cookie_name', [1, '42'], 7);
+        $this->assertSame( __cookie_exists('cookie_name'), true );
+        $this->assertSame( __cookie_get('cookie_name'), [1, '42'] );
     }
 
     function test__helpers()
