@@ -188,6 +188,11 @@ function __strip_nondigit($string)
     return preg_replace('/[^0-9]/', '', $string);
 }
 
+function __strip_whitespace($string)
+{
+    return preg_replace('/\s+/', '', $string);
+}
+
 function __o(...$data)
 {
     if( __x(@$data) )

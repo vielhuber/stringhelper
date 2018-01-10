@@ -374,6 +374,10 @@ __strip_numeric('the answer is 42.00') // the answer is
 // strip non-digit (all except 0-9)
 __strip_nondigit('the answer is 42') // 42
 
+// strip whitespace
+__strip_whitespace('the answer is 42') // theansweris42
+__strip_whitespace('the     answeris42') // theansweris42
+
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
 __is_serialized('idkfa') // false
