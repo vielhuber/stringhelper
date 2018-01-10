@@ -168,9 +168,19 @@ function __strip($string, $length = 50, $dots = '...')
     return rtrim(mb_substr($string, 0, $length)).$dots;
 }
 
+function __strip_numeric($string)
+{
+    return preg_replace('/[0-9,.]/', '', $string);  
+}
+
 function __strip_nonnumeric($string)
 {
     return preg_replace('/[^0-9,.]/', '', $string);  
+}
+
+function __strip_digit($string)
+{
+    return preg_replace('/[0-9]/', '', $string);
 }
 
 function __strip_nondigit($string)

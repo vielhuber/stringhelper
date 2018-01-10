@@ -362,8 +362,14 @@ __random_string(16, 'idkfa') // idifafafifaifafk
 // strip string
 __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.', 12) // Lorem ipsum...
 
+// strip numeric (0-9.,)
+__strip_numeric('the answer is 42.00') // the answer is 
+
 // strip non-numeric (all except 0-9.,)
 __strip_nonnumeric('the answer is 42.00') // 42.00
+
+// strip digit (0-9)
+__strip_numeric('the answer is 42.00') // the answer is 
 
 // strip non-digit (all except 0-9)
 __strip_nondigit('the answer is 42') // 42
