@@ -378,6 +378,11 @@ __strip_nondigit('the answer is 42') // 42
 __strip_whitespace('the answer is 42') // theansweris42
 __strip_whitespace('the     answeris42') // theansweris42
 
+// split string by new line
+__split_newline('foo
+bar
+baz') // ['foo','bar','baz']
+
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
 __is_serialized('idkfa') // false

@@ -193,6 +193,11 @@ function __strip_whitespace($string)
     return preg_replace('/\s+/', '', $string);
 }
 
+function __split_newline($string)
+{
+    return preg_split('/\r\n|\n|\r/', $string);
+}
+
 function __o(...$data)
 {
     if( __x(@$data) )
