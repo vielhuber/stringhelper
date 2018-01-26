@@ -116,7 +116,18 @@ function __true($val)
 
 function __false($val)
 {
-    return !__true(@$val);
+    if( $val === null ) { return false; }
+    if( $val === false ) { return true; }
+    if( $val === [] ) { return false; }
+    if( $val === [''] ) { return false; }
+    if( $val === 0 ) { return true; }
+    if( $val === '0' ) { return true; }
+    if( $val === '' ) { return false; }
+    if( $val === ' ' ) { return false; }
+    if( $val === 'null' ) { return false; }
+    if( $val === 'false' ) { return true; }
+    if( is_object($val) && empty((array)$val) ) { return false; }
+    return false;
 }
 
 function __cookie_exists($cookie_name)

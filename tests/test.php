@@ -79,27 +79,27 @@ class Test extends \PHPUnit\Framework\TestCase
 
     function test__false()
     {
-        $this->assertTrue(__false(null));
+        $this->assertFalse(__false(null));
         $this->assertTrue(__false(false));
         $this->assertFalse(__false(true));
-        $this->assertTrue(__false([]));
-        $this->assertTrue(__false(['']));
+        $this->assertFalse(__false([]));
+        $this->assertFalse(__false(['']));
         $this->assertTrue(__false(0));
         $this->assertFalse(__false(1));
         $this->assertFalse(__false(-1));
         $this->assertTrue(__false('0'));
         $this->assertFalse(__false('1'));
         $this->assertFalse(__false('-1'));
-        $this->assertTrue(__false(''));
-        $this->assertTrue(__false(' '));
-        $this->assertTrue(__false('null'));
+        $this->assertFalse(__false(''));
+        $this->assertFalse(__false(' '));
+        $this->assertFalse(__false('null'));
         $this->assertTrue(__false('false'));
         $this->assertFalse(__false('true'));
         $this->assertFalse(__false('str'));
         $this->assertFalse(__false([0,1]));
         $this->assertFalse(__false([0]));
-        $this->assertTrue(__false(new stdClass));
-        $this->assertTrue(__false(@$_GET['undefined']));
+        $this->assertFalse(__false(new stdClass));
+        $this->assertFalse(__false(@$_GET['undefined']));
     }
 
     function test__v()
