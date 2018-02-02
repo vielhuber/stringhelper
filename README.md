@@ -425,7 +425,22 @@ __can_be_looped((object)[1,2]) // true
 __can_be_looped([]) // false
 
 // removes recursively all items from array or object or collection that are considered empty
-__remove_empty([0 => ['foo',null,''], null]) // [0 => ['foo']]
+__remove_empty([0 => ['foo',null,''], null, 2 => [['',''],[null]]]) // [0 => ['foo']]
+
+// turn values of array "inside out"
+// this is useful when working with html forms
+<tr><input type="text" name="data[option1][]" /><input type="text" name="data[option2][]" /></tr>
+<tr><input type="text" name="data[option1][]" /><input type="text" name="data[option2][]" /></tr>
+<tr><input type="text" name="data[option1][]" /><input type="text" name="data[option2][]" /></tr>
+<tr><input type="text" name="data[option1][]" /><input type="text" name="data[option2][]" /></tr>
+__inside_out_values([
+    'option1' => [0 => 'foo', 1 => 'bar', 2 => 'baz', 3 => ''],
+    'option2' => [0 => 'bar', 1 => 'baz', 2 => 'foo', 3 => null]
+]) // [
+    0 => ['option1' => 'foo','option2' => 'bar'],
+    1 => ['option1' => 'bar','option2' => 'baz'],
+    2 => ['option1' => 'baz','option2' => 'foo']
+]
 
 // highlight strings
 __highlight('that is a search string', 'is') // that <strong class="highlight">is</strong> a search string

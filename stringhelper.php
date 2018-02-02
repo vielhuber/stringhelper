@@ -381,7 +381,15 @@ function __remove_empty($a)
         {
             if(__can_be_looped(@$a__value))
             {
-                $a->put($a__key, __remove_empty(@$a__value));
+                $result = __remove_empty(@$a__value);
+                if( __nx($result) )
+                {
+                    $a->forget($a__key);
+                }
+                else
+                {
+                    $a->put($a__key, $result);
+                }
             }
             elseif( __nx(@$a__value) )
             {
@@ -395,7 +403,15 @@ function __remove_empty($a)
         {
             if(__can_be_looped(@$a__value))
             {
-                $a[$a__key] = __remove_empty(@$a__value);
+                $result = __remove_empty(@$a__value);
+                if( __nx($result) )
+                {
+                    unset($a[$a__key]);
+                }
+                else
+                {
+                    $a[$a__key] = $result;
+                }
             }
             elseif( __nx(@$a__value) )
             {
@@ -409,7 +425,15 @@ function __remove_empty($a)
         {
             if(__can_be_looped(@$a__value))
             {
-                $a->{$a__key} = __remove_empty(@$a__value);
+                $result = __remove_empty(@$a__value);
+                if( __nx($result) )
+                {
+                    unset($a->{$a__key});
+                }
+                else
+                {
+                    $a->{$a__key} = $result;
+                }
             }
             elseif( __nx(@$a__value) )
             {
@@ -595,6 +619,34 @@ function __flatten_values($array)
 {
     $return = [];
     array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+    return $return;
+}
+
+function __inside_out_values($array)
+{
+    if( __nx($array) || !is_array($array) )
+    {
+        return false;
+    }
+    if( empty($array) )
+    {
+        return [];
+    }
+    $first_key = null;
+    foreach($array as $array__key=>$array__value)
+    {
+        $first_key = $array__key;
+        break;
+    }
+    $return = [];
+    foreach($array[$first_key] as $array__index=>$array__value)
+    {
+        foreach($array as $array__field=>$array__data)
+        {
+            $return[$array__index][$array__field] = $array[$array__field][$array__index];
+        }
+    }
+    $return = __remove_empty($return);
     return $return;
 }
 

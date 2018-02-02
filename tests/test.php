@@ -231,12 +231,30 @@ baz'), ['foo','bar','baz'] );
         $this->assertSame( __can_be_looped((object)[1,2]), true );
         $this->assertSame( __can_be_looped([]), false );
 
-        $this->assertSame( __remove_empty([0 => ['foo',null,''], null]), [0 => ['foo']] );
+        $this->assertSame( __remove_empty([0 => ['foo',null,''], null, 2 => [['',''],[null]]]), [0 => ['foo']] );
         $this->assertSame( __highlight('that is a search string', 'is'), 'that <strong class="highlight">is</strong> a search string' );
         $this->assertSame( __is_integer(8372468764378627868742367883268), true );
         $this->assertSame( __flatten_keys(['foo' => ['bar' => 'baz']]), ['foo','bar'] );
         $this->assertSame( __flatten_values(['foo' => 'bar', 'bar' => ['baz', 'foo']]), ['bar','baz','foo'] );
         $this->assertSame( __expl(' ', 'foo bar baz', 1), 'bar' );
+
+        $this->assertSame( __inside_out_values([
+            'field1' => [0 => 'foo', 1 => 'bar', 2 => 'baz', 3 => ''],
+            'field2' => [0 => 'bar', 1 => 'baz', 2 => 'foo', 3 => null]
+        ]), [
+            0 => [
+                'field1' => 'foo',
+                'field2' => 'bar'
+            ],
+            1 => [
+                'field1' => 'bar',
+                'field2' => 'baz'
+            ],
+            2 => [
+                'field1' => 'baz',
+                'field2' => 'foo'
+            ]
+        ]);
 
         $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
         $_POST = ['foo' => 'bar', 42 => "\0"];
