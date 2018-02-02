@@ -643,7 +643,10 @@ function __inside_out_values($array)
     {
         foreach($array as $array__field=>$array__data)
         {
-            $return[$array__index][$array__field] = $array[$array__field][$array__index];
+            if( __x( @$array[$array__field][$array__index] ) )
+            {
+                $return[$array__index][$array__field] = $array[$array__field][$array__index];
+            }
         }
     }
     $return = __remove_empty($return);
