@@ -490,6 +490,10 @@ __post('foo') // bar
 clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
 clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
 clean_up() // same as clean_up_get() and clean_up_post()
+
+// do curl requests (get/post)
+__curl('https://httpbin.org/anything'); // { "method": "GET", ... }
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); // { "method": "POST", "data": {"foo": "bar"}, ... }
 ```
 
 

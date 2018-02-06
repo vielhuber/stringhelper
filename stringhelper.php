@@ -686,10 +686,55 @@ function __rand($array)
     return $array[array_rand($array)];
 }
 
+function __curl($url, $data = null, $method = null)
+{
+    // guess method based on data
+    if( $method === null )
+    {
+        if( __nx($data) )
+        {
+            $method = 'GET';
+        }
+        else
+        {
+            $method = 'POST';
+        }
+    }
+    if( $method == 'GET' && __x($data) )
+    {
+        $url .= '?'.http_build_query($data);
+    }
 
-
-
-
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); // don't verify certificate 
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2); 
+    if( $method == 'GET' )
+    {
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_HEADER, false);
+    }
+    if( $method == 'POST' )
+    {
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_POST, 1);
+        if( __x($data) )
+        {
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Content-Length: '.strlen(json_encode($data))
+            ]);
+        }
+    }
+    $result = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+    $result = json_decode($result);
+    return (object)['result' => $result, 'status' => $status];
+}
 
 /* LEGACY CODE */
 
