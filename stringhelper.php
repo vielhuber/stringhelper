@@ -686,7 +686,7 @@ function __rand($array)
     return $array[array_rand($array)];
 }
 
-function __curl($url, $data = null, $method = null)
+function __curl($url, $data = null, $method = null, $headers = null)
 {
     // guess method based on data
     if( $method === null )
@@ -704,17 +704,34 @@ function __curl($url, $data = null, $method = null)
     {
         $url .= '?'.http_build_query($data);
     }
-
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); // don't verify certificate 
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2); 
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+    /* prepare headers */
+    $curl_headers = [];
+    if( $method == 'POST' && __x($data) )
+    {
+        $curl_headers[] = 'Content-Type: application/json';
+        $curl_headers[] = 'Content-Length: '.strlen(json_encode($data));
+    }
+    foreach(__i($headers) as $headers__key=>$headers__value)
+    {
+        $curl_headers[] = $headers__key.': '.$headers__value;
+    }
+    if( __nx($curl_headers) )
+    {
+        curl_setopt($curl, CURLOPT_HEADER, false);
+    }
+    else
+    {
+        curl_setopt($curl, CURLOPT_HTTPHEADER, (__nx($curl_headers)?(false):($curl_headers)));
+    }
     if( $method == 'GET' )
     {
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_HEADER, false);
     }
     if( $method == 'POST' )
     {
@@ -723,10 +740,6 @@ function __curl($url, $data = null, $method = null)
         if( __x($data) )
         {
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($curl, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Content-Length: '.strlen(json_encode($data))
-            ]);
         }
     }
     $result = curl_exec($curl);

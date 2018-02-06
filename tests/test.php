@@ -261,6 +261,8 @@ baz'), ['foo','bar','baz'] );
         $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST');
         $this->assertSame($response->result->method, 'POST');
         $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
+        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']);
+        $this->assertSame($response->result->headers->Bar, 'baz');
 
         $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
         $_POST = ['foo' => 'bar', 42 => "\0"];

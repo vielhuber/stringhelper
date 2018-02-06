@@ -494,6 +494,7 @@ clean_up() // same as clean_up_get() and clean_up_post()
 // do curl requests (get/post)
 __curl('https://httpbin.org/anything'); // { "method": "GET", ... }
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); // { "method": "POST", "data": {"foo": "bar"}, ... }
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); // { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }
 ```
 
 
