@@ -749,6 +749,11 @@ function __curl($url, $data = null, $method = null, $headers = null)
     return (object)['result' => $result, 'status' => $status];
 }
 
+function __exception($message = '')
+{
+    throw new \Exception($message);
+}
+
 /* LEGACY CODE */
 
 // same as __v

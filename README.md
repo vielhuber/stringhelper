@@ -478,6 +478,10 @@ __prg('https://test.de')
 __redirect() // to current url without get arguments
 __redirect('https://test.de')
 
+// throw exceptions
+try { __exception('foo'); }
+catch(Exception $e) { $e->getMessage() // 'foo' }
+
 $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
 $_POST = ['foo' => 'bar', 42 => "\0"];
 
