@@ -754,6 +754,16 @@ function __exception($message = '')
     throw new \Exception($message);
 }
 
+function __success($message = '')
+{
+    return (object)['success' => true, 'message' => $message];
+}
+
+function __error($message = '')
+{
+    return (object)['success' => false, 'message' => $message];
+}
+
 /* LEGACY CODE */
 
 // same as __v

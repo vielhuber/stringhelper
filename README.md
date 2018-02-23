@@ -478,9 +478,13 @@ __prg('https://test.de')
 __redirect() // to current url without get arguments
 __redirect('https://test.de')
 
-// throw exceptions
+// throw exceptions (of type Exception)
 try { __exception('foo'); }
 catch(Exception $e) { $e->getMessage() // 'foo' }
+
+// success/error return values
+return __success() // { success: true, message: '' }
+return __error('missing data') // { success: false, message: 'missing data' }
 
 $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
 $_POST = ['foo' => 'bar', 42 => "\0"];

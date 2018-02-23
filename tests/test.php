@@ -273,6 +273,11 @@ baz'), ['foo','bar','baz'] );
             $this->assertSame('foo',$e->getMessage());
         }
 
+        $this->assertEquals( __success(), ((object)['success' => true, 'message' => '']) );
+        $this->assertEquals( __success('foo'), (object)['success' => true, 'message' => 'foo'] );
+        $this->assertEquals( __error(), (object)['success' => false, 'message' => ''] );
+        $this->assertEquals( __error('bar'), (object)['success' => false, 'message' => 'bar'] );
+
         $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
         $_POST = ['foo' => 'bar', 42 => "\0"];
         $this->assertSame( __get('foo'), null );
