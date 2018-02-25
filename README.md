@@ -483,8 +483,11 @@ try { __exception('foo'); }
 catch(Exception $e) { $e->getMessage() // 'foo' }
 
 // success/error return values
-return __success() // { success: true, message: '' }
-return __error('missing data') // { success: false, message: 'missing data' }
+__success() // { success: true, message: '' }
+__error('missing data') // { success: false, message: 'missing data' }
+
+// get current os
+__os() // ['windows','mac','linux']
 
 $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
 $_POST = ['foo' => 'bar', 42 => "\0"];

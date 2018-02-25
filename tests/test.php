@@ -278,6 +278,8 @@ baz'), ['foo','bar','baz'] );
         $this->assertEquals( __error(), (object)['success' => false, 'message' => ''] );
         $this->assertEquals( __error('bar'), (object)['success' => false, 'message' => 'bar'] );
 
+        $this->assertSame( in_array(__os(), ['windows','mac','linux','unknown']), true );
+
         $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
         $_POST = ['foo' => 'bar', 42 => "\0"];
         $this->assertSame( __get('foo'), null );

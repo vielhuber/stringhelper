@@ -764,6 +764,14 @@ function __error($message = '')
     return (object)['success' => false, 'message' => $message];
 }
 
+function __os()
+{
+    if( stristr(PHP_OS, 'DAR') ) { return 'mac'; }
+    if( stristr(PHP_OS, 'WIN') ) { return 'windows'; }
+    if( stristr(PHP_OS, 'LINUX') ) { return 'linux'; }
+    return 'unknown';
+}
+
 /* LEGACY CODE */
 
 // same as __v
