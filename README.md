@@ -489,6 +489,9 @@ __error('missing data') // { success: false, message: 'missing data' }
 // get current os
 __os() // ['windows','mac','linux']
 
+// get current url
+__url() // https://github.com/vielhuber/stringhelper
+
 $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
 $_POST = ['foo' => 'bar', 42 => "\0"];
 

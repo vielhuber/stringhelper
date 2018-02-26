@@ -772,6 +772,15 @@ function __os()
     return 'unknown';
 }
 
+function __url()
+{
+    if( __nx(@$_SERVER['HTTP_HOST']) || __nx(@$_SERVER['REQUEST_URI']) )
+    {
+        return null;
+    }
+    return 'http'.((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+}
+
 /* LEGACY CODE */
 
 // same as __v
