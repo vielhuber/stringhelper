@@ -515,7 +515,7 @@ __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz'
 
 ### js implementation
 
-there is also a javascript implemenation [stringhelperjs](https://github.com/vielhuber/stringhelperjs) with similiar functions available.
+there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp) with similiar functions available.
 
 
 ### existence matrix
