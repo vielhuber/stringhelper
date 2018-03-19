@@ -781,6 +781,67 @@ function __url()
     return 'http'.((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 }
 
+function __char_to_int($letters)
+{
+    $num = 0;
+    $arr = array_reverse(str_split($letters));
+    for($i = 0; $i < count($arr); $i++)
+    {
+        $num += (ord(strtolower($arr[$i])) - 96) * (pow(26,$i));
+    }
+    return $num;
+}
+
+function __int_to_char($num)
+{
+    $letters = '';
+    while ($num > 0)
+    {
+        $code = ($num % 26 == 0) ? 26 : $num % 26;
+        $letters .= chr($code + 64);
+        $num = ($num - $code) / 26;
+    }
+    return strtoupper(strrev($letters));
+}
+
+function __inc_char($char, $shift = 1)
+{
+    return __int_to_char(__char_to_int($char)+$shift);
+}
+
+function __dec_char($char, $shift = 1)
+{
+    return __int_to_char(__char_to_int($char)-$shift);
+}
+
+function __log_begin($message = '')
+{
+    if(!isset($GLOBALS['performance']))
+    {
+        $GLOBALS['performance'] = [];
+    }
+    $GLOBALS['performance'][] = [
+        'message' => $message,
+        'time' => microtime(true)
+    ];
+}
+
+function __log_end($echo = true)
+{
+    $message = $GLOBALS['performance'][count($GLOBALS['performance'])-1]['message'];
+    $time = number_format((microtime(true)-$GLOBALS['performance'][count($GLOBALS['performance'])-1]['time']),5);
+    if( $echo === true )
+    {
+        echo 'script '.$message.' execution time: '.$time.' seconds'.PHP_EOL;
+    }
+    unset($GLOBALS['performance'][count($GLOBALS['performance'])-1]);
+    $GLOBALS['performance'] = array_values($GLOBALS['performance']);
+    return [
+        'message' => $message,
+        'time' => $time
+    ];
+}
+
 /* LEGACY CODE */
 
 // same as __v

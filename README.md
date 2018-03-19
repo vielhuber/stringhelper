@@ -509,6 +509,24 @@ clean_up() // same as clean_up_get() and clean_up_post()
 __curl('https://httpbin.org/anything'); // { "method": "GET", ... }
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); // { "method": "POST", "data": {"foo": "bar"}, ... }
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); // { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }
+
+// char helpers
+__char_to_int('D') // 4
+__int_to_char(4) // 'D'
+__inc_char('D') // 'E'
+__inc_char('Z') // 'AA'
+__inc_char('A',2) // 'C'
+__dec_char('U') // 'T'
+
+// measure performance
+__log_begin('task');
+for($i = 0; $i < 10000; $i++)
+{
+  __log_begin('childtask');
+  for($y = 0; $y < 100; $y++) { }
+  __log__end();
+}
+__log__end();
 ```
 
 

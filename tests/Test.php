@@ -291,6 +291,38 @@ baz'), ['foo','bar','baz'] );
         clean_up_post();
         $this->assertSame( $_GET, ['page_id' => '13', 'code' => 'Hello World!'] );
         $this->assertSame( $_POST, ['foo' => 'bar', 42 => ''] );
+
+        $this->assertSame( __char_to_int('D'), 4);
+        $this->assertSame( __char_to_int('d'), 4);
+        $this->assertSame( __char_to_int('A'), 1);
+        $this->assertSame( __char_to_int('Z'), 26);
+        $this->assertSame( __char_to_int('AA'), 27);
+        $this->assertSame( __int_to_char(4), 'D');
+        $this->assertSame( __int_to_char(1), 'A');
+        $this->assertSame( __int_to_char(26), 'Z');
+        $this->assertSame( __int_to_char(27), 'AA');
+        $this->assertSame( __inc_char('D'), 'E');
+        $this->assertSame( __inc_char('Z'), 'AA');
+        $this->assertSame( __inc_char('A',2), 'C');
+        $this->assertSame( __dec_char('U'), 'T');
+        $this->assertSame( __dec_char('U',2), 'S');
+        $this->assertSame( __dec_char('A'), '');
+
+        __log_begin('foo');
+        print_r($_GLOBALS['performance']);
+        $this->assertSame( $GLOBALS['performance'][0]['message'], 'foo' );
+        $this->assertSame( count($GLOBALS['performance']), 1 );
+        __log_begin('bar');
+        $this->assertSame( count($GLOBALS['performance']), 2 );
+        __log_begin('');
+        $this->assertSame( count($GLOBALS['performance']), 3 );
+        __log_end();
+        $this->assertSame( count($GLOBALS['performance']), 2 );
+        __log_end();
+        $this->assertSame( count($GLOBALS['performance']), 1 );
+        $this->assertSame( __log_end()['message'], 'foo' );
+        $this->assertSame( count($GLOBALS['performance']), 0 );
+
     }
 
 }
