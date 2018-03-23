@@ -456,10 +456,10 @@ __is_integer(8372468764378627868742367883268) // true (in comparison to is_int()
 // output arguments in a reader friendly way
 __o($var)
 __o($var1, $var2, $var3)
+__o('<strong>foo</strong>') // html codes are not parsed: array(1) { [0]=> string(32) "<strong>foo</strong>" }
 
 // same as __o but die afterwards
 __d($var)
-__d($var1, $var2, $var3)
 
 // flatten multidimensional array (keys)
 __flatten_keys(['foo' => ['bar' => 'baz']]) // ['foo','bar']

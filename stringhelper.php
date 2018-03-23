@@ -213,6 +213,15 @@ function __o(...$data)
 {
     if( __x(@$data) )
     {
+        if( !is_array($data) )
+        {
+            $data = [$data];
+        }
+        // prevent html parsing
+        array_walk_recursive($data, function(&$data__value)
+        {
+            $data__value = htmlspecialchars($data__value);
+        });
         foreach($data as $data__value)
         {
             if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
