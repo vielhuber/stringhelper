@@ -232,6 +232,15 @@ baz'), ['foo','bar','baz'] );
         $this->assertSame( __can_be_looped([]), false );
 
         $this->assertSame( __remove_empty([0 => ['foo',null,''], null, 2 => [['',''],[null]]]), [0 => ['foo']] );
+
+        $this->assertSame( __remove([0 => 'foo', 1 => 'bar', 2 => 'baz'], 1), [0 => 'foo', 1 => 'baz'] );
+        $this->assertSame( __remove(['foo' => 1, 'bar' => 2, 'baz' => 3], 'foo'), ['bar' => 2, 'baz' => 3] );
+        $this->assertSame( __remove([42 => 1, 'foo' => 2, 'bar' => 3], 'foo'), [42 => 1, 'bar' => 3] );
+        $this->assertSame( __remove([0 => 'foo', 'foobar' => 'bar', 2 => 'baz'], 'foobar'), [0 => 'foo', 1 => 'baz'] );
+        $this->assertSame( __remove([0 => 'foo', 1 => 'bar', 2 => 'baz'], 3), [0 => 'foo', 1 => 'bar', 2 => 'baz'] );
+        $this->assertEquals( __remove((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 1), (object)[0 => 'foo', 1 => 'baz'] );
+        $this->assertEquals( __remove((object)[42 => 1, 'foo' => 2, 'bar' => 3], 'foo'), (object)[42 => 1, 'bar' => 3] );
+
         $this->assertSame( __highlight('that is a search string', 'is'), 'that <strong class="highlight">is</strong> a search string' );
         $this->assertSame( __is_integer(8372468764378627868742367883268), true );
         $this->assertSame( __flatten_keys(['foo' => ['bar' => 'baz']]), ['foo','bar'] );

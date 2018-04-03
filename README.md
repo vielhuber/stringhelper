@@ -427,6 +427,11 @@ __can_be_looped([]) // false
 // removes recursively all items from array or object or collection that are considered empty
 __remove_empty([0 => ['foo',null,''], null, 2 => [['',''],[null]]]) // [0 => ['foo']]
 
+// remove item from array or object and fill up gaps (if numeric keys are available)
+__remove([0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // [0 => 'foo', 1 => 'baz']
+__remove(['foo' => 1, 'bar' => 2, 'baz' => 3], 'foo') // ['bar' => 2, 'baz' => 3]
+__remove((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // (object)[0 => 'foo', 1 => 'baz']
+
 // turn values of array "inside out"
 // this is useful when working with html forms
 /*

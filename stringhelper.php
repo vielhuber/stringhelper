@@ -456,6 +456,41 @@ function __remove_empty($a)
     return $a;
 }
 
+function __remove($arr, $key)
+{
+    if( __nx($arr) )
+    {
+        return $arr;
+    }
+    $was_object = false;
+    if( is_object($arr) )
+    {
+        $was_object = true;
+        $arr = (array)$arr;
+    }
+    if( is_array($arr) )
+    {
+        unset($arr[$key]);
+        $all_numeric = true;
+        foreach($arr as $arr__key=>$arr__value)
+        {
+            if( !is_numeric($arr__key) )
+            {
+                $all_numeric = false;
+            }
+        }
+        if( $all_numeric === true )
+        {
+            $arr = array_values($arr);
+        }
+    }
+    if( $was_object === true )
+    {
+        $arr = (object)$arr;
+    }
+    return $arr;
+}
+
 function __can_be_looped($a)
 {
     if( is_array($a) && !empty($a) ) { return true; }
