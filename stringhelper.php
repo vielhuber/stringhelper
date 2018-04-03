@@ -220,7 +220,10 @@ function __o(...$data)
         // prevent html parsing
         array_walk_recursive($data, function(&$data__value)
         {
-            $data__value = htmlspecialchars($data__value);
+            if( is_string($data__value) )
+            {
+                $data__value = htmlspecialchars($data__value);
+            }
         });
         foreach($data as $data__value)
         {
