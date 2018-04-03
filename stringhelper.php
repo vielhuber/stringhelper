@@ -456,11 +456,11 @@ function __remove_empty($a)
     return $a;
 }
 
-function __remove($arr, $key)
+function __remove(&$arr, $key)
 {
     if( __nx($arr) )
     {
-        return $arr;
+        return;
     }
     $was_object = false;
     if( is_object($arr) )
@@ -488,7 +488,7 @@ function __remove($arr, $key)
     {
         $arr = (object)$arr;
     }
-    return $arr;
+    return;
 }
 
 function __can_be_looped($a)
