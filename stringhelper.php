@@ -725,7 +725,7 @@ function __last($array)
 
 function __first($array)
 {
-    return $array[0];
+    return array_values(array_slice($array, 0, 1))[0];
 }
 
 function __rand($array)

@@ -415,6 +415,7 @@ __last(['foo', 'bar', 'baz']) // 'baz'
 
 // get first item of array
 __first(['foo', 'bar', 'baz']) // 'foo'
+__first(['foo' => 'bar', 'bar' => 'baz']) // 'bar'
 
 // get random element from array
 __rand(['foo', 'bar', 'baz']) // 'bar'
