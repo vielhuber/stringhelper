@@ -150,7 +150,7 @@ foreach( __i($array) as $array__key=>$array__value )
 ```
 
 
-### @
+### try
 
 ```php
 // if you are unsure, if a variable is even set before checking its existence,
@@ -528,10 +528,12 @@ __log__end();
 
 
 
-### js implementation
+## js implementation
 
 there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp) with similiar functions available.
 
+
+## appendix
 
 ### existence matrix
 
