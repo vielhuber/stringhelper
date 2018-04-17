@@ -7,6 +7,7 @@ function __x($input)
     if($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0 ) { return false; }
     if($input instanceof Illuminate\Support\Collection && $input->count() === 0 ) { return false; }
     if($input instanceof __empty_helper) { return false; }
+    if( __is_serialized($input) ) { return __x(unserialize($input)); }
     return true;
 }
 
@@ -111,6 +112,7 @@ function __true($val)
     if( $val === 'null' ) { return false; }
     if( $val === 'false' ) { return false; }
     if( is_object($val) && empty((array)$val) ) { return false; }
+    if( __is_serialized($val) ) { return __true(unserialize($val)); }
     return true;
 }
 
@@ -127,6 +129,7 @@ function __false($val)
     if( $val === 'null' ) { return false; }
     if( $val === 'false' ) { return true; }
     if( is_object($val) && empty((array)$val) ) { return false; }
+    if( __is_serialized($val) ) { return __false(unserialize($val)); }
     return false;
 }
 
@@ -328,7 +331,7 @@ function __random_string($length = 8, $chars = null)
 
 function __is_serialized($string)
 {
-    if( __nx(@$string) )
+    if( !is_string($string) || $string == '' )
     {
         return false;
     }

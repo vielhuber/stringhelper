@@ -23,6 +23,9 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertTrue(__x('str'));
         $this->assertTrue(__x([0,1]));
         $this->assertTrue(__x([0]));
+        $this->assertFalse(__x('a:0:{}'));
+        $this->assertTrue(__x('b:1;'));
+        $this->assertFalse(__x('b:0;'));
         $this->assertFalse(__x(new stdClass));
         $this->assertFalse(__x(@$_GET['undefined']));
     }
@@ -48,6 +51,9 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__nx('str'));
         $this->assertFalse(__nx([0,1]));
         $this->assertFalse(__nx([0]));
+        $this->assertTrue(__nx('a:0:{}'));
+        $this->assertFalse(__nx('b:1;'));
+        $this->assertTrue(__nx('b:0;'));
         $this->assertTrue(__nx(new stdClass));
         $this->assertTrue(__nx(@$_GET['undefined']));
     }
@@ -73,6 +79,9 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertTrue(__true('str'));
         $this->assertTrue(__true([0,1]));
         $this->assertTrue(__true([0]));
+        $this->assertFalse(__true('a:0:{}'));
+        $this->assertTrue(__true('b:1;'));
+        $this->assertFalse(__true('b:0;'));
         $this->assertFalse(__true(new stdClass));
         $this->assertFalse(__true(@$_GET['undefined']));
     }
@@ -98,6 +107,9 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__false('str'));
         $this->assertFalse(__false([0,1]));
         $this->assertFalse(__false([0]));
+        $this->assertFalse(__false('a:0:{}'));
+        $this->assertFalse(__false('b:1;'));
+        $this->assertTrue(__false('b:0;'));
         $this->assertFalse(__false(new stdClass));
         $this->assertFalse(__false(@$_GET['undefined']));
     }
@@ -210,6 +222,8 @@ class Test extends \PHPUnit\Framework\TestCase
 bar
 baz'), ['foo','bar','baz'] );
         $this->assertSame( __is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true );
+        $this->assertSame( __is_serialized(''), false );
+        $this->assertSame( __is_serialized(null), false );
         $this->assertSame( __is_serialized('idkfa'), false );
         $this->assertSame( __is_serialized('b:0;'), true );
         $this->assertSame( __extract('<a href="#foo">bar</a>','href="','">'), '#foo' );
