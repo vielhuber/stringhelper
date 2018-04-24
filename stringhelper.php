@@ -212,6 +212,16 @@ function __split_newline($string)
     return preg_split('/\r\n|\n|\r/', $string);
 }
 
+function __remove_emptylines($string)
+{
+    return preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $string);
+}
+
+function __remove_newlines($string)
+{
+    return preg_replace('~[\r\n]+~', '', $string);
+}
+
 function __o(...$data)
 {
     if( __x(@$data) )

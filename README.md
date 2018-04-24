@@ -378,6 +378,17 @@ __split_newline('foo
 bar
 baz') // ['foo','bar','baz']
 
+// remove empty lines
+__remove_emptylines('foo
+
+bar
+baz') // foo\nbar\nbaz
+
+// remove new lines
+__remove_newlines('foo
+bar
+baz') // foobarbaz
+
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
 __is_serialized('idkfa') // false
