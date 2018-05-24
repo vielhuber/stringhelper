@@ -827,7 +827,7 @@ function __error($message = '')
 function __os()
 {
     if( stristr(PHP_OS, 'DAR') ) { return 'mac'; }
-    if( stristr(PHP_OS, 'WIN') ) { return 'windows'; }
+    if( stristr(PHP_OS, 'WIN') || stristr(PHP_OS, 'CYGWIN') ) { return 'windows'; }
     if( stristr(PHP_OS, 'LINUX') ) { return 'linux'; }
     return 'unknown';
 }
