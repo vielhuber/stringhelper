@@ -56,6 +56,10 @@ class __empty_helper implements JsonSerializable
     {
         return null;
     }
+    public function __get($property)  
+    {  
+        return null;
+    }
 }
 
 function __empty()
