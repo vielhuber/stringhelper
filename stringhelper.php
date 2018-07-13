@@ -214,7 +214,7 @@ function __split_newline($string)
 
 function __remove_emptylines($string)
 {
-    return preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $string);
+    return preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", PHP_EOL, $string);
 }
 
 function __remove_newlines($string)
@@ -224,33 +224,30 @@ function __remove_newlines($string)
 
 function __o(...$data)
 {
-    if( __x(@$data) )
+    if( !is_array($data) )
     {
-        if( !is_array($data) )
+        $data = [$data];
+    }
+    // prevent html parsing
+    array_walk_recursive($data, function(&$data__value)
+    {
+        if( is_string($data__value) )
         {
-            $data = [$data];
+            $data__value = htmlspecialchars($data__value);
         }
-        // prevent html parsing
-        array_walk_recursive($data, function(&$data__value)
+    });
+    foreach($data as $data__value)
+    {
+        if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
         {
-            if( is_string($data__value) )
-            {
-                $data__value = htmlspecialchars($data__value);
-            }
-        });
-        foreach($data as $data__value)
-        {
-            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
-            {
-                echo '<pre>';
-            }
-            var_dump($data__value);
-            if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
-            {
-                echo '</pre>';
-            }
-            echo '<br/>';
+            echo '<pre>';
         }
+        var_dump($data__value);
+        if( is_array($data__value) || is_object($data__value) || ($data__value instanceof Traversable) )
+        {
+            echo '</pre>';
+        }
+        echo '<br/>';
     }
 }
 
