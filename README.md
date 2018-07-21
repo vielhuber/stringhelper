@@ -427,8 +427,9 @@ __can_be_looped([1,2]) // true
 __can_be_looped((object)[1,2]) // true
 __can_be_looped([]) // false
 
-// removes recursively all items from array or object or collection that are considered empty
-__remove_empty([0 => ['foo',null,''], null, 2 => [['',''],[null]]]) // [0 => ['foo']]
+// removes recursively all items from array or object or collection that are considered empty (indexes are not reindexed)
+__remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]]) // [0 => ['foo',0,'0']]
+__remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]], [0,'0']) // [0 => ['foo']]
 
 // remove item from array or object and fill up gaps (if numeric keys are available)
 __remove([0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // [0 => 'foo', 1 => 'baz']

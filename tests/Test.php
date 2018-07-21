@@ -249,7 +249,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( __can_be_looped((object)[1,2]), true );
         $this->assertSame( __can_be_looped([]), false );
 
-        $this->assertSame( __remove_empty([0 => ['foo',null,''], null, 2 => [['',''],[null]]]), [0 => ['foo']] );
+        $this->assertSame( __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]]), [0 => ['foo',0,'0']] );
+        $this->assertSame( __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]],[0,'0']), [0 => ['foo']] );
 
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz']; __remove($arr, 1); $this->assertSame($arr, [0 => 'foo', 1 => 'baz'] );
         $arr = ['foo' => 1, 'bar' => 2, 'baz' => 3]; __remove($arr, 'foo'); $this->assertSame($arr, ['bar' => 2, 'baz' => 3] );

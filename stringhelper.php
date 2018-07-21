@@ -399,7 +399,7 @@ function __strposnth($haystack, $needle, $index)
     return $positions[$index-1];
 }
 
-function __remove_empty($a)
+function __remove_empty($a, $additional = null)
 {
     if( ($a instanceof Illuminate\Database\Eloquent\Collection || $a instanceof Illuminate\Support\Collection) && $a->count() > 0 )
     {
@@ -407,7 +407,7 @@ function __remove_empty($a)
         {
             if(__can_be_looped(@$a__value))
             {
-                $result = __remove_empty(@$a__value);
+                $result = __remove_empty(@$a__value, $additional);
                 if( __nx($result) )
                 {
                     $a->forget($a__key);
@@ -417,7 +417,7 @@ function __remove_empty($a)
                     $a->put($a__key, $result);
                 }
             }
-            elseif( __nx(@$a__value) )
+            elseif( __nx(@$a__value) || ($additional !== null && in_array($a__value,$additional)) )
             {
                 $a->forget($a__key);
             }
@@ -429,7 +429,7 @@ function __remove_empty($a)
         {
             if(__can_be_looped(@$a__value))
             {
-                $result = __remove_empty(@$a__value);
+                $result = __remove_empty(@$a__value, $additional);
                 if( __nx($result) )
                 {
                     unset($a[$a__key]);
@@ -439,7 +439,7 @@ function __remove_empty($a)
                     $a[$a__key] = $result;
                 }
             }
-            elseif( __nx(@$a__value) )
+            elseif( __nx(@$a__value) || ($additional !== null && in_array($a__value,$additional, true)) )
             {
                 unset($a[$a__key]);
             }
@@ -451,7 +451,7 @@ function __remove_empty($a)
         {
             if(__can_be_looped(@$a__value))
             {
-                $result = __remove_empty(@$a__value);
+                $result = __remove_empty(@$a__value, $additional);
                 if( __nx($result) )
                 {
                     unset($a->{$a__key});
@@ -461,7 +461,7 @@ function __remove_empty($a)
                     $a->{$a__key} = $result;
                 }
             }
-            elseif( __nx(@$a__value) )
+            elseif( __nx(@$a__value) || ($additional !== null && in_array($a__value,$additional, true)) )
             {
                 unset($a->{$a__key});
             }
