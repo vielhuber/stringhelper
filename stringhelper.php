@@ -8,6 +8,7 @@ function __x($input)
     if($input instanceof Illuminate\Support\Collection && $input->count() === 0 ) { return false; }
     if($input instanceof __empty_helper) { return false; }
     if( __is_serialized($input) ) { return __x(unserialize($input)); }
+    if( json_encode($input) === '"\ufeff"' ) { return false; } // file_get_content of empty file
     return true;
 }
 
