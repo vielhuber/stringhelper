@@ -211,6 +211,10 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( mb_strlen(__random_string(10)), 10 );
         $this->assertSame( mb_strlen(__random_string(16, 'idkfa')), 16 );
 
+        $this->assertSame( __uuid() === __uuid(), false );
+        $this->assertSame( strlen(__uuid()) === 36, true );
+        $this->assertSame( substr_count(__uuid(),'-') === 4, true );
+
         $this->assertSame( __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.', 12), 'Lorem ipsum...' );
         $this->assertSame( __strip_numeric('the answer is 42.00'), 'the answer is ' );
         $this->assertSame( __strip_nonnumeric('the answer is 42.00'), '42.00' );

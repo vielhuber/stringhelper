@@ -354,6 +354,9 @@ __random_string() // edPhi34d
 __random_string(10) // abCa321aC6
 __random_string(16, 'idkfa') // idifafafifaifafk
 
+// generate uuid/guid v4
+__uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
+
 // strip string
 __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.', 12) // Lorem ipsum...
 
