@@ -338,9 +338,14 @@ __validate_email('david@vielhuber.de') // true
 // checks if a date is valid (in english and german format)
 __validate_date('29.02.2001') // false
 
-// returns null if date is invalid, otherwise formatted date
+// simple date helper
+__date('2000-01-01') // 2000-01-01
 __date('2000-01-01', 'd.m.Y') // 01.01.2000
-__date('2001-02-29', 'd.m.Y') // null
+__date('2001-02-29', 'd.m.Y') // null; returns null if date is invalid, otherwise formatted date
+__date('2000-01-01', null, '+6 months') // 2000-07-01; allows date modifications
+__date('2000-01-01', 'd.m.Y', '+6 months') // 01.07.2000
+__date(strtotime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts timestamps
+__date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
 
 // outputs a valid formatted value for input datetime-local
 __datetime('01.01.2000') // 2000-01-01T00:00

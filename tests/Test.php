@@ -201,8 +201,15 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( __validate_url('https://vielhuber.de'), true );
         $this->assertSame( __validate_email('david@vielhuber.de'), true );
         $this->assertSame( __validate_date('29.02.2001'), false );
+
+        $this->assertSame( __date('2000-01-01'), '2000-01-01' );
         $this->assertSame( __date('2000-01-01', 'd.m.Y'), '01.01.2000' );
         $this->assertSame( __date('2001-02-29', 'd.m.Y'), null );
+        $this->assertSame( __date('2000-01-01', null, '+6 months'), '2000-07-01' );
+        $this->assertSame( __date('2000-01-01', 'd.m.Y', '+6 months'), '01.07.2000' );
+        $this->assertSame( __date(strtotime('2000-01-01'), 'd.m.Y'), '01.01.2000' );
+        $this->assertSame( __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months'), '01.07.2000' );
+
         $this->assertSame( __datetime('01.01.2000'), '2000-01-01T00:00' );
         $this->assertSame( __datetime('01.01.2000 18:00'), '2000-01-01T18:00' );
         $this->assertSame( __slug('This string will be sanitized!'), 'this-string-will-be-sanitized' );

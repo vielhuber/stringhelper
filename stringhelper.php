@@ -651,10 +651,24 @@ function __redirect($url = null)
     die();
 }
 
-function __date($date, $format = 'Y-m-d')
+function __date($date, $format = null, $mod = null)
 {
-    if( !__validate_date(@$date) ) { return null; }
-    return date($format,strtotime($date));
+    if( is_numeric($date) )
+    {
+        $date = date('Y-m-d', $date);
+    }
+    if( __nx($format) )
+    {
+        $format = 'Y-m-d';
+    }
+    if( !__validate_date($date) )
+    {
+        return null;
+    }
+    return date(
+        $format,
+        strtotime( $date.(__x($mod)?(' '.$mod):('')) )
+    );
 }
 
 function __datetime($datetime)
