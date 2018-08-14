@@ -437,10 +437,10 @@ __array_to_object(['foo' => 'bar']) // {foo: 'bar'}
 __array_to_object(['foo','bar' => ['foo','bar']]) // {0: 'foo', bar: {0: 'foo', 1: 'bar'}}
 
 // convert object to array
-__array((object)['foo']) // ['foo']
-__array((object)['foo','bar']) // ['foo','bar']
-__array((object)['foo' => 'bar']) // ['foo': 'bar']
-__array((object)['foo','bar' => (object)['foo','bar']]) // ['foo','bar' => ['foo','bar']]
+__object_to_array((object)['foo']) // ['foo']
+__object_to_array((object)['foo','bar']) // ['foo','bar']
+__object_to_array((object)['foo' => 'bar']) // ['foo': 'bar']
+__object_to_array((object)['foo','bar' => (object)['foo','bar']]) // ['foo','bar' => ['foo','bar']]
 
 // convert variable to array
 __array() // []

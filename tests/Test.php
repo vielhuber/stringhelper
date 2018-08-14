@@ -264,10 +264,10 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertEquals( __array_to_object(['foo','bar']), (object)['foo','bar'] );
         $this->assertEquals( __array_to_object(['foo' => 'bar']), (object)['foo' => 'bar'] );
         $this->assertEquals( __array_to_object(['foo','bar' => ['foo','bar']]), (object)['foo','bar' => (object)['foo','bar']] );
-        $this->assertEquals( __array((object)['foo']), ['foo'] );
-        $this->assertEquals( __array((object)['foo','bar']), ['foo','bar'] );
-        $this->assertEquals( __array((object)['foo' => 'bar']), ['foo' => 'bar'] );
-        $this->assertEquals( __array((object)['foo','bar' => (object)['foo','bar']]), ['foo','bar' => ['foo','bar']] );
+        $this->assertEquals( __object_to_array((object)['foo']), ['foo'] );
+        $this->assertEquals( __object_to_array((object)['foo','bar']), ['foo','bar'] );
+        $this->assertEquals( __object_to_array((object)['foo' => 'bar']), ['foo' => 'bar'] );
+        $this->assertEquals( __object_to_array((object)['foo','bar' => (object)['foo','bar']]), ['foo','bar' => ['foo','bar']] );
 
         $this->assertEquals( __array(), [] );
         $this->assertEquals( __array('foo'), ['foo'] );
