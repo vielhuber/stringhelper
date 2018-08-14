@@ -232,7 +232,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( __split_newline('foo'.PHP_EOL.'bar'.PHP_EOL.'baz'), ['foo','bar','baz'] );
 
         $this->assertSame( __remove_emptylines('foo'.PHP_EOL.''.PHP_EOL.'bar'.PHP_EOL.'baz'), 'foo'.PHP_EOL.'bar'.PHP_EOL.'baz' );
-        $this->assertSame( __remove_newlines('foo'.PHP_EOL.'bar'.PHP_EOL.'baz'), 'foobarbaz' );
+        $this->assertSame( __remove_newlines('foo'.PHP_EOL.'bar<br/>'.PHP_EOL.'baz'), 'foobarbaz' );
 
         $this->assertSame( __is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true );
         $this->assertSame( __is_serialized(''), false );

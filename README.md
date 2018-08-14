@@ -394,7 +394,7 @@ baz') // foo\nbar\nbaz
 
 // remove new lines
 __remove_newlines('foo
-bar
+bar<br/>
 baz') // foobarbaz
 
 // check if string is serialized

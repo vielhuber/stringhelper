@@ -224,7 +224,9 @@ function __remove_emptylines($string)
 
 function __remove_newlines($string)
 {
-    return preg_replace('~[\r\n]+~', '', $string);
+    $string = preg_replace('~[\r\n]+~', '', $string); // remove nl
+    $string = str_ireplace(['<br/>','<br />','<br>'], '', $string); // remove brs
+    return $string;
 }
 
 function __o(...$data)
