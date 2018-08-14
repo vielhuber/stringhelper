@@ -514,6 +514,62 @@ function __can_be_looped($a)
     return false;
 }
 
+function __array($a = null)
+{
+    if( __nx($a) )
+    {
+        return [];
+    }
+    if( is_array($a) )
+    {
+        return __object_to_array(__array_to_object($a));
+    }
+    if( is_object($a) )
+    {
+        return __object_to_array($a);
+    }
+    return [$a];
+}
+
+function __object($a = null)
+{
+    if( __nx($a) )
+    {
+        return (object)[];
+    }
+    if( is_object($a) )
+    {
+        return __array_to_object(__object_to_array($a));
+    }
+    if( is_array($a) )
+    {
+        return __array_to_object($a);
+    }
+    return (object)[$a];
+}
+
+function __object_to_array($obj)
+{
+    return json_decode(json_encode($obj),true);
+}
+
+function __array_to_object($arr)
+{
+    $obj = new stdClass;
+    foreach($arr as $k => $v) {
+        if(strlen($k)) {
+            if(is_array($v)) {
+                $obj->{$k} = __array_to_object($v);
+            }
+            else
+            {
+                $obj->{$k} = $v;
+            }
+        }
+    }
+    return $obj;
+}
+
 function __highlight($string, $query, $strip = false, $strip_length = 500)
 {
     if( $strip === true )

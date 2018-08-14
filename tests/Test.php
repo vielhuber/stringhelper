@@ -260,6 +260,29 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( __can_be_looped((object)[1,2]), true );
         $this->assertSame( __can_be_looped([]), false );
 
+        $this->assertEquals( __array_to_object(['foo']), (object)['foo'] );
+        $this->assertEquals( __array_to_object(['foo','bar']), (object)['foo','bar'] );
+        $this->assertEquals( __array_to_object(['foo' => 'bar']), (object)['foo' => 'bar'] );
+        $this->assertEquals( __array_to_object(['foo','bar' => ['foo','bar']]), (object)['foo','bar' => (object)['foo','bar']] );
+        $this->assertEquals( __array((object)['foo']), ['foo'] );
+        $this->assertEquals( __array((object)['foo','bar']), ['foo','bar'] );
+        $this->assertEquals( __array((object)['foo' => 'bar']), ['foo' => 'bar'] );
+        $this->assertEquals( __array((object)['foo','bar' => (object)['foo','bar']]), ['foo','bar' => ['foo','bar']] );
+
+        $this->assertEquals( __array(), [] );
+        $this->assertEquals( __array('foo'), ['foo'] );
+        $this->assertEquals( __array(['foo']), ['foo'] );
+        $this->assertEquals( __array(['foo','bar']), ['foo','bar'] );
+        $this->assertEquals( __array((object)['foo','bar']), ['foo','bar'] );
+        $this->assertEquals( __array((object)['foo','bar' => (object)['foo','bar']]), ['foo','bar' => ['foo','bar']] );
+        $this->assertEquals( __object(), (object)[] );
+        $this->assertEquals( __object('foo'), (object)['foo'] );
+        $this->assertEquals( __object(['foo']), (object)['foo'] );
+        $this->assertEquals( __object(['foo','bar']), (object)['foo','bar'] );
+        $this->assertEquals( __object(['foo' => 'bar']), (object)['foo' => 'bar'] );
+        $this->assertEquals( __object((object)['foo','bar']), (object)['foo','bar'] );
+        $this->assertEquals( __object(['foo','bar' => ['foo','bar']]), (object)['foo','bar' => (object)['foo','bar']] );
+
         $this->assertSame( __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]]), [0 => ['foo',0,'0']] );
         $this->assertSame( __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]],[0,'0']), [0 => ['foo']] );
 

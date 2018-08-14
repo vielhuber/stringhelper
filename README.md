@@ -430,6 +430,35 @@ __first(['foo' => 'bar', 'bar' => 'baz']) // 'bar'
 // get random element from array
 __rand(['foo', 'bar', 'baz']) // 'bar'
 
+// convert array to object
+__array_to_object(['foo']) // {0: 'foo'}
+__array_to_object(['foo','bar']) // {0: 'foo', 1: 'bar'}
+__array_to_object(['foo' => 'bar']) // {foo: 'bar'}
+__array_to_object(['foo','bar' => ['foo','bar']]) // {0: 'foo', bar: {0: 'foo', 1: 'bar'}}
+
+// convert object to array
+__array((object)['foo']) // ['foo']
+__array((object)['foo','bar']) // ['foo','bar']
+__array((object)['foo' => 'bar']) // ['foo': 'bar']
+__array((object)['foo','bar' => (object)['foo','bar']]) // ['foo','bar' => ['foo','bar']]
+
+// convert variable to array
+__array() // []
+__array('foo') // ['foo']
+__array(['foo']) // ['foo']
+__array(['foo','bar']) // ['foo','bar']
+__array((object)['foo','bar']) // ['foo','bar']
+__array((object)['foo','bar' => (object)['foo','bar']]) // ['foo','bar' => ['foo','bar']]
+
+// convert variable to object
+__object() // {}
+__object('foo') // {0: 'foo'}
+__object(['foo']) // {0: 'foo'}
+__object(['foo','bar']) // {0: 'foo', 1: 'bar'}
+__object(['foo' => 'bar']) // {foo: 'bar'}
+__object((object)['foo','bar']) // {0: 'foo',1: 'bar'}
+__object(['foo','bar' => ['foo','bar']]) // {0: 'foo', bar: {0: 'foo', 1: 'bar'}}
+
 // check if item can be looped (is a non empty array, object or collection)
 __can_be_looped([1,2]) // true
 __can_be_looped((object)[1,2]) // true
