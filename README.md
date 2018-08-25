@@ -493,6 +493,12 @@ __inside_out_values([
 ]
 */
 
+// converts recursively nested arrays into objects
+// this is useful when working with state in vue/redux
+// objects are automatically keyed by id (if property "id" is available)
+__arrays_to_objects(['foo' => ['bar','baz'], 'bar' => [(object)['id' => 7, 'name' => 'foo'], (object)['id' => 42, 'name' => 'bar']]]);
+// { 'foo': { 0: 'bar', 1: 'baz' }, 'bar' => { 7: { 'id': 7, 'name': 'foo' }, 7: { 'id': 42, 'name': 'bar' } } }
+
 // highlight strings
 __highlight('that is a search string', 'is') // that <strong class="highlight">is</strong> a search string
 

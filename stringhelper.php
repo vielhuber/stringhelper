@@ -787,6 +787,46 @@ function __inside_out_values($array)
     return $return;
 }
 
+function __arrays_to_objects($arr)
+{
+    if( !is_object($arr) && !is_array($arr) )
+    {
+        return $arr;
+    }
+    if( is_array($arr) )
+    {
+        $new = new \stdClass();
+        foreach($arr as $arr__key=>$arr__value)
+        {
+            if( is_object($arr__value) && isset($arr__value->id) )
+            {
+                $new->{intval($arr__value->id)} = $arr__value;
+            }
+            elseif( is_array($arr__value) && isset($arr__value['id']) )
+            {
+                $new->{intval($arr__value['id'])} = $arr__value;
+            }
+            else
+            {
+                $new->{$arr__key} = $arr__value;
+            }
+        }
+        $arr = $new;
+    }
+    foreach($arr as $arr__key => $arr__value)
+    {
+        if( is_object($arr) )
+        {
+            $arr->{$arr__key} = __arrays_to_objects($arr__value);
+        }
+        elseif( is_array($arr) )
+        {
+            $arr[$arr__key] = __arrays_to_objects($arr__value);
+        }
+    }
+    return $arr;
+}
+
 function __fkey($array__key,$array)
 {
     if( array_keys($array)[0] === $array__key )

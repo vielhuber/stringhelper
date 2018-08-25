@@ -319,6 +319,14 @@ class Test extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
+        $this->assertEquals(
+            __arrays_to_objects(['foo' => ['bar','baz'], 'bar' => [(object)['id' => 7, 'name' => 'foo'], (object)['id' => 42, 'name' => 'bar']]]),
+            (object)[
+                'foo' => (object)[0 => 'bar',1 => 'baz'],
+                'bar' => (object)[7 => (object)['id' => 7, 'name' => 'foo'], 42 => (object)['id' => 42, 'name' => 'bar']]
+            ]
+        );
+
         $response = __curl('https://httpbin.org/anything');
         $this->assertSame($response->result->method, 'GET');
         $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST');
