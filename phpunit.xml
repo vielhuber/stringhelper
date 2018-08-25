@@ -12,4 +12,9 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <server name="HTTPS" value="on" />
+        <server name="HTTP_HOST" value="github.com" />
+        <server name="REQUEST_URI" value="/vielhuber/stringhelper" />
+    </php>
 </phpunit>

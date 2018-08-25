@@ -343,7 +343,17 @@ class Test extends \PHPUnit\Framework\TestCase
 
         $this->assertSame( in_array(__os(), ['windows','mac','linux','unknown']), true );
 
-        $this->assertSame( __url(), null );
+        $this->assertSame( __url(), 'https://github.com/vielhuber/stringhelper' );
+        $this->assertSame( __baseurl(), 'https://github.com' );
+
+        $this->assertSame( __is_external('https://github.com/vielhuber/stringhelper'), false );
+        $this->assertSame( __is_external('https://github.com/vielhuber/stringhelper/'), false );
+        $this->assertSame( __is_external('https://github.com/vielhuber/stringhelper/issues'), false );
+        $this->assertSame( __is_external('https://github.com/vielhuber/stringhelper/test.pdf'), true );
+        $this->assertSame( __is_external('tel:+4989215400142'), false );
+        $this->assertSame( __is_external('mailto:david@vielhuber.de'), false );
+        $this->assertSame( __is_external('https://vielhuber.de'), true );
+        $this->assertSame( __is_external('https://vielhuber.de/test.pdf'), true );
 
         $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
         $_POST = ['foo' => 'bar', 42 => "\0"];

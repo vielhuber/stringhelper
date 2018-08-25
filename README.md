@@ -535,8 +535,19 @@ __error('missing data') // { success: false, message: 'missing data' }
 // get current os
 __os() // ['windows','mac','linux']
 
-// get current url
+// get current url (without trailing slash)
 __url() // https://github.com/vielhuber/stringhelper
+__baseurl() // https://github.com
+
+// check if link is external or internal
+__is_external('https://github.com/vielhuber/stringhelper') // false
+__is_external('https://github.com/vielhuber/stringhelper/') // false
+__is_external('https://github.com/vielhuber/stringhelper/issues') // false
+__is_external('https://github.com/vielhuber/stringhelper/test.pdf') // true
+__is_external('tel:+4989215400142') // false
+__is_external('mailto:david@vielhuber.de') // false
+__is_external('https://vielhuber.de') // true
+__is_external('https://vielhuber.de/test.pdf') // true
 
 $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
 $_POST = ['foo' => 'bar', 42 => "\0"];

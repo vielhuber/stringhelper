@@ -920,7 +920,18 @@ function __url()
     {
         return null;
     }
-    return 'http'.((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    $url = 'http'.((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    return rtrim( $url, '/' );
+}
+
+function __baseurl()
+{
+    if( __nx(@$_SERVER['HTTP_HOST']) )
+    {
+        return null;
+    }
+    $url = 'http'.((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'s':'').'://'.$_SERVER['HTTP_HOST'];
+    return rtrim( $url, '/' );
 }
 
 function __char_to_int($letters)
@@ -982,6 +993,15 @@ function __log_end($echo = true)
         'message' => $message,
         'time' => $time
     ];
+}
+
+function __is_external($link)
+{
+    if( __nx($link) )
+    {
+        return false;
+    }
+    return (strpos($link,__baseurl()) === false && strpos($link,'mailto') === false && strpos($link,'tel') === false) || strpos($link,'.pdf') !== false;
 }
 
 /* LEGACY CODE */
