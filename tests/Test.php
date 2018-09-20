@@ -222,6 +222,11 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( strlen(__uuid()) === 36, true );
         $this->assertSame( substr_count(__uuid(),'-') === 4, true );
 
+        $this->assertSame( __pushId() === __pushId(), false );
+        $this->assertSame( strlen(__pushId()) === 20, true );
+        $this->assertSame( strlen(__pushId()) === 20, true );
+        $this->assertSame( strlen(__pushId()) === 20, true );
+
         $this->assertSame( __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.', 12), 'Lorem ipsum...' );
         $this->assertSame( __strip_numeric('the answer is 42.00'), 'the answer is ' );
         $this->assertSame( __strip_nonnumeric('the answer is 42.00'), '42.00' );

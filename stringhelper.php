@@ -1044,6 +1044,39 @@ function __is_external($link)
     return (strpos($link,__baseurl()) === false && strpos($link,'mailto') === false && strpos($link,'tel') === false) || strpos($link,'.pdf') !== false;
 }
 
+function __pushId()
+{
+    /* https://gist.github.com/datasage/fbd4cdc725598e184c7d */
+    if(!isset($GLOBALS['lastPushTime'])) { $GLOBALS['lastPushTime'] = 0; }
+    if(!isset($GLOBALS['lastRandChars'])) { $GLOBALS['lastRandChars'] = []; }
+    $PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+    $now = (int) (microtime(true) * 1000);
+    $isDuplicateTime = ($now === $GLOBALS['lastPushTime']);
+    $GLOBALS['lastPushTime'] = $now;
+    $timeStampChars = new \SplFixedArray(8);
+    for ($i = 7; $i >= 0; $i--) {
+        $timeStampChars[$i] = substr($PUSH_CHARS, $now % 64, 1);
+        // NOTE: Can't use << here because javascript will convert to int and lose the upper bits.
+        $now = (int) floor($now / 64);
+    }
+    $id = implode('', $timeStampChars->toArray());
+    if (!$isDuplicateTime) {
+        for ($i = 0; $i < 12; $i++) {
+            $GLOBALS['lastRandChars'][$i] = (int) floor(rand(0, 63));
+        }
+    } else {
+        // If the timestamp hasn't changed since last push, use the same random number, except incremented by 1.
+        for ($i = 11; $i >= 0 && $GLOBALS['lastRandChars'][$i] === 63; $i--) {
+            $GLOBALS['lastRandChars'][$i] = 0;
+        }
+        $GLOBALS['lastRandChars'][$i]++;
+    }
+    for ($i = 0; $i < 12; $i++) {
+        $id .= substr($PUSH_CHARS, $GLOBALS['lastRandChars'][$i], 1);
+    }
+    return $id;
+}
+
 /* LEGACY CODE */
 
 // same as __v

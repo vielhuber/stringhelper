@@ -362,6 +362,9 @@ __random_string(16, 'idkfa') // idifafafifaifafk
 // generate uuid/guid v4
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
 
+// create lexicographically ordered string ids like in firebase 
+__pushId() // -LMsSyccg4OavBCZxRAA
+
 // strip string
 __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.', 12) // Lorem ipsum...
 
