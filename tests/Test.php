@@ -395,7 +395,6 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( __dec_char('A'), '');
 
         __log_begin('foo');
-        print_r($_GLOBALS['performance']);
         $this->assertSame( $GLOBALS['performance'][0]['message'], 'foo' );
         $this->assertSame( count($GLOBALS['performance']), 1 );
         __log_begin('bar');
