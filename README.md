@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vielhuber/stringhelper.svg?branch=master)](https://travis-ci.org/vielhuber/stringhelper)
+
 ## motivation
 tired of writing
 ```php
