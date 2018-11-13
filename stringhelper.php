@@ -882,6 +882,7 @@ function __curl($url, $data = null, $method = null, $headers = null)
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 400);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); // don't verify certificate 
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
     /* prepare headers */
