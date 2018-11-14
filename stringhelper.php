@@ -860,6 +860,12 @@ function __rand($array)
     return $array[array_rand($array)];
 }
 
+function __string_is_json($str)
+{
+    json_decode($str);
+    return (json_last_error() == JSON_ERROR_NONE);
+}
+
 function __curl($url, $data = null, $method = null, $headers = null)
 {
     // guess method based on data
@@ -920,7 +926,12 @@ function __curl($url, $data = null, $method = null, $headers = null)
     $result = curl_exec($curl);
     $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
-    $result = json_decode($result);
+
+    if( __string_is_json($result) )
+    {
+        $result = json_decode($result);
+    }
+
     return (object)['result' => $result, 'status' => $status];
 }
 

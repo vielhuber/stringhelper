@@ -239,11 +239,16 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame( __remove_emptylines('foo'.PHP_EOL.''.PHP_EOL.'bar'.PHP_EOL.'baz'), 'foo'.PHP_EOL.'bar'.PHP_EOL.'baz' );
         $this->assertSame( __remove_newlines('foo'.PHP_EOL.'bar<br/>'.PHP_EOL.'baz'), 'foobarbaz' );
 
+        $this->assertSame( __string_is_json('[]'), true );
+        $this->assertSame( __string_is_json('{"foo":"bar"}'), true );
+        $this->assertSame( __string_is_json('["foo" => "bar"]'), false );
+
         $this->assertSame( __is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true );
         $this->assertSame( __is_serialized(''), false );
         $this->assertSame( __is_serialized(null), false );
         $this->assertSame( __is_serialized('idkfa'), false );
         $this->assertSame( __is_serialized('b:0;'), true );
+
         $this->assertSame( __extract('<a href="#foo">bar</a>','href="','">'), '#foo' );
         $this->assertSame( __extract('<a href="#foo">bar</a>','">','</a'), 'bar' );
         $this->assertSame( __strposx('bar foo baz foobar', 'foo'), [4,12] );
@@ -339,6 +344,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
         $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']);
         $this->assertSame($response->result->headers->Bar, 'baz');
+        $response = __curl('https://vielhuber.de');
+        $this->assertTrue(strpos($response->result, '<html') !== false);
 
         try
         {

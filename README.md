@@ -402,6 +402,11 @@ __remove_newlines('foo
 bar<br/>
 baz') // foobarbaz
 
+// check if string is json
+__string_is_json('[]'); // true
+__string_is_json('{"foo":"bar"}'); // true
+__string_is_json('["foo" => "bar"]'); // false
+
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
 __is_serialized('idkfa') // false
@@ -577,6 +582,7 @@ clean_up() // same as clean_up_get() and clean_up_post()
 __curl('https://httpbin.org/anything'); // { "method": "GET", ... }
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); // { "method": "POST", "data": {"foo": "bar"}, ... }
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); // { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }
+__curl('https://vielhuber.de'); // json is automatically decoded (but only if the response is of type json)
 
 // char helpers
 __char_to_int('D') // 4
