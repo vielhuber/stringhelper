@@ -1,21 +1,27 @@
 [![Build Status](https://travis-ci.org/vielhuber/stringhelper.svg?branch=master)](https://travis-ci.org/vielhuber/stringhelper)
 
 ## motivation
+
 tired of writing
+
 ```php
 if( isset($_POST['foo']) && $_POST['foo'] === '1' )
 {
 
 }
 ```
+
 or
+
 ```php
 if( !empty($a) || (isset($a) && $a === 0) )
 {
 
 }
 ```
-or 
+
+or
+
 ```php
 if( !empty($a) )
 {
@@ -25,23 +31,26 @@ if( !empty($a) )
     }
 }
 ```
+
 or
+
 ```php
 if( Person::find(1) !== null && Person::find(1)->getAddress() !== null && Person::find(1)->getAddress()->getCountry() !== null && Person::find(1)->getAddress()->getCountry()->getName() !== null )
 {
     echo Person::find(1)->getAddress()->getCountry()->getName();
 }
 ```
+
 ?
 
-
-
 ## installation
+
 ```
 composer require vielhuber/stringhelper
 ```
 
 hotload the functions in your composer.json:
+
 ```
 ...
 "autoload": {
@@ -52,6 +61,7 @@ hotload the functions in your composer.json:
 },
 ...
 ```
+
 ```
 composer dump-autoload
 ```
@@ -59,6 +69,7 @@ composer dump-autoload
 ## usage
 
 ### existence
+
 ```php
 // check existence
 if( __x($var) )
@@ -74,6 +85,7 @@ if( __nx($var) )
 ```
 
 ### equality
+
 ```php
 // php has a lot of pitfalls, when comparing loosely
 if( 0 == 'true' ) // true
@@ -131,6 +143,7 @@ __false(null) // false
 ```
 
 ### value
+
 ```php
 // get variable if exists, otherwise null
 __v( $var )
@@ -143,6 +156,7 @@ __v( $var1, $var2, $var3 )
 ```
 
 ### loop
+
 ```php
 // loop only if exists
 foreach( __i($array) as $array__key=>$array__value )
@@ -150,7 +164,6 @@ foreach( __i($array) as $array__key=>$array__value )
 
 }
 ```
-
 
 ### try
 
@@ -167,22 +180,22 @@ echo __v(@$var)
 foreach( __i(@$array) as $array__key=>$array__value)
 
 ```
+
 A short note on the usage of @: In this concept we use @-operator that hides errors. We are aware of its potential misuse and also of its benefits. When using @$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. In both cases, we intentionally prevent the parser from stopping and catch the resulting null value. But be aware: Don't use it before function calls (@__x($a['undefined']).
 
-
-
 ### classes
+
 ```php
 // consider the following laravelish code
 class Person
 {
     public $id;
-    
+
     function __construct($id)
     {
         $this->id = $id;
     }
-    
+
     static function find($id)
     {
         // mock example (normally lookup in database)
@@ -233,12 +246,12 @@ echo Person::find(3)?->getAddress()?->getCountry()?->getName(); // null
 class Person
 {
     public $id;
-    
+
     function __construct($id)
     {
         $this->id = $id;
     }
-    
+
     static function find($id)
     {
         if( $id === 1 || $id === 2 )
@@ -285,13 +298,13 @@ echo Person::find(3)->getAddress()->getCountry()->getName(); // ''
 // ...check for existence...
 if( __x(Person::find(1)->getAddress()->getCountry()->getName()) )
 {
-    
+
 }
 
 // ...check for strict equality...
 if( Person::find(1)->getAddress()->getCountry()->getName() === 'Germany' )
 {
-    
+
 }
 
 // ...get a value...
@@ -300,12 +313,14 @@ echo __v( Person::find(1)->getAddress()->getCountry()->getName(), 'default' );
 // ...and loop when possible
 foreach( Person::find(1)->getAddress()->getCountry() as $value )
 {
-    
+
 }
 ```
 
 ### helpers
+
 there are also some other neat little helpers available.
+
 ```php
 // check if all variables exist
 if( __x_all('foo', 'bar', null) ) // false
@@ -364,20 +379,20 @@ __random_string(16, 'idkfa') // idifafafifaifafk
 // generate uuid/guid v4
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
 
-// create lexicographically ordered string ids like in firebase 
+// create lexicographically ordered string ids like in firebase
 __pushId() // -LMsSyccg4OavBCZxRAA
 
 // strip string
 __strip('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.', 12) // Lorem ipsum...
 
 // strip numeric (0-9.,)
-__strip_numeric('the answer is 42.00') // the answer is 
+__strip_numeric('the answer is 42.00') // the answer is
 
 // strip non-numeric (all except 0-9.,)
 __strip_nonnumeric('the answer is 42.00') // 42.00
 
 // strip digit (0-9)
-__strip_numeric('the answer is 42.00') // the answer is 
+__strip_numeric('the answer is 42.00') // the answer is
 
 // strip non-digit (all except 0-9)
 __strip_nondigit('the answer is 42') // 42
@@ -555,6 +570,16 @@ __os() // ['windows','mac','linux']
 __url() // https://github.com/vielhuber/stringhelper
 __baseurl() // https://github.com
 
+// compress image
+__image_compress('input.jpg');
+__image_compress('input.jpg', 70);
+__image_compress('input.jpg', 70, 'output.jpg');
+
+// fix exif image orientation
+__image_orientate('input.jpg');
+__image_orientate('input.jpg', 70);
+__image_orientate('input.jpg', 70, 'output.jpg');
+
 // check if link is external or internal
 __is_external('https://github.com/vielhuber/stringhelper') // false
 __is_external('https://github.com/vielhuber/stringhelper/') // false
@@ -603,72 +628,68 @@ for($i = 0; $i < 10000; $i++)
 __log__end();
 ```
 
-
-
 ## js implementation
 
 there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp) with similiar functions available.
-
 
 ## appendix
 
 ### existence matrix
 
-| | <sub>__x()</sub> | <sub>__true()</sub> | <sub>__false()</sub> | <sub>!== null</sub> | <sub>!= null</sub> | <sub>!== false</sub> | <sub>!= false</sub> | <sub>=== true</sub> | <sub>== true</sub> | <sub>!is_null()</sub> | <sub>isset()</sub> | <sub>!empty()</sub> | <sub>if/else</sub> | <sub>ternary</sub> | <sub>count() > 0</sub> | <sub>!= ''</sub> | <sub>!== ''</sub> |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <sub>null</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> |
-| <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> |
-| <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>[]</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>['']</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>0</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> |
-| <sub>1</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>-1</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>'0'</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>'1'</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>'-1'</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>''</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> |
-| <sub>' '</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>'null'</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>'false'</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>'true'</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>'str'</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>[0,1]</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>[0]</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>a:0:{}</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>b:1;</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>b:0;</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>new stdClass</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>false</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> | <sub>true</sub> |
-| <sub>$_GET['undefined']</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>false</sub> | <sub>false</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> |
-| <sub>@$_GET['undefined']</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub> |
-
+|                                  | <sub>\_\_x()</sub> | <sub>\_\_true()</sub> | <sub>\_\_false()</sub> | <sub>!== null</sub> | <sub>!= null</sub> | <sub>!== false</sub> | <sub>!= false</sub> | <sub>=== true</sub> | <sub>== true</sub> | <sub>!is_null()</sub> | <sub>isset()</sub> | <sub>!empty()</sub> | <sub>if/else</sub> | <sub>ternary</sub> | <sub>count() > 0</sub> | <sub>!= ''</sub> | <sub>!== ''</sub> |
+| -------------------------------- | ------------------ | --------------------- | ---------------------- | ------------------- | ------------------ | -------------------- | ------------------- | ------------------- | ------------------ | --------------------- | ------------------ | ------------------- | ------------------ | ------------------ | ---------------------- | ---------------- | ----------------- |
+| <sub>null</sub>                  | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>false</sub>    | <sub>false</sub>   | <sub>true</sub>      | <sub>false</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>   | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>   | <sub>false</sub>       | <sub>false</sub> | <sub>true</sub>   |
+| <sub>false</sub>                 | <sub>false</sub>   | <sub>false</sub>      | <sub>true</sub>        | <sub>true</sub>     | <sub>false</sub>   | <sub>false</sub>     | <sub>false</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>true</sub>       | <sub>true</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>   | <sub>true</sub>        | <sub>false</sub> | <sub>true</sub>   |
+| <sub>true</sub>                  | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>[]</sub>                    | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>true</sub>     | <sub>false</sub>   | <sub>true</sub>      | <sub>false</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>true</sub>       | <sub>true</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>   | <sub>false</sub>       | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>['']</sub>                  | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>0</sub>                     | <sub>true</sub>    | <sub>false</sub>      | <sub>true</sub>        | <sub>true</sub>     | <sub>false</sub>   | <sub>true</sub>      | <sub>false</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>true</sub>       | <sub>true</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>   | <sub>true</sub>        | <sub>false</sub> | <sub>true</sub>   |
+| <sub>1</sub>                     | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>-1</sub>                    | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>'0'</sub>                   | <sub>true</sub>    | <sub>false</sub>      | <sub>true</sub>        | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>false</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>true</sub>       | <sub>true</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>   | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>'1'</sub>                   | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>'-1'</sub>                  | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>''</sub>                    | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>true</sub>     | <sub>false</sub>   | <sub>true</sub>      | <sub>false</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>true</sub>       | <sub>true</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>   | <sub>true</sub>        | <sub>false</sub> | <sub>false</sub>  |
+| <sub>' '</sub>                   | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>'null'</sub>                | <sub>true</sub>    | <sub>false</sub>      | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>'false'</sub>               | <sub>true</sub>    | <sub>false</sub>      | <sub>true</sub>        | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>'true'</sub>                | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>'str'</sub>                 | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>[0,1]</sub>                 | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>[0]</sub>                   | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>a:0:{}</sub>                | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>b:1;</sub>                  | <sub>true</sub>    | <sub>true</sub>       | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>b:0;</sub>                  | <sub>false</sub>   | <sub>false</sub>      | <sub>true</sub>        | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>new stdClass</sub>          | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>      | <sub>true</sub>     | <sub>false</sub>    | <sub>true</sub>    | <sub>true</sub>       | <sub>true</sub>    | <sub>true</sub>     | <sub>true</sub>    | <sub>true</sub>    | <sub>true</sub>        | <sub>true</sub>  | <sub>true</sub>   |
+| <sub>\$\_GET['undefined']</sub>  | <sub>error</sub>   | <sub>error</sub>      | <sub>error</sub>       | <sub>error</sub>    | <sub>error</sub>   | <sub>error</sub>     | <sub>error</sub>    | <sub>error</sub>    | <sub>error</sub>   | <sub>error</sub>      | <sub>false</sub>   | <sub>false</sub>    | <sub>error</sub>   | <sub>error</sub>   | <sub>error</sub>       | <sub>error</sub> | <sub>error</sub>  |
+| <sub>@\$\_GET['undefined']</sub> | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>       | <sub>false</sub>    | <sub>false</sub>   | <sub>true</sub>      | <sub>false</sub>    | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>      | <sub>false</sub>   | <sub>false</sub>    | <sub>false</sub>   | <sub>false</sub>   | <sub>false</sub>       | <sub>false</sub> | <sub>true</sub>   |
 
 ### loose comparison matrix
 
-| <sub>==</sub> | <sub>null</sub> | <sub>false</sub> | <sub>true</sub> | <sub>[]</sub> | <sub>['']</sub> | <sub>0</sub> | <sub>1</sub> | <sub>-1</sub> | <sub>'0'</sub> | <sub>'1'</sub> | <sub>'-1'</sub> | <sub>''</sub> | <sub>' '</sub> | <sub>'null'</sub> | <sub>'false'</sub> | <sub>'true'</sub> | <sub>'str'</sub> | <sub>[0,1]</sub> | <sub>[0]</sub> | <sub>a:0:{}</sub> | <sub>b:1;</sub> | <sub>b:0;</sub> | <sub>new stdClass</sub> | <sub>$_GET['undefined']</sub> | <sub>@$_GET['undefined']</sub> |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <sub>null</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>true</sub> |
-| <sub>false</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>true</sub> |
-| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>[]</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>true</sub> |
-| <sub>['']</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>0</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>true</sub>| <sub>true</sub>| <sub>error</sub>| <sub>error</sub>| <sub>true</sub> |
-| <sub>1</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>-1</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>'0'</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>'1'</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>'-1'</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>''</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>true</sub> |
-| <sub>' '</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>'null'</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>'false'</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>'true'</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>'str'</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>[0,1]</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>[0]</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>a:0:{}</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>b:1;</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>b:0;</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>new stdClass</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>error</sub>| <sub>false</sub> |
-| <sub>$_GET['undefined']</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub>| <sub>error</sub> |
-| <sub>@$_GET['undefined']</sub>| <sub>true</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>true</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>false</sub>| <sub>error</sub>| <sub>true</sub> |
+| <sub>==</sub>                    | <sub>null</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>[]</sub>    | <sub>['']</sub>  | <sub>0</sub>     | <sub>1</sub>     | <sub>-1</sub>    | <sub>'0'</sub>   | <sub>'1'</sub>   | <sub>'-1'</sub>  | <sub>''</sub>    | <sub>' '</sub>   | <sub>'null'</sub> | <sub>'false'</sub> | <sub>'true'</sub> | <sub>'str'</sub> | <sub>[0,1]</sub> | <sub>[0]</sub>   | <sub>a:0:{}</sub> | <sub>b:1;</sub>  | <sub>b:0;</sub>  | <sub>new stdClass</sub> | <sub>\$\_GET['undefined']</sub> | <sub>@\$\_GET['undefined']</sub> |
+| -------------------------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ----------------- | ------------------ | ----------------- | ---------------- | ---------------- | ---------------- | ----------------- | ---------------- | ---------------- | ----------------------- | ------------------------------- | -------------------------------- |
+| <sub>null</sub>                  | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>true</sub>                  |
+| <sub>false</sub>                 | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>true</sub>                  |
+| <sub>true</sub>                  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>true</sub>   | <sub>true</sub>    | <sub>true</sub>   | <sub>true</sub>  | <sub>true</sub>  | <sub>true</sub>  | <sub>true</sub>   | <sub>true</sub>  | <sub>true</sub>  | <sub>true</sub>         | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>[]</sub>                    | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>true</sub>                  |
+| <sub>['']</sub>                  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>0</sub>                     | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>true</sub>  | <sub>true</sub>   | <sub>true</sub>    | <sub>true</sub>   | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>   | <sub>true</sub>  | <sub>true</sub>  | <sub>error</sub>        | <sub>error</sub>                | <sub>true</sub>                  |
+| <sub>1</sub>                     | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>error</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>-1</sub>                    | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>error</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>'0'</sub>                   | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>'1'</sub>                   | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>'-1'</sub>                  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>''</sub>                    | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>true</sub>                  |
+| <sub>' '</sub>                   | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>'null'</sub>                | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>   | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>'false'</sub>               | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>true</sub>    | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>'true'</sub>                | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>true</sub>   | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>'str'</sub>                 | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>[0,1]</sub>                 | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>[0]</sub>                   | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>a:0:{}</sub>                | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>   | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>b:1;</sub>                  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>b:0;</sub>                  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub>        | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>new stdClass</sub>          | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>         | <sub>error</sub>                | <sub>false</sub>                 |
+| <sub>\$\_GET['undefined']</sub>  | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub>  | <sub>error</sub>   | <sub>error</sub>  | <sub>error</sub> | <sub>error</sub> | <sub>error</sub> | <sub>error</sub>  | <sub>error</sub> | <sub>error</sub> | <sub>error</sub>        | <sub>error</sub>                | <sub>error</sub>                 |
+| <sub>@\$\_GET['undefined']</sub> | <sub>true</sub>  | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>true</sub>  | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub>   | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>  | <sub>false</sub> | <sub>false</sub> | <sub>false</sub>        | <sub>error</sub>                | <sub>true</sub>                  |
