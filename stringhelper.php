@@ -1046,7 +1046,7 @@ function __image_orientate($source, $quality = 90, $destination = null)
     }
     $info = getimagesize($source);
     if ($info['mime'] === 'image/jpeg') {
-        $exif = exif_read_data($source);
+        $exif = @exif_read_data($source);
         if (!empty($exif['Orientation']) && in_array($exif['Orientation'], [2, 3, 4, 5, 6, 7, 8])) {
             $image = imagecreatefromjpeg($source);
             if (in_array($exif['Orientation'], [3, 4])) {
