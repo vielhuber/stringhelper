@@ -1101,6 +1101,7 @@ function __pushId()
         }
     } else {
         // If the timestamp hasn't changed since last push, use the same random number, except incremented by 1.
+        usleep(10); // additionally prevent duplicates
         for ($i = 11; $i >= 0 && $GLOBALS['lastRandChars'][$i] === 63; $i--) {
             $GLOBALS['lastRandChars'][$i] = 0;
         }
