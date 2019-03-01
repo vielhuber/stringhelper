@@ -124,6 +124,17 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__v(), null);
     }
 
+    function test__e()
+    {
+        $this->assertSame(__e('foo'), 'foo');
+        $this->assertSame(__e(0), 0);
+        $this->assertEquals(__e(''), __empty());
+        $this->assertSame(__e(' ', 'default'), 'default');
+        $this->assertSame(__e('', [], 'baz'), 'baz');
+        $this->assertEquals(__e('', [], null), __empty());
+        $this->assertEquals(__e(), __empty());
+    }
+
     function test__loop()
     {
         $array = ['foo', 'bar', 'baz'];

@@ -153,6 +153,11 @@ __v( $var, 'default' )
 
 // get first variable that exists, otherwise null
 __v( $var1, $var2, $var3 )
+
+// get variable if exists, otherwise the empty object
+__e( $var )
+__e( $var, 'default' )
+__e( $var1, $var2, $var3 )
 ```
 
 ### loop
@@ -289,6 +294,9 @@ class Country
         return 'Germany';
     }
 }
+
+// this empty helper object is quite useful for returning an empty class which is callable with undefined functions
+__empty()
 
 // we can no conveniently call those chains...
 echo Person::find(1)->getAddress()->getCountry()->getName(); // 'Germany'

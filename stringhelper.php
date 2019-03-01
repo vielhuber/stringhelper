@@ -43,6 +43,16 @@ function __v(...$args)
     return null;
 }
 
+function __e(...$args)
+{
+    foreach ($args as $arg) {
+        if (__x(@$arg)) {
+            return $arg;
+        }
+    }
+    return __empty();
+}
+
 function __i($var)
 {
     if (__nx(@$var)) {
