@@ -731,16 +731,26 @@ function __redirect($url = null)
 
 function __date($date, $format = null, $mod = null)
 {
+    if (__nx($date) || $date === true || $date === false) {
+        return null;
+    }
+    // input timestamp
     if (is_numeric($date)) {
         $date = date('Y-m-d', $date);
     }
+    // default value for format
     if (__nx($format)) {
         $format = 'Y-m-d';
     }
-    if (!__validate_date($date)) {
+    // if date has length 10, sort out invalid
+    if (strlen($date) === 10 && !__validate_date($date)) {
         return null;
     }
-    return date($format, strtotime($date . (__x($mod) ? ' ' . $mod : '')));
+    // pass modification
+    if (__x($mod)) {
+        $date .= ' ' . $mod;
+    }
+    return date($format, strtotime($date));
 }
 
 function __datetime($datetime)

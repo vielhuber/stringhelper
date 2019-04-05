@@ -369,6 +369,8 @@ __date('2000-01-01', 'd.m.Y') // 01.01.2000
 __date('2001-02-29', 'd.m.Y') // null; returns null if date is invalid, otherwise formatted date
 __date('2000-01-01', null, '+6 months') // 2000-07-01; allows date modifications
 __date('2000-01-01', 'd.m.Y', '+6 months') // 01.07.2000
+__date('01.01.2000'); // 2000-01-01; also accepts other formats
+__date('now') // 05.04.2019; also accepts strings
 __date(strtotime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts timestamps
 __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
 
