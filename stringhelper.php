@@ -299,6 +299,20 @@ function __remove_newlines($string)
     return $string;
 }
 
+function __atrim($arr)
+{
+    if( __nx($arr) || (!is_array($arr) && !($arr instanceof Traversable)) )
+    {
+        return $arr;
+    }
+
+    foreach($arr as $arr__key=>$arr__value)
+    {
+        $arr[$arr__key] = trim($arr__value);
+    }
+    return $arr;
+}
+
 function __o(...$data)
 {
     if (!is_array($data)) {

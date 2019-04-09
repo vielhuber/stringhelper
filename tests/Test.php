@@ -323,6 +323,15 @@ class Test extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(__remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), 'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz');
         $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
+        
+        $this->assertSame(__atrim(null), null);
+        $this->assertSame(__atrim(false), false);
+        $this->assertSame(__atrim(true), true);
+        $this->assertSame(__atrim([]), []);
+        $this->assertSame(__atrim(['foo','bar','baz']), ['foo','bar','baz']);
+        $this->assertSame(__atrim(['foo
+','bar','
+baz']), ['foo','bar','baz']);
 
         $this->assertSame(__string_is_json('[]'), true);
         $this->assertSame(__string_is_json('{"foo":"bar"}'), true);

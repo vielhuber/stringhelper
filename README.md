@@ -427,6 +427,11 @@ __remove_newlines('foo
 bar<br/>
 baz') // foobarbaz
 
+// trim every item in array
+__atrim(['foo
+','bar','
+baz']) // ['foo','bar','baz']
+
 // check if string is json
 __string_is_json('[]'); // true
 __string_is_json('{"foo":"bar"}'); // true
