@@ -294,6 +294,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date(''), null);
         $this->assertSame(__date('2008-31-31'), null);
         $this->assertSame(__date('now + 6 days'), date('Y-m-d', strtotime('now + 6 days')));
+        $this->assertSame(__date('rfkjh lkjerhflk kjekj'), null);
 
         $this->assertSame(__datetime('01.01.2000'), '2000-01-01T00:00');
         $this->assertSame(__datetime('01.01.2000 18:00'), '2000-01-01T18:00');

@@ -764,6 +764,10 @@ function __date($date, $format = null, $mod = null)
     if (__x($mod)) {
         $date .= ' ' . $mod;
     }
+    if( strtotime($date) === false )
+    {
+        return null;
+    }
     return date($format, strtotime($date));
 }
 
