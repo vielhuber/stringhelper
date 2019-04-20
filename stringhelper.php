@@ -74,6 +74,10 @@ class __empty_helper implements JsonSerializable
     {
         return '';
     }
+    public function toArray()
+    {
+        return [];
+    }
     public function count()
     {
         return 0;
