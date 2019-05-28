@@ -536,6 +536,29 @@ baz']), ['foo','bar','baz']);
         $this->assertSame(count($GLOBALS['performance']), 1);
         $this->assertSame(__log_end()['message'], 'foo');
         $this->assertSame(count($GLOBALS['performance']), 0);
+
+        __log_begin('foo');
+        $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_begin('bar');
+        $this->assertSame($GLOBALS['performance'][1]['message'], 'bar');
+        $this->assertSame(count($GLOBALS['performance']), 2);
+        __log_end('foo');
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_end('bar');
+        $this->assertSame(count($GLOBALS['performance']), 0);
+
+        __log_begin();
+        $this->assertSame($GLOBALS['performance'][0]['message'], null);
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_begin();
+        $this->assertSame($GLOBALS['performance'][1]['message'], null);
+        $this->assertSame(count($GLOBALS['performance']), 2);
+        __log_end();
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_end();
+        $this->assertSame(count($GLOBALS['performance']), 0);
+
     }
 }
 

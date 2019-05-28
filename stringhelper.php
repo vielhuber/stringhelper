@@ -1035,7 +1035,7 @@ function __dec_char($char, $shift = 1)
     return __int_to_char(__char_to_int($char) - $shift);
 }
 
-function __log_begin($message = '')
+function __log_begin($message = null)
 {
     if (!isset($GLOBALS['performance'])) {
         $GLOBALS['performance'] = [];
@@ -1046,14 +1046,30 @@ function __log_begin($message = '')
     ];
 }
 
-function __log_end($echo = true)
+function __log_end($message = null, $echo = true)
 {
-    $message = $GLOBALS['performance'][count($GLOBALS['performance']) - 1]['message'];
-    $time = number_format(microtime(true) - $GLOBALS['performance'][count($GLOBALS['performance']) - 1]['time'], 5);
+    if (!isset($GLOBALS['performance'])) {
+        $GLOBALS['performance'] = [];
+    }
+    $performance_active_key = null;
+    foreach(array_reverse($GLOBALS['performance'], true) as $performance__key=>$performance__value)
+    {
+        if( $performance__value['message'] === $message || $message === null )
+        {
+            $performance_active_key = $performance__key;
+            break;
+        }
+    }
+    if( $performance_active_key === null )
+    {
+        return null;
+    }
+    $message = $GLOBALS['performance'][$performance_active_key]['message'];
+    $time = number_format(microtime(true) - $GLOBALS['performance'][$performance_active_key]['time'], 5);
     if ($echo === true) {
         echo 'script ' . $message . ' execution time: ' . $time . ' seconds' . PHP_EOL;
     }
-    unset($GLOBALS['performance'][count($GLOBALS['performance']) - 1]);
+    unset($GLOBALS['performance'][$performance_active_key]);
     $GLOBALS['performance'] = array_values($GLOBALS['performance']);
     return [
         'message' => $message,

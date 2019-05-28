@@ -633,14 +633,27 @@ __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
 
 // measure performance
+__log_begin();
+for($i = 0; $i < 10000; $i++) { }
+__log_end(); // echos script execution time
+
+__log_begin();
+for($i = 0; $i < 10000; $i++) { }
+$data = __log_end(); // ['message' => '...', 'time' => '...'];
+
 __log_begin('task');
 for($i = 0; $i < 10000; $i++)
 {
   __log_begin('childtask');
   for($y = 0; $y < 100; $y++) { }
-  __log__end();
+  __log__end('childtask');
 }
-__log__end();
+__log__end('task');
+
+__log_begin('task1');
+__log_begin('task2');
+__log__end('task1');
+__log__end('task2');
 ```
 
 ## js implementation
