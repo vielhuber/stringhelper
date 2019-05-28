@@ -637,23 +637,28 @@ __log_begin();
 for($i = 0; $i < 10000; $i++) { }
 __log_end(); // echos script execution time
 
-__log_begin();
+__log_begin('task');
 for($i = 0; $i < 10000; $i++) { }
-$data = __log_end(); // ['message' => '...', 'time' => '...'];
+$data = __log_end('task', false); // ['message' => '...', 'time' => '...'];
 
 __log_begin('task');
 for($i = 0; $i < 10000; $i++)
 {
   __log_begin('childtask');
   for($y = 0; $y < 100; $y++) { }
-  __log__end('childtask');
+  __log_end('childtask');
 }
-__log__end('task');
+__log_end('task');
 
 __log_begin('task1');
 __log_begin('task2');
-__log__end('task1');
-__log__end('task2');
+__log_end('task1');
+__log_end('task2');
+
+__log_begin();
+__log_begin();
+__log__end(); // this ends latest entry (lifo)
+__log__end();
 ```
 
 ## js implementation
