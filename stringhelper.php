@@ -1067,7 +1067,7 @@ function __log_end($message = null, $echo = true)
     $message = $GLOBALS['performance'][$performance_active_key]['message'];
     $time = number_format(microtime(true) - $GLOBALS['performance'][$performance_active_key]['time'], 5);
     if ($echo === true) {
-        echo 'script ' . $message . ' execution time: ' . $time . ' seconds' . PHP_EOL;
+        echo 'script' . (($message != '')?(' '.$message):('')) . ' execution time: ' . $time . ' seconds' . PHP_EOL;
     }
     unset($GLOBALS['performance'][$performance_active_key]);
     $GLOBALS['performance'] = array_values($GLOBALS['performance']);

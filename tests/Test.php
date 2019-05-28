@@ -559,6 +559,10 @@ baz']), ['foo','bar','baz']);
         __log_end();
         $this->assertSame(count($GLOBALS['performance']), 0);
 
+        __log_begin();
+        sleep(1);
+        $data = __log_end(null, false);
+        $this->assertSame(intval(round($data['time'])),1);
     }
 }
 
