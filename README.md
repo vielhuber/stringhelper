@@ -642,8 +642,7 @@ for($i = 0; $i < 10000; $i++) { }
 $data = __log_end('task', false); // ['message' => '...', 'time' => '...'];
 
 __log_begin('task');
-for($i = 0; $i < 10000; $i++)
-{
+for($i = 0; $i < 10000; $i++) {
   __log_begin('childtask');
   for($y = 0; $y < 100; $y++) { }
   __log_end('childtask');
@@ -657,8 +656,8 @@ __log_end('task2');
 
 __log_begin();
 __log_begin();
-__log__end(); // this ends latest entry (lifo)
-__log__end();
+__log_end(); // this ends latest entry (lifo)
+__log_end();
 ```
 
 ## js implementation
