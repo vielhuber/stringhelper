@@ -337,6 +337,8 @@ baz']), ['foo','bar','baz']);
         $this->assertSame(__string_is_json('[]'), true);
         $this->assertSame(__string_is_json('{"foo":"bar"}'), true);
         $this->assertSame(__string_is_json('["foo" => "bar"]'), false);
+        $this->assertSame(__string_is_json([]), false);
+        $this->assertSame(__string_is_json((object)[]), false);
 
         $this->assertSame(__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true);
         $this->assertSame(__is_serialized(''), false);
@@ -453,6 +455,13 @@ baz']), ['foo','bar','baz']);
                 'bar' => (object) [7 => (object) ['id' => 7, 'name' => 'foo'], 42 => (object) ['id' => 42, 'name' => 'bar']]
             ]
         );
+
+        $response = __fetch('https://httpbin.org/anything');
+        $this->assertSame($response->method, 'GET');
+        $response = __fetch('https://httpbin.org/anything', 'curl');
+        $this->assertSame($response->method, 'GET');
+        $response = __fetch('https://httpbin.org/anything', 'php');
+        $this->assertSame($response->method, 'GET');
 
         $response = __curl('https://httpbin.org/anything');
         $this->assertSame($response->result->method, 'GET');

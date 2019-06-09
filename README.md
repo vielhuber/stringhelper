@@ -436,6 +436,8 @@ baz']) // ['foo','bar','baz']
 __string_is_json('[]'); // true
 __string_is_json('{"foo":"bar"}'); // true
 __string_is_json('["foo" => "bar"]'); // false
+__string_is_json([]); // false
+__string_is_json((object)[]); // false
 
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
@@ -618,10 +620,15 @@ clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
 clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
 clean_up() // same as clean_up_get() and clean_up_post()
 
+// do simple get requests (via curl or as a fallback with php file_get_contents [allow_url_fopen=1])
+__fetch('https://httpbin.org/anything'); // { "method": "GET", ... }
+__fetch('https://httpbin.org/anything', 'curl'); // { "method": "GET", ... }
+__fetch('https://httpbin.org/anything', 'php'); // { "method": "GET", ... }
+
 // do curl requests (get/post)
-__curl('https://httpbin.org/anything'); // { "method": "GET", ... }
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); // { "method": "POST", "data": {"foo": "bar"}, ... }
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); // { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }
+__curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }}
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }}
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); //  {"status": 200, "result" => { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }}
 __curl('https://vielhuber.de'); // json is automatically decoded (but only if the response is of type json)
 
 // char helpers

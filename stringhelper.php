@@ -890,8 +890,38 @@ function __rand($array)
 
 function __string_is_json($str)
 {
+    if( !is_string($str) )
+    {
+        return false;
+    }
     json_decode($str);
     return json_last_error() == JSON_ERROR_NONE;
+}
+
+function __fetch($url, $method = null)
+{
+    if(
+        $method === 'curl' ||
+        ($method === null && function_exists('curl_version'))
+    )
+    {
+        $result = __curl($url)->result;
+    }
+    elseif(
+        $method === 'php' ||
+        ($method === null && file_get_contents(__FILE__) && ini_get('allow_url_fopen'))
+    )
+    {
+        $result = @file_get_contents($url);
+    }
+    else
+    {
+        $result = json_encode([]);
+    }
+    if (__string_is_json($result)) {
+        $result = json_decode($result);
+    }
+    return $result;
 }
 
 function __curl($url, $data = null, $method = null, $headers = null)
