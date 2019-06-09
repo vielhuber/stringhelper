@@ -625,7 +625,7 @@ __fetch('https://httpbin.org/anything'); // { "method": "GET", ... }
 __fetch('https://httpbin.org/anything', 'curl'); // { "method": "GET", ... }
 __fetch('https://httpbin.org/anything', 'php'); // { "method": "GET", ... }
 
-// do curl requests (get/post)
+// do curl requests (get/post) and get status and result
 __curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); //  {"status": 200, "result" => { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }}
