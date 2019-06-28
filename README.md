@@ -371,6 +371,8 @@ __date('2000-01-01', null, '+6 months') // 2000-07-01; allows date modifications
 __date('2000-01-01', 'd.m.Y', '+6 months') // 01.07.2000
 __date('01.01.2000'); // 2000-01-01; also accepts other formats
 __date('now') // 2019-05-28; also accepts strings
+__date() // null
+$unknown = null; __date($unknown) // null
 __date(strtotime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts timestamps
 __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
 
