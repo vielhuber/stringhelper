@@ -135,7 +135,30 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertEquals(__e(), __empty());
     }
 
-    function test__loop()
+    function test__loop_e()
+    {
+        $array = ['foo', 'bar', 'baz'];
+        foreach (__e($array) as $array__key => $array__value) {
+            if ($array__key === 0) {
+                $this->assertSame($array__value, 'foo');
+            }
+            if ($array__key === 1) {
+                $this->assertSame($array__value, 'bar');
+            }
+            if ($array__key === 2) {
+                $this->assertSame($array__value, 'baz');
+            }
+        }
+        $array = [];
+        foreach (__e($array) as $array__key => $array__value) {
+            $this->assertTrue(false);
+        }
+        foreach (__e(@$array2) as $array2__key => $array2__value) {
+            $this->assertTrue(false);
+        }
+    }
+
+    function test__loop_i()
     {
         $array = ['foo', 'bar', 'baz'];
         foreach (__i($array) as $array__key => $array__value) {
@@ -178,7 +201,7 @@ class Test extends \PHPUnit\Framework\TestCase
         if (@$_GET['number'] == 1337) {
             $this->assertTrue(false);
         }
-        foreach (__i(@$array) as $array__key => $array__value) {
+        foreach (__e(@$array) as $array__key => $array__value) {
             $this->assertTrue(false);
         }
         $this->assertSame(__v(@$var), null);

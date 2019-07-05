@@ -164,7 +164,7 @@ __e( $var1, $var2, $var3 )
 
 ```php
 // loop only if exists
-foreach( __i($array) as $array__key=>$array__value )
+foreach( __e($array) as $array__key=>$array__value )
 {
 
 }
@@ -182,7 +182,7 @@ if( __false(@$var) )
 if( @$var === 'foo' )
 if( @$_GET['number'] == 1337 )
 echo __v(@$var)
-foreach( __i(@$array) as $array__key=>$array__value)
+foreach( __e(@$array) as $array__key=>$array__value)
 
 ```
 
