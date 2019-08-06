@@ -474,7 +474,7 @@ __first(['foo' => 'bar', 'bar' => 'baz']) // 'bar'
 // get random element from array
 __rand(['foo', 'bar', 'baz']) // 'bar'
 
-// remove first/last item of array (and reindex)
+// remove first/last item of array (and reindex array)
 __remove_first(['foo', 'bar', 'baz']) // ['bar','baz']
 __remove_last(['foo', 'bar', 'baz']) // ['foo','bar']
 
