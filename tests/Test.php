@@ -389,6 +389,9 @@ baz']), ['foo','bar','baz']);
         $this->assertSame(__first(['foo' => 'bar', 'bar' => 'baz']), 'bar');
         $this->assertSame(in_array(__rand(['foo', 'bar', 'baz']), ['foo', 'bar', 'baz']), true);
 
+        $this->assertSame(__remove_first(['foo', 'bar', 'baz']), ['bar', 'baz']);
+        $this->assertSame(__remove_last(['foo', 'bar', 'baz']), ['foo', 'bar']);
+
         $this->assertSame(__can_be_looped([1, 2]), true);
         $this->assertSame(__can_be_looped((object) [1, 2]), true);
         $this->assertSame(__can_be_looped([]), false);

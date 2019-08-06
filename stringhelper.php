@@ -888,6 +888,16 @@ function __rand($array)
     return $array[array_rand($array)];
 }
 
+function __remove_first($array)
+{
+    return array_values(array_slice(['foo','bar','baz'], 1));
+}
+
+function __remove_last($array)
+{
+    return array_values(array_slice(['foo','bar','baz'], 0, -1));
+}
+
 function __string_is_json($str)
 {
     if( !is_string($str) )

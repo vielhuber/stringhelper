@@ -474,6 +474,10 @@ __first(['foo' => 'bar', 'bar' => 'baz']) // 'bar'
 // get random element from array
 __rand(['foo', 'bar', 'baz']) // 'bar'
 
+// remove first/last item of array (and reindex)
+__remove_first(['foo', 'bar', 'baz']) // ['bar','baz']
+__remove_last(['foo', 'bar', 'baz']) // ['foo','bar']
+
 // convert array to object
 __array_to_object(['foo']) // {0: 'foo'}
 __array_to_object(['foo','bar']) // {0: 'foo', 1: 'bar'}
