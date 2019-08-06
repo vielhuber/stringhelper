@@ -890,12 +890,12 @@ function __rand($array)
 
 function __remove_first($array)
 {
-    return array_values(array_slice(['foo','bar','baz'], 1));
+    return array_values(array_slice($array, 1));
 }
 
 function __remove_last($array)
 {
-    return array_values(array_slice(['foo','bar','baz'], 0, -1));
+    return array_values(array_slice($array, 0, -1));
 }
 
 function __string_is_json($str)
