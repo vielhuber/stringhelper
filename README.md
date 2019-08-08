@@ -603,6 +603,11 @@ __image_orientate('input.jpg');
 __image_orientate('input.jpg', 70);
 __image_orientate('input.jpg', 70, 'output.jpg');
 
+// poor mans encryption (openssl required)
+define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319');  // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
+__decrypt(__encrypt('foo')); // 'foo' (hard, with individual one-time salt)
+__decrypt(__encrypt('bar','known_salt')); // 'bar' (soft, good for searching in dbs)
+
 // check if link is external or internal
 __is_external('https://github.com/vielhuber/stringhelper') // false
 __is_external('https://github.com/vielhuber/stringhelper/') // false

@@ -515,6 +515,10 @@ baz']), ['foo','bar','baz']);
         $this->assertSame(__url(), 'https://github.com/vielhuber/stringhelper');
         $this->assertSame(__baseurl(), 'https://github.com');
 
+        define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319');  // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
+        $this->assertSame(__decrypt(__encrypt('foo')),'foo');
+        $this->assertSame(__decrypt(__encrypt('bar','known_salt')),'bar');
+
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/issues'), false);
