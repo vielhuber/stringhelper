@@ -957,7 +957,7 @@ function __curl($url, $data = null, $method = null, $headers = null)
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
     /* prepare headers */
     $curl_headers = [];
-    if ($method == 'POST' && __x($data)) {
+    if (($method == 'POST' || $method === 'PUT') && __x($data)) {
         $curl_headers[] = 'Content-Type: application/json';
         $curl_headers[] = 'Content-Length: ' . strlen(json_encode($data));
     }
@@ -972,9 +972,15 @@ function __curl($url, $data = null, $method = null, $headers = null)
     if ($method == 'GET') {
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
     }
-    if ($method == 'POST') {
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($curl, CURLOPT_POST, 1);
+    if ($method == 'DELETE') {
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    }
+    if ($method == 'POST' || $method === 'PUT') {
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        if( $method === 'POST' )
+        {
+            curl_setopt($curl, CURLOPT_POST, 1);
+        }
         if (__x($data)) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
         }

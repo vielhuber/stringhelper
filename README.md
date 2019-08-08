@@ -645,6 +645,8 @@ __curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method":
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); //  {"status": 200, "result" => { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }}
 __curl('https://vielhuber.de'); // json is automatically decoded (but only if the response is of type json)
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT'); //  {"status": 200, "result": { "method": "PUT", "data": {"foo": "bar"}, ... }}
+__curl('https://httpbin.org/anything', null, 'DELETE'); //  {"status": 200, "result": { "method": "DELETE", "data": "", ... }}
 
 // char helpers
 __char_to_int('D') // 4
