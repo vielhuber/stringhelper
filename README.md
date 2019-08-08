@@ -574,11 +574,11 @@ __expl(' ', 'foo bar baz', 1) // bar
 __prg() // to current url without get arguments
 __prg('https://test.de')
 
-// redirect
+// redirect via php/html
 __redirect_to() // to current url without get arguments
-__redirect_to('https://test.de') // to current url without get arguments
-__redirect_to('https://test.de', 301) // with 301
-__redirect_to('https://test.de', 302) // with 302
+__redirect_to('https://test.de')
+__redirect_to('https://test.de', 301) // with "Moved permanently"
+__redirect_to('https://test.de', 302) // with "Moved temporarily"
 __redirect_to('https://test.de', 7, 'html') // redirect in 7 seconds (via html)
 
 // throw exceptions (of type Exception)
