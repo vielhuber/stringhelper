@@ -1036,6 +1036,15 @@ function __url()
     return rtrim($url, '/');
 }
 
+function __urlWithoutArgs()
+{
+    if (__nx(@$_SERVER['HTTP_HOST']) || __nx(@$_SERVER['REQUEST_URI'])) {
+        return null;
+    }
+    $url = 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    return rtrim($url, '/');
+}
+
 function __baseurl()
 {
     if (__nx(@$_SERVER['HTTP_HOST'])) {

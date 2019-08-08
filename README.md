@@ -593,7 +593,8 @@ __error('missing data') // { success: false, message: 'missing data' }
 __os() // ['windows','mac','linux']
 
 // get current url (without trailing slash)
-__url() // https://github.com/vielhuber/stringhelper
+__url() // https://github.com/vielhuber/stringhelper?foo=bar (with get parameters)
+__urlWithoutArgs() // https://github.com/vielhuber/stringhelper (without get parameters)
 __baseurl() // https://github.com
 
 // compress image
