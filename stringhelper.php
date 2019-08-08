@@ -734,17 +734,18 @@ function __prg($url = null)
     die();
 }
 
-function __redirect($url = null)
+function __redirect_to($url = null, $code_or_seconds = null, $mode = 'php')
 {
-    if ($url == null) {
-        $url = @$_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://';
-        $url .= $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?');
-        if (__x(@$_GET['page_id'])) {
-            $url .= '?page_id=' . $_GET['page_id'];
-        }
+    if( $mode === 'php' )
+    {
+        header('Location: ' . __v($url,__baseurl()) . '', true, $code);
+        die();
     }
-    echo '<meta http-equiv="refresh" content="0; url=\'' . $url . '\'">';
-    die();
+    if( $mode === 'html' )
+    {
+        echo '<meta http-equiv="refresh" content="'.__v($code_or_seconds, 0).'; url=\'' . __v($url,__baseurl()) . '\'">';
+        die();
+    }
 }
 
 function __date($date, $format = null, $mod = null)
@@ -1224,6 +1225,19 @@ function __pushId()
 }
 
 /* LEGACY CODE */
+
+function __redirect($url = null)
+{
+    if ($url == null) {
+        $url = @$_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://';
+        $url .= $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?');
+        if (__x(@$_GET['page_id'])) {
+            $url .= '?page_id=' . $_GET['page_id'];
+        }
+    }
+    echo '<meta http-equiv="refresh" content="0; url=\'' . $url . '\'">';
+    die();
+}
 
 // same as __v
 function __f(...$args)

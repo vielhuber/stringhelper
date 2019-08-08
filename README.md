@@ -574,9 +574,12 @@ __expl(' ', 'foo bar baz', 1) // bar
 __prg() // to current url without get arguments
 __prg('https://test.de')
 
-// redirect via html
-__redirect() // to current url without get arguments
-__redirect('https://test.de')
+// redirect
+__redirect_to() // to current url without get arguments
+__redirect_to('https://test.de') // to current url without get arguments
+__redirect_to('https://test.de', 301) // with 301
+__redirect_to('https://test.de', 302) // with 302
+__redirect_to('https://test.de', 7, 'html') // redirect in 7 seconds (via html)
 
 // throw exceptions (of type Exception)
 try { __exception('foo'); }
