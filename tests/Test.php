@@ -344,6 +344,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__strip_nonchars('the Änswer is 42.-+&!foo'), 'the Änswer is foo');
         $this->assertSame(__strip_whitespace('the answer is 42'), 'theansweris42');
         $this->assertSame(__strip_whitespace('the  answeris42'), 'theansweris42');
+        $this->assertSame(__strip_whitespace_collapsed('the answer is 42'), 'the answer is 42');
+        $this->assertSame(__strip_whitespace_collapsed('the     answer             is 42 '), 'the answer is 42');
         $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), ['foo', 'bar', 'baz']);
 
         $this->assertSame(__remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), 'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz');

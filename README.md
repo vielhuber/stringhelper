@@ -416,6 +416,10 @@ __strip_nonchars('the Änswer is 42.-+&!foo'); // the Änswer is foo
 __strip_whitespace('the answer is 42') // theansweris42
 __strip_whitespace('the     answeris42') // theansweris42
 
+// strip whitespace (collapsed)
+__strip_whitespace_collapsed('the answer is 42') // the answer is 42
+__strip_whitespace_collapsed('the     answer             is 42 ') // the answer is 42
+
 // split string by new line
 __split_newline('foo
 bar

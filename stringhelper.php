@@ -291,6 +291,15 @@ function __strip_whitespace($string)
     return preg_replace('/\s+/', '', $string);
 }
 
+function __strip_whitespace_collapsed($string)
+{
+    if( !is_string($string) )
+    {
+        return '';
+    }
+    return implode(' ',__remove_empty(explode(' ',$string)));
+}
+
 function __split_newline($string)
 {
     return preg_split('/\r\n|\n|\r/', $string);
