@@ -341,6 +341,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__strip_nonnumeric('the answer is 42.00'), '42.00');
         $this->assertSame(__strip_digit('the answer is 42'), 'the answer is ');
         $this->assertSame(__strip_nondigit('the answer is 42'), '42');
+        $this->assertSame(__strip_nonchars('the Änswer is 42.-+&!foo'), 'the Änswer is foo');
         $this->assertSame(__strip_whitespace('the answer is 42'), 'theansweris42');
         $this->assertSame(__strip_whitespace('the  answeris42'), 'theansweris42');
         $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), ['foo', 'bar', 'baz']);
