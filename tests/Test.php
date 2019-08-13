@@ -311,6 +311,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));
         $this->assertSame(__date(strtotime('2000-01-01'), 'd.m.Y'), '01.01.2000');
         $this->assertSame(__date(strtotime('2000-01-01'), 'd.m.Y', '+6 months'), '01.07.2000');
+        $this->assertSame(__date(), date('Y-m-d', strtotime('now')));
         $this->assertSame(__date(null), null);
         $this->assertSame(__date(true), null);
         $this->assertSame(__date(false), null);

@@ -762,8 +762,12 @@ function __redirect_to($url = null, $code_or_seconds = null, $mode = 'php')
     }
 }
 
-function __date($date, $format = null, $mod = null)
+function __date($date = null, $format = null, $mod = null)
 {
+    if( func_num_args() === 0 )
+    {
+        $date = 'now';
+    }
     if (__nx($date) || $date === true || $date === false) {
         return null;
     }
