@@ -347,6 +347,7 @@ if( __nx_one('foo', 'bar') ) // false
 if( __nx_one('', null) ) // true
 
 // cookies
+__cookie_set('cookie_name', 'cookie_value') // set cookie for 30 days
 __cookie_set('cookie_name', 'cookie_value', 7) // set cookie for 7 days
 __cookie_set('cookie_name2', ['can also', 'store', 'arrays'], 7);
 __cookie_exists('cookie_name') // true

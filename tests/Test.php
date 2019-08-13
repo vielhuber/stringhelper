@@ -280,6 +280,10 @@ class Test extends \PHPUnit\Framework\TestCase
         @__cookie_set('cookie_name', [1, '42'], 7);
         $this->assertSame(__cookie_exists('cookie_name'), true);
         $this->assertSame(__cookie_get('cookie_name'), [1, '42']);
+        @__cookie_delete('cookie_name');
+        @__cookie_set('cookie_name', 'cookie_value');
+        $this->assertSame(__cookie_exists('cookie_name'), true);
+        $this->assertSame(__cookie_get('cookie_name'), 'cookie_value');
     }
 
     function test__helpers()

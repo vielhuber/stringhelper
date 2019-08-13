@@ -237,7 +237,7 @@ function __cookie_get($cookie_name)
     return $return;
 }
 
-function __cookie_set($cookie_name, $cookie_value, $days)
+function __cookie_set($cookie_name, $cookie_value, $days = 30)
 {
     if (is_array($cookie_value)) {
         $cookie_value = serialize($cookie_value);
