@@ -665,7 +665,7 @@ __inc_char('Z') // 'AA'
 __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
 
-// inline text modifications using sed/awk (also works on bsd)
+// inline text modifications using sed (also works on sed bsd)
 __sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt');
 __sed_prepend('foo', 'file.txt');
 __sed_append('bar', 'file.txt');
