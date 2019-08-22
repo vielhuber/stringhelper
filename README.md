@@ -666,9 +666,9 @@ __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
 
 // inline text modifications using sed/awk (also works on bsd)
-__fast_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt');
-__fast_prepend('foo', 'file.txt');
-__fast_append('bar', 'file.txt');
+__sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt');
+__sed_prepend('foo', 'file.txt');
+__sed_append('bar', 'file.txt');
 
 // measure performance
 __log_begin();
