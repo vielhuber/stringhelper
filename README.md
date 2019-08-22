@@ -5,29 +5,22 @@
 tired of writing
 
 ```php
-if( isset($_POST['foo']) && $_POST['foo'] === '1' )
-{
-
+if (isset($_POST['foo']) && $_POST['foo'] === '1') {
 }
 ```
 
 or
 
 ```php
-if( !empty($a) || (isset($a) && $a === 0) )
-{
-
+if (!empty($a) || (isset($a) && $a === 0)) {
 }
 ```
 
 or
 
 ```php
-if( !empty($a) )
-{
-    foreach( $a as $value )
-    {
-
+if (!empty($a)) {
+    foreach ($a as $value) {
     }
 }
 ```
@@ -35,9 +28,21 @@ if( !empty($a) )
 or
 
 ```php
-if( Person::find(1) !== null && Person::find(1)->getAddress() !== null && Person::find(1)->getAddress()->getCountry() !== null && Person::find(1)->getAddress()->getCountry()->getName() !== null )
-{
-    echo Person::find(1)->getAddress()->getCountry()->getName();
+if (
+    Person::find(1) !== null &&
+    Person::find(1)->getAddress() !== null &&
+    Person::find(1)
+        ->getAddress()
+        ->getCountry() !== null &&
+    Person::find(1)
+        ->getAddress()
+        ->getCountry()
+        ->getName() !== null
+) {
+    echo Person::find(1)
+        ->getAddress()
+        ->getCountry()
+        ->getName();
 }
 ```
 
@@ -72,15 +77,11 @@ composer dump-autoload
 
 ```php
 // check existence
-if( __x($var) )
-{
-
+if (__x($var)) {
 }
 
 // check non-existence
-if( __nx($var) )
-{
-
+if (__nx($var)) {
 }
 ```
 
@@ -164,9 +165,7 @@ __e( $var1, $var2, $var3 )
 
 ```php
 // loop only if exists
-foreach( __e($array) as $array__key=>$array__value )
-{
-
+foreach (__e($array) as $array__key => $array__value) {
 }
 ```
 
@@ -665,6 +664,11 @@ __inc_char('D') // 'E'
 __inc_char('Z') // 'AA'
 __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
+
+// inline text modifications using sed/awk (also works on bsd)
+__fast_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt');
+__fast_prepend('foo', 'file.txt');
+__fast_append('bar', 'file.txt');
 
 // measure performance
 __log_begin();

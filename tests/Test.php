@@ -355,21 +355,21 @@ class Test extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(__remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), 'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz');
         $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
-        
+
         $this->assertSame(__atrim(null), null);
         $this->assertSame(__atrim(false), false);
         $this->assertSame(__atrim(true), true);
         $this->assertSame(__atrim([]), []);
-        $this->assertSame(__atrim(['foo','bar','baz']), ['foo','bar','baz']);
+        $this->assertSame(__atrim(['foo', 'bar', 'baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(__atrim(['foo
-','bar','
-baz']), ['foo','bar','baz']);
+', 'bar', '
+baz']), ['foo', 'bar', 'baz']);
 
         $this->assertSame(__string_is_json('[]'), true);
         $this->assertSame(__string_is_json('{"foo":"bar"}'), true);
         $this->assertSame(__string_is_json('["foo" => "bar"]'), false);
         $this->assertSame(__string_is_json([]), false);
-        $this->assertSame(__string_is_json((object)[]), false);
+        $this->assertSame(__string_is_json((object) []), false);
 
         $this->assertSame(__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true);
         $this->assertSame(__is_serialized(''), false);
@@ -530,8 +530,8 @@ baz']), ['foo','bar','baz']);
         $this->assertSame(__baseurl(), 'https://github.com');
 
         define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319');  // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
-        $this->assertSame(__decrypt(__encrypt('foo')),'foo');
-        $this->assertSame(__decrypt(__encrypt('bar','known_salt')),'bar');
+        $this->assertSame(__decrypt(__encrypt('foo')), 'foo');
+        $this->assertSame(__decrypt(__encrypt('bar', 'known_salt')), 'bar');
 
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);
@@ -568,13 +568,42 @@ baz']), ['foo','bar','baz']);
         $this->assertSame(__dec_char('U', 2), 'S');
         $this->assertSame(__dec_char('A'), '');
 
-        copy('tests/images/compress.jpg', 'tests/images/input.jpg');
-        $filesize1 = filesize('tests/images/input.jpg');
-        __image_compress('tests/images/input.jpg', 10, 'tests/images/output.jpg');
-        $filesize2 = filesize('tests/images/output.jpg');
+        copy('tests/assets/compress.jpg', 'tests/assets/input.jpg');
+        $filesize1 = filesize('tests/assets/input.jpg');
+        __image_compress('tests/assets/input.jpg', 10, 'tests/assets/output.jpg');
+        $filesize2 = filesize('tests/assets/output.jpg');
         $this->assertSame($filesize1 > $filesize2, true);
-        @unlink('tests/images/input.jpg');
-        @unlink('tests/images/output.jpg');
+        @unlink('tests/assets/input.jpg');
+        @unlink('tests/assets/output.jpg');
+
+        file_put_contents('tests/assets/file.txt', 'foo
+foo
+bar
+foo
+bar
+baz
+gna
+gna
+cool; stuff;');
+        __sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr', 'cool; stuff;' => 'foo'], 'tests/assets/file.txt');
+        $this->assertSame(file_get_contents('tests/assets/file.txt'), 'baz
+baz
+baz
+baz
+baz
+baz
+gnarr
+gnarr
+foo');
+        @unlink('tests/assets/file.txt');
+
+        file_put_contents('tests/assets/file.txt', 'foo');
+        __sed_prepend('baz gnarr; /\yoo&', 'tests/assets/file.txt');
+        __sed_append('bar fuu; yoo//', 'tests/assets/file.txt');
+        $this->assertSame(file_get_contents('tests/assets/file.txt'), 'baz gnarr; /\yoo&
+foo
+bar fuu; yoo//');
+        //@unlink('tests/assets/file.txt');
 
         __log_begin('foo');
         $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');
@@ -615,7 +644,7 @@ baz']), ['foo','bar','baz']);
         __log_begin();
         sleep(1);
         $data = __log_end(null, false);
-        $this->assertSame(intval(round($data['time'])),1);
+        $this->assertSame(intval(round($data['time'])), 1);
     }
 }
 

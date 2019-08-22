@@ -293,11 +293,10 @@ function __strip_whitespace($string)
 
 function __strip_whitespace_collapsed($string)
 {
-    if( !is_string($string) )
-    {
+    if (!is_string($string)) {
         return '';
     }
-    return implode(' ',__remove_empty(explode(' ',$string)));
+    return implode(' ', __remove_empty(explode(' ', $string)));
 }
 
 function __split_newline($string)
@@ -319,13 +318,11 @@ function __remove_newlines($string)
 
 function __atrim($arr)
 {
-    if( __nx($arr) || (!is_array($arr) && !($arr instanceof Traversable)) )
-    {
+    if (__nx($arr) || (!is_array($arr) && !($arr instanceof Traversable))) {
         return $arr;
     }
 
-    foreach($arr as $arr__key=>$arr__value)
-    {
+    foreach ($arr as $arr__key => $arr__value) {
         $arr[$arr__key] = trim($arr__value);
     }
     return $arr;
@@ -750,22 +747,19 @@ function __prg($url = null)
 
 function __redirect_to($url = null, $code_or_seconds = null, $mode = 'php')
 {
-    if( $mode === 'php' )
-    {
-        header('Location: ' . __v($url,__baseurl()) . '', true, $code);
+    if ($mode === 'php') {
+        header('Location: ' . __v($url, __baseurl()) . '', true, $code);
         die();
     }
-    if( $mode === 'html' )
-    {
-        echo '<meta http-equiv="refresh" content="'.__v($code_or_seconds, 0).'; url=\'' . __v($url,__baseurl()) . '\'">';
+    if ($mode === 'html') {
+        echo '<meta http-equiv="refresh" content="' . __v($code_or_seconds, 0) . '; url=\'' . __v($url, __baseurl()) . '\'">';
         die();
     }
 }
 
 function __date($date = null, $format = null, $mod = null)
 {
-    if( func_num_args() === 0 )
-    {
+    if (func_num_args() === 0) {
         $date = 'now';
     }
     if (__nx($date) || $date === true || $date === false) {
@@ -787,8 +781,7 @@ function __date($date = null, $format = null, $mod = null)
     if (__x($mod)) {
         $date .= ' ' . $mod;
     }
-    if( strtotime($date) === false )
-    {
+    if (strtotime($date) === false) {
         return null;
     }
     return date($format, strtotime($date));
@@ -919,8 +912,7 @@ function __remove_last($array)
 
 function __string_is_json($str)
 {
-    if( !is_string($str) )
-    {
+    if (!is_string($str)) {
         return false;
     }
     json_decode($str);
@@ -929,22 +921,15 @@ function __string_is_json($str)
 
 function __fetch($url, $method = null)
 {
-    if(
-        $method === 'curl' ||
-        ($method === null && function_exists('curl_version'))
-    )
-    {
+    if (
+        $method === 'curl' || ($method === null && function_exists('curl_version'))
+    ) {
         $result = __curl($url)->result;
-    }
-    elseif(
-        $method === 'php' ||
-        ($method === null && file_get_contents(__FILE__) && ini_get('allow_url_fopen'))
-    )
-    {
+    } elseif (
+        $method === 'php' || ($method === null && file_get_contents(__FILE__) && ini_get('allow_url_fopen'))
+    ) {
         $result = @file_get_contents($url);
-    }
-    else
-    {
+    } else {
         $result = json_encode([]);
     }
     if (__string_is_json($result)) {
@@ -995,8 +980,7 @@ function __curl($url, $data = null, $method = null, $headers = null)
     }
     if ($method == 'POST' || $method === 'PUT') {
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-        if( $method === 'POST' )
-        {
+        if ($method === 'POST') {
             curl_setopt($curl, CURLOPT_POST, 1);
         }
         if (__x($data)) {
@@ -1109,6 +1093,54 @@ function __dec_char($char, $shift = 1)
     return __int_to_char(__char_to_int($char) - $shift);
 }
 
+function __sed_replace($replacements = [], $filename)
+{
+    if (!file_exists($filename)) {
+        return;
+    }
+    $command = "sed -i" . (__os() === 'mac' ? " ''" : "") . "";
+    foreach ($replacements as $replacements__key => $replacements__value) {
+        $command .= " -e 's/" . __sed_escape($replacements__key) . "/" . __sed_escape($replacements__value) . "/g'";
+    }
+    $command .= ' "' . $filename . '"';
+    shell_exec($command);
+}
+
+function __sed_prepend($str, $filename)
+{
+    if (!file_exists($filename)) {
+        return;
+    }
+    $new_line = "\\n";
+    if (__os() === 'mac') {
+        $new_line = "\\\\\\n";
+    }
+    $command = "sed -i" . (__os() === 'mac' ? " ''" : "") . "";
+    $command .= " '1s;^;" . __sed_escape($str) . "" . $new_line . ";'";
+    $command .= ' "' . $filename . '"';
+    shell_exec($command);
+}
+
+function __sed_append($str, $filename)
+{
+    if (!file_exists($filename)) {
+        return;
+    }
+    $new_line = "\\n";
+    if (__os() === 'mac') {
+        $new_line = "\\\\\\n";
+    }
+    $command = "sed -i" . (__os() === 'mac' ? " ''" : "") . "";
+    $command .= " '$ s/$/" . $new_line . "" . __sed_escape($str) . "/'";
+    $command .= ' "' . $filename . '"';
+    shell_exec($command);
+}
+
+function __sed_escape($str)
+{
+    return str_replace('/', '\/', str_replace('&', '\&', str_replace(';', '\;', preg_quote($str))));
+}
+
 function __log_begin($message = null)
 {
     if (!isset($GLOBALS['performance'])) {
@@ -1126,22 +1158,19 @@ function __log_end($message = null, $echo = true)
         $GLOBALS['performance'] = [];
     }
     $performance_active_key = null;
-    foreach(array_reverse($GLOBALS['performance'], true) as $performance__key=>$performance__value)
-    {
-        if( $performance__value['message'] === $message || $message === null )
-        {
+    foreach (array_reverse($GLOBALS['performance'], true) as $performance__key => $performance__value) {
+        if ($performance__value['message'] === $message || $message === null) {
             $performance_active_key = $performance__key;
             break;
         }
     }
-    if( $performance_active_key === null )
-    {
+    if ($performance_active_key === null) {
         return null;
     }
     $message = $GLOBALS['performance'][$performance_active_key]['message'];
     $time = number_format(microtime(true) - $GLOBALS['performance'][$performance_active_key]['time'], 5);
     if ($echo === true) {
-        echo 'script' . (($message != '')?(' '.$message):('')) . ' execution time: ' . $time . ' seconds' . PHP_EOL;
+        echo 'script' . (($message != '') ? (' ' . $message) : ('')) . ' execution time: ' . $time . ' seconds' . PHP_EOL;
     }
     unset($GLOBALS['performance'][$performance_active_key]);
     $GLOBALS['performance'] = array_values($GLOBALS['performance']);
@@ -1201,12 +1230,15 @@ function __image_orientate($source, $quality = 90, $destination = null)
 
 function __encrypt($string, $salt = null)
 {
-  if($salt === null) { $salt = hash('sha256', uniqid(mt_rand(), true)); }  // this is an unique salt per entry and directly stored within a password
-  return base64_encode(openssl_encrypt($string, 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT))).':'.$salt;
+    if ($salt === null) {
+        $salt = hash('sha256', uniqid(mt_rand(), true));
+    }  // this is an unique salt per entry and directly stored within a password
+    return base64_encode(openssl_encrypt($string, 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT))) . ':' . $salt;
 }
 function __decrypt($string)
 {
-    $salt = explode(":",$string)[1]; $string = explode(":",$string)[0]; // read salt from entry
+    $salt = explode(":", $string)[1];
+    $string = explode(":", $string)[0]; // read salt from entry
     return openssl_decrypt(base64_decode($string), 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT));
 }
 

@@ -1,5 +1,6 @@
 /.idea/
 composer.lock
 /vendor/
-/tests/images/input.jpg
-/tests/images/output.jpg
+/tests/assets/input.jpg
+/tests/assets/output.jpg
+/tests/assets/file.txt
