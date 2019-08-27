@@ -1113,7 +1113,7 @@ function __sed_prepend($str, $filename)
     }
     $new_line = "\\n";
     if (__os() === 'mac') {
-        $new_line = "\\\\\\n";
+        $new_line = "'$'\\\n''";
     }
     $command = "sed -i" . (__os() === 'mac' ? " ''" : "") . "";
     $command .= " '1s;^;" . __sed_escape($str) . "" . $new_line . ";'";
@@ -1126,12 +1126,8 @@ function __sed_append($str, $filename)
     if (!file_exists($filename)) {
         return;
     }
-    $new_line = "\\n";
-    if (__os() === 'mac') {
-        $new_line = "\\\\\\n";
-    }
     $command = "sed -i" . (__os() === 'mac' ? " ''" : "") . "";
-    $command .= " '$ a\\" . __sed_escape($str) . "'";
+    $command .= " '$ a\\" . ((__os() === 'mac')?("'$'\n'' "):('')) . __sed_escape($str) . "'";
     $command .= ' "' . $filename . '"';
     shell_exec($command);
 }
