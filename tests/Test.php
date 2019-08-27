@@ -377,6 +377,11 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(__is_serialized('idkfa'), false);
         $this->assertSame(__is_serialized('b:0;'), true);
 
+        $this->assertSame(__is_base64_encoded('dGhpcyBpcyBjb29sIHN0dWZm'), true);
+        $this->assertSame(__is_base64_encoded('#ib3498r'), false);
+        $this->assertSame(__is_base64_encoded('al3Vna##2dqa#Gdm'), false);
+        $this->assertSame(__is_base64_encoded((object)[]), false);
+
         $this->assertSame(__extract('<a href="#foo">bar</a>', 'href="', '">'), '#foo');
         $this->assertSame(__extract('<a href="#foo">bar</a>', '">', '</a'), 'bar');
         $this->assertSame(__strposx('bar foo baz foobar', 'foo'), [4, 12]);

@@ -1242,6 +1242,21 @@ function __decrypt($string)
     return openssl_decrypt(base64_decode($string), 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT));
 }
 
+function __is_base64_encoded($str)
+{
+    if( !is_string($str) )
+    {
+        return false;
+    }
+    if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $str))
+    {
+       return true;
+    }
+    else
+    {
+       return false;
+    }
+}
 
 function __is_external($link)
 {

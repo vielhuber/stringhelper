@@ -455,6 +455,12 @@ __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
 __is_serialized('idkfa') // false
 __is_serialized('b:0;') // true
 
+// check if string is base64 encoded
+__is_base64_encoded('dGhpcyBpcyBjb29sIHN0dWZm'); // true
+__is_base64_encoded('#ib3498r'); // false
+__is_base64_encoded('al3Vna##2dqa#Gdm'); // false
+__is_base64_encoded((object)[]); // false
+
 // extract part from string
 __extract('<a href="#foo">bar</a>','href="','">') // #foo
 __extract('<a href="#foo">bar</a>','">','</a') // bar
