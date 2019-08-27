@@ -380,7 +380,7 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(__is_base64_encoded('dGhpcyBpcyBjb29sIHN0dWZm'), true);
         $this->assertSame(__is_base64_encoded('#ib3498r'), false);
         $this->assertSame(__is_base64_encoded('al3Vna##2dqa#Gdm'), false);
-        $this->assertSame(__is_base64_encoded((object)[]), false);
+        $this->assertSame(__is_base64_encoded((object) []), false);
 
         $this->assertSame(__extract('<a href="#foo">bar</a>', 'href="', '">'), '#foo');
         $this->assertSame(__extract('<a href="#foo">bar</a>', '">', '</a'), 'bar');
@@ -581,6 +581,33 @@ baz']), ['foo', 'bar', 'baz']);
         @unlink('tests/assets/input.jpg');
         @unlink('tests/assets/output.jpg');
 
+
+
+        file_put_contents('tests/assets/file1.txt', __line_endings_convert('foo
+bar', 'linux'));
+        file_put_contents('tests/assets/file2.txt', __line_endings_convert('foo
+bar', 'mac'));
+        file_put_contents('tests/assets/file3.txt', __line_endings_convert('foo
+bar', 'windows'));
+        $this->assertNotSame(file_get_contents('tests/assets/file1.txt'), file_get_contents('tests/assets/file2.txt'));
+        $this->assertNotSame(file_get_contents('tests/assets/file1.txt'), file_get_contents('tests/assets/file3.txt'));
+        $this->assertNotSame(file_get_contents('tests/assets/file2.txt'), file_get_contents('tests/assets/file3.txt'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file1.txt'), 'windows'), __line_endings_convert(file_get_contents('tests/assets/file2.txt'), 'windows'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file1.txt'), 'mac'), __line_endings_convert(file_get_contents('tests/assets/file2.txt'), 'mac'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file1.txt'), 'linux'), __line_endings_convert(file_get_contents('tests/assets/file2.txt'), 'linux'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file1.txt'), 'windows'), __line_endings_convert(file_get_contents('tests/assets/file3.txt'), 'windows'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file1.txt'), 'mac'), __line_endings_convert(file_get_contents('tests/assets/file3.txt'), 'mac'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file1.txt'), 'linux'), __line_endings_convert(file_get_contents('tests/assets/file3.txt'), 'linux'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file2.txt'), 'windows'), __line_endings_convert(file_get_contents('tests/assets/file3.txt'), 'windows'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file2.txt'), 'mac'), __line_endings_convert(file_get_contents('tests/assets/file3.txt'), 'mac'));
+        $this->assertSame(__line_endings_convert(file_get_contents('tests/assets/file2.txt'), 'linux'), __line_endings_convert(file_get_contents('tests/assets/file3.txt'), 'linux'));
+        $this->assertSame(__line_endings_weak_equals(file_get_contents('tests/assets/file1.txt'), file_get_contents('tests/assets/file2.txt')), true);
+        $this->assertSame(__line_endings_weak_equals(file_get_contents('tests/assets/file1.txt'), file_get_contents('tests/assets/file3.txt')), true);
+        $this->assertSame(__line_endings_weak_equals(file_get_contents('tests/assets/file2.txt'), file_get_contents('tests/assets/file3.txt')), true);
+        @unlink('tests/assets/file1.txt');
+        @unlink('tests/assets/file2.txt');
+        @unlink('tests/assets/file3.txt');
+
         file_put_contents('tests/assets/file.txt', 'foo
 foo
 bar
@@ -591,7 +618,7 @@ gna
 gna
 cool; stuff;');
         __sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr', 'cool; stuff;' => 'foo'], 'tests/assets/file.txt');
-        $this->assertSame(file_get_contents('tests/assets/file.txt'), 'baz
+        $this->assertSame(__line_endings_weak_equals(trim(file_get_contents('tests/assets/file.txt')), 'baz
 baz
 baz
 baz
@@ -599,16 +626,16 @@ baz
 baz
 gnarr
 gnarr
-foo');
+foo'), true);
         @unlink('tests/assets/file.txt');
 
         file_put_contents('tests/assets/file.txt', 'foo');
         __sed_prepend('baz gnarr; /\yoo&', 'tests/assets/file.txt');
         __sed_append('bar fuu; yoo//', 'tests/assets/file.txt');
-        $this->assertSame(file_get_contents('tests/assets/file.txt'), 'baz gnarr; /\yoo&
+        $this->assertSame(__line_endings_weak_equals(trim(file_get_contents('tests/assets/file.txt')), 'baz gnarr; /\yoo&
 foo
-bar fuu; yoo//');
-        //@unlink('tests/assets/file.txt');
+bar fuu; yoo//'), true);
+        @unlink('tests/assets/file.txt');
 
         __log_begin('foo');
         $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');

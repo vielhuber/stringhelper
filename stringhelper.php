@@ -1131,7 +1131,7 @@ function __sed_append($str, $filename)
         $new_line = "\\\\\\n";
     }
     $command = "sed -i" . (__os() === 'mac' ? " ''" : "") . "";
-    $command .= " '$ s/$/" . $new_line . "" . __sed_escape($str) . "/'";
+    $command .= " '$ a\\" . __sed_escape($str) . "'";
     $command .= ' "' . $filename . '"';
     shell_exec($command);
 }
@@ -1139,6 +1139,36 @@ function __sed_append($str, $filename)
 function __sed_escape($str)
 {
     return str_replace('/', '\/', str_replace('&', '\&', str_replace(';', '\;', preg_quote($str))));
+}
+
+function __line_endings_convert($str, $os)
+{
+    if (__nx($str) || !is_string($str) || __nx($os) || !in_array($os, ['linux', 'mac', 'windows'])) {
+        return '';
+    }
+    if ($os === 'linux') {
+        $str = str_replace("\r\n", "\n", $str);
+        $str = str_replace("\r", "\n", $str);
+    }
+    if ($os === 'mac') {
+        $str = str_replace("\r\n", "\n", $str);
+        $str = str_replace("\r", "\n", $str);
+        $str = str_replace("\n", "\r", $str);
+    }
+    if ($os === 'windows') {
+        $str = str_replace("\r\n", "\n", $str);
+        $str = str_replace("\r", "\n", $str);
+        $str = str_replace("\n", "\r\n", $str);
+    }
+    return $str;
+}
+
+function __line_endings_weak_equals($str1, $str2)
+{
+    if ((!is_string($str1) || !is_string($str2)) && $str1 !== $str2) {
+        return false;
+    }
+    return __line_endings_convert($str1, 'linux') === __line_endings_convert($str2, 'linux');
 }
 
 function __log_begin($message = null)
@@ -1244,17 +1274,13 @@ function __decrypt($string)
 
 function __is_base64_encoded($str)
 {
-    if( !is_string($str) )
-    {
+    if (!is_string($str)) {
         return false;
     }
-    if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $str))
-    {
-       return true;
-    }
-    else
-    {
-       return false;
+    if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $str)) {
+        return true;
+    } else {
+        return false;
     }
 }
 

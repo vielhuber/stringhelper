@@ -671,6 +671,12 @@ __inc_char('Z') // 'AA'
 __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
 
+// fun with line endings
+__line_endings_convert($str, 'unix') // converts string to linux line endings (LF)
+__line_endings_convert($str, 'mac') // converts string to mac line endings (CR)
+__line_endings_convert($str, 'windows') // converts string to windows line endings (CRLF)
+__line_endings_weak_equals($str1, $str2) // compares 2 strings ignoring its line endings
+
 // inline text modifications using sed (also works on sed bsd)
 __sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt');
 __sed_prepend('foo', 'file.txt');

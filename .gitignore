@@ -4,3 +4,4 @@ composer.lock
 /tests/assets/input.jpg
 /tests/assets/output.jpg
 /tests/assets/file.txt
+/tests/assets/file*.txt
