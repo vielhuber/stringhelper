@@ -672,7 +672,7 @@ __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
 
 // fun with line endings
-__line_endings_convert($str, 'unix') // converts string to linux line endings (LF)
+__line_endings_convert($str, 'linux') // converts string to linux line endings (LF)
 __line_endings_convert($str, 'mac') // converts string to mac line endings (CR)
 __line_endings_convert($str, 'windows') // converts string to windows line endings (CRLF)
 __line_endings_weak_equals($str1, $str2) // compares 2 strings ignoring its line endings
