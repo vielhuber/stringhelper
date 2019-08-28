@@ -1,7 +1,7 @@
 language: php
 php:
-    - 7.2
+    - 7.3.7
 os:
     - linux
-    - osx
-    #- windows (windows currently has no support for php in travis ci)
+    #- osx (currently no support for php in travis ci)
+    #- windows (currently no support for php in travis ci)
