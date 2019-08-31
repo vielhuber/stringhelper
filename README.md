@@ -54,23 +54,6 @@ if (
 composer require vielhuber/stringhelper
 ```
 
-hotload the functions in your composer.json:
-
-```
-...
-"autoload": {
-	...
-    "files": [
-        "vendor/vielhuber/stringhelper/stringhelper.php"
-    ]
-},
-...
-```
-
-```
-composer dump-autoload
-```
-
 ## usage
 
 ### existence
