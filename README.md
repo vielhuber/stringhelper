@@ -645,7 +645,7 @@ __curl(
     'POST', // method
     ['Bar' => 'baz'], // headers
     false, // store and send cookies
-    false // send as json (or application/x-www-form-urlencoded)
+    true // send as json (or application/x-www-form-urlencoded)
 );
 __curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }}

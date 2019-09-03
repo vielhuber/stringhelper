@@ -938,7 +938,7 @@ function __fetch($url, $method = null)
     return $result;
 }
 
-function __curl($url = '', $data = null, $method = null, $headers = null, $enable_cookies = false, $send_as_json = false)
+function __curl($url = '', $data = null, $method = null, $headers = null, $enable_cookies = false, $send_as_json = true)
 {
     // guess method based on data
     if ($method === null) {
@@ -963,7 +963,7 @@ function __curl($url = '', $data = null, $method = null, $headers = null, $enabl
 
     /* encode data */
     if (__x($data)) {
-        if ($send_as_json === false) {
+        if ($send_as_json === true) {
             $data = json_encode($data);
         } else {
             $data = http_build_query($data);
@@ -973,7 +973,7 @@ function __curl($url = '', $data = null, $method = null, $headers = null, $enabl
     /* prepare headers */
     $curl_headers = [];
     if (($method == 'POST' || $method === 'PUT') && __x($data)) {
-        if ($send_as_json === false) {
+        if ($send_as_json === true) {
             $curl_headers[] = 'Content-Type: application/json';
             $curl_headers[] = 'Content-Length: ' . strlen($data);
         } else {

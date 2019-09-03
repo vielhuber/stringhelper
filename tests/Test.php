@@ -523,7 +523,7 @@ baz']), ['foo', 'bar', 'baz']);
             $wp_url = 'https://vielhuber.de';
             $wp_username = 'username';
             $wp_password = 'password';
-            __curl($wp_url . '/wp-login.php', ['log' => $wp_username, 'pwd' => $wp_password], 'POST', null, true, true);
+            __curl($wp_url . '/wp-login.php', ['log' => $wp_username, 'pwd' => $wp_password], 'POST', null, true, false);
             $response = __curl($wp_url . '/wp-admin/options.php', null, 'GET', null, true); // gets the html code of wp backend
             $this->assertTrue(strpos($response->result, 'show_avatars') !== false);
         }
