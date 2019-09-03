@@ -938,7 +938,7 @@ function __fetch($url, $method = null)
     return $result;
 }
 
-function __curl($url, $data = null, $method = null, $headers = null)
+function __curl($url = '', $data = null, $method = null, $headers = null, $enable_cookies = false, $send_as_json = false)
 {
     // guess method based on data
     if ($method === null) {
@@ -951,18 +951,34 @@ function __curl($url, $data = null, $method = null, $headers = null)
     if ($method == 'GET' && __x($data)) {
         $url .= '?' . http_build_query($data);
     }
+
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 400);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 10);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // don't verify certificate
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); // follow redirects
+
+    /* encode data */
+    if (__x($data)) {
+        if ($send_as_json === false) {
+            $data = json_encode($data);
+        } else {
+            $data = http_build_query($data);
+        }
+    }
+
     /* prepare headers */
     $curl_headers = [];
     if (($method == 'POST' || $method === 'PUT') && __x($data)) {
-        $curl_headers[] = 'Content-Type: application/json';
-        $curl_headers[] = 'Content-Length: ' . strlen(json_encode($data));
+        if ($send_as_json === false) {
+            $curl_headers[] = 'Content-Type: application/json';
+            $curl_headers[] = 'Content-Length: ' . strlen($data);
+        } else {
+            $curl_headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        }
     }
     foreach (__i($headers) as $headers__key => $headers__value) {
         $curl_headers[] = $headers__key . ': ' . $headers__value;
@@ -984,12 +1000,27 @@ function __curl($url, $data = null, $method = null, $headers = null)
             curl_setopt($curl, CURLOPT_POST, 1);
         }
         if (__x($data)) {
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         }
+    }
+    if ($enable_cookies === true) {
+        $cookie_filename = 'stringhelper-curl-cookies.txt';
+        if (isset($GLOBALS[$cookie_filename])) {
+            file_put_contents($cookie_filename, $GLOBALS[$cookie_filename]);
+        }
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie_filename); // read
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie_filename); // store
     }
     $result = curl_exec($curl);
     $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
+
+    if ($enable_cookies === true) {
+        if (file_exists($cookie_filename)) {
+            $GLOBALS[$cookie_filename] = file_get_contents($cookie_filename);
+            @unlink($cookie_filename);
+        }
+    }
 
     if (__string_is_json($result)) {
         $result = json_decode($result);
@@ -1127,7 +1158,7 @@ function __sed_append($str, $filename)
         return;
     }
     $command = "sed -i" . (__os() === 'mac' ? " ''" : "") . "";
-    $command .= " '$ a\\" . ((__os() === 'mac')?("'$'\n'' "):('')) . __sed_escape($str) . "'";
+    $command .= " '$ a\\" . ((__os() === 'mac') ? ("'$'\n'' ") : ('')) . __sed_escape($str) . "'";
     $command .= ' "' . $filename . '"';
     shell_exec($command);
 }

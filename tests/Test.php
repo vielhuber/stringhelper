@@ -518,6 +518,16 @@ baz']), ['foo', 'bar', 'baz']);
         $response = __curl('https://vielhuber.de');
         $this->assertTrue(strpos($response->result, '<html') !== false);
 
+        //fill in your wp credentials to test this
+        if (1 == 0) {
+            $wp_url = 'https://vielhuber.de';
+            $wp_username = 'username';
+            $wp_password = 'password';
+            __curl($wp_url . '/wp-login.php', ['log' => $wp_username, 'pwd' => $wp_password], 'POST', null, true, true);
+            $response = __curl($wp_url . '/wp-admin/options.php', null, 'GET', null, true); // gets the html code of wp backend
+            $this->assertTrue(strpos($response->result, 'show_avatars') !== false);
+        }
+
         try {
             __exception('foo');
         } catch (Exception $e) {
