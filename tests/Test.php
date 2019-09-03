@@ -518,7 +518,7 @@ baz']), ['foo', 'bar', 'baz']);
         $response = __curl('https://vielhuber.de');
         $this->assertTrue(strpos($response->result, '<html') !== false);
 
-        //fill in your wp credentials to test this
+        // fill in your wp credentials to test this
         if (1 == 0) {
             $wp_url = 'https://vielhuber.de';
             $wp_username = 'username';

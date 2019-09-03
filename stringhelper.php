@@ -938,7 +938,7 @@ function __fetch($url, $method = null)
     return $result;
 }
 
-function __curl($url = '', $data = null, $method = null, $headers = null, $enable_cookies = false, $send_as_json = true)
+function __curl($url = '', $data = null, $method = null, $headers = null, $enable_cookies = false, $send_as_json = true, $timeout = 60)
 {
     // guess method based on data
     if ($method === null) {
@@ -956,7 +956,7 @@ function __curl($url = '', $data = null, $method = null, $headers = null, $enabl
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // don't verify certificate
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); // follow redirects
