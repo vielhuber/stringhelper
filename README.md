@@ -610,6 +610,12 @@ define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2
 __decrypt(__encrypt('foo')); // 'foo' (hard, with individual one-time salt)
 __decrypt(__encrypt('bar','known_salt')); // 'bar' (soft, good for searching in dbs)
 
+// list all files in folder (['filename1','filename2',...])
+__files_in_folder(); // current folder
+__files_in_folder('.'); // current folder
+__files_in_folder('foo'); // subfolder
+__files_in_folder('foo', true); // do it recursively
+
 // check if link is external or internal
 __is_external('https://github.com/vielhuber/stringhelper') // false
 __is_external('https://github.com/vielhuber/stringhelper/') // false

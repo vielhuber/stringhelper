@@ -548,6 +548,12 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(__decrypt(__encrypt('foo')), 'foo');
         $this->assertSame(__decrypt(__encrypt('bar', 'known_salt')), 'bar');
 
+        $this->assertSame(count(__files_in_folder()) === 7, true);
+        $this->assertSame(count(__files_in_folder('.')) === 7, true);
+        $this->assertSame(count(__files_in_folder('tests')) === 2, true);
+        $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
+        $this->assertSame(count(__files_in_folder('tests/', true)) > 2, true);
+
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/issues'), false);

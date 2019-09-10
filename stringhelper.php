@@ -1299,6 +1299,25 @@ function __decrypt($string)
     return openssl_decrypt(base64_decode($string), 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT));
 }
 
+function __files_in_folder($folder = '.', $recursive = false)
+{
+    $folder = trim($folder, '/');
+    $files = [];
+    if ($handle = opendir($folder)) {
+        while (false !== ($fileOrFolder = readdir($handle))) {
+            if ($fileOrFolder != '.' && $fileOrFolder != '..') {
+                if (!is_dir($folder . '/' . $fileOrFolder)) {
+                    $files[] = $fileOrFolder;
+                } elseif ($recursive === true) {
+                    $files = array_merge($files, __files_in_folder($folder . '/' . $fileOrFolder, $recursive));
+                }
+            }
+        }
+        closedir($handle);
+    }
+    return $files;
+}
+
 function __is_base64_encoded($str)
 {
     if (!is_string($str)) {
