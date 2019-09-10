@@ -1303,17 +1303,19 @@ function __files_in_folder($folder = '.', $recursive = false)
 {
     $folder = trim($folder, '/');
     $files = [];
-    if ($handle = opendir($folder)) {
-        while (false !== ($fileOrFolder = readdir($handle))) {
-            if ($fileOrFolder != '.' && $fileOrFolder != '..') {
-                if (!is_dir($folder . '/' . $fileOrFolder)) {
-                    $files[] = $fileOrFolder;
-                } elseif ($recursive === true) {
-                    $files = array_merge($files, __files_in_folder($folder . '/' . $fileOrFolder, $recursive));
+    if (file_exists($folder) && is_dir($folder)) {
+        if ($handle = opendir($folder)) {
+            while (false !== ($fileOrFolder = readdir($handle))) {
+                if ($fileOrFolder != '.' && $fileOrFolder != '..') {
+                    if (!is_dir($folder . '/' . $fileOrFolder)) {
+                        $files[] = $fileOrFolder;
+                    } elseif ($recursive === true) {
+                        $files = array_merge($files, __files_in_folder($folder . '/' . $fileOrFolder, $recursive));
+                    }
                 }
             }
+            closedir($handle);
         }
-        closedir($handle);
     }
     return $files;
 }

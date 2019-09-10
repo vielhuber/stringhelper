@@ -553,6 +553,7 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(count(__files_in_folder('tests')) === 2, true);
         $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
         $this->assertSame(count(__files_in_folder('tests/', true)) > 2, true);
+        $this->assertSame(count(__files_in_folder('foo')) === 0, true);
 
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);
