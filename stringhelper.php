@@ -1301,7 +1301,7 @@ function __decrypt($string)
 
 function __files_in_folder($folder = '.', $recursive = false)
 {
-    $folder = trim($folder, '/');
+    $folder = rtrim($folder, '/');
     $files = [];
     if (file_exists($folder) && is_dir($folder)) {
         if ($handle = opendir($folder)) {
