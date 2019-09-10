@@ -615,6 +615,7 @@ __files_in_folder(); // current folder
 __files_in_folder('.'); // current folder
 __files_in_folder('foo'); // subfolder
 __files_in_folder('foo', true); // do it recursively
+__files_in_folder('foo', true, ['.git', '.gitkeep']); // do it recursively and exclude some folders/files
 
 // check if link is external or internal
 __is_external('https://github.com/vielhuber/stringhelper') // false

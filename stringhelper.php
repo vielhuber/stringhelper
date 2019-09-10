@@ -1299,14 +1299,14 @@ function __decrypt($string)
     return openssl_decrypt(base64_decode($string), 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT));
 }
 
-function __files_in_folder($folder = '.', $recursive = false)
+function __files_in_folder($folder = '.', $recursive = false, $exclude = [])
 {
     $folder = rtrim($folder, '/');
     $files = [];
     if (file_exists($folder) && is_dir($folder)) {
         if ($handle = opendir($folder)) {
             while (false !== ($fileOrFolder = readdir($handle))) {
-                if ($fileOrFolder != '.' && $fileOrFolder != '..') {
+                if ($fileOrFolder != '.' && $fileOrFolder != '..' && !in_array($fileOrFolder, $exclude)) {
                     if (!is_dir($folder . '/' . $fileOrFolder)) {
                         $files[] = $fileOrFolder;
                     } elseif ($recursive === true) {

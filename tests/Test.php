@@ -550,8 +550,13 @@ baz']), ['foo', 'bar', 'baz']);
 
         $this->assertSame(count(__files_in_folder()) === 7, true);
         $this->assertSame(count(__files_in_folder('.')) === 7, true);
+        $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) === 6, true);
+        $this->assertSame(in_array('.gitignore',__files_in_folder('.', false)), true);
+        $this->assertSame(in_array('.gitignore',__files_in_folder('.', false, ['.gitignore'])), false);
         $this->assertSame(count(__files_in_folder('tests')) === 2, true);
+        $this->assertSame(count(__files_in_folder('tests', false, ['Test.php'])) === 1, true);
         $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
+        $this->assertSame(count(__files_in_folder('tests', true, ['assets'])) === 2, true);
         $this->assertSame(count(__files_in_folder('tests/', true)) > 2, true);
         $this->assertSame(count(__files_in_folder('foo')) === 0, true);
 
