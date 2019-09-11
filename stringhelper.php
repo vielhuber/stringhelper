@@ -1299,6 +1299,35 @@ function __decrypt($string)
     return openssl_decrypt(base64_decode($string), 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT));
 }
 
+function __encrypt_poor($string)
+{
+    $folder = sys_get_temp_dir();
+    if (defined('ENCRYPTION_FOLDER')) {
+        $folder = ENCRYPTION_FOLDER;
+    }
+    $folder = rtrim($folder, '/');
+    $token = md5(uniqid(mt_rand(), true));
+    file_put_contents($folder . '/' . $token, $string);
+    return $token;
+}
+
+function __decrypt_poor($token, $once = false)
+{
+    $folder = sys_get_temp_dir();
+    if (defined('ENCRYPTION_FOLDER')) {
+        $folder = ENCRYPTION_FOLDER;
+    }
+    $folder = rtrim($folder, '/');
+    if (!file_exists($folder . '/' . $token)) {
+        return null;
+    }
+    $string = file_get_contents($folder . '/' . $token);
+    if ($once === true) {
+        @unlink($folder . '/' . $token);
+    }
+    return $string;
+}
+
 function __files_in_folder($folder = '.', $recursive = false, $exclude = [])
 {
     $folder = rtrim($folder, '/');

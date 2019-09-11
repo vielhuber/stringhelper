@@ -605,10 +605,17 @@ __image_orientate('input.jpg');
 __image_orientate('input.jpg', 70);
 __image_orientate('input.jpg', 70, 'output.jpg');
 
-// poor mans encryption (openssl required)
+// poor mans encryption (via openssl)
 define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319');  // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
 __decrypt(__encrypt('foo')); // 'foo' (hard, with individual one-time salt)
 __decrypt(__encrypt('bar','known_salt')); // 'bar' (soft, good for searching in dbs)
+
+// very poor mans encryption (via file system)
+define('ENCRYPTION_FOLDER', $_SERVER['DOCUMENT_ROOT'].'/encryption'); // Deny from all this if this is public(!)
+__decrypt_poor(__encrypt_poor('foo')); // 'foo'
+$token = __encrypt_poor('bar');
+__decrypt_poor($token, true); // 'bar' (one time decryption supported)
+__decrypt_poor($token); // null
 
 // list all files in folder (['filename1','filename2',...])
 __files_in_folder(); // current folder

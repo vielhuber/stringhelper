@@ -548,11 +548,16 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(__decrypt(__encrypt('foo')), 'foo');
         $this->assertSame(__decrypt(__encrypt('bar', 'known_salt')), 'bar');
 
+        $this->assertSame(__decrypt_poor(__encrypt_poor('foo')), 'foo');
+        $token = __encrypt_poor('bar');
+        $this->assertSame(__decrypt_poor($token, true), 'bar');
+        $this->assertSame(__decrypt_poor($token, true), null);
+
         $this->assertSame(count(__files_in_folder()) === 7, true);
         $this->assertSame(count(__files_in_folder('.')) === 7, true);
         $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) === 6, true);
-        $this->assertSame(in_array('.gitignore',__files_in_folder('.', false)), true);
-        $this->assertSame(in_array('.gitignore',__files_in_folder('.', false, ['.gitignore'])), false);
+        $this->assertSame(in_array('.gitignore', __files_in_folder('.', false)), true);
+        $this->assertSame(in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])), false);
         $this->assertSame(count(__files_in_folder('tests')) === 2, true);
         $this->assertSame(count(__files_in_folder('tests', false, ['Test.php'])) === 1, true);
         $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
