@@ -442,6 +442,20 @@ function __random_string($length = 8, $chars = null)
     return $random_string;
 }
 
+function __shuffle_assoc($array)
+{
+    if (!is_array($array)) {
+        return null;
+    }
+    $new = [];
+    $keys = array_keys($array);
+    shuffle($keys);
+    foreach ($keys as $keys__value) {
+        $new[$keys__value] = $array[$keys__value];
+    }
+    return $new;
+}
+
 function __is_serialized($string)
 {
     if (!is_string($string) || $string == '') {

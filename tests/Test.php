@@ -332,6 +332,17 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(mb_strlen(__random_string(10)), 10);
         $this->assertSame(mb_strlen(__random_string(16, 'idkfa')), 16);
 
+        $this->assertSame(__shuffle_assoc(null), null);
+        $this->assertSame(__shuffle_assoc(false), null);
+        $this->assertSame(__shuffle_assoc(true), null);
+        $this->assertSame(__shuffle_assoc(1337), null);
+        $this->assertSame(__shuffle_assoc([]), []);
+        $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
+        $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['foo'] === 'bar', true);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz', true);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo', true);
+
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);
         $this->assertSame(substr_count(__uuid(), '-') === 4, true);

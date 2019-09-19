@@ -373,6 +373,9 @@ __random_string() // edPhi34d
 __random_string(10) // abCa321aC6
 __random_string(16, 'idkfa') // idifafafifaifafk
 
+// shuffle associative array and preserve keys
+__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo']) // ['bar' => 'baz', 'baz' => 'foo', 'foo' => 'bar']
+
 // generate uuid/guid v4
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
 
