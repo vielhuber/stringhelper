@@ -376,6 +376,9 @@ __random_string(16, 'idkfa') // idifafafifaifafk
 // shuffle associative array and preserve keys
 __shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo']) // ['bar' => 'baz', 'baz' => 'foo', 'foo' => 'bar']
 
+// ask question on cli
+$answer = __ask('What\'s your name?') // David
+
 // generate uuid/guid v4
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
 

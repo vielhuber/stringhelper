@@ -456,6 +456,16 @@ function __shuffle_assoc($array)
     return $new;
 }
 
+function __ask($question)
+{
+    echo $question;
+    echo PHP_EOL;
+    $handle = fopen('php://stdin', 'r');
+    $line = fgets($handle);
+    fclose($handle);
+    return trim($line);
+}
+
 function __is_serialized($string)
 {
     if (!is_string($string) || $string == '') {
