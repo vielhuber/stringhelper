@@ -578,6 +578,14 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(count(__files_in_folder('tests/', true)) > 2, true);
         $this->assertSame(count(__files_in_folder('foo')) === 0, true);
 
+        mkdir('tests/foo');
+        $this->assertSame(count(__files_in_folder('tests/foo')) === 0, true);
+        touch('tests/foo/index.txt');
+        $this->assertSame(count(__files_in_folder('tests/foo')) === 1, true);
+        $this->assertSame(is_dir('tests/foo'), true);
+        __rrmdir('tests/foo');
+        $this->assertSame(!is_dir('tests/foo'), true);
+
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/issues'), false);

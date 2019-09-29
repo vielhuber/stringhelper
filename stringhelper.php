@@ -1387,6 +1387,22 @@ function __files_in_folder($folder = '.', $recursive = false, $exclude = [])
     return $files;
 }
 
+function __rrmdir($dir)
+{
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir . "/" . $object) == "dir")
+                    rrmdir($dir . "/" . $object);
+                else unlink($dir . "/" . $object);
+            }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
+}
+
 function __is_base64_encoded($str)
 {
     if (!is_string($str)) {

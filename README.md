@@ -630,6 +630,9 @@ __files_in_folder('foo'); // subfolder
 __files_in_folder('foo', true); // do it recursively
 __files_in_folder('foo', true, ['.git', '.gitkeep']); // do it recursively and exclude some folders/files
 
+// recursively remove folder and it's contents
+__rrmdir('foo');
+
 // check if link is external or internal
 __is_external('https://github.com/vielhuber/stringhelper') // false
 __is_external('https://github.com/vielhuber/stringhelper/') // false
