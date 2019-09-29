@@ -515,6 +515,8 @@ baz']), ['foo', 'bar', 'baz']);
 
         $response = __curl('https://httpbin.org/anything');
         $this->assertSame($response->result->method, 'GET');
+        $this->assertSame($response->status, 200);
+        $this->assertSame(!empty($response->headers), true);
         $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST');
         $this->assertSame($response->result->method, 'POST');
         $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));

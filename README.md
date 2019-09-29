@@ -658,7 +658,7 @@ __fetch('https://httpbin.org/anything'); // { "method": "GET", ... }
 __fetch('https://httpbin.org/anything', 'curl'); // { "method": "GET", ... }
 __fetch('https://httpbin.org/anything', 'php'); // { "method": "GET", ... }
 
-// do curl requests (get/post) and get status and result
+// do curl requests (get/post) and get status code, body and header
 __curl(
     'https://httpbin.org/anything', // url
     ['foo' => 'bar'], // data
@@ -668,12 +668,12 @@ __curl(
     true, // send as json (or application/x-www-form-urlencoded)
     60, // timeout in seconds
 );
-__curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }}
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }}
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); //  {"status": 200, "result" => { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }}
+__curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ]}
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ]}
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); //  {"status": 200, "result" => { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }, "headers": [ ... ]}
 __curl('https://vielhuber.de'); // json is automatically decoded (but only if the response is of type json)
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT'); //  {"status": 200, "result": { "method": "PUT", "data": {"foo": "bar"}, ... }}
-__curl('https://httpbin.org/anything', null, 'DELETE'); //  {"status": 200, "result": { "method": "DELETE", "data": "", ... }}
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT'); //  {"status": 200, "result": { "method": "PUT", "data": {"foo": "bar"}, ... }, "headers": [ ... ]}
+__curl('https://httpbin.org/anything', null, 'DELETE'); //  {"status": 200, "result": { "method": "DELETE", "data": "", ... }, "headers": [ ... ]}
 // __curl also supports both storing and sending cookies (without leaving a trace on the local filesystem)
 // with that you can do cool stuff like scraping the wordpress backend
 __curl('https://vielhuber.de/wp-login.php', ['log' => 'username', 'pwd', 'password'], 'POST', null, true, false);

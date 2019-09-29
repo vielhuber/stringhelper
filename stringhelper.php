@@ -1035,8 +1035,22 @@ function __curl($url = '', $data = null, $method = null, $headers = null, $enabl
         curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie_filename); // read
         curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie_filename); // store
     }
+
+    $headers = [];
+    curl_setopt($curl, CURLOPT_HEADERFUNCTION, function ($curl, $header) use (&$headers) {
+        $len = strlen($header);
+        $header = explode(':', $header, 2);
+        if (count($header) < 2) {
+            return $len;
+        }
+        $headers[strtolower(trim($header[0]))][] = trim($header[1]);
+        return $len;
+    });
+
     $result = curl_exec($curl);
+
     $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
     curl_close($curl);
 
     if ($enable_cookies === true) {
@@ -1050,7 +1064,7 @@ function __curl($url = '', $data = null, $method = null, $headers = null, $enabl
         $result = json_decode($result);
     }
 
-    return (object) ['result' => $result, 'status' => $status];
+    return (object) ['result' => $result, 'status' => $status, 'headers' => $headers];
 }
 
 function __exception($message = '')
