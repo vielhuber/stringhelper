@@ -662,6 +662,9 @@ function __array_to_object($arr)
 
 function __highlight($string, $query, $strip = false, $strip_length = 500)
 {
+    if (__nx($string) || __nx($query)) {
+        return $string;
+    }
     if ($strip === true) {
         // get all query begin positions in spot
         $lastPos = 0;
