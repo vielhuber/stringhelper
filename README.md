@@ -701,6 +701,12 @@ __sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt');
 __sed_prepend('foo', 'file.txt');
 __sed_append('bar', 'file.txt');
 
+// csv fun
+__array2csv([['foo', 'bar', 'baz'],['foo', 'bar', 'baz']], 'file.csv')
+__array2csv([['foo', 'bar', 'baz'],['foo', 'bar', 'baz']], 'file.csv', ';', '"')
+__csv2array('file.csv') // [['foo', 'bar', 'baz'],['foo', 'bar', 'baz']]
+__csv2array('file.csv', ';', '"') // [['foo', 'bar', 'baz'],['foo', 'bar', 'baz']]
+
 // measure performance
 __log_begin();
 for($i = 0; $i < 10000; $i++) { }

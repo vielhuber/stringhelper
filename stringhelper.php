@@ -1165,6 +1165,33 @@ function __dec_char($char, $shift = 1)
     return __int_to_char(__char_to_int($char) - $shift);
 }
 
+
+function __csv2array($filename, $delimiter = ';', $enclosure = '"')
+{
+    if (__nx($filename) || !file_exists($filename)) {
+        return false;
+    }
+    $array = array_map(function ($d) use ($delimiter, $enclosure) {
+        return array_map(function ($d2) {
+            if (!mb_detect_encoding($d2, 'UTF-8', true)) {
+                $d2 = utf8_encode($d2);
+            }
+            return $d2;
+        }, str_getcsv($d, $delimiter, $enclosure));
+    }, file($filename));
+    return $array;
+}
+
+function __array2csv($array, $filename, $delimiter = ';', $enclosure = '"')
+{
+    $fp = fopen($filename, 'wb');
+    foreach ($array as $array__fields) {
+        fputcsv($fp, $array__fields, $delimiter, $enclosure);
+    }
+    fclose($fp);
+    return true;
+}
+
 function __sed_replace($replacements = [], $filename)
 {
     if (!file_exists($filename)) {

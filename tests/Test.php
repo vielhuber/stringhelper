@@ -691,6 +691,41 @@ foo
 bar fuu; yoo//'), true);
         @unlink('tests/assets/file.txt');
 
+        __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv');
+        $this->assertSame(
+            __line_endings_weak_equals(
+                trim(file_get_contents('tests/assets/file.csv')),
+                'foo;bar;baz
+foo;bar;baz'
+            ),
+            true
+        );
+        __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ';', '"');
+        $this->assertSame(
+            __line_endings_weak_equals(
+                trim(file_get_contents('tests/assets/file.csv')),
+                'foo;bar;baz
+foo;bar;baz'
+            ),
+            true
+        );
+        __array2csv([['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ',', '\'');
+        $this->assertSame(
+            __line_endings_weak_equals(
+                trim(file_get_contents('tests/assets/file.csv')),
+                '\'foo bar\',bar,baz
+foo,bar,baz'
+            ),
+            true
+        );
+        __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv');
+        $this->assertSame(__csv2array('tests/assets/file.csv'), [['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']]);
+        __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ';', '"');
+        $this->assertSame(__csv2array('tests/assets/file.csv', ';', '"'), [['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']]);
+        __array2csv([['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ',', '\'');
+        $this->assertSame(__csv2array('tests/assets/file.csv', ',', '\''), [['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']]);
+        @unlink('tests/assets/file.csv');
+
         __log_begin('foo');
         $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');
         $this->assertSame(count($GLOBALS['performance']), 1);
