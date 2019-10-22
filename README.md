@@ -369,6 +369,9 @@ __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
 __datetime('01.01.2000') // 2000-01-01T00:00
 __datetime('01.01.2000 18:00') // 2000-01-01T18:00
 
+// normalizes phone numbers (din, germany)
+__normalize_phone_number('(0)89-12 456 666') // +49 89 12456666
+
 // string to slug (sanitize string)
 __slug('This string will be sanitized!') // this-string-will-be-sanitized
 

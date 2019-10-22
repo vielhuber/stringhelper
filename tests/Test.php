@@ -306,6 +306,15 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
         $this->assertSame(__validate_date('29.02.2001'), false);
 
+        $this->assertSame(__normalize_phone_number(null), null);
+        $this->assertSame(__normalize_phone_number(''), '');
+        $this->assertSame(__normalize_phone_number('(0)89-12 456 666'), '+49 89 12456666');
+        $this->assertSame(__normalize_phone_number('089 12 456 666'), '+49 89 12456666');
+        $this->assertSame(__normalize_phone_number('08541 12 456---666'), '+49 8541 12456666');
+        $this->assertSame(__normalize_phone_number('08541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__normalize_phone_number('++498541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__normalize_phone_number('++49(00)8541 12 456/666'), '+49 8541 12456666');
+
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
         $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');
         $this->assertSame(__date('2001-02-29', 'd.m.Y'), null);
