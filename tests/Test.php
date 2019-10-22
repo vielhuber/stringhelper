@@ -314,6 +314,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__normalize_phone_number('08541 12 456/666'), '+49 8541 12456666');
         $this->assertSame(__normalize_phone_number('++498541 12 456/666'), '+49 8541 12456666');
         $this->assertSame(__normalize_phone_number('++49(00)8541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__normalize_phone_number('0151 / 58-75-46-91'), '+49 151 58754691');
 
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
         $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');
