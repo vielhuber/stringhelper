@@ -306,15 +306,23 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
         $this->assertSame(__validate_date('29.02.2001'), false);
 
-        $this->assertSame(__normalize_phone_number(null), null);
-        $this->assertSame(__normalize_phone_number(''), '');
-        $this->assertSame(__normalize_phone_number('(0)89-12 456 666'), '+49 89 12456666');
-        $this->assertSame(__normalize_phone_number('089 12 456 666'), '+49 89 12456666');
-        $this->assertSame(__normalize_phone_number('08541 12 456---666'), '+49 8541 12456666');
-        $this->assertSame(__normalize_phone_number('08541 12 456/666'), '+49 8541 12456666');
-        $this->assertSame(__normalize_phone_number('++498541 12 456/666'), '+49 8541 12456666');
-        $this->assertSame(__normalize_phone_number('++49(00)8541 12 456/666'), '+49 8541 12456666');
-        $this->assertSame(__normalize_phone_number('0151 / 58-75-46-91'), '+49 151 58754691');
+        $this->assertSame(__phone_normalize(null), '');
+        $this->assertSame(__phone_normalize(''), '');
+        $this->assertSame(__phone_normalize('(0)89-12 456 666'), '+49 89 12456666');
+        $this->assertSame(__phone_normalize('089 12 456 666'), '+49 89 12456666');
+        $this->assertSame(__phone_normalize('08541 12 456---666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('08541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('++498541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('++49(00)8541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('0151 / 58-75-46-91'), '+49 151 58754691');
+        $this->assertSame(__phone_tokenize('(0)89-12 456 666'), ['country_code' => '49', 'area_code' => '89', 'number' => '12456666']);
+        $this->assertSame(in_array('49', __phone_country_codes()), true);
+        $this->assertSame(in_array('89', __phone_area_codes()), true);
+        $this->assertSame(in_array('151', __phone_area_codes()), true);
+        $this->assertSame(in_array('89', __phone_area_codes_landline()), true);
+        $this->assertSame(in_array('151', __phone_area_codes_mobile()), true);
+        $this->assertSame(__phone_is_landline('(0)89-12 456 666'), true);
+        $this->assertSame(__phone_is_mobile('(0)89-12 456 666'), false);
 
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
         $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');

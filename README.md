@@ -370,7 +370,14 @@ __datetime('01.01.2000') // 2000-01-01T00:00
 __datetime('01.01.2000 18:00') // 2000-01-01T18:00
 
 // normalizes phone numbers (din, germany)
-__normalize_phone_number('(0)89-12 456 666') // +49 89 12456666
+__phone_normalize('(0)89-12 456 666') // +49 89 12456666
+__phone_tokenize('(0)89-12 456 666') // ['country_code' => '49', 'area_code' => '89', 'number' => '12456666']
+__phone_country_codes() // ['49', ...]
+__phone_area_codes() // ['89', '151', ...]
+__phone_area_codes_landline() // ['89', ...]
+__phone_area_codes_mobile() // ['151', ...]
+__phone_is_landline('(0)89-12 456 666') // true
+__phone_is_mobile('(0)89-12 456 666') // false
 
 // string to slug (sanitize string)
 __slug('This string will be sanitized!') // this-string-will-be-sanitized
