@@ -554,6 +554,10 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame($response->result->headers->Bar, 'baz');
         $response = __curl('https://vielhuber.de');
         $this->assertTrue(strpos($response->result, '<html') !== false);
+        $response = __curl('https://httpbin.org/basic-auth/foo/bar');
+        $this->assertSame($response->status, 401);
+        $response = __curl('https://httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, ['foo' => 'bar']);
+        $this->assertSame($response->status, 200);
 
         // fill in your wp credentials to test this
         if (1 == 0) {

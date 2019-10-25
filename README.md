@@ -684,6 +684,7 @@ __curl(
     false, // store and send cookies
     true, // send as json (or application/x-www-form-urlencoded)
     60, // timeout in seconds
+    ['username' => 'password'], // basic authentication
 );
 __curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ]}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ]}
