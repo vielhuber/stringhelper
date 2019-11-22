@@ -492,6 +492,7 @@ baz']), ['foo', 'bar', 'baz']);
         $this->assertSame(__highlight('that is a search string', 'is'), 'that <strong class="highlight">is</strong> a search string');
         $this->assertSame(__highlight('that is a search isstring', 'is'), 'that <strong class="highlight">is</strong> a search <strong class="highlight">is</strong>string');
         $this->assertSame(__highlight('that is a search isstring', ''), 'that is a search isstring');
+        $this->assertSame(__highlight('Maßbierkrug', 'bier'), 'Maß<strong class="highlight">bier</strong>krug');
         $this->assertSame(__highlight('', ''), '');
         $this->assertSame(__highlight(null, ''), null);
         $this->assertSame(__highlight(null, null), null);

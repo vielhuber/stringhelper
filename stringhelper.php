@@ -805,7 +805,7 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
     $wrap_begin = '<strong class="highlight">';
     $wrap_end = '</strong>';
     for ($x = 0; $x < count($positions); $x++) {
-        $string = substr($string, 0, $positions[$x]) . $wrap_begin . substr($string, $positions[$x], strlen($query)) . $wrap_end . substr($string, $positions[$x] + strlen($query));
+        $string = mb_substr($string, 0, $positions[$x]) . $wrap_begin . mb_substr($string, $positions[$x], mb_strlen($query)) . $wrap_end . mb_substr($string, $positions[$x] + mb_strlen($query));
         // shift other positions
         for ($y = $x + 1; $y < count($positions); $y++) {
             $positions[$y] = $positions[$y] + mb_strlen($wrap_begin) + mb_strlen($wrap_end);
