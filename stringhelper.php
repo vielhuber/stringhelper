@@ -99,6 +99,10 @@ function __empty()
 
 function __x_all(...$args)
 {
+    if( __x(@$args[0]) && $args[0] instanceof Illuminate\Support\Collection )
+    {
+        $args[0] = $args[0]->toArray();
+    }
     if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
         $args = $args[0];
     }
@@ -117,6 +121,10 @@ function __nx_all(...$args)
 
 function __x_one(...$args)
 {
+    if( __x(@$args[0]) && $args[0] instanceof Illuminate\Support\Collection )
+    {
+        $args[0] = $args[0]->toArray();
+    }
     if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
         $args = $args[0];
     }
@@ -130,6 +138,10 @@ function __x_one(...$args)
 
 function __true_one(...$args)
 {
+    if( __x(@$args[0]) && $args[0] instanceof Illuminate\Support\Collection )
+    {
+        $args[0] = $args[0]->toArray();
+    }
     if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
         $args = $args[0];
     }
@@ -143,6 +155,10 @@ function __true_one(...$args)
 
 function __false_one(...$args)
 {
+    if( __x(@$args[0]) && $args[0] instanceof Illuminate\Support\Collection )
+    {
+        $args[0] = $args[0]->toArray();
+    }
     if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
         $args = $args[0];
     }
@@ -156,6 +172,10 @@ function __false_one(...$args)
 
 function __true_all(...$args)
 {
+    if( __x(@$args[0]) && $args[0] instanceof Illuminate\Support\Collection )
+    {
+        $args[0] = $args[0]->toArray();
+    }
     if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
         $args = $args[0];
     }
@@ -169,6 +189,10 @@ function __true_all(...$args)
 
 function __false_all(...$args)
 {
+    if( __x(@$args[0]) && $args[0] instanceof Illuminate\Support\Collection )
+    {
+        $args[0] = $args[0]->toArray();
+    }
     if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
         $args = $args[0];
     }
