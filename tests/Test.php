@@ -302,6 +302,20 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__nx_one('foo', 'bar'), false);
         $this->assertSame(__nx_one('', null), true);
 
+        $this->assertSame(__true_all(true, true, true), true);
+        $this->assertSame(__true_all([true, true, null]), false);
+        $this->assertSame(__true_all(true, '1'), true);
+        $this->assertSame(__true_all([true, false]), false);
+        $this->assertSame(__false_all('foo', 'bar', null), false);
+        $this->assertSame(__false_all(false), true);
+
+        $this->assertSame(__true_one(true, true, true), true);
+        $this->assertSame(__true_one([true, true, null]), true);
+        $this->assertSame(__true_one(true, '1'), true);
+        $this->assertSame(__true_one([true, false]), true);
+        $this->assertSame(__false_one('foo', 'bar', null), false);
+        $this->assertSame(__false_one(false), true);
+
         $this->assertSame(__validate_url('https://vielhuber.de'), true);
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
         $this->assertSame(__validate_date('29.02.2001'), false);

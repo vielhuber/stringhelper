@@ -128,6 +128,58 @@ function __x_one(...$args)
     return false;
 }
 
+function __true_one(...$args)
+{
+    if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
+        $args = $args[0];
+    }
+    foreach ($args as $arg) {
+        if (__true(@$arg)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function __false_one(...$args)
+{
+    if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
+        $args = $args[0];
+    }
+    foreach ($args as $arg) {
+        if (__false(@$arg)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function __true_all(...$args)
+{
+    if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
+        $args = $args[0];
+    }
+    foreach ($args as $arg) {
+        if (!__true(@$arg)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function __false_all(...$args)
+{
+    if (__x(@$args[0]) && is_array($args[0]) && count($args) === 1) {
+        $args = $args[0];
+    }
+    foreach ($args as $arg) {
+        if (!__false(@$arg)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function __nx_one(...$args)
 {
     return !__x_one(...@$args);

@@ -332,6 +332,22 @@ if( __x_one(['', null]) ) // false
 if( __nx_one('foo', 'bar') ) // false
 if( __nx_one('', null) ) // true
 
+// check truthness of all variables
+if( __true_all(true, true, true) ) // true
+if( __true_all([true, true, null]) ) // false
+if( __true_all(true, '1') ) // true
+if( __true_all([true, false]) ) // false
+if( __false_all('foo', 'bar', null) ) // false
+if( __false_all(false) ) // true
+
+// check truthness of one variable
+if( __true_one(true, true, true) ) // true
+if( __true_one([true, true, null]) ) // true
+if( __true_one(true, '1') ) // true
+if( __true_one([true, false]) ) // true
+if( __false_one('foo', 'bar', null) ) // false
+if( __false_one(false) ) // true
+
 // cookies
 __cookie_set('cookie_name', 'cookie_value') // set cookie for 30 days
 __cookie_set('cookie_name', 'cookie_value', 7) // set cookie for 7 days
