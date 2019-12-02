@@ -374,6 +374,8 @@ __date('2000-01-01', null, '+6 months') // 2000-07-01; allows date modifications
 __date('2000-01-01', 'd.m.Y', '+6 months') // 01.07.2000
 __date('01.01.2000'); // 2000-01-01; also accepts other formats
 __date('now') // 2019-05-28; also accepts strings
+__date('2019-12-02 12:00:00', 'd.m.Y H:i:s') // 02.12.2019 12:00:00
+__date('2019-12-02T12:00:00', 'd.m.Y H:i:s') // 02.12.2019 12:00:00
 __date() // 2019-05-28
 __date('') // null
 __date(null) // null
