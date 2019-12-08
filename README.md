@@ -723,6 +723,10 @@ __inc_char('Z') // 'AA'
 __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
 
+// str_replace
+__str_replace_first('foo','bar','foofoo') // 'barfoo'
+__str_replace_last('foo','bar','foofoo') // 'foobar'
+
 // fun with line endings
 __line_endings_convert($str, 'linux') // converts string to linux line endings (LF)
 __line_endings_convert($str, 'mac') // converts string to mac line endings (CR)
