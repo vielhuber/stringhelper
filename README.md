@@ -387,6 +387,16 @@ __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
 __datetime('01.01.2000') // 2000-01-01T00:00
 __datetime('01.01.2000 18:00') // 2000-01-01T18:00
 
+// remove useless zero digits from decimals
+__remove_zero_decimals(1337) // 1337
+__remove_zero_decimals('1337') // 1337
+__remove_zero_decimals('1337.40') // 1337.4
+__remove_zero_decimals('1337,40') // 1337.4
+__remove_zero_decimals(1337.0) // 1337
+__remove_zero_decimals(1337.4) // 1337.4
+__remove_zero_decimals(1337.42) // 1337.42
+__remove_zero_decimals(1337.424) // 1337.424
+
 // normalizes phone numbers (din, germany)
 __phone_normalize('(0)89-12 456 666') // +49 89 12456666
 __phone_tokenize('(0)89-12 456 666') // ['country_code' => '49', 'area_code' => '89', 'number' => '12456666']

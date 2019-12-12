@@ -1042,6 +1042,24 @@ function __datetime($datetime)
     return date('Y-m-d', strtotime($datetime)) . 'T' . date('H:i', strtotime($datetime));
 }
 
+function __remove_zero_decimals($num)
+{
+    if (__nx($num)) {
+        return null;
+    }
+    if (is_string($num)) {
+        $num = str_replace(',', '.', $num);
+    }
+    if (!is_numeric($num)) {
+        return null;
+    }
+    $num = $num + 0;
+    if (floor($num) == $num) {
+        $num = intval($num);
+    }
+    return $num;
+}
+
 function __flatten_keys($array)
 {
     $return = [];

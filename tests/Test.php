@@ -369,6 +369,19 @@ class Test extends \PHPUnit\Framework\TestCase
             'this-string-will-be-sanitized'
         );
 
+        $this->assertSame(__remove_zero_decimals(1337), 1337);
+        $this->assertSame(__remove_zero_decimals('1337'), 1337);
+        $this->assertSame(__remove_zero_decimals('1337.40'), 1337.4);
+        $this->assertSame(__remove_zero_decimals('1337,40'), 1337.4);
+        $this->assertSame(__remove_zero_decimals(1337.0), 1337);
+        $this->assertSame(__remove_zero_decimals(1337.4), 1337.4);
+        $this->assertSame(__remove_zero_decimals(1337.42), 1337.42);
+        $this->assertSame(__remove_zero_decimals(1337.424), 1337.424);
+        $this->assertSame(__remove_zero_decimals(null), null);
+        $this->assertSame(__remove_zero_decimals(false), null);
+        $this->assertSame(__remove_zero_decimals(''), null);
+        $this->assertSame(__remove_zero_decimals('foo'), null);
+
         $this->assertSame(mb_strlen(__random_string()), 8);
         $this->assertSame(mb_strlen(__random_string(10)), 10);
         $this->assertSame(mb_strlen(__random_string(16, 'idkfa')), 16);
