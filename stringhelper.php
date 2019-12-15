@@ -1016,6 +1016,10 @@ function __date($date = null, $format = null, $mod = null)
     if (is_numeric($date)) {
         $date = date('Y-m-d', $date);
     }
+    // input datetime object
+    if ($date instanceof DateTime) {
+        $date = $date->format('Y-m-d');
+    }
     // default value for format
     if (__nx($format)) {
         $format = 'Y-m-d';

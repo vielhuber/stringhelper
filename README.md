@@ -382,6 +382,7 @@ __date(null) // null
 $unknown = null; __date($unknown) // null
 __date(strtotime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts timestamps
 __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
+__date(new DateTime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts datetime objects
 
 // outputs a valid formatted value for input datetime-local
 __datetime('01.01.2000') // 2000-01-01T00:00
