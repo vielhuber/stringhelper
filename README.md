@@ -596,6 +596,7 @@ __arrays_to_objects(['foo' => ['bar','baz'], 'bar' => [(object)['id' => 7, 'name
 
 // highlight strings
 __highlight('that is a search string', 'is') // that <strong class="highlight">is</strong> a search string
+__highlight('abc def geh ijk lmn opq rst abc def geh ijk lmn opq rst', 'ijk', true, 5) // '... geh <strong class="highlight">ijk</strong> lmn ... geh <strong class="highlight">ijk</strong> lmn ...'
 
 // checks if variable is an integer (works also for big integers)
 __is_integer(8372468764378627868742367883268) // true (in comparison to is_int())

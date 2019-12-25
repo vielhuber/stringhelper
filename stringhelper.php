@@ -877,6 +877,7 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
         return $string;
     }
     if ($strip === true) {
+        $dots = '...';
         // get all query begin positions in spot
         $lastPos = 0;
         $positions = [];
@@ -885,25 +886,28 @@ function __highlight($string, $query, $strip = false, $strip_length = 500)
             $lastPos = $lastPos + mb_strlen($query);
         }
         // strip away parts
-        $placeholder = md5('♥♥♥');
-        for ($i = 0; $i < mb_strlen($string); $i++) {
+        $words = explode(' ', $string);
+        $i = 0;
+        foreach ($words as $words__key => $words__value) {
             $strip_now = true;
-            foreach ($positions as $p) {
-                if ($i >= $p - $strip_length && $i <= $p + mb_strlen($query) + $strip_length) {
+            foreach ($positions as $positions__value) {
+                if (
+                    $i >= $positions__value - $strip_length &&
+                    $i <= $positions__value + mb_strlen($query) + $strip_length - 1
+                ) {
                     $strip_now = false;
                 }
             }
             if ($strip_now === true) {
-                $string = mb_substr($string, 0, $i - 1) . $placeholder . mb_substr($string, $i);
+                $words[$words__key] = $dots;
             }
+            $i += mb_strlen($words__value) + 1;
         }
-        while (mb_strpos($string, $placeholder . $placeholder) !== false) {
-            $string = str_replace($placeholder . $placeholder, $placeholder, $string);
+        $string = implode(' ', $words);
+        while (mb_strpos($string, $dots . ' ' . $dots) !== false) {
+            $string = str_replace($dots . ' ' . $dots, $dots, $string);
         }
-        $string = str_replace($placeholder, ' ... ', $string);
-        if (mb_strlen($string) > $strip_length) {
-            $string = mb_substr($string, 0, $strip_length) . ' ...';
-        }
+        $string = trim($string);
     }
     // again: get all query begin positions in spot
     $lastPos = 0;
