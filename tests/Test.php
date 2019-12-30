@@ -320,6 +320,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
         $this->assertSame(__validate_date('29.02.2001'), false);
 
+        $this->assertSame(__validate_date_format('d.m.Y'), true);
+        $this->assertSame(__validate_date_format('Y-m-d'), true);
+        $this->assertSame(__validate_date_format('foo'), false);
+        $this->assertSame(__validate_date_format(null), false);
+        $this->assertSame(__validate_date_format(true), false);
+        $this->assertSame(__validate_date_format(false), false);
+        $this->assertSame(__validate_date_format(''), false);
+
         $this->assertSame(__phone_normalize(null), '');
         $this->assertSame(__phone_normalize(''), '');
         $this->assertSame(__phone_normalize('(0)89-12 456 666'), '+49 89 12456666');
@@ -362,6 +370,12 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date('now + 6 days'), date('Y-m-d', strtotime('now + 6 days')));
         $this->assertSame(__date('rfkjh lkjerhflk kjekj'), null);
         $this->assertSame(__date(new DateTime('2000-01-01'), 'd.m.Y'), '01.01.2000');
+        $this->assertSame(__date('d.m.Y'), date('d.m.Y', strtotime('now')));
+        $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
+        $this->assertSame(
+            __date('d.m.Y', 'tomorrow', '+ 6 months'),
+            date('d.m.Y', strtotime('tomorrow + 6 months'))
+        );
 
         $this->assertSame(__datetime('01.01.2000'), '2000-01-01T00:00');
         $this->assertSame(__datetime('01.01.2000 18:00'), '2000-01-01T18:00');

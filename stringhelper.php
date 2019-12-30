@@ -1024,22 +1024,90 @@ function __date($date = null, $format = null, $mod = null)
     if ($date instanceof DateTime) {
         $date = $date->format('Y-m-d');
     }
+    // sort out invalid
+    if (
+        (strlen($date) === 10 && !__validate_date($date)) ||
+        strtotime($date . (__x($mod) ? ' ' . $mod : '')) === false
+    ) {
+        // try to switch args, if date is valid format
+        if (__validate_date_format($date) !== false) {
+            [$date, $format] = [$format, $date];
+            if (__nx($date)) {
+                $date = 'now';
+            }
+        }
+        // try again
+        if (
+            (strlen($date) === 10 && !__validate_date($date)) ||
+            strtotime($date . (__x($mod) ? ' ' . $mod : '')) === false
+        ) {
+            return null;
+        }
+    }
     // default value for format
     if (__nx($format)) {
         $format = 'Y-m-d';
     }
-    // if date has length 10, sort out invalid
-    if (strlen($date) === 10 && !__validate_date($date)) {
-        return null;
+    return date($format, strtotime($date . (__x($mod) ? ' ' . $mod : '')));
+}
+
+function __validate_date_format($str)
+{
+    if (__nx($str)) {
+        return false;
     }
-    // pass modification
-    if (__x($mod)) {
-        $date .= ' ' . $mod;
+    foreach (str_split($str) as $str__value) {
+        if (
+            !in_array($str__value, [
+                ' ',
+                '-',
+                '.',
+                ':',
+                'd',
+                'D',
+                'j',
+                'l',
+                'N',
+                'S',
+                'w',
+                'z',
+                'W',
+                'F',
+                'm',
+                'M',
+                'n',
+                't',
+                'L',
+                'o',
+                'Y',
+                'y',
+                'a',
+                'A',
+                'B',
+                'g',
+                'G',
+                'h',
+                'H',
+                'i',
+                's',
+                'u',
+                'v',
+                'e',
+                'I',
+                'O',
+                'P',
+                'T',
+                'Z',
+                'z',
+                'c',
+                'r',
+                'U'
+            ])
+        ) {
+            return false;
+        }
     }
-    if (strtotime($date) === false) {
-        return null;
-    }
-    return date($format, strtotime($date));
+    return true;
 }
 
 function __datetime($datetime)
