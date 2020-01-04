@@ -1160,7 +1160,7 @@ function __validate_date_mod($mod)
 
 function __datetime($datetime)
 {
-    if (__nx(@$datetime)) {
+    if (__nx(@$datetime) || !is_string($datetime)) {
         return null;
     }
     return date('Y-m-d', strtotime($datetime)) . 'T' . date('H:i', strtotime($datetime));
@@ -1168,7 +1168,7 @@ function __datetime($datetime)
 
 function __date_reset_time($date)
 {
-    if (__nx(@$date)) {
+    if (__nx(@$date) || !is_string($date)) {
         return null;
     }
     return date('Y-m-d 00:00:00', strtotime($date));
