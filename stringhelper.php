@@ -450,23 +450,35 @@ function __validate_date($date)
     if (__nx(@$date)) {
         return false;
     }
-    $date = explode(' ', $date)[0];
-    if (substr_count($date, '-') == 2) {
-        $date = explode('-', $date);
-        if (checkdate($date[1], $date[2], $date[0])) {
-            if ($date[0] >= 2037) {
-                return false;
-            } // prevent 32-bit problem
-            return true;
+    // input timestamp
+    if (is_numeric($date)) {
+        $date = date('Y-m-d', $date);
+    }
+    // input datetime object
+    if ($date instanceof DateTime) {
+        $date = $date->format('Y-m-d');
+    }
+    if (strlen($date) === 10) {
+        $date = explode(' ', $date)[0];
+        if (substr_count($date, '-') == 2) {
+            $date = explode('-', $date);
+            if (checkdate($date[1], $date[2], $date[0])) {
+                if ($date[0] >= 2037) {
+                    return false;
+                } // prevent 32-bit problem
+                return true;
+            }
+        } elseif (substr_count($date, '.') == 2) {
+            $date = explode('.', $date);
+            if (checkdate($date[1], $date[0], $date[2])) {
+                if ($date[2] >= 2037) {
+                    return false;
+                } // prevent 32-bit problem
+                return true;
+            }
         }
-    } elseif (substr_count($date, '.') == 2) {
-        $date = explode('.', $date);
-        if (checkdate($date[1], $date[0], $date[2])) {
-            if ($date[2] >= 2037) {
-                return false;
-            } // prevent 32-bit problem
-            return true;
-        }
+    } elseif (strtotime($date) !== false) {
+        return true;
     }
     return false;
 }
@@ -1016,34 +1028,62 @@ function __date($date = null, $format = null, $mod = null)
     if (__nx($date) || $date === true || $date === false) {
         return null;
     }
+
+    // sort arguments magically
+    if (
+        ($date === null || __validate_date($date)) &&
+        ($format === null || __validate_date_format($format)) &&
+        ($mod === null || __validate_date_mod($mod))
+    ) {
+        // default case
+    } elseif (
+        ($date === null || __validate_date($date)) &&
+        ($mod === null || __validate_date_format($mod)) &&
+        ($format === null || __validate_date_mod($format))
+    ) {
+        [$format, $mod] = [$mod, $format];
+    } elseif (
+        ($format === null || __validate_date($format)) &&
+        ($date === null || __validate_date_format($date)) &&
+        ($mod === null || __validate_date_mod($mod))
+    ) {
+        [$format, $date] = [$date, $format];
+    } elseif (
+        ($format === null || __validate_date($format)) &&
+        ($mod === null || __validate_date_format($mod)) &&
+        ($date === null || __validate_date_mod($date))
+    ) {
+        [$date, $format] = [$format, $date];
+        [$format, $mod] = [$mod, $format];
+    } elseif (
+        ($mod === null || __validate_date($mod)) &&
+        ($date === null || __validate_date_format($date)) &&
+        ($format === null || __validate_date_mod($format))
+    ) {
+        [$date, $mod] = [$mod, $date];
+        [$format, $mod] = [$mod, $format];
+    } elseif (
+        ($mod === null || __validate_date($mod)) &&
+        ($format === null || __validate_date_format($format)) &&
+        ($date === null || __validate_date_mod($date))
+    ) {
+        [$date, $mod] = [$mod, $date];
+    } else {
+        return null;
+    }
+
+    if (__nx($date)) {
+        $date = 'now';
+    }
     // input timestamp
-    if (is_numeric($date)) {
+    elseif (is_numeric($date)) {
         $date = date('Y-m-d', $date);
     }
     // input datetime object
-    if ($date instanceof DateTime) {
+    elseif ($date instanceof DateTime) {
         $date = $date->format('Y-m-d');
     }
-    // sort out invalid
-    if (
-        (strlen($date) === 10 && !__validate_date($date)) ||
-        strtotime($date . (__x($mod) ? ' ' . $mod : '')) === false
-    ) {
-        // try to switch args, if date is valid format
-        if (__validate_date_format($date) !== false) {
-            [$date, $format] = [$format, $date];
-            if (__nx($date)) {
-                $date = 'now';
-            }
-        }
-        // try again
-        if (
-            (strlen($date) === 10 && !__validate_date($date)) ||
-            strtotime($date . (__x($mod) ? ' ' . $mod : '')) === false
-        ) {
-            return null;
-        }
-    }
+
     // default value for format
     if (__nx($format)) {
         $format = 'Y-m-d';
@@ -1108,6 +1148,14 @@ function __validate_date_format($str)
         }
     }
     return true;
+}
+
+function __validate_date_mod($mod)
+{
+    if (__nx($mod)) {
+        return false;
+    }
+    return strtotime('2000-01-01 ' . $mod) !== false;
 }
 
 function __datetime($datetime)

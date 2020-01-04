@@ -363,19 +363,27 @@ __validate_url('https://vielhuber.de') // true
 // check if string is a valid email (also works with umlauts and without external lib like idna)
 __validate_email('david@vielhuber.de') // true
 
-// checks if a date is valid (in english and german format)
+// checks if a date is valid (string in english/german, timestamp or date format)
+__validate_date('2000-01-01') // true
+__validate_date('01.01.2000') // true
 __validate_date('29.02.2001') // false
+__validate_date(new DateTime('2000-01-01')) // true
+__validate_date(946713600) // true
 
 // checks if a string is a valid date format
 __validate_date_format('d.m.Y') // true
 __validate_date_format('Y-m-d') // true
 __validate_date_format('foo') // false
 
+// checks if a string is a valid date modifier
+__validate_date_mod('+6 months') // true
+__validate_date_mod('foo') // false
+
 // simple date helper
 __date('2000-01-01') // 2000-01-01
 __date('2000-01-01', 'd.m.Y') // 01.01.2000
 __date('2001-02-29', 'd.m.Y') // null; returns null if date is invalid, otherwise formatted date
-__date('2000-01-01', null, '+6 months') // 2000-07-01; allows date modifications
+__date('2000-01-01', '+6 months') // 2000-07-01; allows date modifications
 __date('2000-01-01', 'd.m.Y', '+6 months') // 01.07.2000
 __date('01.01.2000'); // 2000-01-01; also accepts other formats
 __date('now') // 2019-05-28; also accepts strings
@@ -388,8 +396,9 @@ $unknown = null; __date($unknown) // null
 __date(strtotime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts timestamps
 __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
 __date(new DateTime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts datetime objects
-__date('d.m.Y') // 01.01.2000; you can even switch arguments
+__date('d.m.Y') // 01.01.2000; you can even switch arguments (they are sorted magically)
 __date('d.m.Y', 'now') // 2019-05-28
+__date('+6 months') // 2019-11-28
 
 // outputs a valid formatted value for input datetime-local
 __datetime('01.01.2000') // 2000-01-01T00:00

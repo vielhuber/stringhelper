@@ -318,7 +318,16 @@ class Test extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(__validate_url('https://vielhuber.de'), true);
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
+
+        $this->assertSame(__validate_date('2000-01-01'), true);
+        $this->assertSame(__validate_date('01.01.2000'), true);
         $this->assertSame(__validate_date('29.02.2001'), false);
+        $this->assertSame(__validate_date(new DateTime('2000-01-01')), true);
+        $this->assertSame(__validate_date(946713600), true);
+        $this->assertSame(__validate_date(null), false);
+        $this->assertSame(__validate_date(''), false);
+        $this->assertSame(__validate_date(true), false);
+        $this->assertSame(__validate_date(false), false);
 
         $this->assertSame(__validate_date_format('d.m.Y'), true);
         $this->assertSame(__validate_date_format('Y-m-d'), true);
@@ -327,6 +336,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__validate_date_format(true), false);
         $this->assertSame(__validate_date_format(false), false);
         $this->assertSame(__validate_date_format(''), false);
+
+        $this->assertSame(__validate_date_mod('+6 months'), true);
+        $this->assertSame(__validate_date_mod('+ 6 months'), true);
+        $this->assertSame(__validate_date_mod('+1 week 2 days 4 hours 2 seconds'), true);
+        $this->assertSame(__validate_date_mod(''), false);
+        $this->assertSame(__validate_date_mod(null), false);
+        $this->assertSame(__validate_date_mod(false), false);
+        $this->assertSame(__validate_date_mod(true), false);
 
         $this->assertSame(__phone_normalize(null), '');
         $this->assertSame(__phone_normalize(''), '');
@@ -353,6 +370,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
         $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');
         $this->assertSame(__date('2001-02-29', 'd.m.Y'), null);
+        $this->assertSame(__date('2000-01-01', '+6 months'), '2000-07-01');
         $this->assertSame(__date('2000-01-01', null, '+6 months'), '2000-07-01');
         $this->assertSame(__date('2000-01-01', 'd.m.Y', '+6 months'), '01.07.2000');
         $this->assertSame(__date('01.01.2000'), '2000-01-01');
@@ -376,6 +394,7 @@ class Test extends \PHPUnit\Framework\TestCase
             __date('d.m.Y', 'tomorrow', '+ 6 months'),
             date('d.m.Y', strtotime('tomorrow + 6 months'))
         );
+        $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
 
         $this->assertSame(__datetime('01.01.2000'), '2000-01-01T00:00');
         $this->assertSame(__datetime('01.01.2000 18:00'), '2000-01-01T18:00');
