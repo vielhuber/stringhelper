@@ -404,6 +404,11 @@ __date('+6 months') // 2019-11-28
 __datetime('01.01.2000') // 2000-01-01T00:00
 __datetime('01.01.2000 18:00') // 2000-01-01T18:00
 
+// set time of date as string to begin of day
+__date_reset_time('2000-01-01 16:30:00') // 2000-01-01 00:00:00
+__date_reset_time('2000-01-01') // 2000-01-01 00:00:00
+__date_reset_time('01.01.2000') // 2000-01-01 00:00:00
+
 // remove useless zero digits from decimals
 __remove_zero_decimals(1337) // 1337
 __remove_zero_decimals('1337') // 1337

@@ -398,6 +398,13 @@ class Test extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(__datetime('01.01.2000'), '2000-01-01T00:00');
         $this->assertSame(__datetime('01.01.2000 18:00'), '2000-01-01T18:00');
+        $this->assertSame(__datetime(null), null);
+        $this->assertSame(__datetime(false), null);
+        $this->assertSame(__datetime(true), null);
+
+        $this->assertSame(__date_reset_time('2000-01-01 16:30:00'), '2000-01-01 00:00:00');
+        $this->assertSame(__date_reset_time('2000-01-01 16:30:00'), '2000-01-01 00:00:00');
+
         $this->assertSame(
             __slug('This string will be sanitized!'),
             'this-string-will-be-sanitized'

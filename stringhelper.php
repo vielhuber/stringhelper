@@ -1166,6 +1166,14 @@ function __datetime($datetime)
     return date('Y-m-d', strtotime($datetime)) . 'T' . date('H:i', strtotime($datetime));
 }
 
+function __date_reset_time($date)
+{
+    if (__nx(@$date)) {
+        return null;
+    }
+    return date('Y-m-d 00:00:00', strtotime($date));
+}
+
 function __remove_zero_decimals($num)
 {
     if (__nx($num)) {
