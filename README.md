@@ -585,9 +585,12 @@ __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]]) // [0 
 __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]], [0,'0']) // [0 => ['foo']]
 
 // remove item from array or object and fill up gaps (if numeric keys are available)
-__remove([0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // [0 => 'foo', 1 => 'baz']
-__remove(['foo' => 1, 'bar' => 2, 'baz' => 3], 'foo') // ['bar' => 2, 'baz' => 3]
-__remove((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // (object)[0 => 'foo', 1 => 'baz']
+__remove_by_key([0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // [0 => 'foo', 1 => 'baz']
+__remove_by_key(['foo' => 1, 'bar' => 2, 'baz' => 3], 'foo') // ['bar' => 2, 'baz' => 3]
+__remove_by_key((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // (object)[0 => 'foo', 1 => 'baz']
+__remove_by_key([0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // [0 => 'foo', 1 => 'baz']
+__remove_by_key(['foo' => 1, 'bar' => 2, 'baz' => 3], 1) // ['bar' => 2, 'baz' => 3]
+__remove_by_key((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // (object)[0 => 'foo', 1 => 'baz']
 
 // turn values of array "inside out"
 // this is useful when working with html forms

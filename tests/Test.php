@@ -390,10 +390,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date(new DateTime('2000-01-01'), 'd.m.Y'), '01.01.2000');
         $this->assertSame(__date('d.m.Y'), date('d.m.Y', strtotime('now')));
         $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
-        $this->assertSame(
-            __date('d.m.Y', 'tomorrow', '+ 6 months'),
-            date('d.m.Y', strtotime('tomorrow + 6 months'))
-        );
+        $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
 
         $this->assertSame(__datetime('01.01.2000'), '2000-01-01T00:00');
@@ -413,10 +410,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date_reset_time(false), null);
         $this->assertSame(__date_reset_time(true), null);
 
-        $this->assertSame(
-            __slug('This string will be sanitized!'),
-            'this-string-will-be-sanitized'
-        );
+        $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
 
         $this->assertSame(__remove_zero_decimals(1337), 1337);
         $this->assertSame(__remove_zero_decimals('1337'), 1337);
@@ -442,18 +436,9 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__shuffle_assoc([]), []);
         $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
         $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
-        $this->assertSame(
-            __shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['foo'] === 'bar',
-            true
-        );
-        $this->assertSame(
-            __shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz',
-            true
-        );
-        $this->assertSame(
-            __shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo',
-            true
-        );
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['foo'] === 'bar', true);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz', true);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo', true);
 
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);
@@ -476,24 +461,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__strip_whitespace('the answer is 42'), 'theansweris42');
         $this->assertSame(__strip_whitespace('the  answeris42'), 'theansweris42');
         $this->assertSame(__strip_whitespace_collapsed('the answer is 42'), 'the answer is 42');
-        $this->assertSame(
-            __strip_whitespace_collapsed('the     answer             is 42 '),
-            'the answer is 42'
-        );
-        $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), [
-            'foo',
-            'bar',
-            'baz'
-        ]);
+        $this->assertSame(__strip_whitespace_collapsed('the     answer             is 42 '), 'the answer is 42');
+        $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), ['foo', 'bar', 'baz']);
 
         $this->assertSame(
             __remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'),
             'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'
         );
-        $this->assertSame(
-            __remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'),
-            'foobarbaz'
-        );
+        $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
 
         $this->assertSame(__atrim(null), null);
         $this->assertSame(__atrim(false), false);
@@ -590,42 +565,65 @@ baz'
             (object) ['foo', 'bar' => (object) ['foo', 'bar']]
         );
 
-        $this->assertSame(
-            __remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]]),
-            [0 => ['foo', 0, '0']]
-        );
-        $this->assertSame(
-            __remove_empty(
-                [0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]],
-                [0, '0']
-            ),
-            [0 => ['foo']]
-        );
+        $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]]), [
+            0 => ['foo', 0, '0']
+        ]);
+        $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]], [0, '0']), [
+            0 => ['foo']
+        ]);
 
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
-        __remove($arr, 1);
+        __remove_by_key($arr, 1);
         $this->assertSame($arr, [0 => 'foo', 1 => 'baz']);
         $arr = ['foo' => 1, 'bar' => 2, 'baz' => 3];
-        __remove($arr, 'foo');
+        __remove_by_key($arr, 'foo');
         $this->assertSame($arr, ['bar' => 2, 'baz' => 3]);
         $arr = [42 => 1, 'foo' => 2, 'bar' => 3];
-        __remove($arr, 'foo');
+        __remove_by_key($arr, 'foo');
         $this->assertSame($arr, [42 => 1, 'bar' => 3]);
         $arr = [0 => 'foo', 'foobar' => 'bar', 2 => 'baz'];
-        __remove($arr, 'foobar');
+        __remove_by_key($arr, 'foobar');
         $this->assertSame($arr, [0 => 'foo', 1 => 'baz']);
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
-        __remove($arr, 3);
+        __remove_by_key($arr, 3);
         $this->assertSame($arr, [0 => 'foo', 1 => 'bar', 2 => 'baz']);
         $arr = (object) [0 => 'foo', 1 => 'bar', 2 => 'baz'];
-        __remove($arr, 1);
+        __remove_by_key($arr, 1);
         $this->assertEquals($arr, (object) [0 => 'foo', 1 => 'baz']);
         $arr = (object) ['foo' => 1, 'bar' => 2, 'baz' => 3];
-        __remove($arr, 'foo');
+        __remove_by_key($arr, 'foo');
         $this->assertEquals($arr, (object) ['bar' => 2, 'baz' => 3]);
         $arr = (object) [42 => 1, 'foo' => 2, 'bar' => 3];
-        __remove($arr, 'foo');
+        __remove_by_key($arr, 'foo');
         $this->assertEquals($arr, (object) [42 => 1, 'bar' => 3]);
+
+        $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
+        __remove_by_value($arr, 'bar');
+        $this->assertSame($arr, [0 => 'foo', 1 => 'baz']);
+        $arr = ['foo' => 1, 'bar' => 2, 'baz' => 3];
+        __remove_by_value($arr, 1);
+        $this->assertSame($arr, ['bar' => 2, 'baz' => 3]);
+        $arr = [42 => 1, 'foo' => 2, 'bar' => 3];
+        __remove_by_value($arr, 2);
+        $this->assertSame($arr, [42 => 1, 'bar' => 3]);
+        $arr = [0 => 'foo', 'foobar' => 'bar', 2 => 'baz'];
+        __remove_by_value($arr, 'bar');
+        $this->assertSame($arr, [0 => 'foo', 1 => 'baz']);
+        $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
+        __remove_by_value($arr, 'bazzz');
+        $this->assertSame($arr, [0 => 'foo', 1 => 'bar', 2 => 'baz']);
+        $arr = (object) [0 => 'foo', 1 => 'bar', 2 => 'baz'];
+        __remove_by_value($arr, 'bar');
+        $this->assertEquals($arr, (object) [0 => 'foo', 1 => 'baz']);
+        $arr = (object) ['foo' => 1, 'bar' => 2, 'baz' => 3];
+        __remove_by_value($arr, 1);
+        $this->assertEquals($arr, (object) ['bar' => 2, 'baz' => 3]);
+        $arr = (object) [42 => 1, 'foo' => 2, 'bar' => 3];
+        __remove_by_value($arr, 2);
+        $this->assertEquals($arr, (object) [42 => 1, 'bar' => 3]);
+        $arr = [0 => 'foo', 1 => 'foo', 2 => 'foo'];
+        __remove_by_value($arr, 'foo');
+        $this->assertSame($arr, []);
 
         $this->assertSame(
             __highlight('that is a search string', 'is'),
@@ -635,14 +633,8 @@ baz'
             __highlight('that is a search isstring', 'is'),
             'that <strong class="highlight">is</strong> a search <strong class="highlight">is</strong>string'
         );
-        $this->assertSame(
-            __highlight('that is a search isstring', ''),
-            'that is a search isstring'
-        );
-        $this->assertSame(
-            __highlight('Maßbierkrug', 'bier'),
-            'Maß<strong class="highlight">bier</strong>krug'
-        );
+        $this->assertSame(__highlight('that is a search isstring', ''), 'that is a search isstring');
+        $this->assertSame(__highlight('Maßbierkrug', 'bier'), 'Maß<strong class="highlight">bier</strong>krug');
         $this->assertSame(__highlight('', ''), '');
         $this->assertSame(__highlight(null, ''), null);
         $this->assertSame(__highlight(null, null), null);
@@ -671,11 +663,7 @@ baz'
 
         $this->assertSame(__is_integer(8372468764378627868742367883268), true);
         $this->assertSame(__flatten_keys(['foo' => ['bar' => 'baz']]), ['foo', 'bar']);
-        $this->assertSame(__flatten_values(['foo' => 'bar', 'bar' => ['baz', 'foo']]), [
-            'bar',
-            'baz',
-            'foo'
-        ]);
+        $this->assertSame(__flatten_values(['foo' => 'bar', 'bar' => ['baz', 'foo']]), ['bar', 'baz', 'foo']);
         $this->assertSame(__expl(' ', 'foo bar baz', 1), 'bar');
 
         $this->assertSame(
@@ -702,10 +690,7 @@ baz'
         $this->assertEquals(
             __arrays_to_objects([
                 'foo' => ['bar', 'baz'],
-                'bar' => [
-                    (object) ['id' => 7, 'name' => 'foo'],
-                    (object) ['id' => 42, 'name' => 'bar']
-                ]
+                'bar' => [(object) ['id' => 7, 'name' => 'foo'], (object) ['id' => 42, 'name' => 'bar']]
             ]),
             (object) [
                 'foo' => (object) [0 => 'bar', 1 => 'baz'],
@@ -744,16 +729,9 @@ baz'
         $this->assertTrue(strpos($response->result, '<html') !== false);
         $response = __curl('https://httpbin.org/basic-auth/foo/bar');
         $this->assertSame($response->status, 401);
-        $response = __curl(
-            'https://httpbin.org/basic-auth/foo/bar',
-            null,
-            null,
-            null,
-            false,
-            true,
-            60,
-            ['foo' => 'bar']
-        );
+        $response = __curl('https://httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, [
+            'foo' => 'bar'
+        ]);
         $this->assertSame($response->status, 200);
 
         // fill in your wp credentials to test this
@@ -789,10 +767,7 @@ baz'
         $this->assertSame(__url(), 'https://github.com/vielhuber/stringhelper');
         $this->assertSame(__baseurl(), 'https://github.com');
 
-        define(
-            'ENCRYPTION_KEY',
-            '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319'
-        ); // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
+        define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319'); // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
         $this->assertSame(__decrypt(__encrypt('foo')), 'foo');
         $this->assertSame(__decrypt(__encrypt('bar', 'known_salt')), 'bar');
 
@@ -805,10 +780,7 @@ baz'
         $this->assertSame(count(__files_in_folder('.')) === 7, true);
         $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) === 6, true);
         $this->assertSame(in_array('.gitignore', __files_in_folder('.', false)), true);
-        $this->assertSame(
-            in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])),
-            false
-        );
+        $this->assertSame(in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])), false);
         $this->assertSame(count(__files_in_folder('tests')) === 2, true);
         $this->assertSame(count(__files_in_folder('tests', false, ['Test.php'])) === 1, true);
         $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
@@ -827,10 +799,7 @@ baz'
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/issues'), false);
-        $this->assertSame(
-            __is_external('https://github.com/vielhuber/stringhelper/test.pdf'),
-            true
-        );
+        $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/test.pdf'), true);
         $this->assertSame(__is_external('tel:+4989215400142'), false);
         $this->assertSame(__is_external('mailto:david@vielhuber.de'), false);
         $this->assertSame(__is_external('https://vielhuber.de'), true);
@@ -899,18 +868,9 @@ bar',
                 'windows'
             )
         );
-        $this->assertNotSame(
-            file_get_contents('tests/assets/file1.txt'),
-            file_get_contents('tests/assets/file2.txt')
-        );
-        $this->assertNotSame(
-            file_get_contents('tests/assets/file1.txt'),
-            file_get_contents('tests/assets/file3.txt')
-        );
-        $this->assertNotSame(
-            file_get_contents('tests/assets/file2.txt'),
-            file_get_contents('tests/assets/file3.txt')
-        );
+        $this->assertNotSame(file_get_contents('tests/assets/file1.txt'), file_get_contents('tests/assets/file2.txt'));
+        $this->assertNotSame(file_get_contents('tests/assets/file1.txt'), file_get_contents('tests/assets/file3.txt'));
+        $this->assertNotSame(file_get_contents('tests/assets/file2.txt'), file_get_contents('tests/assets/file3.txt'));
         $this->assertSame(
             __line_endings_convert(file_get_contents('tests/assets/file1.txt'), 'windows'),
             __line_endings_convert(file_get_contents('tests/assets/file2.txt'), 'windows')
@@ -1028,12 +988,7 @@ foo;bar;baz'
             ),
             true
         );
-        __array2csv(
-            [['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']],
-            'tests/assets/file.csv',
-            ';',
-            '"'
-        );
+        __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ';', '"');
         $this->assertSame(
             __line_endings_weak_equals(
                 trim(file_get_contents('tests/assets/file.csv')),
@@ -1042,12 +997,7 @@ foo;bar;baz'
             ),
             true
         );
-        __array2csv(
-            [['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']],
-            'tests/assets/file.csv',
-            ',',
-            '\''
-        );
+        __array2csv([['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ',', '\'');
         $this->assertSame(
             __line_endings_weak_equals(
                 trim(file_get_contents('tests/assets/file.csv')),
@@ -1057,26 +1007,13 @@ foo,bar,baz'
             true
         );
         __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv');
-        $this->assertSame(__csv2array('tests/assets/file.csv'), [
-            ['foo', 'bar', 'baz'],
-            ['foo', 'bar', 'baz']
-        ]);
-        __array2csv(
-            [['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']],
-            'tests/assets/file.csv',
-            ';',
-            '"'
-        );
+        $this->assertSame(__csv2array('tests/assets/file.csv'), [['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']]);
+        __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ';', '"');
         $this->assertSame(__csv2array('tests/assets/file.csv', ';', '"'), [
             ['foo', 'bar', 'baz'],
             ['foo', 'bar', 'baz']
         ]);
-        __array2csv(
-            [['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']],
-            'tests/assets/file.csv',
-            ',',
-            '\''
-        );
+        __array2csv([['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ',', '\'');
         $this->assertSame(__csv2array('tests/assets/file.csv', ',', '\''), [
             ['foo bar', 'bar', 'baz'],
             ['foo', 'bar', 'baz']

@@ -14,10 +14,7 @@ function __x($input)
     if (is_array($input) && count($input) === 1 && array_values($input)[0] === '') {
         return false;
     }
-    if (
-        $input instanceof Illuminate\Database\Eloquent\Relations\BelongsTo &&
-        $input->count() === 0
-    ) {
+    if ($input instanceof Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0) {
         return false;
     }
     if ($input instanceof Illuminate\Database\Eloquent\Collection && $input->count() === 0) {
@@ -420,19 +417,11 @@ function __o(...$data)
         }
     });
     foreach ($data as $data__value) {
-        if (
-            is_array($data__value) ||
-            is_object($data__value) ||
-            $data__value instanceof Traversable
-        ) {
+        if (is_array($data__value) || is_object($data__value) || $data__value instanceof Traversable) {
             echo '<pre>';
         }
         var_dump($data__value);
-        if (
-            is_array($data__value) ||
-            is_object($data__value) ||
-            $data__value instanceof Traversable
-        ) {
+        if (is_array($data__value) || is_object($data__value) || $data__value instanceof Traversable) {
             echo '</pre>';
         }
         echo '<br/>';
@@ -734,8 +723,7 @@ function __strposnth($haystack, $needle, $index)
 function __remove_empty($a, $additional = null)
 {
     if (
-        ($a instanceof Illuminate\Database\Eloquent\Collection ||
-            $a instanceof Illuminate\Support\Collection) &&
+        ($a instanceof Illuminate\Database\Eloquent\Collection || $a instanceof Illuminate\Support\Collection) &&
         $a->count() > 0
     ) {
         foreach ($a as $a__key => $a__value) {
@@ -746,10 +734,7 @@ function __remove_empty($a, $additional = null)
                 } else {
                     $a->put($a__key, $result);
                 }
-            } elseif (
-                __nx(@$a__value) ||
-                ($additional !== null && in_array($a__value, $additional))
-            ) {
+            } elseif (__nx(@$a__value) || ($additional !== null && in_array($a__value, $additional))) {
                 $a->forget($a__key);
             }
         }
@@ -762,10 +747,7 @@ function __remove_empty($a, $additional = null)
                 } else {
                     $a[$a__key] = $result;
                 }
-            } elseif (
-                __nx(@$a__value) ||
-                ($additional !== null && in_array($a__value, $additional, true))
-            ) {
+            } elseif (__nx(@$a__value) || ($additional !== null && in_array($a__value, $additional, true))) {
                 unset($a[$a__key]);
             }
         }
@@ -778,10 +760,7 @@ function __remove_empty($a, $additional = null)
                 } else {
                     $a->$a__key = $result;
                 }
-            } elseif (
-                __nx(@$a__value) ||
-                ($additional !== null && in_array($a__value, $additional, true))
-            ) {
+            } elseif (__nx(@$a__value) || ($additional !== null && in_array($a__value, $additional, true))) {
                 unset($a->$a__key);
             }
         }
@@ -790,6 +769,11 @@ function __remove_empty($a, $additional = null)
 }
 
 function __remove(&$arr, $key)
+{
+    __remove_by_key($arr, $key);
+}
+
+function __remove_by_key(&$arr, $key)
 {
     if (__nx($arr)) {
         return;
@@ -817,6 +801,36 @@ function __remove(&$arr, $key)
     return;
 }
 
+function __remove_by_value(&$arr, $value)
+{
+    if (__nx($arr)) {
+        return;
+    }
+    $was_object = false;
+    if (is_object($arr)) {
+        $was_object = true;
+        $arr = (array) $arr;
+    }
+    if (is_array($arr)) {
+        foreach (array_keys($arr, $value, true) as $key) {
+            unset($arr[$key]);
+        }
+        $all_numeric = true;
+        foreach ($arr as $arr__key => $arr__value) {
+            if (!is_numeric($arr__key)) {
+                $all_numeric = false;
+            }
+        }
+        if ($all_numeric === true) {
+            $arr = array_values($arr);
+        }
+    }
+    if ($was_object === true) {
+        $arr = (object) $arr;
+    }
+    return;
+}
+
 function __can_be_looped($a)
 {
     if (is_array($a) && !empty($a)) {
@@ -826,8 +840,7 @@ function __can_be_looped($a)
         return true;
     }
     if (
-        ($a instanceof Illuminate\Database\Eloquent\Collection ||
-            $a instanceof Illuminate\Support\Collection) &&
+        ($a instanceof Illuminate\Database\Eloquent\Collection || $a instanceof Illuminate\Support\Collection) &&
         $a->count() > 0
     ) {
         return true;
@@ -1320,10 +1333,7 @@ function __fetch($url, $method = null)
 {
     if ($method === 'curl' || ($method === null && function_exists('curl_version'))) {
         $result = __curl($url)->result;
-    } elseif (
-        $method === 'php' ||
-        ($method === null && file_get_contents(__FILE__) && ini_get('allow_url_fopen'))
-    ) {
+    } elseif ($method === 'php' || ($method === null && file_get_contents(__FILE__) && ini_get('allow_url_fopen'))) {
         $result = @file_get_contents($url);
     } else {
         $result = json_encode([]);
@@ -1526,10 +1536,7 @@ function __baseurl()
         return null;
     }
     $url =
-        'http' .
-        (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '') .
-        '://' .
-        $_SERVER['HTTP_HOST'];
+        'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '') . '://' . $_SERVER['HTTP_HOST'];
     return rtrim($url, '/');
 }
 
@@ -1617,12 +1624,7 @@ function __sed_replace($replacements = [], $filename)
     }
     $command = 'sed -i' . (__os() === 'mac' ? " ''" : '') . '';
     foreach ($replacements as $replacements__key => $replacements__value) {
-        $command .=
-            " -e 's/" .
-            __sed_escape($replacements__key) .
-            '/' .
-            __sed_escape($replacements__value) .
-            "/g'";
+        $command .= " -e 's/" . __sed_escape($replacements__key) . '/' . __sed_escape($replacements__value) . "/g'";
     }
     $command .= ' "' . $filename . '"';
     shell_exec($command);
@@ -1661,12 +1663,7 @@ function __sed_escape($str)
 
 function __line_endings_convert($str, $os)
 {
-    if (
-        __nx($str) ||
-        !is_string($str) ||
-        __nx($os) ||
-        !in_array($os, ['linux', 'mac', 'windows'])
-    ) {
+    if (__nx($str) || !is_string($str) || __nx($os) || !in_array($os, ['linux', 'mac', 'windows'])) {
         return '';
     }
     if ($os === 'linux') {
@@ -1711,10 +1708,7 @@ function __log_end($message = null, $echo = true)
         $GLOBALS['performance'] = [];
     }
     $performance_active_key = null;
-    foreach (
-        array_reverse($GLOBALS['performance'], true)
-        as $performance__key => $performance__value
-    ) {
+    foreach (array_reverse($GLOBALS['performance'], true) as $performance__key => $performance__value) {
         if ($performance__value['message'] === $message || $message === null) {
             $performance_active_key = $performance__key;
             break;
@@ -1724,17 +1718,9 @@ function __log_end($message = null, $echo = true)
         return null;
     }
     $message = $GLOBALS['performance'][$performance_active_key]['message'];
-    $time = number_format(
-        microtime(true) - $GLOBALS['performance'][$performance_active_key]['time'],
-        5
-    );
+    $time = number_format(microtime(true) - $GLOBALS['performance'][$performance_active_key]['time'], 5);
     if ($echo === true) {
-        echo 'script' .
-            ($message != '' ? ' ' . $message : '') .
-            ' execution time: ' .
-            $time .
-            ' seconds' .
-            PHP_EOL;
+        echo 'script' . ($message != '' ? ' ' . $message : '') . ' execution time: ' . $time . ' seconds' . PHP_EOL;
     }
     unset($GLOBALS['performance'][$performance_active_key]);
     $GLOBALS['performance'] = array_values($GLOBALS['performance']);
@@ -1798,13 +1784,7 @@ function __encrypt($string, $salt = null)
         $salt = hash('sha256', uniqid(mt_rand(), true));
     } // this is an unique salt per entry and directly stored within a password
     return base64_encode(
-        openssl_encrypt(
-            $string,
-            'AES-256-CBC',
-            ENCRYPTION_KEY,
-            0,
-            str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT)
-        )
+        openssl_encrypt($string, 'AES-256-CBC', ENCRYPTION_KEY, 0, str_pad(substr($salt, 0, 16), 16, '0', STR_PAD_LEFT))
     ) .
         ':' .
         $salt;
@@ -1858,18 +1838,11 @@ function __files_in_folder($folder = '.', $recursive = false, $exclude = [])
     if (file_exists($folder) && is_dir($folder)) {
         if ($handle = opendir($folder)) {
             while (false !== ($fileOrFolder = readdir($handle))) {
-                if (
-                    $fileOrFolder != '.' &&
-                    $fileOrFolder != '..' &&
-                    !in_array($fileOrFolder, $exclude)
-                ) {
+                if ($fileOrFolder != '.' && $fileOrFolder != '..' && !in_array($fileOrFolder, $exclude)) {
                     if (!is_dir($folder . '/' . $fileOrFolder)) {
                         $files[] = $fileOrFolder;
                     } elseif ($recursive === true) {
-                        $files = array_merge(
-                            $files,
-                            __files_in_folder($folder . '/' . $fileOrFolder, $recursive)
-                        );
+                        $files = array_merge($files, __files_in_folder($folder . '/' . $fileOrFolder, $recursive));
                     }
                 }
             }
