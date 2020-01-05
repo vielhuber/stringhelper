@@ -588,9 +588,9 @@ __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]], [0,'0'
 __remove_by_key([0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // [0 => 'foo', 1 => 'baz']
 __remove_by_key(['foo' => 1, 'bar' => 2, 'baz' => 3], 'foo') // ['bar' => 2, 'baz' => 3]
 __remove_by_key((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // (object)[0 => 'foo', 1 => 'baz']
-__remove_by_key([0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // [0 => 'foo', 1 => 'baz']
-__remove_by_key(['foo' => 1, 'bar' => 2, 'baz' => 3], 1) // ['bar' => 2, 'baz' => 3]
-__remove_by_key((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // (object)[0 => 'foo', 1 => 'baz']
+__remove_by_value([0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // [0 => 'foo', 1 => 'baz']
+__remove_by_value(['foo' => 1, 'bar' => 2, 'baz' => 3], 1) // ['bar' => 2, 'baz' => 3]
+__remove_by_value((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // (object)[0 => 'foo', 1 => 'baz']
 
 // turn values of array "inside out"
 // this is useful when working with html forms
