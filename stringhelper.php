@@ -768,15 +768,15 @@ function __remove_empty($a, $additional = null)
     return $a;
 }
 
-function __remove(&$arr, $key)
+function __remove($arr, $key)
 {
-    __remove_by_key($arr, $key);
+    return __remove_by_key($arr, $key);
 }
 
-function __remove_by_key(&$arr, $key)
+function __remove_by_key($arr, $key)
 {
     if (__nx($arr)) {
-        return;
+        return $arr;
     }
     $was_object = false;
     if (is_object($arr)) {
@@ -798,13 +798,13 @@ function __remove_by_key(&$arr, $key)
     if ($was_object === true) {
         $arr = (object) $arr;
     }
-    return;
+    return $arr;
 }
 
-function __remove_by_value(&$arr, $value)
+function __remove_by_value($arr, $value)
 {
     if (__nx($arr)) {
-        return;
+        return $arr;
     }
     $was_object = false;
     if (is_object($arr)) {
@@ -828,7 +828,7 @@ function __remove_by_value(&$arr, $value)
     if ($was_object === true) {
         $arr = (object) $arr;
     }
-    return;
+    return $arr;
 }
 
 function __arr_append($array, $value, $condition = true)
