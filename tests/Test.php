@@ -625,6 +625,17 @@ baz'
         __remove_by_value($arr, 'foo');
         $this->assertSame($arr, []);
 
+        $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
+        __append_to_array_if(42 % 7 === 0, 'gnarr', $arr);
+        $this->assertEquals($arr, [0 => 'foo', 1 => 'bar', 2 => 'baz', 3 => 'gnarr']);
+        __append_to_array_if(42 % 7 === 1, 'gnarr', $arr);
+        $this->assertEquals($arr, [0 => 'foo', 1 => 'bar', 2 => 'baz', 3 => 'gnarr']);
+        $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
+        __prepend_to_array_if(0 % 1 === 0, 'gnarr', $arr);
+        $this->assertEquals($arr, [0 => 'gnarr', 1 => 'foo', 2 => 'bar', 3 => 'baz']);
+        __prepend_to_array_if(0 % 1 === 1, 'gnarr', $arr);
+        $this->assertEquals($arr, [0 => 'gnarr', 1 => 'foo', 2 => 'bar', 3 => 'baz']);
+
         $this->assertSame(
             __highlight('that is a search string', 'is'),
             'that <strong class="highlight">is</strong> a search string'

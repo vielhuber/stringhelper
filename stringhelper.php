@@ -831,6 +831,22 @@ function __remove_by_value(&$arr, $value)
     return;
 }
 
+function __append_to_array_if($condition, $value, &$array)
+{
+    if ($condition === false || !is_array($array)) {
+        return;
+    }
+    $array[] = $value;
+}
+
+function __prepend_to_array_if($condition, $value, &$array)
+{
+    if ($condition === false || !is_array($array)) {
+        return;
+    }
+    array_unshift($array, $value);
+}
+
 function __can_be_looped($a)
 {
     if (is_array($a) && !empty($a)) {
