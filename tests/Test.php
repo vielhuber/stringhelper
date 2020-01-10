@@ -626,15 +626,19 @@ baz'
         $this->assertSame($arr, []);
 
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
-        __append_to_array_if(42 % 7 === 0, 'gnarr', $arr);
+        __arr_append($arr, 'gnarr', 42 % 7 === 0);
         $this->assertEquals($arr, [0 => 'foo', 1 => 'bar', 2 => 'baz', 3 => 'gnarr']);
-        __append_to_array_if(42 % 7 === 1, 'gnarr', $arr);
+        __arr_append($arr, 'gnarr', 42 % 7 === 1);
         $this->assertEquals($arr, [0 => 'foo', 1 => 'bar', 2 => 'baz', 3 => 'gnarr']);
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
-        __prepend_to_array_if(0 % 1 === 0, 'gnarr', $arr);
+        __arr_prepend($arr, 'gnarr', 0 % 1 === 0);
         $this->assertEquals($arr, [0 => 'gnarr', 1 => 'foo', 2 => 'bar', 3 => 'baz']);
-        __prepend_to_array_if(0 % 1 === 1, 'gnarr', $arr);
+        __arr_prepend($arr, 'gnarr', 0 % 1 === 1);
         $this->assertEquals($arr, [0 => 'gnarr', 1 => 'foo', 2 => 'bar', 3 => 'baz']);
+        $this->assertEquals(__arr_append(__arr_append(__arr_append([], 'foo'), 'bar', false), 'baz'), [
+            0 => 'foo',
+            1 => 'baz'
+        ]);
 
         $this->assertSame(
             __highlight('that is a search string', 'is'),

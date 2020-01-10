@@ -592,9 +592,12 @@ __remove_by_value([0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // [0 => 'foo', 1
 __remove_by_value(['foo' => 1, 'bar' => 2, 'baz' => 3], 1) // ['bar' => 2, 'baz' => 3]
 __remove_by_value((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // (object)[0 => 'foo', 1 => 'baz']
 
-// conditional append/prepend to array
-__append_to_array_if(42%7 === 0, 'bar', ['foo']) // ['foo','bar']
-__prepend_to_array_if(0%1 === 0, 'foo', ['bar']) // ['foo','bar']
+// (conditional) append/prepend to array
+__arr_append(['foo'], 'bar') // ['foo','bar']
+__arr_prepend(['bar'], 'foo') // ['foo','bar']
+__arr_append(['foo'], 'bar', 42%7 === 0) // ['foo','bar']
+__arr_prepend(['bar'], 'foo', 0%1 === 1) // ['foo']
+__arr_append(__arr_append(__arr_append([], 'foo'), 'bar', false), 'baz') // ['foo','baz']
 
 // turn values of array "inside out"
 // this is useful when working with html forms

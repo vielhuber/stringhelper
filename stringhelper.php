@@ -831,20 +831,22 @@ function __remove_by_value(&$arr, $value)
     return;
 }
 
-function __append_to_array_if($condition, $value, &$array)
+function __arr_append($array, $value, $condition = true)
 {
     if ($condition === false || !is_array($array)) {
-        return;
+        return $array;
     }
     $array[] = $value;
+    return $array;
 }
 
-function __prepend_to_array_if($condition, $value, &$array)
+function __arr_prepend($array, $value, $condition = true)
 {
     if ($condition === false || !is_array($array)) {
-        return;
+        return $array;
     }
     array_unshift($array, $value);
+    return $array;
 }
 
 function __can_be_looped($a)
