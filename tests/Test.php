@@ -623,6 +623,7 @@ baz'
         $this->assertEquals($arr, (object) [42 => 1, 'bar' => 3]);
         $arr = [0 => 'foo', 1 => 'foo', 2 => 'foo'];
         $arr = __remove_by_value($arr, 'foo');
+        $arr = __remove_by_value($arr, 'foo');
         $this->assertSame($arr, []);
 
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
