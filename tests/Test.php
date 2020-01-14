@@ -678,7 +678,24 @@ baz'
             '... sadipscing <strong class="highlight">elitr</strong>, sed diam nonumy eirmod ... sadipscing <strong class="highlight">elitr</strong>, sed diam nonumy eirmod ...'
         );
 
+        $this->assertSame(__is_integer(0), true);
+        $this->assertSame(__is_integer(42), true);
+        $this->assertSame(__is_integer(4.2), false);
+        $this->assertSame(__is_integer(0.42), false);
+        $this->assertSame(__is_integer(42.), true);
+        $this->assertSame(__is_integer('42'), true);
+        $this->assertSame(__is_integer('a42'), false);
+        $this->assertSame(__is_integer('42a'), false);
+        $this->assertSame(__is_integer(0x24), true);
         $this->assertSame(__is_integer(8372468764378627868742367883268), true);
+        $this->assertSame(__is_integer('8372468764378627868742367883268'), true);
+        $this->assertSame(__is_integer(' 1337'), false);
+        $this->assertSame(__is_integer('1337 '), false);
+        $this->assertSame(__is_integer([]), false);
+        $this->assertSame(__is_integer(null), false);
+        $this->assertSame(__is_integer(false), false);
+        $this->assertSame(__is_integer(true), false);
+
         $this->assertSame(__flatten_keys(['foo' => ['bar' => 'baz']]), ['foo', 'bar']);
         $this->assertSame(__flatten_values(['foo' => 'bar', 'bar' => ['baz', 'foo']]), ['bar', 'baz', 'foo']);
         $this->assertSame(__expl(' ', 'foo bar baz', 1), 'bar');

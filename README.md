@@ -629,8 +629,24 @@ __arrays_to_objects(['foo' => ['bar','baz'], 'bar' => [(object)['id' => 7, 'name
 __highlight('that is a search string', 'is') // that <strong class="highlight">is</strong> a search string
 __highlight('abc def geh ijk lmn opq rst abc def geh ijk lmn opq rst', 'ijk', true, 5) // '... geh <strong class="highlight">ijk</strong> lmn ... geh <strong class="highlight">ijk</strong> lmn ...'
 
-// checks if variable is an integer (works also for big integers)
+// checks if variable is an integer (accepts also well formed strings)
+__is_integer(0) // true
+__is_integer(42) // true
+__is_integer(4.2) // false
+__is_integer(0.42) // false
+__is_integer(42.) // true
+__is_integer('42') // true
+__is_integer('a42') // false
+__is_integer('42a') // false
+__is_integer(0x24) // true
 __is_integer(8372468764378627868742367883268) // true (in comparison to is_int())
+__is_integer('8372468764378627868742367883268') // true
+__is_integer(' 1337') // false
+__is_integer('1337 ') // false
+__is_integer([]) // false
+__is_integer(null) // false
+__is_integer(false) // false
+__is_integer(true) // false
 
 // output arguments in a reader friendly way
 __o($var)

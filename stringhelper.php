@@ -678,13 +678,16 @@ function __is_integer($input)
     if (__nx(@$input)) {
         return false;
     }
+    if ($input === true) {
+        return false;
+    }
     if (is_int($input)) {
         return true;
     }
     if (is_numeric($input) && $input != (string) (float) $input) {
         return true;
     }
-    return false;
+    return preg_match('/^\d+$/', $input) === 1;
 }
 
 function __extract($string, $begin, $end)
