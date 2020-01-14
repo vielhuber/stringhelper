@@ -1134,6 +1134,7 @@ function __validate_date_format($str)
                 '-',
                 '.',
                 ':',
+                '/',
                 'd',
                 'D',
                 'j',
