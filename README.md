@@ -373,6 +373,7 @@ __validate_date(946713600) // true
 // checks if a string is a valid date format
 __validate_date_format('d.m.Y') // true
 __validate_date_format('Y-m-d') // true
+__validate_date_format('01.m.Y') // true
 __validate_date_format('foo') // false
 
 // checks if a string is a valid date modifier

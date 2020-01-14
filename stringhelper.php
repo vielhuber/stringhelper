@@ -1130,59 +1130,61 @@ function __validate_date_format($str)
     if (__nx($str)) {
         return false;
     }
+    if ($str === true) {
+        return false;
+    }
+    $chars_needed = [
+        'd',
+        'D',
+        'j',
+        'l',
+        'N',
+        'S',
+        'w',
+        'z',
+        'W',
+        'F',
+        'm',
+        'M',
+        'n',
+        't',
+        'L',
+        'o',
+        'Y',
+        'y',
+        'a',
+        'A',
+        'B',
+        'g',
+        'G',
+        'h',
+        'H',
+        'i',
+        's',
+        'u',
+        'v',
+        'e',
+        'I',
+        'O',
+        'P',
+        'T',
+        'Z',
+        'z',
+        'c',
+        'r',
+        'U'
+    ];
+    $chars_optional = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '-', '.', ':', '/'];
+    $min_one_needed_char = false;
     foreach (str_split($str) as $str__value) {
-        if (
-            !in_array($str__value, [
-                ' ',
-                '-',
-                '.',
-                ':',
-                '/',
-                'd',
-                'D',
-                'j',
-                'l',
-                'N',
-                'S',
-                'w',
-                'z',
-                'W',
-                'F',
-                'm',
-                'M',
-                'n',
-                't',
-                'L',
-                'o',
-                'Y',
-                'y',
-                'a',
-                'A',
-                'B',
-                'g',
-                'G',
-                'h',
-                'H',
-                'i',
-                's',
-                'u',
-                'v',
-                'e',
-                'I',
-                'O',
-                'P',
-                'T',
-                'Z',
-                'z',
-                'c',
-                'r',
-                'U'
-            ])
-        ) {
+        if (!in_array($str__value, array_merge($chars_needed, $chars_optional))) {
             return false;
         }
+        if (in_array($str__value, $chars_needed)) {
+            $min_one_needed_char = true;
+        }
     }
-    return true;
+    return $min_one_needed_char;
 }
 
 function __validate_date_mod($mod)

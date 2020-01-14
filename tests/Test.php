@@ -332,6 +332,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__validate_date_format('d.m.Y'), true);
         $this->assertSame(__validate_date_format('Y-m-d'), true);
         $this->assertSame(__validate_date_format('Y/m/d'), true);
+        $this->assertSame(__validate_date_format('01.m.Y'), true);
+        $this->assertSame(__validate_date_format('01.01.2000'), false);
         $this->assertSame(__validate_date_format('foo'), false);
         $this->assertSame(__validate_date_format(null), false);
         $this->assertSame(__validate_date_format(true), false);
