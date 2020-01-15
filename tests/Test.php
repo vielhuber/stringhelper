@@ -443,6 +443,24 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz', true);
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo', true);
 
+        $arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
+        $this->assertSame($arr, [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]);
+        usort(
+            $arr,
+            __array_multisort(function ($v) {
+                return [[$v['a'], 'asc'], [$v['b'], 'asc']];
+            })
+        );
+        $this->assertSame($arr, [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]);
+        $arr = [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc'], ['c', 'asc']]));
+        $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
+        usort($arr, __array_multisort([['a', 'desc'], ['b', 'desc'], ['c', 'asc']]));
+        $this->assertSame($arr, [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']]);
+        usort($arr, __array_multisort([['a', 'desc'], ['b', 'asc'], ['c', 'desc']]));
+        $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
+
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);
         $this->assertSame(substr_count(__uuid(), '-') === 4, true);

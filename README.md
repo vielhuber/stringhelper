@@ -441,6 +441,12 @@ __random_string(16, 'idkfa') // idifafafifaifafk
 // shuffle associative array and preserve keys
 __shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo']) // ['bar' => 'baz', 'baz' => 'foo', 'foo' => 'bar']
 
+// array order sort by many
+$arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]]
+usort($arr, __array_multisort([ ['a', 'asc'], ['b', 'asc'] ])) // [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]
+usort($arr, __array_multisort(function($v) { return [ [$v['a'], 'asc'], [$v['b'], 'asc'] ]; })) // [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]
+collect($arr)->sort( __array_multisort([ ['a', 'asc'], ['b', 'asc'] ]) ) // can also be used by laravel collections
+
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
 

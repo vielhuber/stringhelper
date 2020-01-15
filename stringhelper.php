@@ -651,6 +651,38 @@ function __shuffle_assoc($array)
     return $new;
 }
 
+function __array_multisort($args)
+{
+    return function ($a, $b) use ($args) {
+        $position = [true => -1, false => 1];
+        $order = true;
+        if (is_array($args)) {
+            foreach ($args as $args__value) {
+                $order = strcasecmp($a[$args__value[0]], $b[$args__value[0]]) < 0;
+                if ($args__value[1] === 'desc') {
+                    $order = !$order;
+                }
+                if ($a[$args__value[0]] !== $b[$args__value[0]]) {
+                    return $position[$order];
+                }
+            }
+        } elseif (is_callable($args)) {
+            $args_a = $args($a);
+            $args_b = $args($b);
+            foreach ($args_a as $args__key => $args__value) {
+                $order = strcasecmp($args_a[$args__key][0], $args_b[$args__key][0]) < 0;
+                if ($args_a[$args__key][1] === 'desc') {
+                    $order = !$order;
+                }
+                if ($args_a[$args__key][0] !== $args_b[$args__key][0]) {
+                    return $position[$order];
+                }
+            }
+        }
+        return $position[$order];
+    };
+}
+
 function __ask($question)
 {
     echo $question;
