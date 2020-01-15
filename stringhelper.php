@@ -683,13 +683,17 @@ function __array_multisort($args)
     };
 }
 
-function __array_group_by($array, ...$key)
+function __array_group_by($array, $keys)
 {
-    if (__nx($key)) {
+    if (__nx($keys)) {
         return null;
     }
     $grouped = [];
-    $keyCur = $key[0];
+
+    if (!is_array($keys)) {
+        $keys = [$keys];
+    }
+    $keyCur = $keys[0];
     foreach ($array as $array__value) {
         $value_behind_key = null;
         if (is_object($array__value) && property_exists($array__value, $keyCur)) {
@@ -702,10 +706,9 @@ function __array_group_by($array, ...$key)
         }
         $grouped[$value_behind_key][] = $array__value;
     }
-    if (count($key) > 1) {
+    if (count($keys) > 1) {
         foreach ($grouped as $grouped__key => $grouped__value) {
-            $params = array_merge([$grouped__value], array_slice($key, 1));
-            $grouped[$grouped__key] = __array_group_by(...$params);
+            $grouped[$grouped__key] = __array_group_by($grouped__value, array_slice($keys, 1));
         }
     }
     return $grouped;

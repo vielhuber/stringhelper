@@ -465,8 +465,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];
         $c = ['a' => 17, 'b' => 42, 'c' => 'baz'];
         $arr = [$a, $b, $c];
-        $this->assertSame(__array_group_by($arr, 'a'), [17 => [$a, $c], 19 => [$b]]);
-        $this->assertSame(__array_group_by($arr, 'a', 'b'), [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]);
+        $this->assertSame(__array_group_by($arr, ['a']), [17 => [$a, $c], 19 => [$b]]);
+        $this->assertSame(__array_group_by($arr, ['a', 'b']), [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]);
 
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);

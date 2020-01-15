@@ -452,8 +452,8 @@ $a = ['a' => 17, 'b' => 42, 'c' => 'foo']
 $b = ['a' => 19, 'b' => 20, 'c' => 'bar']
 $c = ['a' => 17, 'b' => 42, 'c' => 'baz']
 $arr = [$a, $b, $c]
-__array_group_by($arr, 'a') // [17 => [$a, $c], 19 => [$b]]
-__array_group_by($arr, 'a', 'b') // [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
+__array_group_by($arr, ['a']) // [17 => [$a, $c], 19 => [$b]]
+__array_group_by($arr, ['a', 'b']) // [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
 
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
