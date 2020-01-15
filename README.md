@@ -447,6 +447,14 @@ usort($arr, __array_multisort([ ['a', 'asc'], ['b', 'asc'] ])) // [['a' => 13, '
 usort($arr, __array_multisort(function($v) { return [ [$v['a'], 'asc'], [$v['b'], 'asc'] ]; })) // [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]
 collect($arr)->sort( __array_multisort([ ['a', 'asc'], ['b', 'asc'] ]) ) // can also be used by laravel collections
 
+// array group by
+$a = ['a' => 17, 'b' => 42, 'c' => 'foo']
+$b = ['a' => 19, 'b' => 20, 'c' => 'bar']
+$c = ['a' => 17, 'b' => 42, 'c' => 'baz']
+$arr = [$a, $b, $c]
+__array_group_by($arr, 'a') // [17 => [$a, $c], 19 => [$b]]
+__array_group_by($arr, 'a', 'b') // [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
+
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
 

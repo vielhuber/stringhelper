@@ -683,6 +683,34 @@ function __array_multisort($args)
     };
 }
 
+function __array_group_by($array, ...$key)
+{
+    if (__nx($key)) {
+        return null;
+    }
+    $grouped = [];
+    $keyCur = $key[0];
+    foreach ($array as $array__value) {
+        $value_behind_key = null;
+        if (is_object($array__value) && property_exists($array__value, $keyCur)) {
+            $value_behind_key = $array__value->{$keyCur};
+        } elseif (isset($array__value[$keyCur])) {
+            $value_behind_key = $array__value[$keyCur];
+        }
+        if ($value_behind_key === null) {
+            continue;
+        }
+        $grouped[$value_behind_key][] = $array__value;
+    }
+    if (count($key) > 1) {
+        foreach ($grouped as $grouped__key => $grouped__value) {
+            $params = array_merge([$grouped__value], array_slice($key, 1));
+            $grouped[$grouped__key] = __array_group_by(...$params);
+        }
+    }
+    return $grouped;
+}
+
 function __ask($question)
 {
     echo $question;
