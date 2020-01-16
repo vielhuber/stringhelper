@@ -651,20 +651,6 @@ function __shuffle_assoc($array)
     return $new;
 }
 
-function __array_multisort_get_order($a, $b, $dir = 'asc')
-{
-    $order = null;
-    if (is_string($a) && is_string($b)) {
-        $order = strcasecmp($a, $$b) < 0;
-    } else {
-        $order = $a < $b;
-    }
-    if ($dir === 'desc') {
-        $order = !$order;
-    }
-    return $order;
-}
-
 function __array_multisort($args)
 {
     return function ($a, $b) use ($args) {
@@ -695,6 +681,20 @@ function __array_multisort($args)
         }
         return $position[$order];
     };
+}
+
+function __array_multisort_get_order($a, $b, $dir = 'asc')
+{
+    $order = null;
+    if (is_string($a) && is_string($b)) {
+        $order = strcasecmp($a, $$b) < 0;
+    } else {
+        $order = $a < $b;
+    }
+    if ($dir === 'desc') {
+        $order = !$order;
+    }
+    return $order;
 }
 
 function __array_group_by($array, $key)
