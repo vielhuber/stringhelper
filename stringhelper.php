@@ -651,6 +651,20 @@ function __shuffle_assoc($array)
     return $new;
 }
 
+function __array_multisort_get_order($a, $b, $dir = 'asc')
+{
+    $order = null;
+    if (is_string($a) && is_string($b)) {
+        $order = strcasecmp($a, $$b) < 0;
+    } else {
+        $order = $a < $b;
+    }
+    if ($dir === 'desc') {
+        $order = !$order;
+    }
+    return $order;
+}
+
 function __array_multisort($args)
 {
     return function ($a, $b) use ($args) {
@@ -658,28 +672,24 @@ function __array_multisort($args)
         $order = true;
         if (is_array($args)) {
             foreach ($args as $args__value) {
-                if (is_string($a[$args__value[0]]) && is_string($b[$args__value[0]])) {
-                    $order = strcasecmp($a[$args__value[0]], $b[$args__value[0]]) < 0;
-                } else {
-                    $order = $a[$args__value[0]] < $b[$args__value[0]];
-                }
-                if ($args__value[1] === 'desc') {
-                    $order = !$order;
-                }
                 if ($a[$args__value[0]] != $b[$args__value[0]]) {
-                    return $position[$order];
+                    return $position[
+                        __array_multisort_get_order($a[$args__value[0]], $b[$args__value[0]], $args__value[1])
+                    ];
                 }
             }
         } elseif (is_callable($args)) {
             $args_a = $args($a);
             $args_b = $args($b);
             foreach ($args_a as $args__key => $args__value) {
-                $order = strcasecmp($args_a[$args__key][0], $args_b[$args__key][0]) < 0;
-                if ($args_a[$args__key][1] === 'desc') {
-                    $order = !$order;
-                }
-                if ($args_a[$args__key][0] !== $args_b[$args__key][0]) {
-                    return $position[$order];
+                if ($args_a[$args__key][0] != $args_b[$args__key][0]) {
+                    return $position[
+                        __array_multisort_get_order(
+                            $args_a[$args__key][0],
+                            $args_b[$args__key][0],
+                            $args_a[$args__key][1]
+                        )
+                    ];
                 }
             }
         }
