@@ -658,11 +658,15 @@ function __array_multisort($args)
         $order = true;
         if (is_array($args)) {
             foreach ($args as $args__value) {
-                $order = strcasecmp($a[$args__value[0]], $b[$args__value[0]]) < 0;
+                if (is_string($a[$args__value[0]]) && is_string($b[$args__value[0]])) {
+                    $order = strcasecmp($a[$args__value[0]], $b[$args__value[0]]) < 0;
+                } else {
+                    $order = $a[$args__value[0]] < $b[$args__value[0]];
+                }
                 if ($args__value[1] === 'desc') {
                     $order = !$order;
                 }
-                if ($a[$args__value[0]] !== $b[$args__value[0]]) {
+                if ($a[$args__value[0]] != $b[$args__value[0]]) {
                     return $position[$order];
                 }
             }

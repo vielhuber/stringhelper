@@ -460,6 +460,23 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame($arr, [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']]);
         usort($arr, __array_multisort([['a', 'desc'], ['b', 'asc'], ['c', 'desc']]));
         $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
+        $arr = [
+            ['id' => 1, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 2, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
+        ];
+        usort($arr, __array_multisort([['pos', 'asc'], ['date', 'asc'], ['created_at', 'asc'], ['id', 'asc']]));
+        $this->assertEquals($arr, [
+            ['id' => 1, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 2, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
+        ]);
 
         $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
         $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];
