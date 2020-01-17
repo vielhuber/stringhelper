@@ -466,7 +466,7 @@ function __validate_date($date)
                 return true;
             }
         }
-    } elseif (strtotime($date) !== false) {
+    } elseif (strtotime($date) !== false && $date !== 'Y') {
         return true;
     }
     return false;
