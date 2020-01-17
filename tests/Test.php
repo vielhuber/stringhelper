@@ -477,6 +477,9 @@ class Test extends \PHPUnit\Framework\TestCase
             ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
             ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
         ]);
+        $arr = [['foo' => 'baz', 'bar' => 'baz'], ['foo' => 'baz', 'bar' => 'gnarr']];
+        usort($arr, __array_multisort([['foo', 'desc'], ['bar', 'desc']]));
+        $this->assertEquals($arr, [['foo' => 'baz', 'bar' => 'gnarr'], ['foo' => 'baz', 'bar' => 'baz']]);
 
         $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
         $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];

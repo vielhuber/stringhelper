@@ -687,7 +687,7 @@ function __array_multisort_get_order($a, $b, $dir = 'asc')
 {
     $order = null;
     if (is_string($a) && is_string($b)) {
-        $order = strcasecmp($a, $$b) < 0;
+        $order = strcasecmp($a, $b) < 0;
     } else {
         $order = $a < $b;
     }
