@@ -466,7 +466,7 @@ function __validate_date($date)
                 return true;
             }
         }
-    } elseif (strtotime($date) !== false && $date !== 'Y') {
+    } elseif (strtotime($date) !== false) {
         return true;
     }
     return false;
@@ -1142,6 +1142,93 @@ function __date($date = null, $format = null, $mod = null)
         return null;
     }
 
+    /*
+    /* special case: if only one argument is provided which can be understood both as date and date format
+    /* strategy: always prefer as format (except keywords below)
+    /* examples:
+    /*   now
+    /*   Y
+    /*   yesterday
+    */
+    if ($date !== null && $format === null && $mod === null) {
+        if (__validate_date($date) && __validate_date_format($date)) {
+            /* see: https://www.php.net/manual/de/datetime.formats.relative.php */
+            $whitelist = [
+                'sunday',
+                'monday',
+                'tuesday',
+                'wednesday',
+                'thursday',
+                'friday',
+                'saturday',
+                'sun',
+                'mon',
+                'tue',
+                'wed',
+                'thu',
+                'fri',
+                'sat',
+                'weekday',
+                'weekdays',
+                'first',
+                'second',
+                'third',
+                'fourth',
+                'fifth',
+                'sixth',
+                'seventh',
+                'eighth',
+                'ninth',
+                'tenth',
+                'eleventh',
+                'twelfth',
+                'next',
+                'last',
+                'previous',
+                'this',
+                'next',
+                'last',
+                'previous',
+                'this',
+                'sec',
+                'second',
+                'min',
+                'minute',
+                'hour',
+                'day',
+                'fortnight',
+                'forthnight',
+                'month',
+                'year',
+                'weeks',
+                'yesterday',
+                'midnight',
+                'today',
+                'now',
+                'noon',
+                'tomorrow',
+                'back of',
+                'front of',
+                'first day of',
+                'last day of',
+                'last',
+                'week',
+                'ago',
+                'week'
+            ];
+            $found = false;
+            foreach ($whitelist as $whitelist__value) {
+                if (stripos($date, $whitelist__value) !== false) {
+                    $found = true;
+                    break;
+                }
+            }
+            if ($found === false) {
+                [$date, $format] = [$format, $date];
+            }
+        }
+    }
+
     // sort arguments magically
     if (
         ($date === null || __validate_date($date)) &&
@@ -1150,17 +1237,17 @@ function __date($date = null, $format = null, $mod = null)
     ) {
         // default case
     } elseif (
-        ($date === null || __validate_date($date)) &&
-        ($mod === null || __validate_date_format($mod)) &&
-        ($format === null || __validate_date_mod($format))
-    ) {
-        [$format, $mod] = [$mod, $format];
-    } elseif (
         ($format === null || __validate_date($format)) &&
         ($date === null || __validate_date_format($date)) &&
         ($mod === null || __validate_date_mod($mod))
     ) {
         [$format, $date] = [$date, $format];
+    } elseif (
+        ($date === null || __validate_date($date)) &&
+        ($mod === null || __validate_date_format($mod)) &&
+        ($format === null || __validate_date_mod($format))
+    ) {
+        [$format, $mod] = [$mod, $format];
     } elseif (
         ($format === null || __validate_date($format)) &&
         ($mod === null || __validate_date_format($mod)) &&

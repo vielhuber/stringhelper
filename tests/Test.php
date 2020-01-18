@@ -395,7 +395,13 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
         $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
+
         $this->assertSame(__date('Y'), date('Y', strtotime('now')));
+        $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));
+        $this->assertSame(__date('yesterday'), date('Y-m-d', strtotime('yesterday')));
+        $this->assertSame(__date('Yesterday'), date('Y-m-d', strtotime('Yesterday')));
+        $this->assertSame(__date('+5 weeks'), date('Y-m-d', strtotime('+5 weeks')));
+        $this->assertSame(__date('z vDHY'), date('z vDHY', strtotime('now')));
 
         $this->assertSame(__datetime('01.01.2000'), '2000-01-01T00:00');
         $this->assertSame(__datetime('01.01.2000 18:00'), '2000-01-01T18:00');
