@@ -1524,7 +1524,16 @@ function __fetch($url, $method = null)
     if ($method === 'curl' || ($method === null && function_exists('curl_version'))) {
         $result = __curl($url)->result;
     } elseif ($method === 'php' || ($method === null && file_get_contents(__FILE__) && ini_get('allow_url_fopen'))) {
-        $result = @file_get_contents($url);
+        $result = @file_get_contents(
+            $url,
+            false,
+            stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false
+                ]
+            ])
+        );
     } else {
         $result = json_encode([]);
     }
