@@ -430,6 +430,10 @@ __phone_area_codes_mobile() // ['151', ...]
 __phone_is_landline('(0)89-12 456 666') // true
 __phone_is_mobile('(0)89-12 456 666') // false
 
+// normalize url
+__url_normalize('www.tld.com') // https://www.tld.com
+__url_normalize('http://tld.com/') // http://tld.com
+
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med
 

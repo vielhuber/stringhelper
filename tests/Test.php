@@ -374,6 +374,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__phone_is_mobile('(0)151/58 75 46 91'), true);
         $this->assertSame(__phone_is_mobile('141'), false);
 
+        $this->assertSame(__url_normalize('www.tld.com'), 'https://www.tld.com');
+        $this->assertSame(__url_normalize('http://tld.com/'), 'http://tld.com');
+        $this->assertSame(__url_normalize(''), '');
+        $this->assertSame(__url_normalize(true), true);
+        $this->assertSame(__url_normalize(false), false);
+        $this->assertSame(__url_normalize(42), 42);
+        $this->assertSame(__url_normalize('http://www.foo.com/bar/'), 'http://www.foo.com/bar');
+
         $this->assertSame(__remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med'), 'Lorem  ipsum  dolor  med');
         $this->assertSame(__remove_emoji('OK!🥊'), 'OK!');
         $this->assertSame(__remove_emoji(''), '');

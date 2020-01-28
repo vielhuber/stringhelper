@@ -609,6 +609,18 @@ function __phone_is_mobile($value)
     return false;
 }
 
+function __url_normalize($str)
+{
+    if (__nx($str) || !is_string($str)) {
+        return $str;
+    }
+    if (strpos($str, '://') === false) {
+        $str = 'https://' . $str;
+    }
+    $str = rtrim($str, '/');
+    return $str;
+}
+
 function __remove_emoji($text)
 {
     if (__nx($text) || !is_string($text)) {
