@@ -350,6 +350,7 @@ class Test extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(__phone_normalize(null), '');
         $this->assertSame(__phone_normalize(''), '');
+        $this->assertSame(__phone_normalize('141'), '141');
         $this->assertSame(__phone_normalize('(0)89-12 456 666'), '+49 89 12456666');
         $this->assertSame(__phone_normalize('089 12 456 666'), '+49 89 12456666');
         $this->assertSame(__phone_normalize('08541 12 456---666'), '+49 8541 12456666');
@@ -368,7 +369,9 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(in_array('89', __phone_area_codes_landline()), true);
         $this->assertSame(in_array('151', __phone_area_codes_mobile()), true);
         $this->assertSame(__phone_is_landline('(0)89-12 456 666'), true);
+        $this->assertSame(__phone_is_landline('141'), false);
         $this->assertSame(__phone_is_mobile('(0)89-12 456 666'), false);
+        $this->assertSame(__phone_is_mobile('141'), false);
 
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
         $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');

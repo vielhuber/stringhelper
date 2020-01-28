@@ -512,6 +512,11 @@ function __phone_tokenize($value)
 
     $value = __strip_nondigit($value);
 
+    if (mb_strlen($value) <= 3) {
+        $return['number'] = $value;
+        return $return;
+    }
+
     foreach (__phone_country_codes() as $phone_country_codes__value) {
         if (strpos($value, $phone_country_codes__value) === 0) {
             $shift = 0;
