@@ -371,6 +371,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__phone_is_landline('(0)89-12 456 666'), true);
         $this->assertSame(__phone_is_landline('141'), false);
         $this->assertSame(__phone_is_mobile('(0)89-12 456 666'), false);
+        $this->assertSame(__phone_is_mobile('(0)151/58 75 46 91'), true);
         $this->assertSame(__phone_is_mobile('141'), false);
 
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
