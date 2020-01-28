@@ -374,6 +374,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__phone_is_mobile('(0)151/58 75 46 91'), true);
         $this->assertSame(__phone_is_mobile('141'), false);
 
+        $this->assertSame(__remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med'), 'Lorem  ipsum  dolor  med');
+        $this->assertSame(__remove_emoji('OK!🥊'), 'OK!');
+        $this->assertSame(__remove_emoji(''), '');
+        $this->assertSame(__remove_emoji(null), null);
+        $this->assertSame(__remove_emoji(true), true);
+        $this->assertSame(__remove_emoji(false), false);
+        $this->assertSame(__remove_emoji(42), 42);
+
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
         $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');
         $this->assertSame(__date('2001-02-29', 'd.m.Y'), null);
