@@ -437,7 +437,7 @@ __url_normalize('http://tld.com/') // http://tld.com
 // minify html
 __minify_html('<!DOCTYPE html>
 <title>shortest valid html5 document</title>
-<p>Yay</p>') // <!DOCTYPE html><title>shortest valid html5 document</title> <p>cool stuff</p>
+<p>yay</p>') // <!DOCTYPE html><title>shortest valid html5 document</title> <p>yay</p>
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med
