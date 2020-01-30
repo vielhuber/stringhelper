@@ -633,6 +633,19 @@ function __remove_emoji($text)
     );
 }
 
+// __minify (uses https://github.com/jenstornell/tiny-html-minifier, which is currently not installable via composer)
+function __minify_html($html, $options = [])
+{
+    if (__nx($html) || !is_string($html)) {
+        return $html;
+    }
+    if (class_exists('TinyHtmlMinifier') === false) {
+        require __DIR__ . '/lib/TinyHtmlMinifier.php';
+    }
+    $minifier = new TinyHtmlMinifier($options);
+    return $minifier->minify($html);
+}
+
 function __slug($string)
 {
     // replace non letter or digits by -

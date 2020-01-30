@@ -382,6 +382,63 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__url_normalize(42), 42);
         $this->assertSame(__url_normalize('http://www.foo.com/bar/'), 'http://www.foo.com/bar');
 
+        $this->assertSame(__minify_html('<p>foo</p>'), '<p>foo</p>');
+        $this->assertSame(__minify_html(null), null);
+        $this->assertSame(__minify_html(true), true);
+        $this->assertSame(__minify_html(false), false);
+        $this->assertSame(__minify_html(''), '');
+        $this->assertSame(
+            __minify_html('<!DOCTYPE html>
+<title>shortest valid html5 document</title>
+<p>cool stuff</p>'),
+            '<!DOCTYPE html><title>shortest valid html5 document</title> <p>cool stuff</p>'
+        );
+        $this->assertSame(
+            __minify_html('<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+<link href="http://example.com/style.css" rel="stylesheet" />
+<link rel="icon" href="http://example.com/favicon.png" />
+
+<title>Tiny Html Minifier</title>
+
+</head>
+<body class="body">
+
+<div class="main-wrap">
+    <main>
+        <textarea>
+            Some text
+            with newlines
+            and some spaces
+        </textarea>
+
+        <div class="test">
+            <p>This text</p>
+            <p>should not</p>
+            <p>wrap on multiple lines</p>
+        </div>
+    </main>
+</div>
+<script>
+    console.log("Script tags are not minified");
+    console.log("This is inside a script tag");
+</script></body>
+</html>'),
+            '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><link href="http://example.com/style.css" rel="stylesheet"><link rel="icon" href="http://example.com/favicon.png"><title>Tiny Html Minifier</title></head> <body class="body"><div class="main-wrap"> <main> <textarea>
+            Some text
+            with newlines
+            and some spaces
+        </textarea> <div class="test"> <p>This text</p> <p>should not</p> <p>wrap on multiple lines</p> </div> </main> </div> <script>
+    console.log("Script tags are not minified");
+    console.log("This is inside a script tag");
+</script></body></html>'
+        );
+
         $this->assertSame(__remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med'), 'Lorem  ipsum  dolor  med');
         $this->assertSame(__remove_emoji('OK!🥊'), 'OK!');
         $this->assertSame(__remove_emoji(''), '');
