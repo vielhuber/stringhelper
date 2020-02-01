@@ -528,6 +528,16 @@ class Test extends \PHPUnit\Framework\TestCase
             'To be or not to be; that is the question.'
         );
 
+        $this->assertSame(
+            __translate_microsoft(
+                'Sein oder Nichtsein; das ist hier die Frage.',
+                'de',
+                'en',
+                getenv('MICROSOFT_TRANSLATION_API_KEY')
+            ),
+            'To be or not to be; that is the question.'
+        );
+
         $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
 
         $this->assertSame(__remove_zero_decimals(1337), 1337);

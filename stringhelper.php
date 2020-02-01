@@ -679,6 +679,21 @@ function __translate_google($str, $from_lng, $to_lng, $api_key)
     return $trans;
 }
 
+function __translate_microsoft($str, $from_lng, $to_lng, $api_key)
+{
+    $response = __curl(
+        'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=' . $from_lng . '&to=' . $to_lng,
+        ['Text' => $str],
+        'POST',
+        [
+            'Ocp-Apim-Subscription-Key' => $api_key
+        ],
+        false,
+        true
+    );
+    __d($response);
+}
+
 function __first_char_is_uppercase($str)
 {
     if (__nx($str) || !is_string($str)) {
