@@ -683,7 +683,7 @@ function __translate_microsoft($str, $from_lng, $to_lng, $api_key)
 {
     $response = __curl(
         'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=' . $from_lng . '&to=' . $to_lng,
-        ['Text' => $str],
+        [['Text' => $str]],
         'POST',
         [
             'Ocp-Apim-Subscription-Key' => $api_key
@@ -691,7 +691,14 @@ function __translate_microsoft($str, $from_lng, $to_lng, $api_key)
         false,
         true
     );
-    __d($response);
+
+    if (@$response->result[0]->translations[0]->text != '') {
+        $trans = $response->result[0]->translations[0]->text;
+    } else {
+        $trans = $str;
+    }
+
+    return $trans;
 }
 
 function __first_char_is_uppercase($str)

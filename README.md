@@ -441,7 +441,7 @@ __minify_html('<!DOCTYPE html>
 
 // translate strings
 __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // To be or not to be; that is the question.
-__translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**')
+__translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // Being or not being; that is the question here.
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med

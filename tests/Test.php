@@ -535,7 +535,7 @@ class Test extends \PHPUnit\Framework\TestCase
                 'en',
                 getenv('MICROSOFT_TRANSLATION_API_KEY')
             ),
-            'To be or not to be; that is the question.'
+            'Being or not being; that is the question here.'
         );
 
         $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
