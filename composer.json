@@ -2,12 +2,12 @@
     "name": "vielhuber/stringhelper",
     "description": "Collection of useful shorthand string related functions in PHP.",
     "require": {
-        "php": ">=5.6",
-        "vlucas/phpdotenv": "^4.1"
+        "php": ">=5.6"
     },
     "license": "MIT",
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "vlucas/phpdotenv": "^4.1"
     },
     "autoload": {
         "files": [
