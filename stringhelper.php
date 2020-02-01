@@ -646,6 +646,56 @@ function __minify_html($html, $options = [])
     return $minifier->minify($html);
 }
 
+function __translate_google($str, $from_lng, $to_lng, $api_key)
+{
+    $response = __curl(
+        'https://www.googleapis.com/language/translate/v2?key=' .
+            $api_key .
+            '&q=' .
+            rawurlencode($str) .
+            '&source=' .
+            ($from_lng === null ? $this->getSourceLng() : $from_lng) .
+            '&target=' .
+            $to_lng
+    );
+
+    if (@$response->result->data->translations[0]->translatedText != '') {
+        $trans = $response->result->data->translations[0]->translatedText;
+    } else {
+        $trans = $str;
+    }
+
+    // the api returns some characters in their html characters form (e.g. "'" is returned as "&#39;")
+    // we want to store the real values
+    $trans = html_entity_decode($trans, ENT_QUOTES);
+
+    // uppercase
+    // the google translation api does a very bad job at keeping uppercased words at the beginning
+    // we fix this here
+    if (__first_char_is_uppercase($str) && !__first_char_is_uppercase($trans)) {
+        $trans = __set_first_char_uppercase($trans);
+    }
+
+    return $trans;
+}
+
+function __first_char_is_uppercase($str)
+{
+    if (__nx($str) || !is_string($str)) {
+        return false;
+    }
+    return mb_substr($str, 0, 1) == mb_strtoupper(mb_substr($str, 0, 1));
+}
+
+function __set_first_char_uppercase($str)
+{
+    if (__nx($str) || !is_string($str)) {
+        return $str;
+    }
+    $fc = mb_strtoupper(mb_substr($str, 0, 1));
+    return $fc . mb_substr($str, 1);
+}
+
 function __slug($string)
 {
     // replace non letter or digits by -

@@ -439,6 +439,10 @@ __minify_html('<!DOCTYPE html>
 <title>shortest valid html5 document</title>
 <p>yay</p>') // <!DOCTYPE html><title>shortest valid html5 document</title> <p>yay</p>
 
+// translate strings
+__translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // To be or not to be; that is the question.
+__translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**')
+
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med
 
@@ -574,6 +578,12 @@ __rand(['foo', 'bar', 'baz']) // 'bar'
 // remove first/last item of array (and reindex array)
 __remove_first(['foo', 'bar', 'baz']) // ['bar','baz']
 __remove_last(['foo', 'bar', 'baz']) // ['foo','bar']
+
+// uppercase helpers (mb safe)
+__first_char_is_uppercase('Foo') // true
+__first_char_is_uppercase('bar') // true
+__set_first_char_uppercase('baz') // Baz
+__set_first_char_uppercase('übel') // Übel
 
 // convert array to object
 __array_to_object(['foo']) // {0: 'foo'}
@@ -863,6 +873,10 @@ __log_end();
 ## js implementation
 
 there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp) with similiar functions available.
+
+## testing
+
+copy `.env.example` to `.env`, fill in values and run `./vendor/bin/phpunit`.
 
 ## appendix
 

@@ -7,3 +7,4 @@ composer.lock
 /tests/assets/file.csv
 /tests/assets/file*.txt
 /tests/assets/file*.csv
+/.env

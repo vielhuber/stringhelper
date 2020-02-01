@@ -1,6 +1,12 @@
 <?php
 class Test extends \PHPUnit\Framework\TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+        $dotenv->load();
+    }
+
     function test__x()
     {
         $this->assertFalse(__x(null));
@@ -497,6 +503,29 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date_reset_time(false), null);
         $this->assertSame(__date_reset_time(true), null);
 
+        $this->assertSame(__first_char_is_uppercase(true), false);
+        $this->assertSame(__first_char_is_uppercase(false), false);
+        $this->assertSame(__first_char_is_uppercase(''), false);
+        $this->assertSame(__first_char_is_uppercase('foo'), false);
+        $this->assertSame(__first_char_is_uppercase('Foo'), true);
+        $this->assertSame(__set_first_char_uppercase(true), true);
+        $this->assertSame(__set_first_char_uppercase(false), false);
+        $this->assertSame(__set_first_char_uppercase(''), '');
+        $this->assertSame(__set_first_char_uppercase('foo'), 'Foo');
+        $this->assertSame(__set_first_char_uppercase('Foo'), 'Foo');
+        $this->assertSame(__set_first_char_uppercase('übel'), 'Übel');
+        $this->assertSame(__set_first_char_uppercase('Übel'), 'Übel');
+
+        $this->assertSame(
+            __translate_google(
+                'Sein oder Nichtsein; das ist hier die Frage.',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            'To be or not to be; that is the question.'
+        );
+
         $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
 
         $this->assertSame(__remove_zero_decimals(1337), 1337);
@@ -959,9 +988,9 @@ baz'
         $this->assertSame(__decrypt_poor($token, true), 'bar');
         $this->assertSame(__decrypt_poor($token, true), null);
 
-        $this->assertSame(count(__files_in_folder()) === 7, true);
-        $this->assertSame(count(__files_in_folder('.')) === 7, true);
-        $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) === 6, true);
+        $this->assertSame(count(__files_in_folder()) === 9, true);
+        $this->assertSame(count(__files_in_folder('.')) === 9, true);
+        $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) === 8, true);
         $this->assertSame(in_array('.gitignore', __files_in_folder('.', false)), true);
         $this->assertSame(in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])), false);
         $this->assertSame(count(__files_in_folder('tests')) === 2, true);
