@@ -640,7 +640,7 @@ function __minify_html($html, $options = [])
         return $html;
     }
     if (class_exists('TinyHtmlMinifier') === false) {
-        require __DIR__ . '/lib/TinyHtmlMinifier.php';
+        require __DIR__ . '/libs/TinyHtmlMinifier.php';
     }
     $minifier = new TinyHtmlMinifier($options);
     return $minifier->minify($html);
