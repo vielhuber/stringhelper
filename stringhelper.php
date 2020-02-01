@@ -1587,6 +1587,17 @@ function __first($array)
     return array_values(array_slice($array, 0, 1))[0];
 }
 
+function __first_key($array)
+{
+    if (__nx($array) || !is_array($array)) {
+        return null;
+    }
+    foreach ($array as $array__key => $array__value) {
+        return $array__key;
+    }
+    return null;
+}
+
 function __rand($array)
 {
     return $array[array_rand($array)];
@@ -1667,11 +1678,7 @@ function __curl(
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); // follow redirects
 
     if (__x($basic_auth)) {
-        curl_setopt(
-            $curl,
-            CURLOPT_USERPWD,
-            array_key_first($basic_auth) . ':' . $basic_auth[array_key_first($basic_auth)]
-        );
+        curl_setopt($curl, CURLOPT_USERPWD, __first_key($basic_auth) . ':' . $basic_auth[__first_key($basic_auth)]);
     }
 
     /* encode data */

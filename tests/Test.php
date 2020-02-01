@@ -702,6 +702,11 @@ baz'
         $this->assertSame(__first(['foo', 'bar', 'baz']), 'foo');
         $this->assertSame(__first([0 => 'foo', 1 => 'bar', 2 => 'baz']), 'foo');
         $this->assertSame(__first(['foo' => 'bar', 'bar' => 'baz']), 'bar');
+        $this->assertSame(__first_key(['foo' => 'bar', 'bar' => 'baz']), 'foo');
+        $this->assertSame(__first_key(null), null);
+        $this->assertSame(__first_key(true), null);
+        $this->assertSame(__first_key(''), null);
+        $this->assertSame(__first_key(['foo']), 0);
         $this->assertSame(in_array(__rand(['foo', 'bar', 'baz']), ['foo', 'bar', 'baz']), true);
 
         $this->assertSame(__remove_first(['foo', 'bar', 'baz']), ['bar', 'baz']);

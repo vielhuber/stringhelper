@@ -572,6 +572,9 @@ __last(['foo', 'bar', 'baz']) // 'baz'
 __first(['foo', 'bar', 'baz']) // 'foo'
 __first(['foo' => 'bar', 'bar' => 'baz']) // 'bar'
 
+// get first key of array
+__first_key(['foo' => 'bar', 'bar' => 'baz']) // 'foo'
+
 // get random element from array
 __rand(['foo', 'bar', 'baz']) // 'bar'
 
