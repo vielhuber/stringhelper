@@ -8,6 +8,5 @@ os:
     #- osx (currently no support for php in travis ci)
     #- windows (currently no support for php in travis ci)
 before_script:
-    - composer self-update
-    - composer install --prefer-source --no-interaction --dev
+    - composer install
 script: ./vendor/bin/phpunit

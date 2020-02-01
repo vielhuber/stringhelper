@@ -8,3 +8,4 @@
 /tests/assets/file*.txt
 /tests/assets/file*.csv
 /.env
+/.phpunit.result.cache
