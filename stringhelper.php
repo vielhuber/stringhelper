@@ -654,7 +654,7 @@ function __translate_google($str, $from_lng, $to_lng, $api_key)
             '&q=' .
             rawurlencode($str) .
             '&source=' .
-            ($from_lng === null ? $this->getSourceLng() : $from_lng) .
+            $from_lng .
             '&target=' .
             $to_lng
     );
