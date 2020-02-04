@@ -1039,8 +1039,8 @@ baz'
         $this->assertSame(__get('foo'), null);
         $this->assertSame(__get('page_id'), '13');
         $this->assertSame(__post('foo'), 'bar');
-        clean_up_get();
-        clean_up_post();
+        __clean_up_get();
+        __clean_up_post();
         $this->assertSame($_GET, ['page_id' => '13', 'code' => 'Hello World!']);
         $this->assertSame($_POST, ['foo' => 'bar', 42 => '']);
 

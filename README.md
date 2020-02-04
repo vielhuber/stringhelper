@@ -785,9 +785,9 @@ __get('page_id') // '13'
 __post('foo') // bar
 
 // clean up post/get from malicious content using filter_var_array
-clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
-clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
-clean_up() // same as clean_up_get() and clean_up_post()
+__clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
+__clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
+__clean_up() // same as __clean_up_get() and __clean_up_post()
 
 // do simple get requests (via curl or as a fallback with php file_get_contents [allow_url_fopen=1])
 __fetch('https://httpbin.org/anything'); // { "method": "GET", ... }
