@@ -758,10 +758,10 @@ if (!function_exists('__translate_google')) {
                 $to_lng
         );
 
-        if (@$response->result->data->translations[0]->translatedText != '') {
+        if ($response->status == 200 && @$response->result->data->translations[0]->translatedText != '') {
             $trans = $response->result->data->translations[0]->translatedText;
         } else {
-            $trans = $str;
+            return null;
         }
 
         // the api returns some characters in their html characters form (e.g. "'" is returned as "&#39;")
@@ -796,10 +796,10 @@ if (!function_exists('__translate_microsoft')) {
             true
         );
 
-        if (@$response->result[0]->translations[0]->text != '') {
+        if ($response->status == 200 && @$response->result[0]->translations[0]->text != '') {
             $trans = $response->result[0]->translations[0]->text;
         } else {
-            $trans = $str;
+            return null;
         }
 
         return $trans;

@@ -527,7 +527,12 @@ class Test extends \PHPUnit\Framework\TestCase
             ),
             'To be or not to be; that is the question.'
         );
+        $this->assertSame(
+            __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
+            null
+        );
 
+        /*
         $this->assertSame(
             __translate_microsoft(
                 'Sein oder Nichtsein; das ist hier die Frage.',
@@ -536,6 +541,11 @@ class Test extends \PHPUnit\Framework\TestCase
                 getenv('MICROSOFT_TRANSLATION_API_KEY')
             ),
             'Being or not being; that is the question here.'
+        );
+*/
+        $this->assertSame(
+            __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
+            null
         );
 
         $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
