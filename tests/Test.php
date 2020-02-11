@@ -532,7 +532,6 @@ class Test extends \PHPUnit\Framework\TestCase
             null
         );
 
-        /*
         $this->assertSame(
             __translate_microsoft(
                 'Sein oder Nichtsein; das ist hier die Frage.',
@@ -542,7 +541,7 @@ class Test extends \PHPUnit\Framework\TestCase
             ),
             'Being or not being; that is the question here.'
         );
-*/
+
         $this->assertSame(
             __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
             null
