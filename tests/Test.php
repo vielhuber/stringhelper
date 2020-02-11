@@ -531,6 +531,15 @@ class Test extends \PHPUnit\Framework\TestCase
             __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
             null
         );
+        $this->assertSame(
+            __translate_google(
+                '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            '<a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
+        );
 
         $this->assertSame(
             __translate_microsoft(

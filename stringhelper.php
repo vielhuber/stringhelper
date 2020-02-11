@@ -747,6 +747,9 @@ if (!function_exists('__minify_html')) {
 if (!function_exists('__translate_google')) {
     function __translate_google($str, $from_lng, $to_lng, $api_key)
     {
+        // fix bug https://stackoverflow.com/questions/60160838/google-translation-api-gives-different-result-than-on-web
+        $str = htmlentities($str);
+
         $response = __curl(
             'https://www.googleapis.com/language/translate/v2?key=' .
                 $api_key .
@@ -760,6 +763,22 @@ if (!function_exists('__translate_google')) {
 
         if ($response->status == 200 && @$response->result->data->translations[0]->translatedText != '') {
             $trans = $response->result->data->translations[0]->translatedText;
+
+            // because of the bug above we have to decode the output
+            $trans = html_entity_decode($trans);
+            // unfortunately google now provides spaces inside tags (we remove them here)
+            preg_match_all('/<[a-zA-Z]+(>|.*?[^?]>) /', $trans, $matches);
+            if (!empty($matches)) {
+                foreach ($matches[0] as $matches__value) {
+                    $trans = str_replace($matches__value, trim($matches__value), $trans);
+                }
+            }
+            preg_match_all('/ <\/[^<>]*>/', $trans, $matches);
+            if (!empty($matches)) {
+                foreach ($matches[0] as $matches__value) {
+                    $trans = str_replace($matches__value, trim($matches__value), $trans);
+                }
+            }
         } else {
             return null;
         }
