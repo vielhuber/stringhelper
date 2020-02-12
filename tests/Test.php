@@ -294,6 +294,79 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__cookie_get('cookie_name'), 'cookie_value');
     }
 
+    function test__translate()
+    {
+        $this->assertSame(
+            __translate_google(
+                'Das ist das <span>Haus</span> vom Nikolaus',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            'This is the <span>house</span> of Santa Claus'
+        );
+
+        $this->assertSame(
+            __translate_google(
+                'Das ist das <span class="notranslate">Haus</span> vom Nikolaus',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            'This is the <span class="notranslate">Haus</span> of Santa Claus'
+        );
+
+        $this->assertSame(
+            __translate_google(
+                'Telefon: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            'Telephone: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>'
+        );
+
+        $this->assertSame(
+            __translate_google(
+                'Sein oder Nichtsein; das ist hier die Frage.',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            'To be or not to be; that is the question.'
+        );
+
+        $this->assertSame(
+            __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
+            null
+        );
+
+        $this->assertSame(
+            __translate_google(
+                '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
+        );
+
+        $this->assertSame(
+            __translate_microsoft(
+                'Sein oder Nichtsein; das ist hier die Frage.',
+                'de',
+                'en',
+                getenv('MICROSOFT_TRANSLATION_API_KEY')
+            ),
+            'Being or not being; that is the question here.'
+        );
+
+        $this->assertSame(
+            __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
+            null
+        );
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -517,44 +590,6 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__set_first_char_uppercase('Foo'), 'Foo');
         $this->assertSame(__set_first_char_uppercase('übel'), 'Übel');
         $this->assertSame(__set_first_char_uppercase('Übel'), 'Übel');
-
-        $this->assertSame(
-            __translate_google(
-                'Sein oder Nichtsein; das ist hier die Frage.',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            'To be or not to be; that is the question.'
-        );
-        $this->assertSame(
-            __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
-            null
-        );
-        $this->assertSame(
-            __translate_google(
-                '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            '<a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
-        );
-
-        $this->assertSame(
-            __translate_microsoft(
-                'Sein oder Nichtsein; das ist hier die Frage.',
-                'de',
-                'en',
-                getenv('MICROSOFT_TRANSLATION_API_KEY')
-            ),
-            'Being or not being; that is the question here.'
-        );
-
-        $this->assertSame(
-            __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
-            null
-        );
 
         $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
 

@@ -747,37 +747,47 @@ if (!function_exists('__minify_html')) {
 if (!function_exists('__translate_google')) {
     function __translate_google($str, $from_lng, $to_lng, $api_key)
     {
-        // fix bug https://stackoverflow.com/questions/60160838/google-translation-api-gives-different-result-than-on-web
-        $str = htmlentities($str);
+        // there is an annoying bug https://stackoverflow.com/questions/60160838/google-translation-api-gives-different-result-than-on-web
+        // this could be fixed with this encoding, but a lot of other issues arise with that
+        // currently we don't have a solution for that
+        $fix_weird_bug = false;
+        if ($fix_weird_bug === true) {
+            $str = htmlentities($str);
+        }
 
         $response = __curl(
-            'https://www.googleapis.com/language/translate/v2?key=' .
-                $api_key .
-                '&q=' .
-                rawurlencode($str) .
-                '&source=' .
-                $from_lng .
-                '&target=' .
-                $to_lng
+            'https://translation.googleapis.com/language/translate/v2?key=' . $api_key,
+            [
+                'q' => $str,
+                'source' => $from_lng,
+                'target' => $to_lng,
+                'format' => 'html',
+                'model' => 'nmt'
+            ],
+            'POST'
         );
 
         if ($response->status == 200 && @$response->result->data->translations[0]->translatedText != '') {
             $trans = $response->result->data->translations[0]->translatedText;
 
-            // because of the bug above we have to decode the output
-            $trans = html_entity_decode($trans);
-            // unfortunately google now provides spaces inside tags (we remove them here)
-            preg_match_all('/<[a-zA-Z]+(>|.*?[^?]>) /', $trans, $matches);
-            if (!empty($matches)) {
-                foreach ($matches[0] as $matches__value) {
-                    $trans = str_replace($matches__value, trim($matches__value), $trans);
+            if ($fix_weird_bug === true) {
+                // because of the bug above we have to decode the output
+                $trans = html_entity_decode($trans);
+                // unfortunately google now provides spaces inside tags (we remove them here)
+                preg_match_all('/<[a-zA-Z]+(>|.*?[^?]>) /', $trans, $matches);
+                if (!empty($matches)) {
+                    foreach ($matches[0] as $matches__value) {
+                        $trans = str_replace($matches__value, trim($matches__value), $trans);
+                    }
                 }
-            }
-            preg_match_all('/ <\/[^<>]*>/', $trans, $matches);
-            if (!empty($matches)) {
-                foreach ($matches[0] as $matches__value) {
-                    $trans = str_replace($matches__value, trim($matches__value), $trans);
+                preg_match_all('/ <\/[^<>]*>/', $trans, $matches);
+                if (!empty($matches)) {
+                    foreach ($matches[0] as $matches__value) {
+                        $trans = str_replace($matches__value, trim($matches__value), $trans);
+                    }
                 }
+                // google also sometimes adds spaces around @ signs
+                $trans = preg_replace('/ @ /', '@', $trans);
             }
         } else {
             return null;
