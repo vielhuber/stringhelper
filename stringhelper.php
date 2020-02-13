@@ -1594,11 +1594,11 @@ if (!function_exists('__date')) {
         }
         // input timestamp
         elseif (is_numeric($date)) {
-            $date = date('Y-m-d', $date);
+            $date = date('Y-m-d H:i:s', $date);
         }
         // input datetime object
         elseif ($date instanceof DateTime) {
-            $date = $date->format('Y-m-d');
+            $date = $date->format('Y-m-d H:i:s');
         }
 
         // default value for format
