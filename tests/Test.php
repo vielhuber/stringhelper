@@ -713,6 +713,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__strip_whitespace_collapsed('the     answer             is 42 '), 'the answer is 42');
         $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), ['foo', 'bar', 'baz']);
 
+        $this->assertSame(__split_whitespace('DE07123412341234123412', 4), 'DE07 1234 1234 1234 1234 12');
+        $this->assertSame(__split_whitespace(' föö bäär ', 3), 'föö bää r');
+        $this->assertSame(__split_whitespace(null, 3), null);
+        $this->assertSame(__split_whitespace(true, 3), true);
+        $this->assertSame(__split_whitespace(false, 3), false);
+        $this->assertSame(__split_whitespace('', 3), '');
+        $this->assertSame(__split_whitespace('foo', 0), 'foo');
+
         $this->assertSame(
             __remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'),
             'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'

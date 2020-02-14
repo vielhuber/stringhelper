@@ -522,6 +522,10 @@ __split_newline('foo
 bar
 baz') // ['foo','bar','baz']
 
+// add space after every 4th character (first remove whitespace, do it bytesafe, don't add a trailing space like chunk_split)
+__split_whitespace('DE07123412341234123412', 4) // 'DE07 1234 1234 1234 1234 12'
+__split_whitespace(' föö bäär ', 3) // 'föö bää r'
+
 // remove empty lines
 __remove_emptylines('foo
 

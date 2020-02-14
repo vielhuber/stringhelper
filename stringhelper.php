@@ -441,6 +441,24 @@ if (!function_exists('__split_newline')) {
     }
 }
 
+if (!function_exists('__split_whitespace')) {
+    function __split_whitespace($string, $len)
+    {
+        if (__nx($string) || !is_string($string) || !is_numeric($len) || $len <= 0) {
+            return $string;
+        }
+        $string = trim($string);
+        $string = __strip_whitespace($string);
+        $tmp = array_chunk(preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY), $len);
+        $string = '';
+        foreach ($tmp as $t) {
+            $string .= join('', $t) . ' ';
+        }
+        $string = trim($string);
+        return $string;
+    }
+}
+
 if (!function_exists('__remove_emptylines')) {
     function __remove_emptylines($string)
     {
