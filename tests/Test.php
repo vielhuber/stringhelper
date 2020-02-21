@@ -403,6 +403,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__validate_date('2000-01-01'), true);
         $this->assertSame(__validate_date('01.01.2000'), true);
         $this->assertSame(__validate_date('29.02.2001'), false);
+        $this->assertSame(__validate_date('5956-09-24'), false);
+        $this->assertSame(__validate_date('51956-09-24'), false);
         $this->assertSame(__validate_date(new DateTime('2000-01-01')), true);
         $this->assertSame(__validate_date(946713600), true);
         $this->assertSame(__validate_date(null), false);
@@ -599,6 +601,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), null), 20);
         $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), ''), 20);
         $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), 'foo'), null);
+        $this->assertSame(__age_from_date(date(strtotime('5232-01-01'))), null);
 
         $this->assertSame(__first_char_is_uppercase(true), false);
         $this->assertSame(__first_char_is_uppercase(false), false);

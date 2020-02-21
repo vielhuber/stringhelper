@@ -536,11 +536,11 @@ if (!function_exists('__validate_date')) {
         if ($date instanceof DateTime) {
             $date = $date->format('Y-m-d');
         }
-        if (strlen($date) === 10) {
+        if (substr_count(explode(' ', $date)[0], '-') == 2 || substr_count(explode(' ', $date)[0], '.') == 2) {
             $date = explode(' ', $date)[0];
             if (substr_count($date, '-') == 2) {
                 $date = explode('-', $date);
-                if (checkdate($date[1], $date[2], $date[0])) {
+                if (checkdate((int) $date[1], (int) $date[2], (int) $date[0])) {
                     if ($date[0] >= 2037) {
                         return false;
                     } // prevent 32-bit problem
@@ -548,7 +548,7 @@ if (!function_exists('__validate_date')) {
                 }
             } elseif (substr_count($date, '.') == 2) {
                 $date = explode('.', $date);
-                if (checkdate($date[1], $date[0], $date[2])) {
+                if (checkdate((int) $date[1], (int) $date[0], (int) $date[2])) {
                     if ($date[2] >= 2037) {
                         return false;
                     } // prevent 32-bit problem
