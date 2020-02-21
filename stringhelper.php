@@ -1721,6 +1721,30 @@ if (!function_exists('__date_reset_time')) {
     }
 }
 
+if (!function_exists('__age_from_date')) {
+    function __age_from_date($date_birth, $date_relative = null)
+    {
+        if (__nx(@$date_birth)) {
+            return null;
+        }
+        $date_birth = __date($date_birth, 'Y-m-d');
+        if (__nx($date_birth)) {
+            return null;
+        }
+        if (__x($date_relative)) {
+            $date_relative = __date($date_relative, 'Y-m-d');
+            if (__nx($date_relative)) {
+                return null;
+            }
+        } else {
+            $date_relative = __date('now');
+        }
+        $age = floor((strtotime($date_relative) - strtotime($date_birth)) / 31556926); // average number of seconds in a year (avoids leap year problem);
+        $age = intval($age);
+        return $age;
+    }
+}
+
 if (!function_exists('__remove_zero_decimals')) {
     function __remove_zero_decimals($num)
     {

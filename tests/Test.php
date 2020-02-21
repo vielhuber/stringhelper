@@ -583,6 +583,23 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date_reset_time(false), null);
         $this->assertSame(__date_reset_time(true), null);
 
+        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month'))), 20);
+        $this->assertSame(__age_from_date(date(strtotime('now - 20 years + 1 day'))), 19);
+        $this->assertSame(__age_from_date(date(strtotime('now - 20 years'))), 20);
+        $this->assertSame(__age_from_date(date(strtotime('now - 40 years - 1 month'))), 40);
+        $this->assertSame(__age_from_date(date(strtotime('now - 40 years + 1 month'))), 39);
+        $this->assertSame(__age_from_date(null), null);
+        $this->assertSame(__age_from_date(false), null);
+        $this->assertSame(__age_from_date('foo'), null);
+        $this->assertSame(
+            __age_from_date(date(strtotime('now - 20 years - 1 month')), date(strtotime('now - 10 years'))),
+            10
+        );
+        $this->assertSame(__age_from_date(date(strtotime('now - 20 years')), date(strtotime('now - 10 years'))), 10);
+        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), null), 20);
+        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), ''), 20);
+        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), 'foo'), null);
+
         $this->assertSame(__first_char_is_uppercase(true), false);
         $this->assertSame(__first_char_is_uppercase(false), false);
         $this->assertSame(__first_char_is_uppercase(''), false);

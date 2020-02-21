@@ -410,6 +410,10 @@ __date_reset_time('2000-01-01 16:30:00') // 2000-01-01 00:00:00
 __date_reset_time('2000-01-01') // 2000-01-01 00:00:00
 __date_reset_time('01.01.2000') // 2000-01-01 00:00:00
 
+// get age from date
+__age_from_date('2000-01-01') // 20
+__age_from_date('2000-01-01', '2010-01-01') // 10
+
 // remove useless zero digits from decimals
 __remove_zero_decimals(1337) // 1337
 __remove_zero_decimals('1337') // 1337
