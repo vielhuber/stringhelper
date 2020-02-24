@@ -833,7 +833,8 @@ if (!function_exists('__translate_microsoft')) {
             'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=' .
                 $from_lng .
                 '&to=' .
-                $to_lng,
+                $to_lng .
+                '&textType=html',
             [['Text' => $str]],
             'POST',
             [

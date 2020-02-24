@@ -362,6 +362,16 @@ class Test extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertSame(
+            __translate_microsoft(
+                '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                'de',
+                'en',
+                getenv('MICROSOFT_TRANSLATION_API_KEY')
+            ),
+            'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in virtually all areas and is now far superior.'
+        );
+
+        $this->assertSame(
             __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
             null
         );
