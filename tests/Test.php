@@ -352,6 +352,16 @@ class Test extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertSame(
+            __translate_google(
+                '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.'
+        );
+
+        $this->assertSame(
             __translate_microsoft(
                 'Sein oder Nichtsein; das ist hier die Frage.',
                 'de',
@@ -369,6 +379,16 @@ class Test extends \PHPUnit\Framework\TestCase
                 getenv('MICROSOFT_TRANSLATION_API_KEY')
             ),
             'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in virtually all areas and is now far superior.'
+        );
+
+        $this->assertSame(
+            __translate_microsoft(
+                '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                'de',
+                'en',
+                getenv('MICROSOFT_TRANSLATION_API_KEY')
+            ),
+            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original rock <a p="3">jQuery</a> in virtually all areas and is now far superior.'
         );
 
         $this->assertSame(
