@@ -1091,6 +1091,14 @@ baz'
         ]);
         $this->assertSame($response->status, 200);
 
+        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, null);
+        $this->assertSame(empty((array) $response->result->cookies), true);
+        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, [
+            'foo' => 'bar',
+            'bar' => 'baz'
+        ]);
+        $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
+
         // fill in your wp credentials to test this
         if (1 == 0) {
             $wp_url = 'https://vielhuber.de';

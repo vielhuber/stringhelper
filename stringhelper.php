@@ -1975,7 +1975,8 @@ if (!function_exists('__curl')) {
         $enable_cookies = false,
         $send_as_json = true,
         $timeout = 60,
-        $basic_auth = null
+        $basic_auth = null,
+        $cookies = null
     ) {
         // guess method based on data
         if ($method === null) {
@@ -2000,6 +2001,16 @@ if (!function_exists('__curl')) {
 
         if (__x($basic_auth)) {
             curl_setopt($curl, CURLOPT_USERPWD, __first_key($basic_auth) . ':' . $basic_auth[__first_key($basic_auth)]);
+        }
+
+        if (__x($cookies)) {
+            $cookies_curl = [];
+            foreach ($cookies as $cookies__key => $cookies__value) {
+                if ($cookies__key != 'Array') {
+                    $cookies_curl[] = $cookies__key . '=' . $cookies__value;
+                }
+            }
+            curl_setopt($curl, CURLOPT_COOKIE, implode(';', $cookies_curl));
         }
 
         /* encode data */

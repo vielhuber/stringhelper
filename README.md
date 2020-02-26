@@ -825,6 +825,7 @@ __curl(
     true, // send as json (or application/x-www-form-urlencoded)
     60, // timeout in seconds
     ['username' => 'password'], // basic authentication
+    ['foo' => 'bar'], // cookies
 );
 __curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ]}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ]}
@@ -836,6 +837,8 @@ __curl('https://httpbin.org/anything', null, 'DELETE'); //  {"status": 200, "res
 // with that you can do cool stuff like scraping the wordpress backend
 __curl('https://vielhuber.de/wp-login.php', ['log' => 'username', 'pwd', 'password'], 'POST', null, true, false);
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true);
+// you can also hijack the current browser session if logged in
+__curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIES);
 
 // char helpers
 __char_to_int('D') // 4
