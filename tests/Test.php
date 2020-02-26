@@ -739,6 +739,18 @@ class Test extends \PHPUnit\Framework\TestCase
             [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
         );
 
+        $this->assertSame(__array_unique([1, 2, 2]), [1, 2]);
+        $this->assertSame(__array_unique([['foo' => 'bar'], ['bar' => 'baz'], ['foo' => 'bar']]), [
+            ['foo' => 'bar'],
+            ['bar' => 'baz']
+        ]);
+        $this->assertSame(__array_unique(null), null);
+        $this->assertSame(__array_unique([]), []);
+        $this->assertSame(__array_unique(''), '');
+        $this->assertSame(__array_unique(0), 0);
+        $this->assertSame(__array_unique(true), true);
+        $this->assertSame(__array_unique(false), false);
+
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);
         $this->assertSame(substr_count(__uuid(), '-') === 4, true);

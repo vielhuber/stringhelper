@@ -1013,6 +1013,16 @@ if (!function_exists('__array_group_by')) {
     }
 }
 
+if (!function_exists('__array_unique')) {
+    function __array_unique($array)
+    {
+        if (__nx($array) || !is_array($array)) {
+            return $array;
+        }
+        return array_map('unserialize', array_unique(array_map('serialize', $array)));
+    }
+}
+
 if (!function_exists('__ask')) {
     function __ask($question)
     {
