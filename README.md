@@ -838,7 +838,7 @@ __curl('https://httpbin.org/anything', null, 'DELETE'); //  {"status": 200, "res
 __curl('https://vielhuber.de/wp-login.php', ['log' => 'username', 'pwd', 'password'], 'POST', null, true, false);
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true);
 // you can also hijack the current browser session if logged in
-__curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIES);
+__curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE);
 
 // char helpers
 __char_to_int('D') // 4
