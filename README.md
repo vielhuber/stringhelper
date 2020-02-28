@@ -545,6 +545,9 @@ __remove_newlines('foo
 bar<br/>
 baz') // foobarbaz
 
+// trim whitespace (including &nbsp; and line breaks)
+__trim_whitespace('      string including nasty whitespace chars  ') // 'string including nasty whitespace chars'
+
 // trim every item in array
 __atrim(['foo
 ','bar','

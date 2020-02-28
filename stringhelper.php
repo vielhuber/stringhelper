@@ -475,6 +475,21 @@ if (!function_exists('__remove_newlines')) {
     }
 }
 
+if (!function_exists('__trim_whitespace')) {
+    function __trim_whitespace($str)
+    {
+        if (__nx($str) || !is_string($str)) {
+            return $str;
+        }
+        while ($str !== trim($str) || $str !== trim($str, ' ') || $str !== trim($str, html_entity_decode('&nbsp;'))) {
+            $str = trim($str);
+            $str = trim($str, ' ');
+            $str = trim($str, html_entity_decode('&nbsp;'));
+        }
+        return $str;
+    }
+}
+
 if (!function_exists('__atrim')) {
     function __atrim($arr)
     {
@@ -483,7 +498,7 @@ if (!function_exists('__atrim')) {
         }
 
         foreach ($arr as $arr__key => $arr__value) {
-            $arr[$arr__key] = trim($arr__value);
+            $arr[$arr__key] = __trim_whitespace($arr__value);
         }
         return $arr;
     }

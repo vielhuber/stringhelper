@@ -789,6 +789,22 @@ class Test extends \PHPUnit\Framework\TestCase
         );
         $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
 
+        $this->assertSame(
+            __trim_whitespace('      string including nasty whitespace chars  '),
+            'string including nasty whitespace chars'
+        );
+        $this->assertSame(
+            __trim_whitespace('
+        
+   
+
+   string including nasty whitespace chars  
+
+
+'),
+            'string including nasty whitespace chars'
+        );
+
         $this->assertSame(__atrim(null), null);
         $this->assertSame(__atrim(false), false);
         $this->assertSame(__atrim(true), true);
