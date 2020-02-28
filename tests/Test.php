@@ -794,14 +794,19 @@ class Test extends \PHPUnit\Framework\TestCase
             'string including nasty whitespace chars'
         );
         $this->assertSame(
-            __trim_whitespace('
-        
+            __trim_whitespace(
+                '
+
    
 
    string including nasty whitespace chars  
 
+    ' .
+                    html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;') .
+                    '
 
-'),
+'
+            ),
             'string including nasty whitespace chars'
         );
 
