@@ -1099,6 +1099,33 @@ baz'
         ]);
         $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
 
+        $response = __curl(
+            'https://httpbin.org/absolute-redirect/1',
+            null,
+            null,
+            null,
+            false,
+            false,
+            60,
+            null,
+            null,
+            true
+        );
+        $this->assertSame($response->status, 200);
+        $response = __curl(
+            'https://httpbin.org/absolute-redirect/1',
+            null,
+            null,
+            null,
+            false,
+            false,
+            60,
+            null,
+            null,
+            false
+        );
+        $this->assertSame($response->status, 302);
+
         // fill in your wp credentials to test this
         if (1 == 0) {
             $wp_url = 'https://vielhuber.de';

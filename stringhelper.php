@@ -1976,7 +1976,8 @@ if (!function_exists('__curl')) {
         $send_as_json = true,
         $timeout = 60,
         $basic_auth = null,
-        $cookies = null
+        $cookies = null,
+        $follow_redirects = true
     ) {
         // guess method based on data
         if ($method === null) {
@@ -1997,7 +1998,10 @@ if (!function_exists('__curl')) {
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // don't verify certificate
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); // follow redirects
+
+        if ($follow_redirects === true) {
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        }
 
         if (__x($basic_auth)) {
             curl_setopt($curl, CURLOPT_USERPWD, __first_key($basic_auth) . ':' . $basic_auth[__first_key($basic_auth)]);

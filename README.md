@@ -826,6 +826,7 @@ __curl(
     60, // timeout in seconds
     ['username' => 'password'], // basic authentication
     ['foo' => 'bar'], // cookies
+    true, // follow redirects
 );
 __curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ]}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ]}
