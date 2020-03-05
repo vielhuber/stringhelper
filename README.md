@@ -909,6 +909,15 @@ there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp)
 
 copy `.env.example` to `.env`, fill in values, install dependencies with `composer install` and run `./vendor/bin/phpunit`.
 
+## usage as class
+
+if you don't like hotloaded functions, you also can use this library in a class-based way:
+
+```php
+use vielhuber\stringhelper\__;
+__::x(42); // true
+```
+
 ## appendix
 
 ### existence matrix

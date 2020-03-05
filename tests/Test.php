@@ -1,4 +1,6 @@
 <?php
+use vielhuber\stringhelper\__;
+
 class Test extends \PHPUnit\Framework\TestCase
 {
     public static function setUpBeforeClass(): void
@@ -141,6 +143,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__e('', [], 'baz'), 'baz');
         $this->assertEquals(__e('', [], null), __empty());
         $this->assertEquals(__e(), __empty());
+        $this->assertEquals(get_class(__empty()), '__empty_helper');
     }
 
     function test__loop_e()
@@ -1189,6 +1192,11 @@ baz'
         $this->assertSame(__decrypt_poor($token, true), 'bar');
         $this->assertSame(__decrypt_poor($token, true), null);
 
+        define('ENCRYPTION_FOLDER', __DIR__ . '/');
+        $token = __encrypt_poor('bar');
+        $this->assertSame(__decrypt_poor($token, true), 'bar');
+        $this->assertSame(__decrypt_poor($token, true), null);
+
         $this->assertSame(count(__files_in_folder()) >= 8, true);
         $this->assertSame(count(__files_in_folder('.')) >= 8, true);
         $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) >= 7, true);
@@ -1473,6 +1481,12 @@ foo,bar,baz'
         sleep(1);
         $data = __log_end(null, false);
         $this->assertSame(intval(round($data['time'])), 1);
+    }
+
+    function test__class_usage()
+    {
+        $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
+        $this->assertSame(__::arr_append($arr, 'gnarr', 42 % 7 === 0), __arr_append($arr, 'gnarr', 42 % 7 === 0));
     }
 }
 

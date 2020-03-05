@@ -30,7 +30,7 @@
 <body>
 
 	<?php
-	require_once('../stringhelper.php');
+	require_once('../src/functions.php');
     $items = [
         'null' => null,
         'false' => false,

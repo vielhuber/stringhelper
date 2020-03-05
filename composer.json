@@ -10,8 +10,11 @@
         "vlucas/phpdotenv": ">=4.1"
     },
     "autoload": {
+        "psr-4": {
+            "vielhuber\\stringhelper\\": "src/"
+        },
         "files": [
-            "stringhelper.php"
+            "src/functions.php"
         ]
     }
 }
