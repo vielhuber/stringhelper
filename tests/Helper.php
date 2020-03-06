@@ -30,6 +30,7 @@
 <body>
 
 	<?php
+	require_once('../src/stringhelper.php');
 	require_once('../src/functions.php');
     $items = [
         'null' => null,
@@ -75,7 +76,7 @@
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'false'; } elseif( !empty($input) ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } else { echo (($input)?('true'):('false')); } echo '</sub>';
-    		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( count($input) > 0 ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
+    		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( @count($input) > 0 ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input != '' ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' | <sub>'; if( $input === 'error' ) { echo 'error'; } elseif( $input !== '' ) { echo 'true'; } else { echo 'false'; } echo '</sub>';
     		echo ' |';
