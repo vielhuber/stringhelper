@@ -1012,7 +1012,7 @@ if (!function_exists('__pushId')) {
 /* CLASSES */
 
 if (!class_exists('__empty_helper')) {
-    class __empty_helper implements JsonSerializable
+    class __empty_helper implements \JsonSerializable
     {
         public function __call($name, $arguments)
         {
