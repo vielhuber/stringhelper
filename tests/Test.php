@@ -1197,9 +1197,9 @@ baz'
         $this->assertSame(__decrypt_poor($token, true), 'bar');
         $this->assertSame(__decrypt_poor($token, true), null);
 
-        $this->assertSame(count(__files_in_folder()) >= 8, true);
-        $this->assertSame(count(__files_in_folder('.')) >= 8, true);
-        $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) >= 7, true);
+        $this->assertSame(count(__files_in_folder()) >= 6, true);
+        $this->assertSame(count(__files_in_folder('.')) >= 6, true);
+        $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) >= 5, true);
         $this->assertSame(in_array('.gitignore', __files_in_folder('.', false)), true);
         $this->assertSame(in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])), false);
         $this->assertSame(count(__files_in_folder('tests')) === 2, true);
