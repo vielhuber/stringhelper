@@ -1303,13 +1303,13 @@ class __
         }
 
         /*
-    /* special case: if only one argument is provided which can be understood both as date and date format
-    /* strategy: always prefer as format (except keywords below)
-    /* examples:
-    /*   now
-    /*   Y
-    /*   yesterday
-    */
+        /* special case: if only one argument is provided which can be understood both as date and date format
+        /* strategy: always prefer as format (except keywords below)
+        /* examples:
+        /*   now
+        /*   Y
+        /*   yesterday
+        */
         if ($date !== null && $format === null && $mod === null) {
             if (self::validate_date($date) && self::validate_date_format($date)) {
                 /* see: https://www.php.net/manual/de/datetime.formats.relative.php */
@@ -1433,6 +1433,9 @@ class __
         }
 
         if (self::nx($date)) {
+            if (func_num_args() >= 2) {
+                return null;
+            }
             $date = 'now';
         }
         // input timestamp

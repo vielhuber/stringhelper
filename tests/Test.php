@@ -584,6 +584,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__date(true), null);
         $this->assertSame(__date(false), null);
         $this->assertSame(__date(''), null);
+        $this->assertSame(__date('d.m.Y', null), null);
+        $this->assertSame(__date('d.m.Y', true), null);
+        $this->assertSame(__date('d.m.Y', false), null);
+        $this->assertSame(__date('d.m.Y', ''), null);
+        $this->assertSame(__date(null, 'd.m.Y'), null);
+        $this->assertSame(__date(true, 'd.m.Y'), null);
+        $this->assertSame(__date(false, 'd.m.Y'), null);
+        $this->assertSame(__date('', 'd.m.Y'), null);
         $this->assertSame(__date('2008-31-31'), null);
         $this->assertSame(__date('now + 6 days'), date('Y-m-d', strtotime('now + 6 days')));
         $this->assertSame(__date('rfkjh lkjerhflk kjekj'), null);
