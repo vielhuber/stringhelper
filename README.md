@@ -901,14 +901,6 @@ __log_end(); // this ends latest entry (lifo)
 __log_end();
 ```
 
-## js implementation
-
-there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp) with similiar functions available.
-
-## testing
-
-copy `.env.example` to `.env`, fill in values, install dependencies with `composer install` and run `./vendor/bin/phpunit`.
-
 ## usage as class
 
 if you don't like hotloaded functions, you also can use this library in a class-based way:
@@ -917,6 +909,14 @@ if you don't like hotloaded functions, you also can use this library in a class-
 use vielhuber\stringhelper\__;
 __::x(42); // true
 ```
+
+## js implementation
+
+there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp) with similiar functions available.
+
+## testing
+
+copy `.env.example` to `.env`, fill in values, install dependencies with `composer install` and run `./vendor/bin/phpunit`.
 
 ## appendix
 
