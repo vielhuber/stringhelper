@@ -393,6 +393,7 @@ __date('2019-12-02T12:00:00', 'd.m.Y H:i:s') // 02.12.2019 12:00:00
 __date() // 2019-05-28
 __date('') // null
 __date(null) // null
+__date('d.m.Y',null) // null
 $unknown = null; __date($unknown) // null
 __date(strtotime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts timestamps
 __date(strtotime('2000-01-01'), 'd.m.Y', '+6 months') // 01.07.2000
