@@ -890,19 +890,19 @@ class __
         return array_map('unserialize', array_unique(array_map('serialize', $array)));
     }
 
-    public static function array_map_deep($array, $callback)
+    public static function array_map_deep($array, $callback, $array__key = null)
     {
         $new = [];
         if (is_array($array)) {
             foreach ($array as $array__key => $array__value) {
                 if (is_array($array__value)) {
-                    $new[$array__key] = self::array_map_deep($array__value, $callback);
+                    $new[$array__key] = self::array_map_deep($array__value, $callback, $array__key);
                 } else {
-                    $new[$array__key] = call_user_func($callback, $array__value);
+                    $new[$array__key] = call_user_func($callback, $array__value, $array__key);
                 }
             }
         } else {
-            $new = call_user_func($callback, $array);
+            $new = call_user_func($callback, $array, $array__key);
         }
         return $new;
     }

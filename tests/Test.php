@@ -792,6 +792,12 @@ class Test extends \PHPUnit\Framework\TestCase
             }),
             [[[[[[[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]]]]]]
         );
+        $this->assertSame(
+            __array_map_deep([[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok']]]]]]]]]]]]]]]]]]]], function ($value, $key) {
+                return $key === 42 ? $value : $value . '!';
+            }),
+            [[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok!']]]]]]]]]]]]]]]]]]]]
+        );
 
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);

@@ -493,7 +493,11 @@ __array_unique([['foo'=>'bar'],['bar'=>'baz'],['foo'=>'bar']]) // [['foo'=>'bar'
 
 // recursively change values of array of arrays
 __array_map_deep(['foo','bar'=>['baz','gnarr']], function($a) { return $a.'!'; }) // ['foo!','bar'=>['baz!','gnarr!']]
-__array_map_deep([[[[[[[[[[[[[[[[[[[[true]]]]]]]]]]]]]]]]]]]], function($a) { return !$a; }) // [[[[[[[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]]]]]]
+__array_map_deep([[[[[[[[[[[[[[[true]]]]]]]]]]]]]]], function($a) { return !$a; }) // [[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]
+__array_map_deep(
+    [[[[[[[[[[[[[[[42 => 'no', 7 => 'ok']]]]]]]]]]]]]]],
+    function ($value, $key) { return $key === 42 ? $value : $value . '!'; }
+) // [[[[[[[[[[[[[[[42 => 'no', 7 => 'ok!']]]]]]]]]]]]]]]
 
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
