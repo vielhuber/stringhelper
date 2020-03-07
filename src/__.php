@@ -890,6 +890,23 @@ class __
         return array_map('unserialize', array_unique(array_map('serialize', $array)));
     }
 
+    public static function array_map_deep($array, $callback)
+    {
+        $new = [];
+        if (is_array($array)) {
+            foreach ($array as $array__key => $array__value) {
+                if (is_array($array__value)) {
+                    $new[$array__key] = self::array_map_deep($array__value, $callback);
+                } else {
+                    $new[$array__key] = call_user_func($callback, $array__value);
+                }
+            }
+        } else {
+            $new = call_user_func($callback, $array);
+        }
+        return $new;
+    }
+
     public static function ask($question)
     {
         echo $question;

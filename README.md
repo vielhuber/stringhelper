@@ -491,6 +491,10 @@ __array_group_by($arr, function($v) { return $v['a']; }, function($v) { return $
 __array_unique([1,2,2]) // [1,2]
 __array_unique([['foo'=>'bar'],['bar'=>'baz'],['foo'=>'bar']]) // [['foo'=>'bar'],['bar'=>'baz']]
 
+// recursively change values of array of arrays
+__array_map_deep(['foo','bar'=>['baz','gnarr']], function($a) { return $a.'!'; }) // ['foo!','bar'=>['baz!','gnarr!']]
+__array_map_deep([[[[[[[[[[[[[[[[[[[[true]]]]]]]]]]]]]]]]]]]], function($a) { return !$a; }) // [[[[[[[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]]]]]]
+
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
 

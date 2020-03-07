@@ -428,6 +428,13 @@ if (!function_exists('__array_unique')) {
     }
 }
 
+if (!function_exists('__array_map_deep')) {
+    function __array_map_deep(...$args)
+    {
+        return \vielhuber\stringhelper\__::array_map_deep(...$args);
+    }
+}
+
 if (!function_exists('__ask')) {
     function __ask(...$args)
     {

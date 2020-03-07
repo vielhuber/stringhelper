@@ -762,6 +762,37 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__array_unique(true), true);
         $this->assertSame(__array_unique(false), false);
 
+        $this->assertSame(
+            __array_map_deep(['foo', 'bar' => ['baz', 'gnarr']], function ($a) {
+                return $a . '!';
+            }),
+            ['foo!', 'bar' => ['baz!', 'gnarr!']]
+        );
+        $this->assertSame(
+            __array_map_deep(['foo', 'bar' => ['baz', ['1', '2']]], function ($a) {
+                return $a . '!';
+            }),
+            ['foo!', 'bar' => ['baz!', ['1!', '2!']]]
+        );
+        $this->assertSame(
+            __array_map_deep(null, function ($a) {
+                return $a . '!';
+            }),
+            '!'
+        );
+        $this->assertSame(
+            __array_map_deep(true, function ($a) {
+                return !$a;
+            }),
+            false
+        );
+        $this->assertSame(
+            __array_map_deep([[[[[[[[[[[[[[[[[[[[true]]]]]]]]]]]]]]]]]]]], function ($a) {
+                return !$a;
+            }),
+            [[[[[[[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]]]]]]
+        );
+
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);
         $this->assertSame(substr_count(__uuid(), '-') === 4, true);
