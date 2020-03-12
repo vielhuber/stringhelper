@@ -295,6 +295,14 @@ class Test extends \PHPUnit\Framework\TestCase
         @__cookie_set('cookie_name', 'cookie_value');
         $this->assertSame(__cookie_exists('cookie_name'), true);
         $this->assertSame(__cookie_get('cookie_name'), 'cookie_value');
+        @__cookie_set('special_cookie_name', 'cookie_value', 7, [
+            'path' => '/',
+            'domain' => '',
+            'samesite' => 'None',
+            'secure' => true,
+            'httponly' => false
+        ]);
+        $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
 
     function test__translate()

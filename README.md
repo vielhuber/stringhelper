@@ -352,6 +352,13 @@ if( __false_one(false) ) // true
 __cookie_set('cookie_name', 'cookie_value') // set cookie for 30 days
 __cookie_set('cookie_name', 'cookie_value', 7) // set cookie for 7 days
 __cookie_set('cookie_name2', ['can also', 'store', 'arrays'], 7);
+__cookie_set('cookie_name3', 'cookie_value', 7, [
+    'path' => '/',
+    'domain' => '',
+    'samesite' => 'None',
+    'secure' => true,
+    'httponly' => false
+]); // more options like SameSite (also works with PHP<7.3)
 __cookie_exists('cookie_name') // true
 __cookie_get('cookie_name') // 'cookie_value'
 __cookie_get('cookie_name2') // ['can also', 'store', 'arrays']

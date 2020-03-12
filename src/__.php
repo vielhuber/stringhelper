@@ -290,12 +290,39 @@ class __
         return $return;
     }
 
-    public static function cookie_set($cookie_name, $cookie_value, $days = 30)
+    public static function cookie_set($cookie_name, $cookie_value, $days = 30, $options = [])
     {
+        if (__nx($options['secure'])) {
+            $options['secure'] = false;
+        }
+        if (__nx($options['httponly'])) {
+            $options['httponly'] = false;
+        }
+        if (__nx($options['expires'])) {
+            $options['expires'] = time() + 60 * 60 * 24 * $days;
+        }
+        if (__nx($options['path'])) {
+            $options['path'] = '/';
+        }
+        if (__nx($options['domain'])) {
+            $options['domain'] = '';
+        }
         if (is_array($cookie_value)) {
             $cookie_value = serialize($cookie_value);
         }
-        setcookie($cookie_name, $cookie_value, time() + 60 * 60 * 24 * $days, '/');
+        if (PHP_VERSION_ID < 70300) {
+            setcookie(
+                $cookie_name,
+                $cookie_value,
+                $options['expires'],
+                $options['path'] . (__x(@$options['samesite']) ? '; samesite=' . $options['samesite'] : ''),
+                $options['domain'],
+                $options['secure'],
+                $options['httponly']
+            );
+        } else {
+            setcookie($cookie_name, $cookie_value, $options);
+        }
         // immediately set it for current request
         $_COOKIE[$cookie_name] = $cookie_value;
     }
