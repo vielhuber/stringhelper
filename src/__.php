@@ -292,19 +292,19 @@ class __
 
     public static function cookie_set($cookie_name, $cookie_value, $days = 30, $options = [])
     {
-        if (__nx($options['secure'])) {
+        if (__nx(@$options['secure'])) {
             $options['secure'] = false;
         }
-        if (__nx($options['httponly'])) {
+        if (__nx(@$options['httponly'])) {
             $options['httponly'] = false;
         }
-        if (__nx($options['expires'])) {
+        if (__nx(@$options['expires'])) {
             $options['expires'] = time() + 60 * 60 * 24 * $days;
         }
-        if (__nx($options['path'])) {
+        if (__nx(@$options['path'])) {
             $options['path'] = '/';
         }
-        if (__nx($options['domain'])) {
+        if (__nx(@$options['domain'])) {
             $options['domain'] = '';
         }
         if (is_array($cookie_value)) {
