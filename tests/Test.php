@@ -806,6 +806,24 @@ class Test extends \PHPUnit\Framework\TestCase
             }),
             [[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok!']]]]]]]]]]]]]]]]]]]]
         );
+        $this->assertSame(
+            __array_map_deep(
+                ['foo' => ['bar' => 'baz'], 'bar' => ['baz' => 'gnarr'], 'gnarr' => ['foo' => 'gnaz']],
+                function ($value, $key, $key_chain) {
+                    return in_array('bar', $key_chain) ? $value . '!' : $value;
+                }
+            ),
+            ['foo' => ['bar' => 'baz!'], 'bar' => ['baz' => 'gnarr!'], 'gnarr' => ['foo' => 'gnaz']]
+        );
+        $output = [];
+        __array_map_deep([1 => [2 => [3 => [4 => [5 => 'ok1'], 6 => [7 => 'ok2']]]], 8 => 'ok3'], function (
+            $value,
+            $key,
+            $key_chain
+        ) use (&$output) {
+            $output[] = $value . ': ' . implode('.', $key_chain);
+        });
+        $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
 
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);
