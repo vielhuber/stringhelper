@@ -1,3 +1,7 @@
+<?php
+require_once '../src/__.php';
+require_once '../src/functions.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,9 +33,7 @@
 </head>
 <body>
 
-	<?php
- require_once '../src/__.php';
- require_once '../src/functions.php';
+<?php
  $items = [
      'null' => null,
      'false' => false,
