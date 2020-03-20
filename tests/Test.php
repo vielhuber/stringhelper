@@ -389,7 +389,7 @@ class Test extends \PHPUnit\Framework\TestCase
                 'en',
                 getenv('MICROSOFT_TRANSLATION_API_KEY')
             ),
-            'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in virtually all areas and is now far superior.'
+            'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.'
         );
 
         $this->assertSame(
@@ -399,7 +399,7 @@ class Test extends \PHPUnit\Framework\TestCase
                 'en',
                 getenv('MICROSOFT_TRANSLATION_API_KEY')
             ),
-            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original rock <a p="3">jQuery</a> in virtually all areas and is now far superior.'
+            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.'
         );
 
         $this->assertSame(

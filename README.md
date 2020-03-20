@@ -856,6 +856,7 @@ __curl(
     ['username' => 'password'], // basic authentication
     ['foo' => 'bar'], // cookies
     true, // follow redirects
+    'username:password@192.168.178.1:8080' // use proxy (username, password and port are optional)
 );
 __curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ]}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ]}

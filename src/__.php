@@ -1801,7 +1801,8 @@ class __
         $timeout = 60,
         $basic_auth = null,
         $cookies = null,
-        $follow_redirects = true
+        $follow_redirects = true,
+        $proxy = null
     ) {
         // guess method based on data
         if ($method === null) {
@@ -1843,6 +1844,23 @@ class __
                 }
             }
             curl_setopt($curl, CURLOPT_COOKIE, implode(';', $cookies_curl));
+        }
+
+        /* set proxy */
+        if (__x($proxy)) {
+            curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);
+            if (mb_strpos($proxy, '@') !== false) {
+                curl_setopt($curl, CURLOPT_PROXYUSERPWD, explode('@', $proxy)[0]);
+                echo 'using proxyuserpwd ' . explode('@', $proxy)[0] . PHP_EOL;
+                $proxy = explode('@', $proxy)[1];
+            }
+            if (mb_strpos($proxy, ':') !== false) {
+                curl_setopt($curl, CURLOPT_PROXYPORT, explode(':', $proxy)[1]);
+                echo 'using port ' . explode(':', $proxy)[1] . PHP_EOL;
+                $proxy = explode(':', $proxy)[0];
+            }
+            curl_setopt($curl, CURLOPT_PROXY, $proxy);
+            echo 'using proxy ' . $proxy . PHP_EOL . PHP_EOL . PHP_EOL;
         }
 
         /* encode data */
