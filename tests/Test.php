@@ -307,7 +307,7 @@ class Test extends \PHPUnit\Framework\TestCase
 
     function test__translate()
     {
-        foreach ([null, getenv('GOOGLE_TRANSLATION_API_KEY')] as $api_keys__value) {
+        foreach (['free', getenv('GOOGLE_TRANSLATION_API_KEY')] as $api_keys__value) {
             $this->assertSame(
                 __translate_google('Das ist das <span>Haus</span> vom Nikolaus', 'de', 'en', $api_keys__value),
                 'This is the <span>house</span> of Santa Claus'

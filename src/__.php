@@ -678,12 +678,12 @@ class __
         return $minifier->minify($html);
     }
 
-    public static function translate_google($str, $from_lng, $to_lng, $api_key = null)
+    public static function translate_google($str, $from_lng, $to_lng, $api_key)
     {
-        if (__x($api_key) && $api_key !== 'free') {
-            return self::translate_google_api($str, $from_lng, $to_lng, $api_key);
+        if ($api_key === 'free') {
+            return self::translate_google_inofficial($str, $from_lng, $to_lng);
         }
-        return self::translate_google_inofficial($str, $from_lng, $to_lng);
+        return self::translate_google_api($str, $from_lng, $to_lng, $api_key);
     }
 
     public static function translate_google_api($str, $from_lng, $to_lng, $api_key)
