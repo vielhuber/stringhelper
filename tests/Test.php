@@ -307,69 +307,61 @@ class Test extends \PHPUnit\Framework\TestCase
 
     function test__translate()
     {
-        $this->assertSame(
-            __translate_google(
-                'Das ist das <span>Haus</span> vom Nikolaus',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            'This is the <span>house</span> of Santa Claus'
-        );
+        foreach ([null, getenv('GOOGLE_TRANSLATION_API_KEY')] as $api_keys__value) {
+            $this->assertSame(
+                __translate_google('Das ist das <span>Haus</span> vom Nikolaus', 'de', 'en', $api_keys__value),
+                'This is the <span>house</span> of Santa Claus'
+            );
 
-        $this->assertSame(
-            __translate_google(
-                'Das ist das <span class="notranslate">Haus</span> vom Nikolaus',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            'This is the <span class="notranslate">Haus</span> of Santa Claus'
-        );
+            $this->assertSame(
+                __translate_google(
+                    'Das ist das <span class="notranslate">Haus</span> vom Nikolaus',
+                    'de',
+                    'en',
+                    $api_keys__value
+                ),
+                'This is the <span class="notranslate">Haus</span> of Santa Claus'
+            );
 
-        $this->assertSame(
-            __translate_google(
-                'Telefon: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            'Telephone: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>'
-        );
+            $this->assertSame(
+                __translate_google(
+                    'Telefon: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
+                    'de',
+                    'en',
+                    $api_keys__value
+                ),
+                'Telephone: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>'
+            );
 
-        $this->assertSame(
-            __translate_google(
-                'Sein oder Nichtsein; das ist hier die Frage.',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            'To be or not to be; that is the question.'
-        );
+            $this->assertSame(
+                __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
+                'To be or not to be; that is the question.'
+            );
+
+            $this->assertSame(
+                __translate_google(
+                    '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                    'de',
+                    'en',
+                    $api_keys__value
+                ),
+                '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
+            );
+
+            $this->assertSame(
+                __translate_google(
+                    '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                    'de',
+                    'en',
+                    $api_keys__value
+                ),
+                '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.'
+            );
+        }
 
         $this->assertSame(
             __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
             null
-        );
-
-        $this->assertSame(
-            __translate_google(
-                '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
-        );
-
-        $this->assertSame(
-            __translate_google(
-                '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                'de',
-                'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
-            ),
-            '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.'
         );
 
         $this->assertSame(
