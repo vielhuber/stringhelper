@@ -300,7 +300,7 @@ class Test extends \PHPUnit\Framework\TestCase
             'domain' => '',
             'samesite' => 'None',
             'secure' => true,
-            'httponly' => false
+            'httponly' => false,
         ]);
         $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
@@ -477,7 +477,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__phone_tokenize('(0)89-12 456 666'), [
             'country_code' => '49',
             'area_code' => '89',
-            'number' => '12456666'
+            'number' => '12456666',
         ]);
         $this->assertSame(in_array('49', __phone_country_codes()), true);
         $this->assertSame(in_array('89', __phone_area_codes()), true);
@@ -710,7 +710,7 @@ class Test extends \PHPUnit\Framework\TestCase
             ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
             ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
             ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
+            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
         ];
         usort($arr, __array_multisort([['pos', 'asc'], ['date', 'asc'], ['created_at', 'asc'], ['id', 'asc']]));
         $this->assertEquals($arr, [
@@ -719,7 +719,7 @@ class Test extends \PHPUnit\Framework\TestCase
             ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
             ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
             ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
+            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
         ]);
         $arr = [['foo' => 'baz', 'bar' => 'baz'], ['foo' => 'baz', 'bar' => 'gnarr']];
         usort($arr, __array_multisort([['foo', 'desc'], ['bar', 'desc']]));
@@ -753,7 +753,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__array_unique([1, 2, 2]), [1, 2]);
         $this->assertSame(__array_unique([['foo' => 'bar'], ['bar' => 'baz'], ['foo' => 'bar']]), [
             ['foo' => 'bar'],
-            ['bar' => 'baz']
+            ['bar' => 'baz'],
         ]);
         $this->assertSame(__array_unique(null), null);
         $this->assertSame(__array_unique([]), []);
@@ -887,7 +887,7 @@ class Test extends \PHPUnit\Framework\TestCase
 ',
                 'bar',
                 '
-baz'
+baz',
             ]),
             ['foo', 'bar', 'baz']
         );
@@ -953,7 +953,7 @@ baz'
         $this->assertEquals(__object_to_array((object) ['foo' => 'bar']), ['foo' => 'bar']);
         $this->assertEquals(__object_to_array((object) ['foo', 'bar' => (object) ['foo', 'bar']]), [
             'foo',
-            'bar' => ['foo', 'bar']
+            'bar' => ['foo', 'bar'],
         ]);
 
         $this->assertEquals(__array(), []);
@@ -963,7 +963,7 @@ baz'
         $this->assertEquals(__array((object) ['foo', 'bar']), ['foo', 'bar']);
         $this->assertEquals(__array((object) ['foo', 'bar' => (object) ['foo', 'bar']]), [
             'foo',
-            'bar' => ['foo', 'bar']
+            'bar' => ['foo', 'bar'],
         ]);
         $this->assertEquals(__object(), (object) []);
         $this->assertEquals(__object('foo'), (object) ['foo']);
@@ -977,10 +977,10 @@ baz'
         );
 
         $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]]), [
-            0 => ['foo', 0, '0']
+            0 => ['foo', 0, '0'],
         ]);
         $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]], [0, '0']), [
-            0 => ['foo']
+            0 => ['foo'],
         ]);
 
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
@@ -1049,7 +1049,7 @@ baz'
         $this->assertEquals($arr, [0 => 'gnarr', 1 => 'foo', 2 => 'bar', 3 => 'baz']);
         $this->assertEquals(__arr_append(__arr_append(__arr_append([], 'foo'), 'bar', false), 'baz'), [
             0 => 'foo',
-            1 => 'baz'
+            1 => 'baz',
         ]);
 
         $this->assertSame(
@@ -1113,35 +1113,35 @@ baz'
         $this->assertSame(
             __inside_out_values([
                 'field1' => [0 => 'foo', 1 => 'bar', 2 => 'baz', 3 => ''],
-                'field2' => [0 => 'bar', 1 => 'baz', 2 => 'foo', 3 => null]
+                'field2' => [0 => 'bar', 1 => 'baz', 2 => 'foo', 3 => null],
             ]),
             [
                 0 => [
                     'field1' => 'foo',
-                    'field2' => 'bar'
+                    'field2' => 'bar',
                 ],
                 1 => [
                     'field1' => 'bar',
-                    'field2' => 'baz'
+                    'field2' => 'baz',
                 ],
                 2 => [
                     'field1' => 'baz',
-                    'field2' => 'foo'
-                ]
+                    'field2' => 'foo',
+                ],
             ]
         );
 
         $this->assertEquals(
             __arrays_to_objects([
                 'foo' => ['bar', 'baz'],
-                'bar' => [(object) ['id' => 7, 'name' => 'foo'], (object) ['id' => 42, 'name' => 'bar']]
+                'bar' => [(object) ['id' => 7, 'name' => 'foo'], (object) ['id' => 42, 'name' => 'bar']],
             ]),
             (object) [
                 'foo' => (object) [0 => 'bar', 1 => 'baz'],
                 'bar' => (object) [
                     7 => (object) ['id' => 7, 'name' => 'foo'],
-                    42 => (object) ['id' => 42, 'name' => 'bar']
-                ]
+                    42 => (object) ['id' => 42, 'name' => 'bar'],
+                ],
             ]
         );
 
@@ -1166,7 +1166,7 @@ baz'
         $this->assertSame($response->result->method, 'DELETE');
         $this->assertSame($response->result->data, '');
         $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', [
-            'Bar' => 'baz'
+            'Bar' => 'baz',
         ]);
         $this->assertSame($response->result->headers->Bar, 'baz');
         $response = __curl('https://vielhuber.de');
@@ -1174,7 +1174,7 @@ baz'
         $response = __curl('https://httpbin.org/basic-auth/foo/bar');
         $this->assertSame($response->status, 401);
         $response = __curl('https://httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, [
-            'foo' => 'bar'
+            'foo' => 'bar',
         ]);
         $this->assertSame($response->status, 200);
 
@@ -1182,7 +1182,7 @@ baz'
         $this->assertSame(empty((array) $response->result->cookies), true);
         $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, [
             'foo' => 'bar',
-            'bar' => 'baz'
+            'bar' => 'baz',
         ]);
         $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
 
@@ -1212,6 +1212,19 @@ baz'
             false
         );
         $this->assertSame($response->status, 302);
+        $response = __curl(
+            'https://httpbin.org/absolute-redirect/1',
+            null,
+            null,
+            null,
+            false,
+            false,
+            60,
+            null,
+            null,
+            true
+        );
+        $this->assertSame($response->url, 'http://httpbin.org/get');
 
         // fill in your wp credentials to test this
         if (1 == 0) {
@@ -1495,12 +1508,12 @@ foo,bar,baz'
         __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ';', '"');
         $this->assertSame(__csv2array('tests/assets/file.csv', ';', '"'), [
             ['foo', 'bar', 'baz'],
-            ['foo', 'bar', 'baz']
+            ['foo', 'bar', 'baz'],
         ]);
         __array2csv([['foo bar', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv', ',', '\'');
         $this->assertSame(__csv2array('tests/assets/file.csv', ',', '\''), [
             ['foo bar', 'bar', 'baz'],
-            ['foo', 'bar', 'baz']
+            ['foo', 'bar', 'baz'],
         ]);
         @unlink('tests/assets/file.csv');
 

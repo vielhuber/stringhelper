@@ -535,7 +535,7 @@ class __
         $return = [
             'country_code' => '',
             'area_code' => '',
-            'number' => ''
+            'number' => '',
         ];
 
         if (self::nx($value)) {
@@ -695,7 +695,7 @@ class __
                 'source' => $from_lng,
                 'target' => $to_lng,
                 'format' => 'html',
-                'model' => 'nmt'
+                'model' => 'nmt',
             ],
             'POST'
         );
@@ -739,7 +739,7 @@ class __
                 $str,
                 self::translate_google_inofficial_generate_tkk()
             ),
-            'mode' => 1
+            'mode' => 1,
         ];
         $response = self::curl(
             'https://translate.googleapis.com/translate_a/t?' . http_build_query($args),
@@ -748,7 +748,7 @@ class __
             [
                 'User-Agent' =>
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
-                'Content-Length' => strlen('q=' . urlencode($str))
+                'Content-Length' => strlen('q=' . urlencode($str)),
             ],
             false,
             false,
@@ -947,7 +947,7 @@ class __
             [['Text' => $str]],
             'POST',
             [
-                'Ocp-Apim-Subscription-Key' => $api_key
+                'Ocp-Apim-Subscription-Key' => $api_key,
             ],
             false,
             true
@@ -1616,7 +1616,7 @@ class __
                     'last',
                     'week',
                     'ago',
-                    'week'
+                    'week',
                 ];
                 $found = false;
                 foreach ($whitelist as $whitelist__value) {
@@ -1743,7 +1743,7 @@ class __
             'z',
             'c',
             'r',
-            'U'
+            'U',
         ];
         $chars_optional = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '-', '.', ':', '/'];
         $min_one_needed_char = false;
@@ -1974,8 +1974,8 @@ class __
                 stream_context_create([
                     'ssl' => [
                         'verify_peer' => false,
-                        'verify_peer_name' => false
-                    ]
+                        'verify_peer_name' => false,
+                    ],
                 ])
             );
         } else {
@@ -2120,7 +2120,8 @@ class __
 
         $result = curl_exec($curl);
 
-        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curl_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curl_url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
 
         curl_close($curl);
 
@@ -2135,7 +2136,12 @@ class __
             $result = json_decode($result);
         }
 
-        return (object) ['result' => $result, 'status' => $status, 'headers' => $headers];
+        return (object) [
+            'result' => $result,
+            'status' => $curl_status,
+            'headers' => $headers,
+            'url' => $curl_url,
+        ];
     }
 
     public static function exception($message = '')
@@ -2375,7 +2381,7 @@ class __
         }
         $GLOBALS['performance'][] = [
             'message' => $message,
-            'time' => microtime(true)
+            'time' => microtime(true),
         ];
     }
 
@@ -2403,7 +2409,7 @@ class __
         $GLOBALS['performance'] = array_values($GLOBALS['performance']);
         return [
             'message' => $message,
-            'time' => $time
+            'time' => $time,
         ];
     }
 
