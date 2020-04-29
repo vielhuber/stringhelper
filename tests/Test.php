@@ -1494,6 +1494,21 @@ baz'
             true
         );
 
+        $this->assertSame(
+            __line_endings_weak_equals(
+                __diff(
+                    'foo
+bar
+baz',
+                    'foo
+bar
+baz'
+                ),
+                ''
+            ),
+            true
+        );
+
         __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv');
         $this->assertSame(
             __line_endings_weak_equals(
