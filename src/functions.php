@@ -911,6 +911,13 @@ if (!function_exists('__sed_escape')) {
     }
 }
 
+if (!function_exists('__diff')) {
+    function __diff(...$args)
+    {
+        return \vielhuber\stringhelper\__::diff(...$args);
+    }
+}
+
 if (!function_exists('__line_endings_convert')) {
     function __line_endings_convert(...$args)
     {

@@ -1476,6 +1476,24 @@ bar fuu; yoo//'
         );
         @unlink('tests/assets/file.txt');
 
+        $this->assertSame(
+            __line_endings_weak_equals(
+                __diff(
+                    'foo
+bar
+baz',
+                    'foo
+barz
+baz'
+                ),
+                '2c2
+< bar
+---
+> barz'
+            ),
+            true
+        );
+
         __array2csv([['foo', 'bar', 'baz'], ['foo', 'bar', 'baz']], 'tests/assets/file.csv');
         $this->assertSame(
             __line_endings_weak_equals(

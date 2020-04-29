@@ -2347,6 +2347,18 @@ class __
         return str_replace('/', '\/', str_replace('&', '\&', str_replace(';', '\;', preg_quote($str))));
     }
 
+    public static function diff($str1, $str2)
+    {
+        $filename1 = sys_get_temp_dir() . '/' . md5(uniqid());
+        $filename2 = sys_get_temp_dir() . '/' . md5(uniqid());
+        file_put_contents($filename1, $str1);
+        file_put_contents($filename2, $str2);
+        $diff = trim(shell_exec('diff ' . $filename1 . ' ' . $filename2));
+        @unlink($filename1);
+        @unlink($filename2);
+        return $diff;
+    }
+
     public static function line_endings_convert($str, $os)
     {
         if (self::nx($str) || !is_string($str) || self::nx($os) || !in_array($os, ['linux', 'mac', 'windows'])) {
