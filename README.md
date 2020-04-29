@@ -449,7 +449,7 @@ __url_normalize('http://tld.com/') // http://tld.com
 // minify html
 __minify_html('<!DOCTYPE html>
 <title>shortest valid html5 document</title>
-<p>yay</p>') // <!DOCTYPE html><title>shortest valid html5 document</title> <p>yay</p>
+<p>yay</p>') // <!DOCTYPE html><title>shortest valid html5 document</title><p>yay</p>
 
 // translate strings
 /*

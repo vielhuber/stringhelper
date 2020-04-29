@@ -666,7 +666,7 @@ class __
     }
 
     // (uses https://github.com/jenstornell/tiny-html-minifier, which is currently not installable via composer)
-    public static function minify_html($html, $options = [])
+    public static function minify_html($html)
     {
         if (self::nx($html) || !is_string($html)) {
             return $html;
@@ -674,7 +674,10 @@ class __
         if (class_exists('TinyHtmlMinifier') === false) {
             require __DIR__ . '/../libs/TinyHtmlMinifier.php';
         }
-        $minifier = new \TinyHtmlMinifier($options);
+        $minifier = new \TinyHtmlMinifier([
+            'collapse_whitespace' => true,
+            'disable_comments' => true,
+        ]);
         return $minifier->minify($html);
     }
 
