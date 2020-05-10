@@ -683,6 +683,9 @@ class __
 
     public static function translate_google($str, $from_lng, $to_lng, $api_key)
     {
+        if (__nx($str)) {
+            return $str;
+        }
         if ($api_key === 'free') {
             return self::translate_google_inofficial($str, $from_lng, $to_lng);
         }
@@ -706,6 +709,7 @@ class __
         if ($response->status == 200 && @$response->result->data->translations[0]->translatedText != '') {
             $trans = $response->result->data->translations[0]->translatedText;
         } else {
+            self::exception(serialize($response));
             return null;
         }
 

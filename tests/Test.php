@@ -357,12 +357,16 @@ class Test extends \PHPUnit\Framework\TestCase
                 ),
                 '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.'
             );
+
+            $this->assertSame(__translate_google(null, 'de', 'en', $api_keys__value), null);
+            $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
 
-        $this->assertSame(
-            __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
-            null
-        );
+        try {
+            __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
+        } catch (\Exception $e) {
+            $this->assertSame(strpos($e->getMessage(), 'API key not valid') !== false, true);
+        }
 
         $this->assertSame(
             __translate_microsoft(
@@ -1245,7 +1249,7 @@ baz',
 
         try {
             __exception('foo');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->assertSame('foo', $e->getMessage());
         }
 
