@@ -761,7 +761,8 @@ class __
             false,
             3
         );
-        if ($response->status != 200) {
+        if ($response->status != 200 || self::nx($response->result)) {
+            self::exception(serialize($response));
             return null;
         }
         $trans = self::translate_google_inofficial_parse_result($response->result);

@@ -9,3 +9,5 @@
 /tests/assets/file*.csv
 /.env
 /.phpunit.result.cache
+/node_modules/
+/package-lock.json
