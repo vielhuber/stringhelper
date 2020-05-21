@@ -874,7 +874,7 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 
 // extract all urls of (potentially nested) remote sitemap
-__extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml')
+__extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml') // ['https://vielhuber.de','https://vielhuber.de/impressum/', ...]
 
 // char helpers
 __char_to_int('D') // 4
