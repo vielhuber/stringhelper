@@ -410,6 +410,20 @@ class Test extends \PHPUnit\Framework\TestCase
         );
     }
 
+    function test__extract_urls_from_sitemap()
+    {
+        $urls = __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml');
+        $this->assertSame(count($urls) > 100, true);
+        $this->assertSame(in_array('https://vielhuber.de/impressum/', $urls), true);
+        $this->assertSame(in_array('https://vielhuber.de/blog/google-translation-api-hacking/', $urls), true);
+
+        $this->assertSame(__extract_urls_from_sitemap('https://vielhuber.de/'), []);
+        $this->assertSame(__extract_urls_from_sitemap(null), []);
+        $this->assertSame(__extract_urls_from_sitemap(true), []);
+        $this->assertSame(__extract_urls_from_sitemap(false), []);
+        $this->assertSame(__extract_urls_from_sitemap('foo'), []);
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);

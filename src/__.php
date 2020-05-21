@@ -292,19 +292,19 @@ class __
 
     public static function cookie_set($cookie_name, $cookie_value, $days = 30, $options = [])
     {
-        if (__nx(@$options['secure'])) {
+        if (self::nx(@$options['secure'])) {
             $options['secure'] = false;
         }
-        if (__nx(@$options['httponly'])) {
+        if (self::nx(@$options['httponly'])) {
             $options['httponly'] = false;
         }
-        if (__nx(@$options['expires'])) {
+        if (self::nx(@$options['expires'])) {
             $options['expires'] = time() + 60 * 60 * 24 * $days;
         }
-        if (__nx(@$options['path'])) {
+        if (self::nx(@$options['path'])) {
             $options['path'] = '/';
         }
-        if (__nx(@$options['domain'])) {
+        if (self::nx(@$options['domain'])) {
             $options['domain'] = '';
         }
         if (is_array($cookie_value)) {
@@ -315,7 +315,7 @@ class __
                 $cookie_name,
                 $cookie_value,
                 $options['expires'],
-                $options['path'] . (__x(@$options['samesite']) ? '; samesite=' . $options['samesite'] : ''),
+                $options['path'] . (self::x(@$options['samesite']) ? '; samesite=' . $options['samesite'] : ''),
                 $options['domain'],
                 $options['secure'],
                 $options['httponly']
@@ -535,7 +535,7 @@ class __
         $return = [
             'country_code' => '',
             'area_code' => '',
-            'number' => '',
+            'number' => ''
         ];
 
         if (self::nx($value)) {
@@ -676,14 +676,14 @@ class __
         }
         $minifier = new \TinyHtmlMinifier([
             'collapse_whitespace' => true,
-            'disable_comments' => true,
+            'disable_comments' => true
         ]);
         return $minifier->minify($html);
     }
 
     public static function translate_google($str, $from_lng, $to_lng, $api_key)
     {
-        if (__nx($str)) {
+        if (self::nx($str)) {
             return $str;
         }
         if ($api_key === 'free') {
@@ -701,7 +701,7 @@ class __
                 'source' => $from_lng,
                 'target' => $to_lng,
                 'format' => 'html',
-                'model' => 'nmt',
+                'model' => 'nmt'
             ],
             'POST'
         );
@@ -746,7 +746,7 @@ class __
                 $str,
                 self::translate_google_inofficial_generate_tkk()
             ),
-            'mode' => 1,
+            'mode' => 1
         ];
         $response = self::curl(
             'https://translate.googleapis.com/translate_a/t?' . http_build_query($args),
@@ -755,7 +755,7 @@ class __
             [
                 'User-Agent' =>
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
-                'Content-Length' => strlen('q=' . urlencode($str)),
+                'Content-Length' => strlen('q=' . urlencode($str))
             ],
             false,
             false,
@@ -955,7 +955,7 @@ class __
             [['Text' => $str]],
             'POST',
             [
-                'Ocp-Apim-Subscription-Key' => $api_key,
+                'Ocp-Apim-Subscription-Key' => $api_key
             ],
             false,
             true
@@ -1624,7 +1624,7 @@ class __
                     'last',
                     'week',
                     'ago',
-                    'week',
+                    'week'
                 ];
                 $found = false;
                 foreach ($whitelist as $whitelist__value) {
@@ -1751,7 +1751,7 @@ class __
             'z',
             'c',
             'r',
-            'U',
+            'U'
         ];
         $chars_optional = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '-', '.', ':', '/'];
         $min_one_needed_char = false;
@@ -1982,8 +1982,8 @@ class __
                 stream_context_create([
                     'ssl' => [
                         'verify_peer' => false,
-                        'verify_peer_name' => false,
-                    ],
+                        'verify_peer_name' => false
+                    ]
                 ])
             );
         } else {
@@ -1993,6 +1993,37 @@ class __
             $result = json_decode($result);
         }
         return $result;
+    }
+
+    public static function extract_urls_from_sitemap($url)
+    {
+        $urls = [];
+        if (self::nx($url)) {
+            return $urls;
+        }
+        $data = json_decode(json_encode(@simplexml_load_file($url)), true);
+        if (self::nx($data)) {
+            return $urls;
+        }
+        if (isset($data['url']) && is_array($data['url']) && !empty($data['url'])) {
+            foreach ($data['url'] as $url__value) {
+                if (isset($url__value['loc']) && is_string($url__value['loc']) && $url__value['loc'] != '') {
+                    $urls[] = $url__value['loc'];
+                }
+            }
+        }
+        if (isset($data['sitemap']) && is_array($data['sitemap']) && !empty($data['sitemap'])) {
+            foreach ($data['sitemap'] as $sitemap__value) {
+                if (
+                    isset($sitemap__value['loc']) &&
+                    is_string($sitemap__value['loc']) &&
+                    $sitemap__value['loc'] != ''
+                ) {
+                    $urls = array_merge($urls, self::extract_urls_from_sitemap($sitemap__value['loc']));
+                }
+            }
+        }
+        return $urls;
     }
 
     public static function curl(
@@ -2051,7 +2082,7 @@ class __
         }
 
         /* set proxy */
-        if (__x($proxy)) {
+        if (self::x($proxy)) {
             curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);
             if (mb_strpos($proxy, '@') !== false) {
                 curl_setopt($curl, CURLOPT_PROXYUSERPWD, explode('@', $proxy)[0]);
@@ -2148,7 +2179,7 @@ class __
             'result' => $result,
             'status' => $curl_status,
             'headers' => $headers,
-            'url' => $curl_url,
+            'url' => $curl_url
         ];
     }
 
@@ -2401,7 +2432,7 @@ class __
         }
         $GLOBALS['performance'][] = [
             'message' => $message,
-            'time' => microtime(true),
+            'time' => microtime(true)
         ];
     }
 
@@ -2429,7 +2460,7 @@ class __
         $GLOBALS['performance'] = array_values($GLOBALS['performance']);
         return [
             'message' => $message,
-            'time' => $time,
+            'time' => $time
         ];
     }
 

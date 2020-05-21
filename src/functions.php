@@ -771,6 +771,13 @@ if (!function_exists('__curl')) {
     }
 }
 
+if (!function_exists('__extract_urls_from_sitemap')) {
+    function __extract_urls_from_sitemap(...$args)
+    {
+        return \vielhuber\stringhelper\__::extract_urls_from_sitemap(...$args);
+    }
+}
+
 if (!function_exists('__exception')) {
     function __exception(...$args)
     {

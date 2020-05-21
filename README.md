@@ -395,7 +395,7 @@ __date('2000-01-01', 'd.m.Y') // 01.01.2000
 __date('2001-02-29', 'd.m.Y') // null; returns null if date is invalid, otherwise formatted date
 __date('2000-01-01', '+6 months') // 2000-07-01; allows date modifications
 __date('2000-01-01', 'd.m.Y', '+6 months') // 01.07.2000
-__date('01.01.2000'); // 2000-01-01; also accepts other formats
+__date('01.01.2000') // 2000-01-01; also accepts other formats
 __date('now') // 2019-05-28; also accepts strings
 __date('2019-12-02 12:00:00', 'd.m.Y H:i:s') // 02.12.2019 12:00:00
 __date('2019-12-02T12:00:00', 'd.m.Y H:i:s') // 02.12.2019 12:00:00
@@ -515,8 +515,8 @@ $output = [];
 array_map_deep(
     [1=>[2=>[3=>[4=>[5=>'ok1'],6=>[7=>'ok2']]]],8=>'ok3'],
     function($value,$key,$key_chain) use(&$output) { $output[] = $value.': '.implode('.',$key_chain); }
-);
-echo implode(' - ', $output); // ok1: 1.2.3.4.5, ok2: 1.2.3.6.7, ok3: 8
+)
+echo implode(' - ', $output) // ok1: 1.2.3.4.5, ok2: 1.2.3.6.7, ok3: 8
 
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
@@ -543,7 +543,7 @@ __strip_numeric('the answer is 42.00') // the answer is
 __strip_nondigit('the answer is 42') // 42
 
 // strip non-chars (all except a-z and umlauts)
-__strip_nonchars('the Änswer is 42.-+&!foo'); // the Änswer is foo
+__strip_nonchars('the Änswer is 42.-+&!foo') // the Änswer is foo
 
 // strip whitespace
 __strip_whitespace('the answer is 42') // theansweris42
@@ -582,11 +582,11 @@ __atrim(['foo
 baz']) // ['foo','bar','baz']
 
 // check if string is json
-__string_is_json('[]'); // true
-__string_is_json('{"foo":"bar"}'); // true
-__string_is_json('["foo" => "bar"]'); // false
-__string_is_json([]); // false
-__string_is_json((object)[]); // false
+__string_is_json('[]') // true
+__string_is_json('{"foo":"bar"}') // true
+__string_is_json('["foo" => "bar"]') // false
+__string_is_json([]) // false
+__string_is_json((object)[]) // false
 
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
@@ -594,10 +594,10 @@ __is_serialized('idkfa') // false
 __is_serialized('b:0;') // true
 
 // check if string is base64 encoded
-__is_base64_encoded('dGhpcyBpcyBjb29sIHN0dWZm'); // true
-__is_base64_encoded('#ib3498r'); // false
-__is_base64_encoded('al3Vna##2dqa#Gdm'); // false
-__is_base64_encoded((object)[]); // false
+__is_base64_encoded('dGhpcyBpcyBjb29sIHN0dWZm') // true
+__is_base64_encoded('#ib3498r') // false
+__is_base64_encoded('al3Vna##2dqa#Gdm') // false
+__is_base64_encoded((object)[]) // false
 
 // extract part from string
 __extract('<a href="#foo">bar</a>','href="','">') // #foo
@@ -716,7 +716,7 @@ __inside_out_values([
 // converts recursively nested arrays into objects
 // this is useful when working with state in vue/redux
 // objects are automatically keyed by id (if property "id" is available)
-__arrays_to_objects(['foo' => ['bar','baz'], 'bar' => [(object)['id' => 7, 'name' => 'foo'], (object)['id' => 42, 'name' => 'bar']]]);
+__arrays_to_objects(['foo' => ['bar','baz'], 'bar' => [(object)['id' => 7, 'name' => 'foo'], (object)['id' => 42, 'name' => 'bar']]])
 // { 'foo': { 0: 'bar', 1: 'baz' }, 'bar' => { 7: { 'id': 7, 'name': 'foo' }, 7: { 'id': 42, 'name': 'bar' } } }
 
 // highlight strings
@@ -787,36 +787,36 @@ __urlWithoutArgs() // https://github.com/vielhuber/stringhelper (without get par
 __baseurl() // https://github.com
 
 // compress image
-__image_compress('input.jpg');
-__image_compress('input.jpg', 70);
-__image_compress('input.jpg', 70, 'output.jpg');
+__image_compress('input.jpg')
+__image_compress('input.jpg', 70)
+__image_compress('input.jpg', 70, 'output.jpg')
 
 // fix exif image orientation
-__image_orientate('input.jpg');
-__image_orientate('input.jpg', 70);
-__image_orientate('input.jpg', 70, 'output.jpg');
+__image_orientate('input.jpg')
+__image_orientate('input.jpg', 70)
+__image_orientate('input.jpg', 70, 'output.jpg')
 
 // poor mans encryption (via openssl)
-define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319');  // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
-__decrypt(__encrypt('foo')); // 'foo' (hard, with individual one-time salt)
-__decrypt(__encrypt('bar','known_salt')); // 'bar' (soft, good for searching in dbs)
+define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319')  // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
+__decrypt(__encrypt('foo')) // 'foo' (hard, with individual one-time salt)
+__decrypt(__encrypt('bar','known_salt')) // 'bar' (soft, good for searching in dbs)
 
 // very poor mans encryption (via file system)
-define('ENCRYPTION_FOLDER', $_SERVER['DOCUMENT_ROOT'].'/encryption'); // Deny from all this if this is public(!)
-__decrypt_poor(__encrypt_poor('foo')); // 'foo'
-$token = __encrypt_poor('bar');
-__decrypt_poor($token, true); // 'bar' (one time decryption supported)
-__decrypt_poor($token); // null
+define('ENCRYPTION_FOLDER', $_SERVER['DOCUMENT_ROOT'].'/encryption') // Deny from all this if this is public(!)
+__decrypt_poor(__encrypt_poor('foo')) // 'foo'
+$token = __encrypt_poor('bar')
+__decrypt_poor($token, true) // 'bar' (one time decryption supported)
+__decrypt_poor($token) // null
 
 // list all files in folder (['filename1','filename2',...])
-__files_in_folder(); // current folder
-__files_in_folder('.'); // current folder
-__files_in_folder('foo'); // subfolder
-__files_in_folder('foo', true); // do it recursively
-__files_in_folder('foo', true, ['.git', '.gitkeep']); // do it recursively and exclude some folders/files
+__files_in_folder() // current folder
+__files_in_folder('.') // current folder
+__files_in_folder('foo') // subfolder
+__files_in_folder('foo', true) // do it recursively
+__files_in_folder('foo', true, ['.git', '.gitkeep']) // do it recursively and exclude some folders/files
 
 // recursively remove folder and it's contents
-__rrmdir('foo');
+__rrmdir('foo')
 
 // check if link is external or internal
 __is_external('https://github.com/vielhuber/stringhelper') // false
@@ -842,9 +842,9 @@ __clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
 __clean_up() // same as __clean_up_get() and __clean_up_post()
 
 // do simple get requests (via curl or as a fallback with php file_get_contents [allow_url_fopen=1])
-__fetch('https://httpbin.org/anything'); // { "method": "GET", ... }
-__fetch('https://httpbin.org/anything', 'curl'); // { "method": "GET", ... }
-__fetch('https://httpbin.org/anything', 'php'); // { "method": "GET", ... }
+__fetch('https://httpbin.org/anything') // { "method": "GET", ... }
+__fetch('https://httpbin.org/anything', 'curl') // { "method": "GET", ... }
+__fetch('https://httpbin.org/anything', 'php') // { "method": "GET", ... }
 
 // do curl requests (get/post) and get status code, body and header
 __curl(
@@ -859,19 +859,22 @@ __curl(
     ['foo' => 'bar'], // cookies
     true, // follow redirects
     'username:password@192.168.178.1:8080' // use proxy (username, password and port are optional)
-);
-__curl('https://httpbin.org/anything'); // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ], "url": "..."}
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST'); //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ], "url": "..."}
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']); //  {"status": 200, "result" => { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }, "headers": [ ... ], "url": "..."}
-__curl('https://vielhuber.de'); // json is automatically decoded (but only if the response is of type json)
-__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT'); //  {"status": 200, "result": { "method": "PUT", "data": {"foo": "bar"}, ... }, "headers": [ ... ], "url": "..."}
-__curl('https://httpbin.org/anything', null, 'DELETE'); //  {"status": 200, "result": { "method": "DELETE", "data": "", ... }, "headers": [ ... ], "url": "..."}
+)
+__curl('https://httpbin.org/anything') // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ], "url": "..."}
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST') //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ], "url": "..."}
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', ['Bar' => 'baz']) //  {"status": 200, "result" => { "method": "POST", "headers" = { "Bar": "baz", ... }, ... }, "headers": [ ... ], "url": "..."}
+__curl('https://vielhuber.de') // json is automatically decoded (but only if the response is of type json)
+__curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT') //  {"status": 200, "result": { "method": "PUT", "data": {"foo": "bar"}, ... }, "headers": [ ... ], "url": "..."}
+__curl('https://httpbin.org/anything', null, 'DELETE') //  {"status": 200, "result": { "method": "DELETE", "data": "", ... }, "headers": [ ... ], "url": "..."}
 // __curl also supports both storing and sending cookies (without leaving a trace on the local filesystem)
 // with that you can do cool stuff like scraping the wordpress backend
-__curl('https://vielhuber.de/wp-login.php', ['log' => 'username', 'pwd', 'password'], 'POST', null, true, false);
-__curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true);
+__curl('https://vielhuber.de/wp-login.php', ['log' => 'username', 'pwd', 'password'], 'POST', null, true, false)
+__curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 // you can also hijack the current browser session if logged in
-__curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE);
+__curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
+
+// extract all urls of (potentially nested) remote sitemap
+__extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml')
 
 // char helpers
 __char_to_int('D') // 4
@@ -892,16 +895,16 @@ __line_endings_convert($str, 'windows') // converts string to windows line endin
 __line_endings_weak_equals($str1, $str2) // compares 2 strings ignoring its line endings
 
 // inline text modifications using sed (also works on sed bsd)
-__sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt');
-__sed_prepend('foo', 'file.txt');
-__sed_append('bar', 'file.txt');
+__sed_replace(['foo' => 'bar', 'bar' => 'baz', 'gna' => 'gnarr'], 'file.txt')
+__sed_prepend('foo', 'file.txt')
+__sed_append('bar', 'file.txt')
 
 // show diff of two strings
 __diff('foo
 bar
 baz', 'foo
 barz
-baz');
+baz')
 // 2c2
 // < bar
 // ---
@@ -914,31 +917,31 @@ __csv2array('file.csv') // [['foo', 'bar', 'baz'],['foo', 'bar', 'baz']]
 __csv2array('file.csv', ';', '"') // [['foo', 'bar', 'baz'],['foo', 'bar', 'baz']]
 
 // measure performance
-__log_begin();
+__log_begin()
 for($i = 0; $i < 10000; $i++) { }
-__log_end(); // echos script execution time
+__log_end() // echos script execution time
 
-__log_begin('task');
+__log_begin('task')
 for($i = 0; $i < 10000; $i++) { }
-$data = __log_end('task', false); // ['message' => '...', 'time' => '...'];
+$data = __log_end('task', false) // ['message' => '...', 'time' => '...'];
 
-__log_begin('task');
+__log_begin('task')
 for($i = 0; $i < 10000; $i++) {
-  __log_begin('childtask');
+  __log_begin('childtask')
   for($y = 0; $y < 100; $y++) { }
-  __log_end('childtask');
+  __log_end('childtask')
 }
-__log_end('task');
+__log_end('task')
 
-__log_begin('task1');
-__log_begin('task2');
-__log_end('task1');
-__log_end('task2');
+__log_begin('task1')
+__log_begin('task2')
+__log_end('task1')
+__log_end('task2')
 
-__log_begin();
-__log_begin();
-__log_end(); // this ends latest entry (lifo)
-__log_end();
+__log_begin()
+__log_begin()
+__log_end() // this ends latest entry (lifo)
+__log_end()
 ```
 
 ## usage as class
