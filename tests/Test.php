@@ -417,6 +417,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(in_array('https://vielhuber.de/impressum/', $urls), true);
         $this->assertSame(in_array('https://vielhuber.de/blog/google-translation-api-hacking/', $urls), true);
 
+        $this->assertSame(__extract_urls_from_sitemap('https://vielhuber.de/map.xml'), []);
         $this->assertSame(__extract_urls_from_sitemap('https://vielhuber.de/'), []);
         $this->assertSame(__extract_urls_from_sitemap(null), []);
         $this->assertSame(__extract_urls_from_sitemap(true), []);
