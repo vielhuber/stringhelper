@@ -364,14 +364,14 @@ class Test extends \PHPUnit\Framework\TestCase
 
         try {
             __translate_google('Das ist ein Test', 'dejhfjhfhh', 'enjhgffjhfj', 'free');
-        } catch (\Throwable $e) {
-            $this->assertSame(strpos($e->getMessage(), 'HTTP server (unknown)') !== false, true);
+        } catch (\Throwable $t) {
+            $this->assertSame(strpos($t->getMessage(), 'HTTP server (unknown)') !== false, true);
         }
 
         try {
             __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
-        } catch (\Throwable $e) {
-            $this->assertSame(strpos($e->getMessage(), 'API key not valid') !== false, true);
+        } catch (\Throwable $t) {
+            $this->assertSame(strpos($t->getMessage(), 'API key not valid') !== false, true);
         }
 
         $this->assertSame(
@@ -438,6 +438,18 @@ class Test extends \PHPUnit\Framework\TestCase
         } catch (\Exception $e) {
             $this->assertSame(serialize(['foo' => 'bar']), $e->getMessage());
             $this->assertSame(['foo' => 'bar'], $e->getMessageExtended());
+        }
+        try {
+            __exception('foo');
+        } catch (\Throwable $t) {
+            $this->assertSame('foo', $t->getMessage());
+            $this->assertSame('foo', $t->getMessageExtended());
+        }
+        try {
+            __exception(['foo' => 'bar']);
+        } catch (\Throwable $t) {
+            $this->assertSame(serialize(['foo' => 'bar']), $t->getMessage());
+            $this->assertSame(['foo' => 'bar'], $t->getMessageExtended());
         }
     }
 

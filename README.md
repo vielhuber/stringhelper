@@ -774,16 +774,16 @@ __redirect_to('https://test.de', 7, 'html') // redirect in 7 seconds (via html)
 try {
     __exception('foo');
 }
-catch(\Throwable $e) {
-    $e->getMessage() // 'foo'
-    $e->getMessageExtended() // 'foo'
+catch(\Throwable $t) {
+    $t->getMessage() // 'foo'
+    $t->getMessageExtended() // 'foo'
 }
 try {
     __exception(['foo' => 'bar');
 }
-catch(\Throwable $e) {
-    $e->getMessage() // 'a:1:{s:3:"foo";s:3:"bar";}'
-    $e->getMessageExtended() // ['foo' => 'bar']
+catch(\Throwable $t) {
+    $t->getMessage() // 'a:1:{s:3:"foo";s:3:"bar";}'
+    $t->getMessageExtended() // ['foo' => 'bar']
 }
 
 // success/error return values
