@@ -364,13 +364,13 @@ class Test extends \PHPUnit\Framework\TestCase
 
         try {
             __translate_google('Das ist ein Test', 'dejhfjhfhh', 'enjhgffjhfj', 'free');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->assertSame(strpos($e->getMessage(), 'HTTP server (unknown)') !== false, true);
         }
 
         try {
             __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->assertSame(strpos($e->getMessage(), 'API key not valid') !== false, true);
         }
 
@@ -423,6 +423,22 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__extract_urls_from_sitemap(true), []);
         $this->assertSame(__extract_urls_from_sitemap(false), []);
         $this->assertSame(__extract_urls_from_sitemap('foo'), []);
+    }
+
+    function test__exception()
+    {
+        try {
+            __exception('foo');
+        } catch (\Exception $e) {
+            $this->assertSame('foo', $e->getMessage());
+            $this->assertSame('foo', $e->getMessageExtended());
+        }
+        try {
+            __exception(['foo' => 'bar']);
+        } catch (\Exception $e) {
+            $this->assertSame(serialize(['foo' => 'bar']), $e->getMessage());
+            $this->assertSame(['foo' => 'bar'], $e->getMessageExtended());
+        }
     }
 
     function test__helpers()
@@ -1266,12 +1282,6 @@ baz'
             );
             $response = __curl($wp_url . '/wp-admin/options.php', null, 'GET', null, true); // gets the html code of wp backend
             $this->assertTrue(strpos($response->result, 'show_avatars') !== false);
-        }
-
-        try {
-            __exception('foo');
-        } catch (\Exception $e) {
-            $this->assertSame('foo', $e->getMessage());
         }
 
         $this->assertEquals(__success(), ((object) ['success' => true, 'message' => '']));

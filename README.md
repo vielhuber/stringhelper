@@ -770,9 +770,21 @@ __redirect_to('https://test.de', 301) // with "Moved permanently"
 __redirect_to('https://test.de', 302) // with "Moved temporarily"
 __redirect_to('https://test.de', 7, 'html') // redirect in 7 seconds (via html)
 
-// throw exceptions (of type Exception)
-try { __exception('foo'); }
-catch(Exception $e) { $e->getMessage() // 'foo' }
+// throw exceptions (with arrays as messages)
+try {
+    __exception('foo');
+}
+catch(\Throwable $e) {
+    $e->getMessage() // 'foo'
+    $e->getMessageExtended() // 'foo'
+}
+try {
+    __exception(['foo' => 'bar');
+}
+catch(\Throwable $e) {
+    $e->getMessage() // 'a:1:{s:3:"foo";s:3:"bar";}'
+    $e->getMessageExtended() // ['foo' => 'bar']
+}
 
 // success/error return values
 __success() // { success: true, message: '' }

@@ -1062,6 +1062,28 @@ if (!class_exists('__empty_helper')) {
     }
 }
 
+if (!class_exists('__custom_exception')) {
+    class __custom_exception extends \Exception
+    {
+        public function __construct($message = null, $code = 0, Exception $previous = null)
+        {
+            if (!is_string($message)) {
+                $message = serialize($message);
+            }
+            parent::__construct($message, $code, $previous);
+        }
+
+        public function getMessageExtended()
+        {
+            $message = $this->getMessage();
+            if (\vielhuber\stringhelper\__::is_serialized($message)) {
+                $message = unserialize($message);
+            }
+            return $message;
+        }
+    }
+}
+
 /* LEGACY CODE */
 
 if (!function_exists('__redirect')) {

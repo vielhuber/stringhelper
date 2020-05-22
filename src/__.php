@@ -709,7 +709,7 @@ class __
         if ($response->status == 200 && @$response->result->data->translations[0]->translatedText != '') {
             $trans = $response->result->data->translations[0]->translatedText;
         } else {
-            self::exception(serialize($response));
+            self::exception($response);
             return null;
         }
 
@@ -762,7 +762,7 @@ class __
             3
         );
         if ($response->status != 200 || self::nx($response->result)) {
-            self::exception(serialize($response));
+            self::exception($response);
             return null;
         }
         $trans = self::translate_google_inofficial_parse_result($response->result);
@@ -2185,7 +2185,7 @@ class __
 
     public static function exception($message = '')
     {
-        throw new \Exception($message);
+        throw new \__custom_exception($message);
     }
 
     public static function success($message = '')
