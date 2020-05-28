@@ -2026,6 +2026,29 @@ class __
         return $urls;
     }
 
+    public static function extract_title_from_url($url)
+    {
+        if (!__validate_url($url)) {
+            return '';
+        }
+        $str = @file_get_contents($url);
+        if (strlen($str) > 0) {
+            $str = trim(preg_replace('/\s+/', ' ', $str));
+            preg_match('/\<title\>(.*)\<\/title\>/i', $str, $title);
+            return htmlspecialchars_decode($title[1]);
+        }
+        return '';
+    }
+
+    public static function extract_meta_desc_from_url($url)
+    {
+        if (!__validate_url($url)) {
+            return '';
+        }
+        $tags = get_meta_tags($url);
+        return @$tags['description'] ? htmlspecialchars_decode($tags['description']) : '';
+    }
+
     public static function curl(
         $url = '',
         $data = null,

@@ -888,6 +888,10 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, fa
 // extract all urls of (potentially nested) remote sitemap
 __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml') // ['https://vielhuber.de','https://vielhuber.de/impressum/', ...]
 
+// get meta tags from url
+__extract_title_from_url('https://vielhuber.de') // David Vielhuber > Full-Stack Developer aus München
+__extract_meta_desc_from_url('https://vielhuber.de') // 🌀 Vielhuber David ist ein Web-Geek mit einem Faible für schönes Design, einer Prise Perfektionismus und Augen für klare Konturen. 🌀
+
 // char helpers
 __char_to_int('D') // 4
 __int_to_char(4) // 'D'

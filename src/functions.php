@@ -778,6 +778,20 @@ if (!function_exists('__extract_urls_from_sitemap')) {
     }
 }
 
+if (!function_exists('__extract_title_from_url')) {
+    function __extract_title_from_url(...$args)
+    {
+        return \vielhuber\stringhelper\__::extract_title_from_url(...$args);
+    }
+}
+
+if (!function_exists('__extract_meta_desc_from_url')) {
+    function __extract_meta_desc_from_url(...$args)
+    {
+        return \vielhuber\stringhelper\__::extract_meta_desc_from_url(...$args);
+    }
+}
+
 if (!function_exists('__exception')) {
     function __exception(...$args)
     {

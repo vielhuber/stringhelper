@@ -425,6 +425,38 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__extract_urls_from_sitemap('foo'), []);
     }
 
+    function test__extract_title_from_url()
+    {
+        $this->assertSame(
+            __extract_title_from_url('https://vielhuber.de'),
+            'David Vielhuber > Full-Stack Developer aus München'
+        );
+        $this->assertSame(
+            __extract_title_from_url('https://vielhuber.de/'),
+            'David Vielhuber > Full-Stack Developer aus München'
+        );
+        $this->assertSame(__extract_title_from_url(null), '');
+        $this->assertSame(__extract_title_from_url(true), '');
+        $this->assertSame(__extract_title_from_url(false), '');
+        $this->assertSame(__extract_title_from_url('foo'), '');
+    }
+
+    function test__extract_meta_desc_from_url()
+    {
+        $this->assertSame(
+            __extract_meta_desc_from_url('https://vielhuber.de'),
+            '🌀 Vielhuber David ist ein Web-Geek mit einem Faible für schönes Design, einer Prise Perfektionismus und Augen für klare Konturen. 🌀'
+        );
+        $this->assertSame(
+            __extract_meta_desc_from_url('https://vielhuber.de/'),
+            '🌀 Vielhuber David ist ein Web-Geek mit einem Faible für schönes Design, einer Prise Perfektionismus und Augen für klare Konturen. 🌀'
+        );
+        $this->assertSame(__extract_meta_desc_from_url(null), '');
+        $this->assertSame(__extract_meta_desc_from_url(true), '');
+        $this->assertSame(__extract_meta_desc_from_url(false), '');
+        $this->assertSame(__extract_meta_desc_from_url('foo'), '');
+    }
+
     function test__exception()
     {
         try {
