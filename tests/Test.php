@@ -515,6 +515,11 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
     }
 
+    function test__referer()
+    {
+        $this->assertSame(__referer(), 'https://google.de/');
+    }
+
     function test__array_walk_recursive_all()
     {
         $arr = ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz']];

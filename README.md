@@ -890,6 +890,9 @@ __clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
 __clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
 __clean_up() // same as __clean_up_get() and __clean_up_post()
 
+// get referrer
+__referer() // $_SERVER['HTTP_REFERER'], if not available null
+
 // do simple get requests (via curl or as a fallback with php file_get_contents [allow_url_fopen=1])
 __fetch('https://httpbin.org/anything') // { "method": "GET", ... }
 __fetch('https://httpbin.org/anything', 'curl') // { "method": "GET", ... }

@@ -575,6 +575,13 @@ if (!function_exists('__highlight')) {
     }
 }
 
+if (!function_exists('__referer')) {
+    function __referer(...$args)
+    {
+        return \vielhuber\stringhelper\__::referer(...$args);
+    }
+}
+
 if (!function_exists('__clean_up_get')) {
     function __clean_up_get(...$args)
     {

@@ -1510,6 +1510,14 @@ class __
         return $string;
     }
 
+    public static function referer()
+    {
+        if (__nx(@$_SERVER['HTTP_REFERER'])) {
+            return null;
+        }
+        return $_SERVER['HTTP_REFERER'];
+    }
+
     public static function clean_up_get()
     {
         if (self::x(@$_GET)) {

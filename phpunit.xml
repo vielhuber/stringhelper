@@ -16,5 +16,6 @@
         <server name="HTTPS" value="on" />
         <server name="HTTP_HOST" value="github.com" />
         <server name="REQUEST_URI" value="/vielhuber/stringhelper" />
+        <server name="HTTP_REFERER" value="https://google.de/" />
     </php>
 </phpunit>
