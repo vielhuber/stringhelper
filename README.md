@@ -172,9 +172,9 @@ foreach( __e(@$array) as $array__key=>$array__value)
 
 A short note on the usage of @: In this concept we use @-operator that hides errors. We are aware of its potential misuse and also of its benefits.
 
-When using @\$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. In both cases, we intentionally prevent the parser from stopping and catch the resulting null value. Be aware: If $a is a string, @\$a['undefined'] evaluates to $a[0] since php coerces 'undefined' to 0 and therefore exists.
+Be careful when using @\$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. In both cases, we intentionally prevent the parser from stopping and catch the resulting null value. Be aware: If $a is a string, @\$a['undefined'] evaluates to $a[0] since php coerces 'undefined' to 0 and therefore exists.
 
-General rule of thumb: Don't use the operator before function calls (@\_\_x(\$a['undefined']).
+Another general rule of thumb: Don't use the operator before function calls (@\_\_x(\$a['undefined']).
 
 ### classes
 
