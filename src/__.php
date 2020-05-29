@@ -1147,8 +1147,9 @@ class __
             foreach ($array as $array__key => $array__value) {
                 $key_chain_this = $key_chain;
                 $key_chain_this[] = $array__key;
-                call_user_func_array($callback, [&$array__value, $array__key, $key_chain_this]);
-                if (is_array($array__value)) {
+                if (!is_array($array__value)) {
+                    call_user_func_array($callback, [&$array__value, $array__key, $key_chain_this]);
+                } else {
                     self::array_walk_recursive_all($array__value, $callback, $array__key, $key_chain_this);
                     $array[$array__key] = $array__value;
                 }

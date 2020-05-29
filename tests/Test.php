@@ -524,6 +524,12 @@ class Test extends \PHPUnit\Framework\TestCase
             }
         });
         $this->assertSame($arr, ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz2']]);
+        $counter = 0;
+        $arr = ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz']];
+        __array_walk_recursive_all($arr, function (&$value, $key, $key_chain) use (&$counter) {
+            $counter++;
+        });
+        $this->assertSame($counter, 5);
     }
 
     function test__array_map_deep_all()
