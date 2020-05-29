@@ -792,15 +792,35 @@ try {
     __exception('foo');
 }
 catch(\Throwable $t) {
-    $t->getMessage() // 'foo'
-    $t->getMessageExtended() // 'foo'
+     __exception_message($t) // 'foo'
 }
 try {
-    __exception(['foo' => 'bar');
+    __exception(['foo' => 'bar']);
 }
 catch(\Throwable $t) {
-    $t->getMessage() // 'a:1:{s:3:"foo";s:3:"bar";}'
-    $t->getMessageExtended() // ['foo' => 'bar']
+    __exception_message($t) // ['foo' => 'bar']
+}
+try {
+    throw new \Exception('bar');
+}
+catch(\Throwable $t) {
+    __exception_message($t) // 'bar'
+}
+// you also catch these specific exceptions only
+try {
+    __exception('foo');
+}
+catch(\ExtendedException $t) {
+    __exception_message($t) // 'foo'
+}
+try {
+    throw new \Exception('bar');
+}
+catch(\ExceptionExtended $t) {
+    // does not trigger
+}
+catch(\Exception $t) {
+    // triggers
 }
 
 // success/error return values

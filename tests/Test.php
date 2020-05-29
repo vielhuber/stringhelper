@@ -553,27 +553,30 @@ class Test extends \PHPUnit\Framework\TestCase
     {
         try {
             __exception('foo');
-        } catch (\Exception $e) {
-            $this->assertSame('foo', $e->getMessage());
-            $this->assertSame('foo', $e->getMessageExtended());
+        } catch (\Throwable $t) {
+            $this->assertSame(__exception_message($t), 'foo');
         }
         try {
             __exception(['foo' => 'bar']);
-        } catch (\Exception $e) {
-            $this->assertSame(serialize(['foo' => 'bar']), $e->getMessage());
-            $this->assertSame(['foo' => 'bar'], $e->getMessageExtended());
+        } catch (\Throwable $t) {
+            $this->assertSame(__exception_message($t), ['foo' => 'bar']);
+        }
+        try {
+            throw new \Exception('bar');
+        } catch (\Throwable $t) {
+            $this->assertSame(__exception_message($t), 'bar');
         }
         try {
             __exception('foo');
-        } catch (\Throwable $t) {
-            $this->assertSame('foo', $t->getMessage());
-            $this->assertSame('foo', $t->getMessageExtended());
+        } catch (\ExtendedException $t) {
+            $this->assertSame(__exception_message($t), 'foo');
         }
         try {
-            __exception(['foo' => 'bar']);
+            throw new \Exception('bar');
+        } catch (\ExceptionExtended $t) {
+            $this->assertSame(true, false);
         } catch (\Throwable $t) {
-            $this->assertSame(serialize(['foo' => 'bar']), $t->getMessage());
-            $this->assertSame(['foo' => 'bar'], $t->getMessageExtended());
+            $this->assertSame(true, true);
         }
     }
 

@@ -813,6 +813,13 @@ if (!function_exists('__exception')) {
     }
 }
 
+if (!function_exists('__exception_message')) {
+    function __exception_message(...$args)
+    {
+        return \vielhuber\stringhelper\__::exception_message(...$args);
+    }
+}
+
 if (!function_exists('__success')) {
     function __success(...$args)
     {
@@ -1090,8 +1097,8 @@ if (!class_exists('__empty_helper')) {
     }
 }
 
-if (!class_exists('__custom_exception')) {
-    class __custom_exception extends \Exception
+if (!class_exists('ExtendedException')) {
+    class ExtendedException extends \Exception
     {
         public function __construct($message = null, $code = 0, Exception $previous = null)
         {
@@ -1099,15 +1106,6 @@ if (!class_exists('__custom_exception')) {
                 $message = serialize($message);
             }
             parent::__construct($message, $code, $previous);
-        }
-
-        public function getMessageExtended()
-        {
-            $message = $this->getMessage();
-            if (\vielhuber\stringhelper\__::is_serialized($message)) {
-                $message = unserialize($message);
-            }
-            return $message;
         }
     }
 }

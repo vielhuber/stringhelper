@@ -2249,7 +2249,16 @@ class __
 
     public static function exception($message = '')
     {
-        throw new \__custom_exception($message);
+        throw new \ExtendedException($message);
+    }
+
+    public static function exception_message($t)
+    {
+        $message = $t->getMessage();
+        if (self::is_serialized($message)) {
+            $message = unserialize($message);
+        }
+        return $message;
     }
 
     public static function success($message = '')
