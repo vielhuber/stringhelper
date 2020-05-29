@@ -500,7 +500,7 @@ __array_group_by($arr, function($v) { return $v['a']; }, function($v) { return $
 __array_unique([1,2,2]) // [1,2]
 __array_unique([['foo'=>'bar'],['bar'=>'baz'],['foo'=>'bar']]) // [['foo'=>'bar'],['bar'=>'baz']]
 
-// recursively change values of array of arrays
+// recursively change values of array of arrays (only leaf nodes)
 __array_map_deep(['foo','bar'=>['baz','gnarr']], function($a) { return $a.'!'; }) // ['foo!','bar'=>['baz!','gnarr!']]
 __array_map_deep([[[[[[[[[[[[[[[true]]]]]]]]]]]]]]], function($a) { return !$a; }) // [[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]
 __array_map_deep(
@@ -517,6 +517,14 @@ array_map_deep(
     function($value,$key,$key_chain) use(&$output) { $output[] = $value.': '.implode('.',$key_chain); }
 )
 echo implode(' - ', $output) // ok1: 1.2.3.4.5, ok2: 1.2.3.6.7, ok3: 8
+
+// recursively change values of array of arrays (with leaf nodes; be careful: don't change the array structure)
+__array_map_deep_all(['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz']], function($value, $key, $key_chain) {
+    if (is_array($value) && array_key_exists('baz', $value) && $value['baz'] === 'gnarr') {
+        $value['gnarr'] = 'baz2';
+    }
+    return $value;
+}) // ['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz2']]
 
 // ask question on cli
 $answer = __ask('What\'s your name?') // David

@@ -457,6 +457,81 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__extract_meta_desc_from_url('foo'), '');
     }
 
+    function test__array_map_deep()
+    {
+        $this->assertSame(
+            __array_map_deep(['foo', 'bar' => ['baz', 'gnarr']], function ($a) {
+                return $a . '!';
+            }),
+            ['foo!', 'bar' => ['baz!', 'gnarr!']]
+        );
+        $this->assertSame(
+            __array_map_deep(['foo', 'bar' => ['baz', ['1', '2']]], function ($a) {
+                return $a . '!';
+            }),
+            ['foo!', 'bar' => ['baz!', ['1!', '2!']]]
+        );
+        $this->assertSame(
+            __array_map_deep(null, function ($a) {
+                return $a . '!';
+            }),
+            '!'
+        );
+        $this->assertSame(
+            __array_map_deep(true, function ($a) {
+                return !$a;
+            }),
+            false
+        );
+        $this->assertSame(
+            __array_map_deep([[[[[[[[[[[[[[[[[[[[true]]]]]]]]]]]]]]]]]]]], function ($a) {
+                return !$a;
+            }),
+            [[[[[[[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]]]]]]
+        );
+        $this->assertSame(
+            __array_map_deep([[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok']]]]]]]]]]]]]]]]]]]], function ($value, $key) {
+                return $key === 42 ? $value : $value . '!';
+            }),
+            [[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok!']]]]]]]]]]]]]]]]]]]]
+        );
+        $this->assertSame(
+            __array_map_deep(
+                ['foo' => ['bar' => 'baz'], 'bar' => ['baz' => 'gnarr'], 'gnarr' => ['foo' => 'gnaz']],
+                function ($value, $key, $key_chain) {
+                    return in_array('bar', $key_chain) ? $value . '!' : $value;
+                }
+            ),
+            ['foo' => ['bar' => 'baz!'], 'bar' => ['baz' => 'gnarr!'], 'gnarr' => ['foo' => 'gnaz']]
+        );
+        $output = [];
+        __array_map_deep([1 => [2 => [3 => [4 => [5 => 'ok1'], 6 => [7 => 'ok2']]]], 8 => 'ok3'], function (
+            $value,
+            $key,
+            $key_chain
+        ) use (&$output) {
+            $output[] = $value . ': ' . implode('.', $key_chain);
+        });
+        $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
+    }
+
+    function test__array_map_deep_all()
+    {
+        $this->assertSame(
+            __array_map_deep_all(['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz']], function (
+                $value,
+                $key,
+                $key_chain
+            ) {
+                if (is_array($value) && array_key_exists('baz', $value) && $value['baz'] === 'gnarr') {
+                    $value['gnarr'] = 'baz2';
+                }
+                return $value;
+            }),
+            ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz2']]
+        );
+    }
+
     function test__exception()
     {
         try {
@@ -846,61 +921,6 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__array_unique(0), 0);
         $this->assertSame(__array_unique(true), true);
         $this->assertSame(__array_unique(false), false);
-
-        $this->assertSame(
-            __array_map_deep(['foo', 'bar' => ['baz', 'gnarr']], function ($a) {
-                return $a . '!';
-            }),
-            ['foo!', 'bar' => ['baz!', 'gnarr!']]
-        );
-        $this->assertSame(
-            __array_map_deep(['foo', 'bar' => ['baz', ['1', '2']]], function ($a) {
-                return $a . '!';
-            }),
-            ['foo!', 'bar' => ['baz!', ['1!', '2!']]]
-        );
-        $this->assertSame(
-            __array_map_deep(null, function ($a) {
-                return $a . '!';
-            }),
-            '!'
-        );
-        $this->assertSame(
-            __array_map_deep(true, function ($a) {
-                return !$a;
-            }),
-            false
-        );
-        $this->assertSame(
-            __array_map_deep([[[[[[[[[[[[[[[[[[[[true]]]]]]]]]]]]]]]]]]]], function ($a) {
-                return !$a;
-            }),
-            [[[[[[[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]]]]]]
-        );
-        $this->assertSame(
-            __array_map_deep([[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok']]]]]]]]]]]]]]]]]]]], function ($value, $key) {
-                return $key === 42 ? $value : $value . '!';
-            }),
-            [[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok!']]]]]]]]]]]]]]]]]]]]
-        );
-        $this->assertSame(
-            __array_map_deep(
-                ['foo' => ['bar' => 'baz'], 'bar' => ['baz' => 'gnarr'], 'gnarr' => ['foo' => 'gnaz']],
-                function ($value, $key, $key_chain) {
-                    return in_array('bar', $key_chain) ? $value . '!' : $value;
-                }
-            ),
-            ['foo' => ['bar' => 'baz!'], 'bar' => ['baz' => 'gnarr!'], 'gnarr' => ['foo' => 'gnaz']]
-        );
-        $output = [];
-        __array_map_deep([1 => [2 => [3 => [4 => [5 => 'ok1'], 6 => [7 => 'ok2']]]], 8 => 'ok3'], function (
-            $value,
-            $key,
-            $key_chain
-        ) use (&$output) {
-            $output[] = $value . ': ' . implode('.', $key_chain);
-        });
-        $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
 
         $this->assertSame(__uuid() === __uuid(), false);
         $this->assertSame(strlen(__uuid()) === 36, true);
