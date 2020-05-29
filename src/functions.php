@@ -253,6 +253,13 @@ if (!function_exists('__d')) {
     }
 }
 
+if (!function_exists('__anonymize_ip')) {
+    function __anonymize_ip(...$args)
+    {
+        return \vielhuber\stringhelper\__::anonymize_ip(...$args);
+    }
+}
+
 if (!function_exists('__validate_date')) {
     function __validate_date(...$args)
     {

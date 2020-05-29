@@ -504,6 +504,17 @@ class __
         return false;
     }
 
+    public static function anonymize_ip($value)
+    {
+        if (self::nx($value)) {
+            return $value;
+        }
+        if (!is_string($value)) {
+            return $value;
+        }
+        return preg_replace(['/\.\d*$/', '/[\da-f]*:[\da-f]*$/'], ['.XXX', 'XXXX:XXXX'], $value);
+    }
+
     public static function validate_url($value)
     {
         if (self::nx(@$value)) {

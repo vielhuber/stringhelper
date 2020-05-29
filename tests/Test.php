@@ -515,6 +515,27 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
     }
 
+    function test__anonymize_ip()
+    {
+        $this->assertSame(__anonymize_ip('207.142.131.005'), '207.142.131.XXX');
+        $this->assertSame(
+            __anonymize_ip('2001:0db8:0000:08d3:0000:8a2e:0070:7344'),
+            '2001:0db8:0000:08d3:0000:8a2e:XXXX:XXXX'
+        );
+        $this->assertSame(
+            __anonymize_ip('2001:0db8:0000:08d3:0000:8a2e:0070:734a'),
+            '2001:0db8:0000:08d3:0000:8a2e:XXXX:XXXX'
+        );
+        $this->assertSame(__anonymize_ip('207.142.131.5'), '207.142.131.XXX');
+        $this->assertSame(__anonymize_ip('2001:0db8::8d3::8a2e:7:7344'), '2001:0db8::8d3::8a2e:XXXX:XXXX');
+        $this->assertSame(__anonymize_ip('::1'), ':XXXX:XXXX');
+        $this->assertSame(__anonymize_ip('127.0.0.1'), '127.0.0.XXX');
+        $this->assertSame(__anonymize_ip(''), '');
+        $this->assertSame(__anonymize_ip(true), true);
+        $this->assertSame(__anonymize_ip(false), false);
+        $this->assertSame(__anonymize_ip(null), null);
+    }
+
     function test__referer()
     {
         $this->assertSame(__referer(), 'https://google.de/');
