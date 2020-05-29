@@ -442,6 +442,13 @@ if (!function_exists('__array_map_deep_all')) {
     }
 }
 
+if (!function_exists('__array_walk_recursive_all')) {
+    function __array_walk_recursive_all(&$array, $callback, $array__key = null, $key_chain = [])
+    {
+        \vielhuber\stringhelper\__::array_walk_recursive_all($array, $callback, $array__key, $key_chain);
+    }
+}
+
 if (!function_exists('__ask')) {
     function __ask(...$args)
     {

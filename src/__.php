@@ -1140,6 +1140,22 @@ class __
         return $new;
     }
 
+    public static function array_walk_recursive_all(&$array, $callback, $array__key = null, $key_chain = [])
+    {
+        call_user_func_array($callback, [&$array, $array__key, $key_chain]);
+        if (is_array($array)) {
+            foreach ($array as $array__key => $array__value) {
+                $key_chain_this = $key_chain;
+                $key_chain_this[] = $array__key;
+                call_user_func_array($callback, [&$array__value, $array__key, $key_chain_this]);
+                if (is_array($array__value)) {
+                    self::array_walk_recursive_all($array__value, $callback, $array__key, $key_chain_this);
+                    $array[$array__key] = $array__value;
+                }
+            }
+        }
+    }
+
     public static function array_map_deep_all($array, $callback, $array__key = null, $key_chain = [])
     {
         $new = [];

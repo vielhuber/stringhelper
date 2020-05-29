@@ -515,6 +515,17 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
     }
 
+    function test__array_walk_recursive_all()
+    {
+        $arr = ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz']];
+        __array_walk_recursive_all($arr, function (&$value, $key, $key_chain) {
+            if (is_array($value) && array_key_exists('baz', $value) && $value['baz'] === 'gnarr') {
+                $value['gnarr'] = 'baz2';
+            }
+        });
+        $this->assertSame($arr, ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz2']]);
+    }
+
     function test__array_map_deep_all()
     {
         $this->assertSame(
