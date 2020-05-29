@@ -533,7 +533,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__anonymize_ip(''), '');
         $this->assertSame(__anonymize_ip(true), true);
         $this->assertSame(__anonymize_ip(false), false);
-        $this->assertSame(__anonymize_ip(null), null);
+        $this->assertSame(__anonymize_ip(), '192.168.178.XXX');
+        $this->assertSame(__anonymize_ip(null), '192.168.178.XXX');
     }
 
     function test__referer()

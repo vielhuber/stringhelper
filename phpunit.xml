@@ -17,5 +17,6 @@
         <server name="HTTP_HOST" value="github.com" />
         <server name="REQUEST_URI" value="/vielhuber/stringhelper" />
         <server name="HTTP_REFERER" value="https://google.de/" />
+        <server name="REMOTE_ADDR" value="192.168.178.1" />
     </php>
 </phpunit>

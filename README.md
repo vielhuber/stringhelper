@@ -369,6 +369,7 @@ __cookie_delete('cookie_name')
 // anonymize ipv4/ipv6 addresses
 __anonymize_ip('207.142.131.005') // 207.142.131.XXX
 __anonymize_ip('001:0db8:0000:08d3:0000:8a2e:0070:7344') // 2001:0db8:0000:08d3:0000:8a2e:XXXX:XXXX
+__anonymize_ip() // anonymizes ip from $_SERVER['REMOTE_ADDR']
 
 // checks if string is a valid url (also works with umlauts and without external lib like idna)
 __validate_url('https://vielhuber.de') // true

@@ -504,8 +504,11 @@ class __
         return false;
     }
 
-    public static function anonymize_ip($value)
+    public static function anonymize_ip($value = null)
     {
+        if ($value === null) {
+            $value = @$_SERVER['REMOTE_ADDR'];
+        }
         if (self::nx($value)) {
             return $value;
         }
