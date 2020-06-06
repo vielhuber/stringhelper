@@ -2064,6 +2064,10 @@ class __
         if (self::nx($url)) {
             return $urls;
         }
+        // prevent cached sitemaps
+        if (strpos($url, '?') === false) {
+            $url .= '?no_cache=1';
+        }
         $data = json_decode(json_encode(@simplexml_load_file($url)), true);
         if (self::nx($data)) {
             return $urls;
