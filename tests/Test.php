@@ -421,6 +421,10 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertEquals(__decode_data(__encode_data(true)), true);
         $this->assertEquals(__decode_data(__encode_data(false)), false);
         $this->assertEquals(__decode_data(__encode_data(0)), 0);
+        $this->assertEquals(__decode_data(__encode_data('foo')), 'foo');
+        $this->assertEquals(__decode_data(__encode_data(['foo'])), ['foo']);
+        $this->assertEquals(__decode_data(__encode_data(['foo', 'bar'])), ['foo', 'bar']);
+        $this->assertEquals(__decode_data(__encode_data('foo', 'bar')), ['foo', 'bar']);
     }
 
     function test__extract_urls_from_sitemap()

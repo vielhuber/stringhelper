@@ -547,6 +547,9 @@ $answer = __ask('What\'s your name?') // David
 $data = ['foo' => 'bar', 'bar' => 'baz'];
 $str = __encode_data($data) // 'YToyOntzOjM6ImZvbyI7czozOiJiYXIiO3M6MzoiYmFyIjtzOjM6ImJheiI7fQ=='
 __decode_data($str) // ['foo' => 'bar', 'bar' => 'baz']
+// support for multiple arguments
+__decode_data(__encode_data(['foo', 'bar'])) // ['foo', 'bar']);
+__decode_data(__encode_data('foo', 'bar')) // ['foo', 'bar']);
 // this can be useful to enrich form fields with additional data
 echo '<input name="foo['.__encode_data($data).']" value="bar" />';
 __decode_data(array_key_first($_POST['foo'])) // ['foo' => 'bar', 'bar' => 'baz']

@@ -1195,8 +1195,11 @@ class __
         return $new;
     }
 
-    public static function encode_data($data)
+    public static function encode_data(...$data)
     {
+        if (count($data) === 1) {
+            $data = $data[0];
+        }
         return base64_encode(serialize($data));
     }
 
