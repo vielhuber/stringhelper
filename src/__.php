@@ -1195,6 +1195,16 @@ class __
         return $new;
     }
 
+    public static function encode_data($data)
+    {
+        return base64_encode(serialize($data));
+    }
+
+    public static function decode_data($str)
+    {
+        return unserialize(base64_decode($str));
+    }
+
     public static function ask($question)
     {
         echo $question;

@@ -543,6 +543,14 @@ $arr // ['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz2']]
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
 
+// encode arbitrary data to string
+$data = ['foo' => 'bar', 'bar' => 'baz'];
+$str = __encode_data($data) // 'YToyOntzOjM6ImZvbyI7czozOiJiYXIiO3M6MzoiYmFyIjtzOjM6ImJheiI7fQ=='
+__decode_data($str) // ['foo' => 'bar', 'bar' => 'baz']
+// this can be useful to enrich form fields with additional data
+echo '<input name="foo['.__encode_data($data).']" value="bar" />';
+__decode_data(array_key_first($_POST['foo'])) // ['foo' => 'bar', 'bar' => 'baz']
+
 // generate uuid/guid v4
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
 

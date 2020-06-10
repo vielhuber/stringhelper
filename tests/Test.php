@@ -410,6 +410,19 @@ class Test extends \PHPUnit\Framework\TestCase
         );
     }
 
+    function test_encode_decode_string()
+    {
+        $data = ['foo' => 'bar', 'bar' => 'baz'];
+        $this->assertEquals(__encode_data($data), 'YToyOntzOjM6ImZvbyI7czozOiJiYXIiO3M6MzoiYmFyIjtzOjM6ImJheiI7fQ==');
+        $this->assertEquals(__decode_data(__encode_data($data)), $data);
+        $this->assertEquals(__decode_data(__encode_data([])), []);
+        $this->assertEquals(__decode_data(__encode_data((object) $data)), (object) $data);
+        $this->assertEquals(__decode_data(__encode_data(null)), null);
+        $this->assertEquals(__decode_data(__encode_data(true)), true);
+        $this->assertEquals(__decode_data(__encode_data(false)), false);
+        $this->assertEquals(__decode_data(__encode_data(0)), 0);
+    }
+
     function test__extract_urls_from_sitemap()
     {
         $urls = __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml');

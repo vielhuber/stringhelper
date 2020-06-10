@@ -456,6 +456,20 @@ if (!function_exists('__array_walk_recursive_all')) {
     }
 }
 
+if (!function_exists('__encode_data')) {
+    function __encode_data(...$args)
+    {
+        return \vielhuber\stringhelper\__::encode_data(...$args);
+    }
+}
+
+if (!function_exists('__decode_data')) {
+    function __decode_data(...$args)
+    {
+        return \vielhuber\stringhelper\__::decode_data(...$args);
+    }
+}
+
 if (!function_exists('__ask')) {
     function __ask(...$args)
     {
