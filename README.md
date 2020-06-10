@@ -550,6 +550,9 @@ __decode_data($str) // ['foo' => 'bar', 'bar' => 'baz']
 // this can be useful to enrich form fields with additional data
 echo '<input name="foo['.__encode_data($data).']" value="bar" />';
 __decode_data(array_key_first($_POST['foo'])) // ['foo' => 'bar', 'bar' => 'baz']
+// this can also be useful to create a poor mans index
+foreach($a as $a__value) { $index[__encode_data($a__value['foo'],$a__value['bar'])] = null; }
+foreach($b as $b__value) { if(array_key_exists(__encode_data($b__value['foo'],$b__value['bar']),$index)) { /* ... */ } }
 
 // generate uuid/guid v4
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
