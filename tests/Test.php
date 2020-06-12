@@ -624,6 +624,59 @@ class Test extends \PHPUnit\Framework\TestCase
         }
     }
 
+    function test__array_multisort()
+    {
+        $arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
+        $this->assertSame($arr, [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]);
+        usort(
+            $arr,
+            __array_multisort(function ($v) {
+                return [[$v['a'], 'asc'], [$v['b'], 'asc']];
+            })
+        );
+        $this->assertSame($arr, [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]);
+        $arr = [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc'], ['c', 'asc']]));
+        $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
+        usort($arr, __array_multisort([['a', 'desc'], ['b', 'desc'], ['c', 'asc']]));
+        $this->assertSame($arr, [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']]);
+        usort($arr, __array_multisort([['a', 'desc'], ['b', 'asc'], ['c', 'desc']]));
+        $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
+        $arr = [
+            ['id' => 1, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 2, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
+        ];
+        usort($arr, __array_multisort([['pos', 'asc'], ['date', 'asc'], ['created_at', 'asc'], ['id', 'asc']]));
+        $this->assertEquals($arr, [
+            ['id' => 1, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 2, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
+            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
+        ]);
+        $arr = [['foo' => 'baz', 'bar' => 'baz'], ['foo' => 'baz', 'bar' => 'gnarr']];
+        usort($arr, __array_multisort([['foo', 'desc'], ['bar', 'desc']]));
+        $this->assertEquals($arr, [['foo' => 'baz', 'bar' => 'gnarr'], ['foo' => 'baz', 'bar' => 'baz']]);
+        $arr = [['a' => __empty(), 'b' => 42], ['a' => 13, 'b' => 19]];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
+        $this->assertEquals($arr, [['a' => __empty(), 'b' => 42], ['a' => 13, 'b' => 19]]);
+        $arr = [['a' => null, 'b' => 42], ['a' => 13, 'b' => 19]];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
+        $this->assertEquals($arr, [['a' => null, 'b' => 42], ['a' => 13, 'b' => 19]]);
+        $arr = [['a' => 13, 'b' => 19], ['a' => null, 'b' => 42]];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
+        $this->assertEquals($arr, [['a' => null, 'b' => 42], ['a' => 13, 'b' => 19]]);
+        $arr = [['a' => 13, 'b' => 19], ['a' => null, 'b' => 42]];
+        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
+        $this->assertEquals($arr, [['a' => null, 'b' => 42], ['a' => 13, 'b' => 19]]);
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -910,44 +963,6 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['foo'] === 'bar', true);
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz', true);
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo', true);
-
-        $arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]];
-        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
-        $this->assertSame($arr, [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]);
-        usort(
-            $arr,
-            __array_multisort(function ($v) {
-                return [[$v['a'], 'asc'], [$v['b'], 'asc']];
-            })
-        );
-        $this->assertSame($arr, [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]);
-        $arr = [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']];
-        usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc'], ['c', 'asc']]));
-        $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
-        usort($arr, __array_multisort([['a', 'desc'], ['b', 'desc'], ['c', 'asc']]));
-        $this->assertSame($arr, [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']]);
-        usort($arr, __array_multisort([['a', 'desc'], ['b', 'asc'], ['c', 'desc']]));
-        $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
-        $arr = [
-            ['id' => 1, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 2, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
-        ];
-        usort($arr, __array_multisort([['pos', 'asc'], ['date', 'asc'], ['created_at', 'asc'], ['id', 'asc']]));
-        $this->assertEquals($arr, [
-            ['id' => 1, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 2, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 3, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 4, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
-            ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
-        ]);
-        $arr = [['foo' => 'baz', 'bar' => 'baz'], ['foo' => 'baz', 'bar' => 'gnarr']];
-        usort($arr, __array_multisort([['foo', 'desc'], ['bar', 'desc']]));
-        $this->assertEquals($arr, [['foo' => 'baz', 'bar' => 'gnarr'], ['foo' => 'baz', 'bar' => 'baz']]);
 
         $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
         $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];
