@@ -1065,7 +1065,7 @@ class __
                 $args_a = $args($a);
                 $args_b = $args($b);
                 foreach ($args_a as $args__key => $args__value) {
-                    if ($args_a[$args__key][0] != $args_b[$args__key][0]) {
+                    if (__v($args_a[$args__key][0]) != __v($args_b[$args__key][0])) {
                         return $position[
                             self::array_multisort_get_order(
                                 $args_a[$args__key][0],

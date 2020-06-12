@@ -675,6 +675,22 @@ class Test extends \PHPUnit\Framework\TestCase
         $arr = [['a' => 13, 'b' => 19], ['a' => null, 'b' => 42]];
         usort($arr, __array_multisort([['a', 'asc'], ['b', 'asc']]));
         $this->assertEquals($arr, [['a' => null, 'b' => 42], ['a' => 13, 'b' => 19]]);
+        $arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]];
+        usort(
+            $arr,
+            __array_multisort(function ($v) {
+                return [[$v['a'], 'asc'], [$v['b'], 'asc']];
+            })
+        );
+        $this->assertEquals($arr, [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]);
+        $arr = [['a' => __empty(), 'b' => 42], ['a' => 13, 'b' => 19]];
+        usort(
+            $arr,
+            __array_multisort(function ($v) {
+                return [[$v['a'], 'asc'], [$v['b'], 'asc']];
+            })
+        );
+        $this->assertEquals($arr, [['a' => __empty(), 'b' => 42], ['a' => 13, 'b' => 19]]);
     }
 
     function test__helpers()
