@@ -1055,7 +1055,7 @@ class __
             $order = true;
             if (is_array($args)) {
                 foreach ($args as $args__value) {
-                    if (__v($a[$args__value[0]]) != __v($b[$args__value[0]])) {
+                    if (self::v($a[$args__value[0]]) != self::v($b[$args__value[0]])) {
                         return $position[
                             self::array_multisort_get_order($a[$args__value[0]], $b[$args__value[0]], $args__value[1])
                         ];
@@ -1085,8 +1085,8 @@ class __
         $order = null;
         if (is_string($a) && is_string($b)) {
             $order = strcasecmp($a, $b) < 0;
-        } elseif (__nx($a) || __nx($b)) {
-            if (__nx($a)) {
+        } elseif (self::nx($a) || self::nx($b)) {
+            if (self::nx($a)) {
                 $order = true;
             } else {
                 $order = false;
