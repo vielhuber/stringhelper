@@ -324,6 +324,11 @@ class Test extends \PHPUnit\Framework\TestCase
             );
 
             $this->assertSame(
+                __translate_google('Telefon: <a href="#">Dies ist ein Test</a>', 'de', 'fr', $api_keys__value),
+                'Téléphone: <a href="#">Ceci est un test</a>'
+            );
+
+            $this->assertSame(
                 __translate_google(
                     'Telefon: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
                     'de',
