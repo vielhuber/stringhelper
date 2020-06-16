@@ -415,6 +415,16 @@ class Test extends \PHPUnit\Framework\TestCase
         );
     }
 
+    function test_timestamp_excel_unix()
+    {
+        $this->assertSame(__timestamp_excel_to_str(36526), '2000-01-01 00:00:00');
+        $this->assertSame(__timestamp_excel_to_str(36526), '2000-01-01 00:00:00');
+        $this->assertSame(__timestamp_excel_to_str(36526.3440972222), '2000-01-01 08:15:30');
+        $this->assertSame(__timestamp_str_to_excel('2000-01-01'), 36526);
+        $this->assertSame(__timestamp_str_to_excel('2000-01-01 00:00:00'), 36526);
+        $this->assertSame(__timestamp_str_to_excel('2000-01-01 08:15:30'), 36526.3440972222);
+    }
+
     function test_encode_decode_string()
     {
         $data = ['foo' => 'bar', 'bar' => 'baz'];

@@ -2381,6 +2381,18 @@ class __
         return rtrim($url, '/');
     }
 
+    public static function timestamp_excel_to_str($timestamp)
+    {
+        return gmdate('Y-m-d H:i:s', round(($timestamp - 25569) * 86400));
+    }
+
+    public static function timestamp_str_to_excel($str)
+    {
+        $utc = new \DateTimeZone('UTC');
+        $dt = new \DateTime($str, $utc);
+        return 25569 + $dt->getTimestamp() / 86400;
+    }
+
     public static function char_to_int($letters)
     {
         $num = 0;

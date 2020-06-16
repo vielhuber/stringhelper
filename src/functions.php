@@ -897,6 +897,20 @@ if (!function_exists('__baseurl')) {
     }
 }
 
+if (!function_exists('__timestamp_excel_to_str')) {
+    function __timestamp_excel_to_str(...$args)
+    {
+        return \vielhuber\stringhelper\__::timestamp_excel_to_str(...$args);
+    }
+}
+
+if (!function_exists('__timestamp_str_to_excel')) {
+    function __timestamp_str_to_excel(...$args)
+    {
+        return \vielhuber\stringhelper\__::timestamp_str_to_excel(...$args);
+    }
+}
+
 if (!function_exists('__char_to_int')) {
     function __char_to_int(...$args)
     {

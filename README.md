@@ -951,13 +951,19 @@ __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml') // ['https
 __extract_title_from_url('https://vielhuber.de') // David Vielhuber > Full-Stack Developer aus München
 __extract_meta_desc_from_url('https://vielhuber.de') // 🌀 Vielhuber David ist ein Web-Geek mit einem Faible für schönes Design, einer Prise Perfektionismus und Augen für klare Konturen. 🌀
 
-// char helpers
+// char helpers for excel columns
 __char_to_int('D') // 4
 __int_to_char(4) // 'D'
 __inc_char('D') // 'E'
 __inc_char('Z') // 'AA'
 __inc_char('A',2) // 'C'
 __dec_char('U') // 'T'
+
+// convert excel date timestamp to string and vice versa (be aware: excel does utc internally)
+__timestamp_excel_to_str(36526) // '2000-01-01 00:00:00'
+__timestamp_excel_to_str(36526.3440972222) // '2000-01-01 08:15:30'
+__timestamp_str_to_excel('01.01.2000') // 36526
+__timestamp_str_to_excel('01.01.2000 08:15:30') // 36526.3440972222
 
 // str_replace
 __str_replace_first('foo','bar','foofoo') // 'barfoo'
