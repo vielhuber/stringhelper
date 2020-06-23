@@ -409,10 +409,37 @@ class Test extends \PHPUnit\Framework\TestCase
             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.'
         );
 
+        try {
+            __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
+        } catch (\Throwable $t) {
+            $this->assertSame(strpos($t->getMessage(), 'credentials are missing') !== false, true);
+        }
+
         $this->assertSame(
-            __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!'),
-            null
+            __translate_deepl(
+                'Sein oder Nichtsein; das ist hier die Frage.',
+                'de',
+                'en',
+                getenv('DEEPL_TRANSLATION_API_KEY')
+            ),
+            'To be or not to be; that is the question here.'
         );
+
+        $this->assertSame(
+            __translate_deepl(
+                '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                'de',
+                'en',
+                getenv('DEEPL_TRANSLATION_API_KEY')
+            ),
+            'Since <a p="2">ES6</a>,<a p="1"> VanillaJS</a> is almost equal to the primary rock <a p="3">jQuery</a> in all areas and is now far superior.'
+        );
+
+        try {
+            __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
+        } catch (\Throwable $t) {
+            $this->assertSame(strpos($t->getMessage(), 'WRONG_KEY') !== false, true);
+        }
     }
 
     function test_timestamp_excel_unix()

@@ -372,6 +372,13 @@ if (!function_exists('__translate_microsoft')) {
     }
 }
 
+if (!function_exists('__translate_deepl')) {
+    function __translate_deepl(...$args)
+    {
+        return \vielhuber\stringhelper\__::translate_deepl(...$args);
+    }
+}
+
 if (!function_exists('__first_char_is_uppercase')) {
     function __first_char_is_uppercase(...$args)
     {

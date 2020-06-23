@@ -980,10 +980,38 @@ class __
         if ($response->status == 200 && @$response->result[0]->translations[0]->text != '') {
             $trans = $response->result[0]->translations[0]->text;
         } else {
+            self::exception($response);
             return null;
         }
 
         return $trans;
+    }
+
+    public static function translate_deepl($str, $from_lng, $to_lng, $api_key)
+    {
+        $response = self::curl(
+            'https://api.deepl.com/v2/translate?auth_key=' . $api_key,
+            [
+                'text' => $str,
+                'source_lang' => $from_lng,
+                'target_lang' => $to_lng,
+                'split_sentences' => 0,
+                'preserve_formatting' => 0,
+                'formality' => 'default',
+                'tag_handling' => 'xml'
+            ],
+            'POST',
+            null,
+            false,
+            false
+        );
+
+        if ($response->status != 200 || self::nx(@$response->result->translations[0]->text)) {
+            self::exception($response);
+            return null;
+        }
+
+        return $response->result->translations[0]->text;
     }
 
     public static function first_char_is_uppercase($str)
