@@ -978,6 +978,22 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), ''), 20);
         $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), 'foo'), null);
         $this->assertSame(__age_from_date(date(strtotime('5232-01-01'))), null);
+        $this->assertSame(
+            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2007'))),
+            0
+        );
+        $this->assertSame(
+            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('26.12.2008'))),
+            0
+        );
+        $this->assertSame(
+            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2008'))),
+            1
+        );
+        $this->assertSame(
+            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('28.12.2008'))),
+            1
+        );
 
         $this->assertSame(__first_char_is_uppercase(true), false);
         $this->assertSame(__first_char_is_uppercase(false), false);
