@@ -2121,6 +2121,13 @@ class __
         if (self::nx($data)) {
             return $urls;
         }
+        // normalize
+        if (isset($data['url']) && is_array($data['url']) && isset($data['url']['loc'])) {
+            $data['url'] = [$data['url']];
+        }
+        if (isset($data['sitemap']) && is_array($data['sitemap']) && isset($data['sitemap']['loc'])) {
+            $data['sitemap'] = [$data['sitemap']];
+        }
         if (isset($data['url']) && is_array($data['url']) && !empty($data['url'])) {
             foreach ($data['url'] as $url__value) {
                 if (isset($url__value['loc']) && is_string($url__value['loc']) && $url__value['loc'] != '') {
