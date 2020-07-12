@@ -729,7 +729,8 @@ class __
 
         // the api returns some characters in their html characters form (e.g. "'" is returned as "&#39;")
         // we want to store the real values
-        $trans = html_entity_decode($trans, ENT_QUOTES);
+        // this is disabled, because it destroys valid html(!)
+        //$trans = html_entity_decode($trans, ENT_QUOTES);
 
         // uppercase
         // the google translation api does a very bad job at keeping uppercased words at the beginning
@@ -790,7 +791,6 @@ class __
     {
         // google sometimes surrounds the translation with <i> and <b> tags
         // discard the (outer) <i>-tags and take the content of the <b>-tags
-        $input = html_entity_decode($input, ENT_QUOTES);
         $output = '';
         $pointer = 0;
         $lvl_i = 0;
