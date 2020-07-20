@@ -836,7 +836,7 @@ catch(\ExtendedException $t) {
 try {
     throw new \Exception('bar');
 }
-catch(\ExceptionExtended $t) {
+catch(\ExtendedException $t) {
     // does not trigger
 }
 catch(\Exception $t) {
