@@ -358,6 +358,20 @@ if (!function_exists('__minify_html')) {
     }
 }
 
+if (!function_exists('__str_to_dom')) {
+    function __str_to_dom(...$args)
+    {
+        return \vielhuber\stringhelper\__::str_to_dom(...$args);
+    }
+}
+
+if (!function_exists('__dom_to_str')) {
+    function __dom_to_str(...$args)
+    {
+        return \vielhuber\stringhelper\__::dom_to_str(...$args);
+    }
+}
+
 if (!function_exists('__translate_google')) {
     function __translate_google(...$args)
     {

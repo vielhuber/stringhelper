@@ -692,7 +692,69 @@ class __
             'collapse_whitespace' => true,
             'disable_comments' => true
         ]);
-        return $minifier->minify($html);
+        // this does not work: <br/> => <br>, so we fix it
+        $html = str_replace('<br/>', '<br />', $html);
+        $html = $minifier->minify($html);
+        return $html;
+    }
+
+    public static function str_to_dom($html)
+    {
+        $dom = new \DOMDocument();
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        $has_wrapper = strpos($html, '<html') !== false;
+        if ($has_wrapper === false) {
+            $html = '<!DOCTYPE html><html data-please-remove-wrapper><body>' . $html . '</body></html>';
+        }
+        if (mb_strpos($html, '</head>') !== false) {
+            $html = str_replace(
+                '</head>',
+                '<!--remove--><meta http-equiv="Content-type" content="text/html; charset=utf-8" /><!--/remove--></head>',
+                $html
+            );
+        } elseif (mb_strpos($html, '<body') !== false) {
+            $html = str_replace(
+                '<body',
+                '<!--remove--><head><meta http-equiv="content-type" content="text/html;charset=utf-8" /></head><!--/remove--><body',
+                $html
+            );
+        } else {
+            $html =
+                '<!--remove--><head><meta http-equiv="content-type" content="text/html;charset=utf-8" /></head><!--/remove-->' .
+                $html;
+        }
+        @$dom->loadHTML($html);
+        return $dom;
+    }
+
+    public static function dom_to_str($dom)
+    {
+        $DOMXPath = new \DOMXPath($dom);
+        // domdocument does not close empty li tags (because they're valid html)
+        // to circumvent that, use:
+        $nodes = $DOMXPath->query('/html/body//*[not(node())]');
+        foreach ($nodes as $nodes__value) {
+            $nodes__value->nodeValue = '';
+        }
+        $html = $dom->saveHTML();
+        // domdocument converts all umlauts to html entities, revert that
+        // $html = html_entity_decode($html);
+        // this method is bad when we use intentionally encoded code e.g. in <pre> tags; another option to prevent html entities (and leave everything intact)
+        // is to add <meta http-equiv="content-type" content="text/html;charset=utf-8" /> (see above)
+        // warning: this still encodes < to &gt; because < is invalid html!
+        // undo above changes
+        if (mb_strpos($html, '<!--remove-->') !== false && mb_strpos($html, '<!--/remove-->') !== false) {
+            $html =
+                mb_substr($html, 0, mb_strpos($html, '<!--remove-->')) .
+                mb_substr($html, mb_strpos($html, '<!--/remove-->') + mb_strlen('<!--/remove-->'));
+        }
+        // if domdocument added previously a default header, we squish that
+        if (mb_stripos($html, 'data-please-remove-wrapper') !== false) {
+            $pos1 = mb_strpos($html, '<body>') + mb_strlen('<body>');
+            $pos2 = mb_strpos($html, '</body>');
+            $html = mb_substr($html, $pos1, $pos2 - $pos1);
+        }
+        return $html;
     }
 
     public static function translate_google($str, $from_lng, $to_lng, $api_key)
@@ -781,6 +843,7 @@ class __
             self::exception($response);
             return null;
         }
+        $trans = $response->result;
         $trans = self::translate_google_inofficial_parse_result_post($response->result);
         if (self::first_char_is_uppercase($str) && !self::first_char_is_uppercase($trans)) {
             $trans = self::set_first_char_uppercase($trans);
@@ -792,11 +855,13 @@ class __
     {
         // google sometimes surrounds the translation with <i> and <b> tags
         // do distinguish real i-/b-tags, replace them (we undo that later on)
-        $output = $input;
-        $output = str_replace('<i>', '<inative>', $output);
-        $output = str_replace('</i>', '</inative>', $output);
-        $output = str_replace('<b>', '<bnative>', $output);
-        $output = str_replace('</b>', '</bnative>', $output);
+        $dom = self::str_to_dom($input);
+        foreach (['i', 'b'] as $tags__value) {
+            foreach ($dom->getElementsByTagName($tags__value) as $divs__value) {
+                $divs__value->setAttribute('data-native', 'true');
+            }
+        }
+        $output = self::dom_to_str($dom);
         return $output;
     }
 
@@ -817,10 +882,10 @@ class __
             if ($pointer >= 3 && mb_substr($input, $pointer - 3, 3) === '<b>') {
                 $lvl_b_inner++;
             }
-            if (mb_substr($input, $pointer, 4) === '</i>') {
+            if (mb_substr($input, $pointer, 4) === '</i>' && $lvl_i_inner > 0) {
                 $lvl_i_inner--;
             }
-            if (mb_substr($input, $pointer, 4) === '</b>') {
+            if (mb_substr($input, $pointer, 4) === '</b>' && $lvl_b_inner > 0) {
                 $lvl_b_inner--;
             }
             if (mb_substr($input, $pointer, 3) === '<i>') {
@@ -829,10 +894,10 @@ class __
             if (mb_substr($input, $pointer, 3) === '<b>') {
                 $lvl_b++;
             }
-            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</i>') {
+            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</i>' && $lvl_i > 0) {
                 $lvl_i--;
             }
-            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</b>') {
+            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</b>' && $lvl_b > 0) {
                 $lvl_b--;
             }
             $pointer++;
@@ -846,14 +911,13 @@ class __
             }
         }
         $output = trim($output);
-        $output = str_replace('<inative> ', '<i>', $output);
-        $output = str_replace('<inative>', '<i>', $output);
-        $output = str_replace(' </inative>', '</i>', $output);
-        $output = str_replace('</inative>', '</i>', $output);
-        $output = str_replace('<bnative> ', '<b>', $output);
-        $output = str_replace('<bnative>', '<b>', $output);
-        $output = str_replace(' </bnative>', '</b>', $output);
-        $output = str_replace('</bnative>', '</b>', $output);
+        $dom = self::str_to_dom($output);
+        foreach (['i', 'b'] as $tags__value) {
+            foreach ($dom->getElementsByTagName($tags__value) as $divs__value) {
+                $divs__value->removeAttribute('data-native');
+            }
+        }
+        $output = self::dom_to_str($dom);
         return $output;
     }
 

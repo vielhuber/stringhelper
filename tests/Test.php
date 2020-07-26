@@ -305,145 +305,123 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
 
+    function test__str_to_dom()
+    {
+        foreach (
+            [
+                '<ul><li></li><li></li></ul>',
+                'Dies ist ein Test',
+                '<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1" />
+<title>.</title>
+</head>
+<body>
+
+</body>
+</html>',
+                '<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1" />
+<title>.</title>
+</head>
+<body>
+    <p>lsdäwekü0päeikpokpokóäölällöä</p>
+</body>
+</html>'
+            ]
+            as $html__value
+        ) {
+            $this->assertSame(__minify_html(__dom_to_str(__str_to_dom($html__value))), __minify_html($html__value));
+        }
+    }
+
     function test__translate()
     {
         foreach (['free', getenv('GOOGLE_TRANSLATION_API_KEY')] as $api_keys__value) {
-            $this->assertSame(
-                __translate_google('Das ist das <span>Haus</span> vom Nikolaus', 'de', 'en', $api_keys__value),
-                'This is the <span>house</span> of Santa Claus'
-            );
-
-            $this->assertSame(
-                __translate_google(
-                    'Das ist das <span class="notranslate">Haus</span> vom Nikolaus',
-                    'de',
-                    'en',
-                    $api_keys__value
-                ),
-                'This is the <span class="notranslate">Haus</span> of Santa Claus'
-            );
-
-            $this->assertSame(
-                __translate_google('Telefon: <a href="#">Dies ist ein Test</a>', 'de', 'fr', $api_keys__value),
-                'Téléphone: <a href="#">Ceci est un test</a>'
-            );
-
-            $this->assertSame(
-                __translate_google(
-                    'Telefon: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
-                    'de',
-                    'en',
-                    $api_keys__value
-                ),
-                'Telephone: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>'
-            );
-
-            $this->assertSame(
-                __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
-                'To be or not to be; that is the question.'
-            );
-
-            $this->assertSame(
-                __translate_google(
-                    '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                    'de',
-                    'en',
-                    $api_keys__value
-                ),
-                '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
-            );
-
-            $this->assertSame(
-                __translate_google(
-                    '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                    'de',
-                    'en',
-                    $api_keys__value
-                ),
-                '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.'
-            );
-
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('<b>Haus</b><span>Hund</span>', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('<b>House</b><span>Dog</span>'))
-            );
-
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(
-                        __translate_google(
-                            '<i>Hund</i><b>Haus</b><i>Hallo</i><b>Stadt</b>',
-                            'de',
-                            'en',
-                            $api_keys__value
+            foreach (
+                [
+                    [
+                        'Das ist das <span>Haus</span> vom Nikolaus',
+                        'This is the <span>house</span> of Santa Claus',
+                        'de',
+                        'en'
+                    ],
+                    [
+                        'Das ist das <span class="notranslate">Haus</span> vom Nikolaus',
+                        'This is the <span class="notranslate">Haus</span> of Santa Claus',
+                        'de',
+                        'en'
+                    ],
+                    [
+                        'Telefon: <a href="#">Dies ist ein Test</a>',
+                        'Téléphone: <a href="#">Ceci est un test</a>',
+                        'de',
+                        'fr'
+                    ],
+                    [
+                        'Telefon: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
+                        'Telephone: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>',
+                        'de',
+                        'en'
+                    ],
+                    [
+                        'Sein oder Nichtsein; das ist hier die Frage.',
+                        'To be or not to be; that is the question.',
+                        'de',
+                        'en'
+                    ],
+                    [
+                        '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                        '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
+                        'de',
+                        'en'
+                    ],
+                    [
+                        '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                        '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.',
+                        'de',
+                        'en'
+                    ],
+                    ['<b>Haus</b><span>Hund</span>', '<b>House</b><span>Dog</span>', 'de', 'en'],
+                    [
+                        '<i>Hund</i><b>Haus</b><i>Hallo</i><b>Stadt</b>',
+                        '<i>Dog</i><b>House</b><i>Hello</i><b>City</b>',
+                        'de',
+                        'en'
+                    ],
+                    ['<b>Hund</b><span>Haus</span>', '<b>Dog</b><span>House</span>', 'de', 'en'],
+                    ['Hallo. Welt.', 'Hello. World.', 'de', 'en'],
+                    ['<i>Haus.</i><b>Hund.</b>', '<i>House.</i><b>Dog.</b>', 'de', 'en'],
+                    ['<b>Haus.</b><span>Hund.</span>', '<b>House.</b><span>Dog.</span>', 'de', 'en'],
+                    ['<b>Haus.</b><i>Hund.</i>', '<b>House.</b><i>Dog.</i>', 'de', 'en'],
+                    ['<b>Haus.</b><b>Hund.</b>', '<b>House.</b><b>Dog.</b>', 'de', 'en'],
+                    ['<i>Haus.</i><i>Hund.</i>', '<i>House.</i><i>Dog.</i>', 'de', 'en'],
+                    ['<b p="1">Haus</b><span p="2">Hund</span>', '<b p="1">House</b><span p="2">Dog</span>', 'de', 'en']
+                ]
+                as $examples__value
+            ) {
+                $this->assertSame(
+                    __minify_html(
+                        mb_strtolower(
+                            __translate_google(
+                                $examples__value[0],
+                                $examples__value[2],
+                                $examples__value[3],
+                                $api_keys__value
+                            )
                         )
-                    )
-                ),
-                str_replace('> <', '><', mb_strtolower('<i>Dog</i><b>House</b><i>Hello</i><b>City</b>'))
-            );
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('<b>Hund</b><span>Haus</span>', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('<b>Dog</b><span>House</span>'))
-            );
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('Hallo. Welt.', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('Hello. World.'))
-            );
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('<i>Haus.</i><b>Hund.</b>', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('<i>House.</i><b>Dog.</b>'))
-            );
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('<b>Haus.</b><span>Hund.</span>', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('<b>House.</b><span>Dog.</span>'))
-            );
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('<b>Haus.</b><i>Hund.</i>', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('<b>House.</b><i>Dog.</i>'))
-            );
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('<b>Haus.</b><b>Hund.</b>', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('<b>House.</b><b>Dog.</b>'))
-            );
-            $this->assertSame(
-                str_replace(
-                    '> <',
-                    '><',
-                    mb_strtolower(__translate_google('<i>Haus.</i><i>Hund.</i>', 'de', 'en', $api_keys__value))
-                ),
-                str_replace('> <', '><', mb_strtolower('<i>House.</i><i>Dog.</i>'))
-            );
+                    ),
+                    __minify_html(mb_strtolower($examples__value[1]))
+                );
+            }
+        }
 
+        foreach (['free', getenv('GOOGLE_TRANSLATION_API_KEY')] as $api_keys__value) {
             $this->assertSame(__translate_google(null, 'de', 'en', $api_keys__value), null);
             $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
@@ -920,6 +898,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__minify_html(true), true);
         $this->assertSame(__minify_html(false), false);
         $this->assertSame(__minify_html(''), '');
+        $this->assertSame(__minify_html('<br/>'), '<br>');
+        $this->assertSame(__minify_html('<br />'), '<br>');
         $this->assertSame(
             __minify_html('<!DOCTYPE html>
 <title>shortest valid html5 document</title>

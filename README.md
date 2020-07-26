@@ -458,6 +458,9 @@ __minify_html('<!DOCTYPE html>
 <title>shortest valid html5 document</title>
 <p>yay</p>') // <!DOCTYPE html><title>shortest valid html5 document</title><p>yay</p>
 
+// proper string to domdocument and domdocument to string conversion (respects original structure and fixes lots of caveats)
+__dom_to_str(__str_to_dom('<ul><li></li><li></li></ul>')) // <ul><li></li><li></li></ul>
+
 // translate strings
 /*
     short steps to generate google api keys
