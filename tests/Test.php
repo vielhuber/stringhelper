@@ -363,6 +363,87 @@ class Test extends \PHPUnit\Framework\TestCase
                 '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.'
             );
 
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('<b>Haus</b><span>Hund</span>', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('<b>House</b><span>Dog</span>'))
+            );
+
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(
+                        __translate_google(
+                            '<i>Hund</i><b>Haus</b><i>Hallo</i><b>Stadt</b>',
+                            'de',
+                            'en',
+                            $api_keys__value
+                        )
+                    )
+                ),
+                str_replace('> <', '><', mb_strtolower('<i>Dog</i><b>House</b><i>Hello</i><b>City</b>'))
+            );
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('<b>Hund</b><span>Haus</span>', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('<b>Dog</b><span>House</span>'))
+            );
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('Hallo. Welt.', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('Hello. World.'))
+            );
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('<i>Haus.</i><b>Hund.</b>', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('<i>House.</i><b>Dog.</b>'))
+            );
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('<b>Haus.</b><span>Hund.</span>', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('<b>House.</b><span>Dog.</span>'))
+            );
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('<b>Haus.</b><i>Hund.</i>', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('<b>House.</b><i>Dog.</i>'))
+            );
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('<b>Haus.</b><b>Hund.</b>', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('<b>House.</b><b>Dog.</b>'))
+            );
+            $this->assertSame(
+                str_replace(
+                    '> <',
+                    '><',
+                    mb_strtolower(__translate_google('<i>Haus.</i><i>Hund.</i>', 'de', 'en', $api_keys__value))
+                ),
+                str_replace('> <', '><', mb_strtolower('<i>House.</i><i>Dog.</i>'))
+            );
+
             $this->assertSame(__translate_google(null, 'de', 'en', $api_keys__value), null);
             $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
@@ -1445,45 +1526,48 @@ baz'
         ]);
         $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
 
-        $response = __curl(
-            'https://httpbin.org/absolute-redirect/1',
-            null,
-            null,
-            null,
-            false,
-            false,
-            60,
-            null,
-            null,
-            true
-        );
-        $this->assertSame($response->status, 200);
-        $response = __curl(
-            'https://httpbin.org/absolute-redirect/1',
-            null,
-            null,
-            null,
-            false,
-            false,
-            60,
-            null,
-            null,
-            false
-        );
-        $this->assertSame($response->status, 302);
-        $response = __curl(
-            'https://httpbin.org/absolute-redirect/1',
-            null,
-            null,
-            null,
-            false,
-            false,
-            60,
-            null,
-            null,
-            true
-        );
-        $this->assertSame($response->url, 'http://httpbin.org/get');
+        // disabled due to https://github.com/postmanlabs/httpbin/issues/617
+        if (1 == 0) {
+            $response = __curl(
+                'https://httpbin.org/absolute-redirect/1',
+                null,
+                null,
+                null,
+                false,
+                false,
+                60,
+                null,
+                null,
+                true
+            );
+            $this->assertSame($response->status, 200);
+            $response = __curl(
+                'https://httpbin.org/absolute-redirect/1',
+                null,
+                null,
+                null,
+                false,
+                false,
+                60,
+                null,
+                null,
+                false
+            );
+            $this->assertSame($response->status, 302);
+            $response = __curl(
+                'https://httpbin.org/absolute-redirect/1',
+                null,
+                null,
+                null,
+                false,
+                false,
+                60,
+                null,
+                null,
+                true
+            );
+            $this->assertSame($response->url, 'http://httpbin.org/get');
+        }
 
         // fill in your wp credentials to test this
         if (1 == 0) {

@@ -745,6 +745,7 @@ class __
     public static function translate_google_inofficial($str, $from_lng, $to_lng)
     {
         /* more info: https://vielhuber.de/blog/google-translate-api-hacking */
+        $str = self::translate_google_inofficial_parse_result_pre($str);
         $args = [
             'anno' => 3,
             'client' => 'te_lib',
@@ -780,23 +781,35 @@ class __
             self::exception($response);
             return null;
         }
-        $trans = self::translate_google_inofficial_parse_result($response->result);
+        $trans = self::translate_google_inofficial_parse_result_post($response->result);
         if (self::first_char_is_uppercase($str) && !self::first_char_is_uppercase($trans)) {
             $trans = self::set_first_char_uppercase($trans);
         }
         return $trans;
     }
 
-    private static function translate_google_inofficial_parse_result($input)
+    private static function translate_google_inofficial_parse_result_pre($input)
     {
         // google sometimes surrounds the translation with <i> and <b> tags
+        // do distinguish real i-/b-tags, replace them (we undo that later on)
+        $output = $input;
+        $output = str_replace('<i>', '<inative>', $output);
+        $output = str_replace('</i>', '</inative>', $output);
+        $output = str_replace('<b>', '<bnative>', $output);
+        $output = str_replace('</b>', '</bnative>', $output);
+        return $output;
+    }
+
+    private static function translate_google_inofficial_parse_result_post($input)
+    {
         // discard the (outer) <i>-tags and take the content of the <b>-tags
         $output = '';
         $pointer = 0;
         $lvl_i = 0;
-        $lvl_b = 0;
         $lvl_i_inner = 0;
+        $lvl_b = 0;
         $lvl_b_inner = 0;
+        // multibyte split to array of chars
         foreach (preg_split('//u', $input, -1, PREG_SPLIT_NO_EMPTY) as $chars__value) {
             if ($pointer >= 3 && mb_substr($input, $pointer - 3, 3) === '<i>') {
                 $lvl_i_inner++;
@@ -804,11 +817,11 @@ class __
             if ($pointer >= 3 && mb_substr($input, $pointer - 3, 3) === '<b>') {
                 $lvl_b_inner++;
             }
-            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</i>') {
-                $lvl_i--;
+            if (mb_substr($input, $pointer, 4) === '</i>') {
+                $lvl_i_inner--;
             }
-            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</b>') {
-                $lvl_b--;
+            if (mb_substr($input, $pointer, 4) === '</b>') {
+                $lvl_b_inner--;
             }
             if (mb_substr($input, $pointer, 3) === '<i>') {
                 $lvl_i++;
@@ -816,21 +829,31 @@ class __
             if (mb_substr($input, $pointer, 3) === '<b>') {
                 $lvl_b++;
             }
-            if (mb_substr($input, $pointer, 4) === '</i>') {
-                $lvl_i_inner--;
+            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</i>') {
+                $lvl_i--;
             }
-            if (mb_substr($input, $pointer, 4) === '</b>') {
-                $lvl_b_inner--;
+            if ($pointer >= 4 && mb_substr($input, $pointer - 4, 4) === '</b>') {
+                $lvl_b--;
             }
             $pointer++;
+            // discard multiple spaces
             if ($chars__value === ' ' && mb_strlen($output) > 0 && mb_substr($output, -1) === ' ') {
                 continue;
             }
-            if ($lvl_b_inner >= 1 || ($lvl_b === 0 && $lvl_i === 0)) {
+            // save
+            if (($lvl_b_inner >= 1 && $lvl_i_inner === 0) || ($lvl_b === 0 && $lvl_i === 0)) {
                 $output .= $chars__value;
             }
         }
         $output = trim($output);
+        $output = str_replace('<inative> ', '<i>', $output);
+        $output = str_replace('<inative>', '<i>', $output);
+        $output = str_replace(' </inative>', '</i>', $output);
+        $output = str_replace('</inative>', '</i>', $output);
+        $output = str_replace('<bnative> ', '<b>', $output);
+        $output = str_replace('<bnative>', '<b>', $output);
+        $output = str_replace(' </bnative>', '</b>', $output);
+        $output = str_replace('</bnative>', '</b>', $output);
         return $output;
     }
 
