@@ -843,7 +843,6 @@ class __
             self::exception($response);
             return null;
         }
-        $trans = $response->result;
         $trans = self::translate_google_inofficial_parse_result_post($response->result);
         if (self::first_char_is_uppercase($str) && !self::first_char_is_uppercase($trans)) {
             $trans = self::set_first_char_uppercase($trans);
