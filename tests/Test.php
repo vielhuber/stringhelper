@@ -401,7 +401,18 @@ class Test extends \PHPUnit\Framework\TestCase
                     ['<b>Haus.</b><i>Hund.</i>', '<b>House.</b><i>Dog.</i>', 'de', 'en'],
                     ['<b>Haus.</b><b>Hund.</b>', '<b>House.</b><b>Dog.</b>', 'de', 'en'],
                     ['<i>Haus.</i><i>Hund.</i>', '<i>House.</i><i>Dog.</i>', 'de', 'en'],
-                    ['<b p="1">Haus</b><span p="2">Hund</span>', '<b p="1">House</b><span p="2">Dog</span>', 'de', 'en']
+                    [
+                        '<b p="1">Haus</b><span p="2">Hund</span>',
+                        '<b p="1">House</b><span p="2">Dog</span>',
+                        'de',
+                        'en'
+                    ],
+                    [
+                        '<span>Überschrift</span><span>Das ist ein Haus. Und noch ein Haus.</span>',
+                        '<span>Headline</span> <span>this is a house. And another house.</span>',
+                        'de',
+                        'en'
+                    ]
                 ]
                 as $examples__value
             ) {

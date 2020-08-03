@@ -855,9 +855,18 @@ class __
         // google sometimes surrounds the translation with <i> and <b> tags
         // do distinguish real i-/b-tags, replace them (we undo that later on)
         $dom = self::str_to_dom($input);
+        $xpath = new \DOMXPath($dom);
         foreach (['i', 'b'] as $tags__value) {
             foreach ($dom->getElementsByTagName($tags__value) as $divs__value) {
                 $divs__value->setAttribute('data-native', 'true');
+            }
+        }
+        $nodes = $xpath->query('/html/body//*');
+        if (count($nodes) > 0) {
+            $id = 1;
+            foreach ($nodes as $nodes__value) {
+                $nodes__value->setAttribute('gtid', $id);
+                $id++;
             }
         }
         $output = self::dom_to_str($dom);
@@ -911,9 +920,44 @@ class __
         }
         $output = trim($output);
         $dom = self::str_to_dom($output);
+        $xpath = new \DOMXPath($dom);
         foreach (['i', 'b'] as $tags__value) {
             foreach ($dom->getElementsByTagName($tags__value) as $divs__value) {
                 $divs__value->removeAttribute('data-native');
+            }
+        }
+        // merge neighbour elements with the same id together
+        $nodes = $xpath->query('/html/body//*[@gtid]');
+        if (count($nodes) > 0) {
+            foreach ($nodes as $nodes__value) {
+                if ($nodes__value->hasAttribute('please-remove')) {
+                    continue;
+                }
+                $id = $nodes__value->getAttribute('gtid');
+                $html = $nodes__value->nodeValue;
+                $nextSibling = $nodes__value->nextSibling;
+                if ($nextSibling === null) {
+                    continue;
+                }
+                if ($nextSibling->nodeName === '#text' && trim($nextSibling->textContent) == '') {
+                    $nextSibling = $nextSibling->nextSibling;
+                }
+                if ($nextSibling === null || $nextSibling->nodeName === '#text') {
+                    continue;
+                }
+                $id2 = $nextSibling->getAttribute('gtid');
+                if ($id !== $id2) {
+                    continue;
+                }
+                $nextSibling->setAttribute('please-remove', '1');
+                $html .= ' ' . $nextSibling->nodeValue;
+                $nodes__value->nodeValue = $html;
+            }
+            foreach ($nodes as $nodes__value) {
+                $nodes__value->removeAttribute('gtid');
+                if ($nodes__value->hasAttribute('please-remove')) {
+                    $nodes__value->parentNode->removeChild($nodes__value);
+                }
             }
         }
         $output = self::dom_to_str($dom);
