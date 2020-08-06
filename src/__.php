@@ -412,6 +412,14 @@ class __
         return $string;
     }
 
+    public static function br2nl($string)
+    {
+        if (!is_string($string)) {
+            return $string;
+        }
+        return preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $string);
+    }
+
     public static function trim_whitespace($str)
     {
         if (self::nx($str) || !is_string($str)) {

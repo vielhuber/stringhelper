@@ -305,6 +305,20 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
 
+    function test__br2nl()
+    {
+        $this->assertSame(__br2nl('foo<br/>bar'), "foo\nbar");
+        $this->assertSame(__br2nl('foo<br>bar'), "foo\nbar");
+        $this->assertSame(__br2nl("foo\nbar"), "foo\nbar");
+        $this->assertSame(__br2nl('foo bar'), 'foo bar');
+        $this->assertSame(__br2nl('foobar'), 'foobar');
+        $this->assertSame(__br2nl(''), '');
+        $this->assertSame(__br2nl(null), null);
+        $this->assertSame(__br2nl(false), false);
+        $this->assertSame(__br2nl(true), true);
+        $this->assertSame(__br2nl([]), []);
+    }
+
     function test__str_to_dom()
     {
         foreach (

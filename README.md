@@ -613,6 +613,10 @@ __remove_newlines('foo
 bar<br/>
 baz') // foobarbaz
 
+// reverse of nl2br
+__br2nl('foo<br/>bar') // foo
+// bar
+
 // trim whitespace (including &nbsp; and line breaks)
 __trim_whitespace('      string including nasty whitespace chars  ') // 'string including nasty whitespace chars'
 

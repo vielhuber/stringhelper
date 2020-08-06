@@ -225,6 +225,13 @@ if (!function_exists('__remove_newlines')) {
     }
 }
 
+if (!function_exists('__br2nl')) {
+    function __br2nl(...$args)
+    {
+        return \vielhuber\stringhelper\__::br2nl(...$args);
+    }
+}
+
 if (!function_exists('__trim_whitespace')) {
     function __trim_whitespace(...$args)
     {
