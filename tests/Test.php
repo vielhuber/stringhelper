@@ -305,6 +305,18 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
 
+    function test__trim_every_line()
+    {
+        $this->assertSame(__trim_every_line("foo\n bar"), "foo\nbar");
+        $this->assertSame(__trim_every_line("foo\nbar"), "foo\nbar");
+        $this->assertSame(__trim_every_line("foo\n bar\nbaz "), "foo\nbar\nbaz");
+        $this->assertSame(__trim_every_line(''), '');
+        $this->assertSame(__trim_every_line(null), null);
+        $this->assertSame(__trim_every_line(false), false);
+        $this->assertSame(__trim_every_line(true), true);
+        $this->assertSame(__trim_every_line([]), []);
+    }
+
     function test__br2nl()
     {
         $this->assertSame(__br2nl('foo<br/>bar'), "foo\nbar");

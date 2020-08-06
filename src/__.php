@@ -433,6 +433,14 @@ class __
         return $str;
     }
 
+    public static function trim_every_line($str)
+    {
+        if (!is_string($str)) {
+            return $str;
+        }
+        return implode(PHP_EOL, self::atrim(self::split_newline($str)));
+    }
+
     public static function atrim($arr)
     {
         if (self::nx($arr) || (!is_array($arr) && !($arr instanceof \Traversable))) {

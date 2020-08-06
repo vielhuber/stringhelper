@@ -615,7 +615,7 @@ baz') // foobarbaz
 
 // reverse of nl2br
 __br2nl('foo<br/>bar') // foo
-// bar
+//bar
 
 // trim whitespace (including &nbsp; and line breaks)
 __trim_whitespace('      string including nasty whitespace chars  ') // 'string including nasty whitespace chars'
@@ -624,6 +624,13 @@ __trim_whitespace('      string including nasty whitespace chars  ') // 'str
 __atrim(['foo
 ','bar','
 baz']) // ['foo','bar','baz']
+
+// trim every line in multiline array
+__trim_every_line('foo
+ bar
+baz ') // foo
+//bar
+//baz
 
 // check if string is json
 __string_is_json('[]') // true

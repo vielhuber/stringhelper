@@ -239,6 +239,13 @@ if (!function_exists('__trim_whitespace')) {
     }
 }
 
+if (!function_exists('__trim_every_line')) {
+    function __trim_every_line(...$args)
+    {
+        return \vielhuber\stringhelper\__::trim_every_line(...$args);
+    }
+}
+
 if (!function_exists('__atrim')) {
     function __atrim(...$args)
     {
