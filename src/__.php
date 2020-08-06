@@ -776,7 +776,7 @@ class __
                 'q' => $str,
                 'source' => $from_lng,
                 'target' => $to_lng,
-                'format' => 'html',
+                'format' => self::string_is_html($str) ? 'html' : 'text',
                 'model' => 'nmt'
             ],
             'POST'
@@ -811,6 +811,7 @@ class __
         $args = [
             'anno' => 3,
             'client' => 'te_lib',
+            // format "text" does not work here!
             'format' => 'html',
             'v' => '1.0',
             'key' => 'AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw',
@@ -2208,6 +2209,20 @@ class __
         }
         json_decode($str);
         return json_last_error() == JSON_ERROR_NONE;
+    }
+
+    public static function string_is_html($str)
+    {
+        if (!is_string($str)) {
+            return false;
+        }
+        if ($str != strip_tags($str)) {
+            return true;
+        }
+        if ($str != html_entity_decode($str)) {
+            return true;
+        }
+        return false;
     }
 
     public static function fetch($url, $method = null)

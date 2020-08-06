@@ -628,6 +628,12 @@ __string_is_json('["foo" => "bar"]') // false
 __string_is_json([]) // false
 __string_is_json((object)[]) // false
 
+// check if string is html
+__string_is_html('foo') // false
+__string_is_html('<p>foo</p>') // true
+__string_is_html('foo bar') // false
+__string_is_html('foo&nbsp;bar') // true
+
 // check if string is serialized
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
 __is_serialized('idkfa') // false

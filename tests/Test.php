@@ -408,8 +408,8 @@ class Test extends \PHPUnit\Framework\TestCase
                         'en'
                     ],
                     [
-                        '<span>Überschrift</span><span>Das ist ein Haus. Und noch ein Haus.</span>',
-                        '<span>Headline</span> <span>this is a house. And another house.</span>',
+                        '<span>Haus</span><span>Das ist ein Haus. Und noch ein Haus.</span>',
+                        '<span>House</span> <span>this is a house. And another house.</span>',
                         'de',
                         'en'
                     ]
@@ -436,6 +436,18 @@ class Test extends \PHPUnit\Framework\TestCase
             $this->assertSame(__translate_google(null, 'de', 'en', $api_keys__value), null);
             $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
+
+        $this->assertSame(
+            __translate_google(
+                'Hund
+Haus',
+                'de',
+                'en',
+                getenv('GOOGLE_TRANSLATION_API_KEY')
+            ),
+            'Dog
+House'
+        );
 
         try {
             __translate_google('Das ist ein Test', 'dejhfjhfhh', 'enjhgffjhfj', 'free');
@@ -1228,6 +1240,16 @@ baz'
         $this->assertSame(__string_is_json('["foo" => "bar"]'), false);
         $this->assertSame(__string_is_json([]), false);
         $this->assertSame(__string_is_json((object) []), false);
+
+        $this->assertSame(__string_is_html('foo'), false);
+        $this->assertSame(__string_is_html('<p>foo</p>'), true);
+        $this->assertSame(__string_is_html('foo bar'), false);
+        $this->assertSame(__string_is_html('foo&nbsp;bar'), true);
+        $this->assertSame(__string_is_html(null), false);
+        $this->assertSame(__string_is_html(''), false);
+        $this->assertSame(__string_is_html(false), false);
+        $this->assertSame(__string_is_html(true), false);
+        $this->assertSame(__string_is_html([]), false);
 
         $this->assertSame(__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true);
         $this->assertSame(__is_serialized(''), false);

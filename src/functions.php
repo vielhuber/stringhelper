@@ -820,6 +820,13 @@ if (!function_exists('__string_is_json')) {
     }
 }
 
+if (!function_exists('__string_is_html')) {
+    function __string_is_html(...$args)
+    {
+        return \vielhuber\stringhelper\__::string_is_html(...$args);
+    }
+}
+
 if (!function_exists('__fetch')) {
     function __fetch(...$args)
     {
