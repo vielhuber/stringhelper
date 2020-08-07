@@ -1019,6 +1019,7 @@ House'
         $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));
         $this->assertSame(__date('2019-12-02 12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
         $this->assertSame(__date('2019-12-02T12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
+        $this->assertSame(__date('2019-12-02T12:01:02', 'd.m.Y\TH:i:s'), '02.12.2019T12:01:02');
         $this->assertSame(__date(strtotime('2000-01-01'), 'd.m.Y'), '01.01.2000');
         $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y'), '01.01.2000');
         $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y H:i:s'), '01.01.2000 13:14:15');

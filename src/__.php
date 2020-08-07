@@ -1971,6 +1971,8 @@ class __
         if ($str === true) {
             return false;
         }
+        // remove escaped chars like \T
+        $str = preg_replace('/(\\\[a-zA-Z])/', '', $str);
         $chars_needed = [
             'd',
             'D',
