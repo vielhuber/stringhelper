@@ -526,6 +526,7 @@ array_map_deep(
     function($value,$key,$key_chain) use(&$output) { $output[] = $value.': '.implode('.',$key_chain); }
 )
 echo implode(' - ', $output) // ok1: 1.2.3.4.5, ok2: 1.2.3.6.7, ok3: 8
+__array_map_deep(['foo','bar'=>(object)['baz','gnarr']], function($a) { return $a.'!'; }) // ['foo!','bar'=>(object)['baz!','gnarr!']]
 
 // recursively change values of array of arrays (with leaf nodes; be careful when changing the array structure)
 __array_map_deep_all(['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz']], function($value, $key, $key_chain) {

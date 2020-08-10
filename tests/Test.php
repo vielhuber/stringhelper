@@ -383,15 +383,10 @@ class Test extends \PHPUnit\Framework\TestCase
                         'de',
                         'en'
                     ],
+                    ['Land: <a href="#">Dies ist ein Test</a>', 'Pays: <a href="#">Ceci est un test</a>', 'de', 'fr'],
                     [
-                        'Telefon: <a href="#">Dies ist ein Test</a>',
-                        'Téléphone: <a href="#">Ceci est un test</a>',
-                        'de',
-                        'fr'
-                    ],
-                    [
-                        'Telefon: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
-                        'Telephone: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>',
+                        'Haus: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
+                        'House: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>',
                         'de',
                         'en'
                     ],
@@ -680,6 +675,24 @@ House'
         ) use (&$output) {
             $output[] = $value . ': ' . implode('.', $key_chain);
         });
+        $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
+
+        $this->assertEquals(
+            __array_map_deep(['foo', 'bar' => (object) ['baz', 'gnarr']], function ($a) {
+                return $a . '!';
+            }),
+            ['foo!', 'bar' => (object) ['baz!', 'gnarr!']]
+        );
+        $output = [];
+        __array_map_deep(
+            (object) [
+                1 => (object) [2 => (object) [3 => (object) [4 => (object) [5 => 'ok1'], 6 => (object) [7 => 'ok2']]]],
+                8 => 'ok3'
+            ],
+            function ($value, $key, $key_chain) use (&$output) {
+                $output[] = $value . ': ' . implode('.', $key_chain);
+            }
+        );
         $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
     }
 
