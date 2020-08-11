@@ -710,6 +710,10 @@ class __
         ]);
         // this does not work: <br/> => <br>, so we fix it
         $html = str_replace('<br/>', '<br />', $html);
+        // simple strings also don't work
+        if (!self::string_is_html($html)) {
+            return trim($html);
+        }
         $html = $minifier->minify($html);
         return $html;
     }

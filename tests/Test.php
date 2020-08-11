@@ -959,6 +959,8 @@ House'
         $this->assertSame(__minify_html(null), null);
         $this->assertSame(__minify_html(true), true);
         $this->assertSame(__minify_html(false), false);
+        $this->assertSame(__minify_html('Dies ist ein Test'), 'Dies ist ein Test');
+        $this->assertSame(__minify_html('  Dies ist ein Test '), 'Dies ist ein Test');
         $this->assertSame(__minify_html(''), '');
         $this->assertSame(__minify_html('<br/>'), '<br>');
         $this->assertSame(__minify_html('<br />'), '<br>');
