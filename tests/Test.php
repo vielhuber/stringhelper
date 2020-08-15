@@ -588,6 +588,32 @@ House'
         $this->assertSame(__extract_urls_from_sitemap('foo'), []);
     }
 
+    function test__trim_whitespace()
+    {
+        $this->assertSame(
+            __trim_whitespace('      string including nasty whitespace chars  '),
+            'string including nasty whitespace chars'
+        );
+        $this->assertSame(
+            __trim_whitespace(
+                '
+
+   
+
+   string including nasty whitespace chars  
+
+    ' .
+                    html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;') .
+                    '
+
+'
+            ),
+            'string including nasty whitespace chars'
+        );
+        $this->assertSame(__trim_whitespace('𩸽 '), '𩸽');
+        $this->assertSame(__trim_whitespace('Català'), 'Català');
+    }
+
     function test__extract_title_from_url()
     {
         $this->assertSame(
@@ -1239,27 +1265,6 @@ House'
             'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'
         );
         $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
-
-        $this->assertSame(
-            __trim_whitespace('      string including nasty whitespace chars  '),
-            'string including nasty whitespace chars'
-        );
-        $this->assertSame(
-            __trim_whitespace(
-                '
-
-   
-
-   string including nasty whitespace chars  
-
-    ' .
-                    html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;') .
-                    '
-
-'
-            ),
-            'string including nasty whitespace chars'
-        );
 
         $this->assertSame(__atrim(null), null);
         $this->assertSame(__atrim(false), false);

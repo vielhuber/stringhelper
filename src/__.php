@@ -425,11 +425,12 @@ class __
         if (self::nx($str) || !is_string($str)) {
             return $str;
         }
-        while ($str !== trim($str) || $str !== trim($str, ' ') || $str !== trim($str, html_entity_decode('&nbsp;'))) {
-            $str = trim($str);
-            $str = trim($str, ' ');
-            $str = trim($str, html_entity_decode('&nbsp;'));
-        }
+        // the u modifier is important here for multibyte support
+        $str = preg_replace(
+            '/^([\s|' . html_entity_decode('&nbsp;') . ']*)(.*?)([\s|' . html_entity_decode('&nbsp;') . ']*)$/u',
+            '$2',
+            $str
+        );
         return $str;
     }
 
