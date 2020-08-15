@@ -426,11 +426,8 @@ class __
             return $str;
         }
         // the u modifier is important here for multibyte support
-        $str = preg_replace(
-            '/^([\s|' . html_entity_decode('&nbsp;') . ']*)(.*?)([\s|' . html_entity_decode('&nbsp;') . ']*)$/u',
-            '$2',
-            $str
-        );
+        // the s modifier makes \s match &nbsp;
+        $str = preg_replace('/^([\s]*)(.*?)([\s]*)$/us', '$2', $str);
         return $str;
     }
 

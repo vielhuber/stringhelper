@@ -612,6 +612,18 @@ House'
         );
         $this->assertSame(__trim_whitespace('𩸽 '), '𩸽');
         $this->assertSame(__trim_whitespace('Català'), 'Català');
+        $this->assertSame(
+            __trim_whitespace('multi
+line
+string
+
+
+
+'),
+            'multi
+line
+string'
+        );
     }
 
     function test__extract_title_from_url()
