@@ -376,8 +376,8 @@ __password_strength('3iu') // 1
 __password_strength('3iurehkHEDJ') // 2
 __password_strength('3iurehkHEDJK§$R$A') // 3
 
-// calculate radius in meters between two lat/lng points with the haversine formula
-__radius_haversine([48.576809, 13.403207], [48.127719, 11.575344]) // 143999
+// calculate distance in meters between two lat/lng points with the haversine formula
+__distance_haversine([48.576809, 13.403207], [48.127719, 11.575344]) // 143999
 
 // checks if string is a valid url (also works with umlauts and without external lib like idna)
 __validate_url('https://vielhuber.de') // true

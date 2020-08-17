@@ -561,7 +561,7 @@ class __
         return 3;
     }
 
-    public static function radius_haversine($p1, $p2)
+    public static function distance_haversine($p1, $p2)
     {
         if (
             self::nx($p1) ||

@@ -766,11 +766,11 @@ string'
         $this->assertSame(__password_strength([]), 1);
     }
 
-    function test__radius_haversine()
+    function test__distance_haversine()
     {
-        $this->assertSame(__radius_haversine([48.576809, 13.403207], [48.127686, 11.575371]), 143999);
-        $this->assertSame(__radius_haversine(['48.576809', '13.403207'], ['48.127686', '11.575371']), 143999);
-        $this->assertSame(__radius_haversine(null, [null, 0]), null);
+        $this->assertSame(__distance_haversine([48.576809, 13.403207], [48.127686, 11.575371]), 143999);
+        $this->assertSame(__distance_haversine(['48.576809', '13.403207'], ['48.127686', '11.575371']), 143999);
+        $this->assertSame(__distance_haversine(null, [null, 0]), null);
     }
 
     function test__referer()
