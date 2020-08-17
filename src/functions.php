@@ -274,6 +274,13 @@ if (!function_exists('__anonymize_ip')) {
     }
 }
 
+if (!function_exists('__password_strength')) {
+    function __password_strength(...$args)
+    {
+        return \vielhuber\stringhelper\__::password_strength(...$args);
+    }
+}
+
 if (!function_exists('__validate_date')) {
     function __validate_date(...$args)
     {

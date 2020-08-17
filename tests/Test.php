@@ -756,6 +756,16 @@ string'
         $this->assertSame(__anonymize_ip(null), '192.168.178.XXX');
     }
 
+    function test__password_strength()
+    {
+        $this->assertSame(__password_strength('3iu'), 1);
+        $this->assertSame(__password_strength('3iurehkHEDJ'), 2);
+        $this->assertSame(__password_strength('3iurehkHEDJK§$R$A'), 3);
+        $this->assertSame(__password_strength(null), 1);
+        $this->assertSame(__password_strength(''), 1);
+        $this->assertSame(__password_strength([]), 1);
+    }
+
     function test__referer()
     {
         $this->assertSame(__referer(), 'https://google.de/');

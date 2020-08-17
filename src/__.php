@@ -532,6 +532,35 @@ class __
         return preg_replace(['/\.\d*$/', '/[\da-f]*:[\da-f]*$/'], ['.XXX', 'XXXX:XXXX'], $value);
     }
 
+    public static function password_strength($pwd)
+    {
+        if (__nx($pwd)) {
+            return 1;
+        }
+
+        if (strlen($pwd) < 8) {
+            return 1;
+        }
+
+        if (!preg_match('/[0-9]+/', $pwd)) {
+            return 1;
+        }
+
+        if (!preg_match('/[a-zA-Z]+/', $pwd)) {
+            return 1;
+        }
+
+        if (!preg_match('/[\(\)\[\]\{\}\?\!\$\%\&\/\=\*\+\~\,\.\;\:\<\>\-\_]+/', $pwd)) {
+            return 2;
+        }
+
+        if (strlen($pwd) < 12) {
+            return 2;
+        }
+
+        return 3;
+    }
+
     public static function validate_url($value)
     {
         if (self::nx(@$value)) {
