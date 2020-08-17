@@ -534,7 +534,7 @@ class __
 
     public static function password_strength($pwd)
     {
-        if (__nx($pwd)) {
+        if (self::nx($pwd)) {
             return 1;
         }
 
@@ -559,6 +559,38 @@ class __
         }
 
         return 3;
+    }
+
+    public static function radius_haversine($p1, $p2)
+    {
+        if (
+            self::nx($p1) ||
+            self::nx($p2) ||
+            !is_array($p1) ||
+            !is_array($p2) ||
+            count($p1) !== 2 ||
+            count($p2) !== 2 ||
+            !is_numeric($p1[0]) ||
+            !is_numeric($p1[0]) ||
+            !is_numeric($p2[1]) ||
+            !is_numeric($p2[1])
+        ) {
+            return null;
+        }
+        [$latitudeFrom, $longitudeFrom] = $p1;
+        [$latitudeTo, $longitudeTo] = $p2;
+        $earthRadius = 6371000;
+        $latFrom = deg2rad($latitudeFrom);
+        $lonFrom = deg2rad($longitudeFrom);
+        $latTo = deg2rad($latitudeTo);
+        $lonTo = deg2rad($longitudeTo);
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+        $dist = $angle * $earthRadius;
+        $dist = round($dist);
+        $dist = intval($dist);
+        return $dist;
     }
 
     public static function validate_url($value)
@@ -1775,7 +1807,7 @@ class __
 
     public static function referer()
     {
-        if (__nx(@$_SERVER['HTTP_REFERER'])) {
+        if (self::nx(@$_SERVER['HTTP_REFERER'])) {
             return null;
         }
         return $_SERVER['HTTP_REFERER'];

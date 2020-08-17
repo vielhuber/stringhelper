@@ -281,6 +281,13 @@ if (!function_exists('__password_strength')) {
     }
 }
 
+if (!function_exists('__radius_haversine')) {
+    function __radius_haversine(...$args)
+    {
+        return \vielhuber\stringhelper\__::radius_haversine(...$args);
+    }
+}
+
 if (!function_exists('__validate_date')) {
     function __validate_date(...$args)
     {
