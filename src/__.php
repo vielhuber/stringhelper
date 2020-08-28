@@ -1677,6 +1677,32 @@ class __
         return $array;
     }
 
+    public static function foreach_nested(...$args)
+    {
+        $fn = array_pop($args);
+        foreach (self::combinations($args) as $combinations__value) {
+            $fn(...$combinations__value);
+        }
+    }
+
+    public static function combinations($arrays, $i = 0)
+    {
+        if (!isset($arrays[$i])) {
+            return [];
+        }
+        if ($i == count($arrays) - 1) {
+            return $arrays[$i];
+        }
+        $tmp = self::combinations($arrays, $i + 1);
+        $result = [];
+        foreach ($arrays[$i] as $v) {
+            foreach ($tmp as $t) {
+                $result[] = is_array($t) ? array_merge([$v], $t) : [$v, $t];
+            }
+        }
+        return $result;
+    }
+
     public static function can_be_looped($a)
     {
         if (is_array($a) && !empty($a)) {

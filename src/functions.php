@@ -603,6 +603,13 @@ if (!function_exists('__arr_prepend')) {
     }
 }
 
+if (!function_exists('__foreach_nested')) {
+    function __foreach_nested(...$args)
+    {
+        return \vielhuber\stringhelper\__::foreach_nested(...$args);
+    }
+}
+
 if (!function_exists('__can_be_looped')) {
     function __can_be_looped(...$args)
     {

@@ -740,6 +740,14 @@ __can_be_looped([1,2]) // true
 __can_be_looped((object)[1,2]) // true
 __can_be_looped([]) // false
 
+// generate nested foreach loop of n levels
+$a = [1, 2]; $b = [3, 4]; $c = [5, 6]; $output = [];
+$fn = function ($x, $y, $z) use (&$output) { $output[] = $x . '' . $y . '' . $z; };
+__foreach_nested($a, $b, $c, $fn);
+print_r($output);
+// same as foreach($a as $a__value) { foreach($b as $b__value) { foreach($c as $c__value) { $fn($x, $y, $z); } }
+// ['135', '136', '145', '146', '235', '236', '245', '246']
+
 // removes recursively all items from array or object or collection that are considered empty (indexes are not reindexed)
 __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]]) // [0 => ['foo',0,'0']]
 __remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]], [0,'0']) // [0 => ['foo']]

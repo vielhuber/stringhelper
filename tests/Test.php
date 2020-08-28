@@ -766,6 +766,19 @@ string'
         $this->assertSame(__password_strength([]), 1);
     }
 
+    function test__foreach_nested()
+    {
+        $a = [1, 2];
+        $b = [3, 4];
+        $c = [5, 6];
+        $output = [];
+        $fn = function ($x, $y, $z) use (&$output) {
+            $output[] = $x . '' . $y . '' . $z;
+        };
+        __foreach_nested($a, $b, $c, $fn);
+        $this->assertSame($output, ['135', '136', '145', '146', '235', '236', '245', '246']);
+    }
+
     function test__distance_haversine()
     {
         $this->assertSame(__distance_haversine([48.576809, 13.403207], [48.127686, 11.575371]), 143999);
