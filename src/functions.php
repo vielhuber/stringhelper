@@ -876,6 +876,13 @@ if (!function_exists('__curl')) {
     }
 }
 
+if (!function_exists('__json_response')) {
+    function __json_response(...$args)
+    {
+        return \vielhuber\stringhelper\__::json_response(...$args);
+    }
+}
+
 if (!function_exists('__extract_urls_from_sitemap')) {
     function __extract_urls_from_sitemap(...$args)
     {

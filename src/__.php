@@ -2381,6 +2381,14 @@ class __
         return $result;
     }
 
+    public static function json_response($data, $code = 200)
+    {
+        http_response_code($code);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        die();
+    }
+
     public static function extract_urls_from_sitemap($url)
     {
         $urls = [];

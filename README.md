@@ -982,6 +982,18 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 // you can also hijack the current browser session if logged in
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 
+// output json response with status code for apis
+__json_response([
+    'success' => true,
+    'message' => 'successfully created object',
+    'public_message' => 'Object erfolgreich angelegt!',
+    'data' => [
+        'id' => 42,
+        'foo' => 'bar'
+    ],
+    200 // status code
+]);
+
 // extract all urls of (potentially nested) remote sitemap
 __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml') // ['https://vielhuber.de','https://vielhuber.de/impressum/', ...]
 
