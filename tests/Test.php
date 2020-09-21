@@ -336,6 +336,12 @@ class Test extends \PHPUnit\Framework\TestCase
         foreach (
             [
                 '<ul><li></li><li></li></ul>',
+                '<custom-component @click.prevent="foo()"></custom-component>',
+                '<custom-component
+ @click.prevent="foo()"></custom-component>',
+                '<custom-component
+@click.prevent="foo()"
+></custom-component>',
                 'Dies ist ein Test',
                 '<!DOCTYPE html>
 <html lang="de">

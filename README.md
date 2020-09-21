@@ -468,6 +468,7 @@ __minify_html('<!DOCTYPE html>
 
 // proper string to domdocument and domdocument to string conversion (respects original structure and fixes lots of caveats)
 __dom_to_str(__str_to_dom('<ul><li></li><li></li></ul>')) // <ul><li></li><li></li></ul>
+__dom_to_str(__str_to_dom('<custom-component @click.prevent="foo()"></custom-component>')) // <custom-component @click.prevent="foo()"></custom-component>
 
 // translate strings
 /*

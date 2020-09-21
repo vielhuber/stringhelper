@@ -802,6 +802,8 @@ class __
                 '<!--remove--><head><meta http-equiv="content-type" content="text/html;charset=utf-8" /></head><!--/remove-->' .
                 $html;
         }
+        // vuejs attribute names like @click get stripped out by domdocument: prevent that
+        $html = preg_replace('/( |\r\n|\r|\n)(@)([a-zA-Z-_:\.]+=)/', '$1___$3', $html);
         @$dom->loadHTML($html);
         return $dom;
     }
@@ -816,6 +818,7 @@ class __
             $nodes__value->nodeValue = '';
         }
         $html = $dom->saveHTML();
+        $html = preg_replace('/( |\r\n|\r|\n)(___)([a-zA-Z-_:\.]+=)/', '$1@$3', $html);
         // domdocument converts all umlauts to html entities, revert that
         // $html = html_entity_decode($html);
         // this method is bad when we use intentionally encoded code e.g. in <pre> tags; another option to prevent html entities (and leave everything intact)
