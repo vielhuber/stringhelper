@@ -804,6 +804,26 @@ class __
         }
         // vuejs attribute names like @click get stripped out by domdocument: prevent that
         $html = preg_replace('/( |\r\n|\r|\n)(@)([a-zA-Z-_:\.]+=)/', '$1___$3', $html);
+
+        // domdocument has problems with script tags (see: https://stackoverflow.com/questions/33426788/domdocument-removing-closing-tag-within-script-tags)
+        preg_match_all('/<script\b[^>]*>.*?<\/[a-zA-Z][a-zA-Z0-9]*>.*?<\/script>/s', $html, $matches);
+        $matches = array_unique( $matches[0] );
+        if( !empty($matches) ) {
+            foreach ( $matches as $matches__value ) {
+                $before = $matches__value;
+                $after = $matches__value;
+                preg_match_all('/<\/[a-zA-Z][a-zA-Z0-9]*>/', $matches__value, $matches_inner);
+                $matches_inner = array_unique( $matches_inner[0] );
+                foreach($matches_inner as $matches_inner__value) {
+                    if($matches_inner__value === '</script>') { continue; }
+                    $after = str_replace($matches_inner__value, str_replace('/','\/',$matches_inner__value), $after);
+                }
+                $simple[] = $after;
+                $complete[] = $before;
+            }
+            $html = str_replace($complete, $simple, $html);
+        }
+
         @$dom->loadHTML($html);
         return $dom;
     }
