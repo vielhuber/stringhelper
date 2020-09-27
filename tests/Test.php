@@ -370,6 +370,44 @@ class Test extends \PHPUnit\Framework\TestCase
         ) {
             $this->assertSame(__minify_html(__dom_to_str(__str_to_dom($html__value))), __minify_html($html__value));
         }
+
+        $in = <<<'EOD'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script>
+            var baz;
+            </script>
+            <title>test</title>
+            <script>
+            console.log("<h1>hello</h1>");
+            var foo = '<a href="#"></a>';
+            var bar = "<a href=\"#\"></a>";
+            </script>
+        </head>
+        <body>
+        </body>
+        </html>
+        EOD;
+        $out = <<<'EOD'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script>
+            var baz;
+            </script>
+            <title>test</title>
+            <script>
+            console.log("<h1>hello<\/h1>");
+            var foo = '<a href="#"><\/a>';
+            var bar = "<a href=\"#\"><\/a>";
+            </script>
+        </head>
+        <body>
+        </body>
+        </html>
+        EOD;
+        $this->assertSame(__minify_html(__dom_to_str(__str_to_dom($in))), __minify_html($out));
     }
 
     function test__translate()
