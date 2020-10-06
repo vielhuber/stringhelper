@@ -807,17 +807,23 @@ class __
 
         // domdocument has problems with script tags (see: https://stackoverflow.com/questions/33426788/domdocument-removing-closing-tag-within-script-tags)
         preg_match_all('/<script\b[^>]*>.*?<\/script>/s', $html, $matches);
-        $matches = array_unique( $matches[0] );
-        if( !empty($matches) ) {
-            foreach ( $matches as $matches__value ) {
+        $matches = array_unique($matches[0]);
+        if (!empty($matches)) {
+            foreach ($matches as $matches__value) {
                 $before = $matches__value;
                 $after = $matches__value;
                 preg_match_all('/<\/[a-zA-Z][a-zA-Z0-9]*>/', $matches__value, $matches_inner);
-                $matches_inner = array_unique( $matches_inner[0] );
-                if( !empty($matches_inner) ) {
-                    foreach($matches_inner as $matches_inner__value) {
-                        if($matches_inner__value === '</script>') { continue; }
-                        $after = str_replace($matches_inner__value, str_replace('/','\/',$matches_inner__value), $after);
+                $matches_inner = array_unique($matches_inner[0]);
+                if (!empty($matches_inner)) {
+                    foreach ($matches_inner as $matches_inner__value) {
+                        if ($matches_inner__value === '</script>') {
+                            continue;
+                        }
+                        $after = str_replace(
+                            $matches_inner__value,
+                            str_replace('/', '\/', $matches_inner__value),
+                            $after
+                        );
                     }
                     $simple[] = $after;
                     $complete[] = $before;

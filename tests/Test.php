@@ -372,47 +372,47 @@ class Test extends \PHPUnit\Framework\TestCase
         }
 
         $in = <<<'EOD'
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <script>
-            var baz;
-            </script>
-            <title>test</title>
-            <script>
-            console.log("<h1>hello</h1>");
-            var foo = '<a href="#"></a>';
-            var bar = "<a href=\"#\"></a>";
-            </script>
-        </head>
-        <body>
-        </body>
-        </html>
-        EOD;
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+    var baz;
+    </script>
+    <title>test</title>
+    <script>
+    console.log("<h1>hello</h1>");
+    var foo = '<a href="#"></a>';
+    var bar = "<a href=\"#\"></a>";
+    </script>
+</head>
+<body>
+</body>
+</html>
+EOD;
         $out = <<<'EOD'
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <script>
-            var baz;
-            </script>
-            <title>test</title>
-            <script>
-            console.log("<h1>hello<\/h1>");
-            var foo = '<a href="#"><\/a>';
-            var bar = "<a href=\"#\"><\/a>";
-            </script>
-        </head>
-        <body>
-        </body>
-        </html>
-        EOD;
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+    var baz;
+    </script>
+    <title>test</title>
+    <script>
+    console.log("<h1>hello<\/h1>");
+    var foo = '<a href="#"><\/a>';
+    var bar = "<a href=\"#\"><\/a>";
+    </script>
+</head>
+<body>
+</body>
+</html>
+EOD;
         $this->assertSame(__minify_html(__dom_to_str(__str_to_dom($in))), __minify_html($out));
     }
 
     function test__translate()
     {
-        foreach (['free', getenv('GOOGLE_TRANSLATION_API_KEY')] as $api_keys__value) {
+        foreach (['free', $_ENV['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
             foreach (
                 [
                     [
@@ -430,7 +430,7 @@ class Test extends \PHPUnit\Framework\TestCase
                     ['Land: <a href="#">Dies ist ein Test</a>', 'Pays: <a href="#">Ceci est un test</a>', 'de', 'fr'],
                     [
                         'Haus: <a>+49 (0) 89 21 540 01 42</a><br/> Telefax: +49 (0) 89 21 544 59 1<br/> E-Mail: <a>david@vielhuber.local.vielhuber.de</a>',
-                        'House: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1 <br/> Email: <a>david@vielhuber.local.vielhuber.de</a>',
+                        'House: <a>+49 (0) 89 21 540 01 42</a> <br/> Fax: +49 (0) 89 21 544 59 1<br/> Email: <a>david@vielhuber.local.vielhuber.de</a>',
                         'de',
                         'en'
                     ],
@@ -497,7 +497,7 @@ class Test extends \PHPUnit\Framework\TestCase
             }
         }
 
-        foreach (['free', getenv('GOOGLE_TRANSLATION_API_KEY')] as $api_keys__value) {
+        foreach (['free', $_ENV['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
             $this->assertSame(__translate_google(null, 'de', 'en', $api_keys__value), null);
             $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
@@ -508,7 +508,7 @@ class Test extends \PHPUnit\Framework\TestCase
 Haus',
                 'de',
                 'en',
-                getenv('GOOGLE_TRANSLATION_API_KEY')
+                $_ENV['GOOGLE_TRANSLATION_API_KEY']
             ),
             'Dog
 House'
@@ -531,7 +531,7 @@ House'
                 'Sein oder Nichtsein; das ist hier die Frage.',
                 'de',
                 'en',
-                getenv('MICROSOFT_TRANSLATION_API_KEY')
+                $_ENV['MICROSOFT_TRANSLATION_API_KEY']
             ),
             'Being or not being; that is the question here.'
         );
@@ -541,7 +541,7 @@ House'
                 '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
                 'de',
                 'en',
-                getenv('MICROSOFT_TRANSLATION_API_KEY')
+                $_ENV['MICROSOFT_TRANSLATION_API_KEY']
             ),
             'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.'
         );
@@ -551,7 +551,7 @@ House'
                 '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
                 'de',
                 'en',
-                getenv('MICROSOFT_TRANSLATION_API_KEY')
+                $_ENV['MICROSOFT_TRANSLATION_API_KEY']
             ),
             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.'
         );
@@ -567,7 +567,7 @@ House'
                 'Sein oder Nichtsein; das ist hier die Frage.',
                 'de',
                 'en',
-                getenv('DEEPL_TRANSLATION_API_KEY')
+                $_ENV['DEEPL_TRANSLATION_API_KEY']
             ),
             'To be or not to be; that is the question here.'
         );
@@ -577,7 +577,7 @@ House'
                 '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
                 'de',
                 'en',
-                getenv('DEEPL_TRANSLATION_API_KEY')
+                $_ENV['DEEPL_TRANSLATION_API_KEY']
             ),
             'Since <a p="2">ES6</a>,<a p="1"> VanillaJS</a> is almost equal to the primary rock <a p="3">jQuery</a> in all areas and is now far superior.'
         );
