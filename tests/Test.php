@@ -412,7 +412,7 @@ EOD;
 
     function test__translate()
     {
-        foreach (['free', $_ENV['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
+        foreach (['free', $_SERVER['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
             foreach (
                 [
                     [
@@ -497,7 +497,7 @@ EOD;
             }
         }
 
-        foreach (['free', $_ENV['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
+        foreach (['free', $_SERVER['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
             $this->assertSame(__translate_google(null, 'de', 'en', $api_keys__value), null);
             $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
@@ -508,7 +508,7 @@ EOD;
 Haus',
                 'de',
                 'en',
-                $_ENV['GOOGLE_TRANSLATION_API_KEY']
+                $_SERVER['GOOGLE_TRANSLATION_API_KEY']
             ),
             'Dog
 House'
@@ -531,7 +531,7 @@ House'
                 'Sein oder Nichtsein; das ist hier die Frage.',
                 'de',
                 'en',
-                $_ENV['MICROSOFT_TRANSLATION_API_KEY']
+                $_SERVER['MICROSOFT_TRANSLATION_API_KEY']
             ),
             'Being or not being; that is the question here.'
         );
@@ -541,7 +541,7 @@ House'
                 '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
                 'de',
                 'en',
-                $_ENV['MICROSOFT_TRANSLATION_API_KEY']
+                $_SERVER['MICROSOFT_TRANSLATION_API_KEY']
             ),
             'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.'
         );
@@ -551,7 +551,7 @@ House'
                 '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
                 'de',
                 'en',
-                $_ENV['MICROSOFT_TRANSLATION_API_KEY']
+                $_SERVER['MICROSOFT_TRANSLATION_API_KEY']
             ),
             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.'
         );
@@ -567,7 +567,7 @@ House'
                 'Sein oder Nichtsein; das ist hier die Frage.',
                 'de',
                 'en',
-                $_ENV['DEEPL_TRANSLATION_API_KEY']
+                $_SERVER['DEEPL_TRANSLATION_API_KEY']
             ),
             'To be or not to be; that is the question here.'
         );
@@ -577,9 +577,9 @@ House'
                 '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
                 'de',
                 'en',
-                $_ENV['DEEPL_TRANSLATION_API_KEY']
+                $_SERVER['DEEPL_TRANSLATION_API_KEY']
             ),
-            'Since <a p="2">ES6</a>,<a p="1"> VanillaJS</a> is almost equal to the primary rock <a p="3">jQuery</a> in all areas and is now far superior.'
+            'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> is almost equal to the primary rock <a p="3">jQuery</a> in all areas and is now far superior.'
         );
 
         try {
