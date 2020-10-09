@@ -963,6 +963,7 @@ string'
         $this->assertSame($arr, [['a' => true, 'b' => true, 'c' => 'Test!'], ['a' => true, 'b' => false, 'c' => 'yo']]);
         usort($arr, __array_multisort([['a', 'desc'], ['b', 'asc'], ['c', 'desc']]));
         $this->assertSame($arr, [['a' => true, 'b' => false, 'c' => 'yo'], ['a' => true, 'b' => true, 'c' => 'Test!']]);
+
         $arr = [
             ['id' => 1, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
             ['id' => 2, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
@@ -980,6 +981,21 @@ string'
             ['id' => 5, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32'],
             ['id' => 6, 'pos' => null, 'date' => new dateTime('2020-01-01'), 'created_at' => '2020-01-16 13:03:32']
         ]);
+
+        $arr = [
+            ['id' => 1, 'date1' => '2000-01-01', 'date2' => '2000-01-01'],
+            ['id' => 2, 'date1' => '2002-01-01', 'date2' => '2009-01-01'],
+            ['id' => 3, 'date1' => '2002-01-01', 'date2' => '2008-01-01'],
+            ['id' => 4, 'date1' => '2001-01-01', 'date2' => '2000-01-01']
+        ];
+        usort($arr, __array_multisort([['date1', 'asc'], ['date2', 'asc']]));
+        $this->assertEquals($arr, [
+            ['id' => 1, 'date1' => '2000-01-01', 'date2' => '2000-01-01'],
+            ['id' => 4, 'date1' => '2001-01-01', 'date2' => '2000-01-01'],
+            ['id' => 3, 'date1' => '2002-01-01', 'date2' => '2008-01-01'],
+            ['id' => 2, 'date1' => '2002-01-01', 'date2' => '2009-01-01']
+        ]);
+
         $arr = [['foo' => 'baz', 'bar' => 'baz'], ['foo' => 'baz', 'bar' => 'gnarr']];
         usort($arr, __array_multisort([['foo', 'desc'], ['bar', 'desc']]));
         $this->assertEquals($arr, [['foo' => 'baz', 'bar' => 'gnarr'], ['foo' => 'baz', 'bar' => 'baz']]);
