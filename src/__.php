@@ -2195,6 +2195,21 @@ class __
 
     public static function age_from_date($date_birth, $date_relative = null)
     {
+        return self::age_from_date_generic($date_birth, $date_relative, 'years');
+    }
+
+    public static function age_from_date_weeks($date_birth, $date_relative = null)
+    {
+        return self::age_from_date_generic($date_birth, $date_relative, 'weeks');
+    }
+
+    public static function age_from_date_days($date_birth, $date_relative = null)
+    {
+        return self::age_from_date_generic($date_birth, $date_relative, 'days');
+    }
+
+    private static function age_from_date_generic($date_birth, $date_relative = null, $type = 'years')
+    {
         if (self::nx(@$date_birth)) {
             return null;
         }
@@ -2213,7 +2228,15 @@ class __
         $date_birth = new \DateTime($date_birth);
         $date_relative = new \DateTime($date_relative);
         $age = $date_relative->diff($date_birth);
-        $age = $age->y;
+        if ($type === 'years') {
+            $age = $age->y;
+        }
+        if ($type === 'weeks') {
+            $age = floor($age->days / 7);
+        }
+        if ($type === 'days') {
+            $age = $age->days;
+        }
         $age = intval($age);
         return $age;
     }

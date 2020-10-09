@@ -589,6 +589,50 @@ House'
         }
     }
 
+    function test_age_from_date()
+    {
+        __d(
+            __age_from_date_weeks('2000-01-01'),
+            __age_from_date_weeks('2000-01-01', '2010-01-01'),
+            __age_from_date_days('2000-01-01'),
+            __age_from_date_days('2000-01-01', '2010-01-01')
+        );
+        foreach (
+            [
+                [date(strtotime('now - 20 years - 1 month')), 20, 1047, 7335],
+                [date(strtotime('now - 20 years + 1 day')), 19, 1043, 7304],
+                [date(strtotime('now - 20 years')), 20, 1043, 7305],
+                [date(strtotime('now - 40 years - 1 month')), 40, 2091, 14640],
+                [date(strtotime('now - 40 years + 1 month')), 39, 2082, 14579],
+                [null, null, null, null],
+                [false, null, null, null],
+                ['foo', null, null, null],
+                [[date(strtotime('now - 20 years - 1 month')), date(strtotime('now - 10 years'))], 10, 526, 3682],
+                [[date(strtotime('now - 20 years')), date(strtotime('now - 10 years'))], 10, 521, 3652],
+                [[date(strtotime('now - 20 years - 1 month')), null], 20, 1047, 7335],
+                [[date(strtotime('now - 20 years - 1 month')), ''], 20, 1047, 7335],
+                [[date(strtotime('now - 20 years - 1 month')), 'foo'], null, null, null],
+                [date(strtotime('5232-01-01')), null, null, null],
+                [[date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2007'))], 0, 0, 0],
+                [[date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('26.12.2008'))], 0, 52, 365],
+                [[date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2008'))], 1, 52, 366],
+                [[date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('28.12.2008'))], 1, 52, 367]
+            ]
+            as $data__value
+        ) {
+            if (is_array($data__value[0])) {
+                $date_birth = $data__value[0][0];
+                $date_relative = $data__value[0][1];
+            } else {
+                $date_birth = $data__value[0];
+                $date_relative = null;
+            }
+            $this->assertSame(__age_from_date($date_birth, $date_relative), $data__value[1]);
+            $this->assertSame(__age_from_date_weeks($date_birth, $date_relative), $data__value[2]);
+            $this->assertSame(__age_from_date_days($date_birth, $date_relative), $data__value[3]);
+        }
+    }
+
     function test_timestamp_excel_unix()
     {
         $this->assertSame(__timestamp_excel_to_str(36526), '2000-01-01 00:00:00');
@@ -1199,40 +1243,6 @@ string'
         $this->assertSame(__date_reset_time(null), null);
         $this->assertSame(__date_reset_time(false), null);
         $this->assertSame(__date_reset_time(true), null);
-
-        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month'))), 20);
-        $this->assertSame(__age_from_date(date(strtotime('now - 20 years + 1 day'))), 19);
-        $this->assertSame(__age_from_date(date(strtotime('now - 20 years'))), 20);
-        $this->assertSame(__age_from_date(date(strtotime('now - 40 years - 1 month'))), 40);
-        $this->assertSame(__age_from_date(date(strtotime('now - 40 years + 1 month'))), 39);
-        $this->assertSame(__age_from_date(null), null);
-        $this->assertSame(__age_from_date(false), null);
-        $this->assertSame(__age_from_date('foo'), null);
-        $this->assertSame(
-            __age_from_date(date(strtotime('now - 20 years - 1 month')), date(strtotime('now - 10 years'))),
-            10
-        );
-        $this->assertSame(__age_from_date(date(strtotime('now - 20 years')), date(strtotime('now - 10 years'))), 10);
-        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), null), 20);
-        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), ''), 20);
-        $this->assertSame(__age_from_date(date(strtotime('now - 20 years - 1 month')), 'foo'), null);
-        $this->assertSame(__age_from_date(date(strtotime('5232-01-01'))), null);
-        $this->assertSame(
-            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2007'))),
-            0
-        );
-        $this->assertSame(
-            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('26.12.2008'))),
-            0
-        );
-        $this->assertSame(
-            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2008'))),
-            1
-        );
-        $this->assertSame(
-            __age_from_date(date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('28.12.2008'))),
-            1
-        );
 
         $this->assertSame(__first_char_is_uppercase(true), false);
         $this->assertSame(__first_char_is_uppercase(false), false);

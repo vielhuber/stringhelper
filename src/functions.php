@@ -757,6 +757,20 @@ if (!function_exists('__age_from_date')) {
     }
 }
 
+if (!function_exists('__age_from_date_weeks')) {
+    function __age_from_date_weeks(...$args)
+    {
+        return \vielhuber\stringhelper\__::age_from_date_weeks(...$args);
+    }
+}
+
+if (!function_exists('__age_from_date_days')) {
+    function __age_from_date_days(...$args)
+    {
+        return \vielhuber\stringhelper\__::age_from_date_days(...$args);
+    }
+}
+
 if (!function_exists('__remove_zero_decimals')) {
     function __remove_zero_decimals(...$args)
     {
