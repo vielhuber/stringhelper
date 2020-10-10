@@ -780,6 +780,13 @@ class __
     public static function str_to_dom($html)
     {
         $dom = new \DOMDocument();
+
+        // support XML
+        if (mb_strpos($html, '<?xml') === 0) {
+            @$dom->loadXML($html);
+            return $dom;
+        }
+
         $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
         $has_wrapper = strpos($html, '<html') !== false;
         if ($has_wrapper === false) {
@@ -838,9 +845,15 @@ class __
 
     public static function dom_to_str($dom)
     {
-        $DOMXPath = new \DOMXPath($dom);
+        // support XML
+        if ($dom->xmlVersion != '') {
+            $html = $dom->saveXML();
+            return $html;
+        }
+
         // domdocument does not close empty li tags (because they're valid html)
         // to circumvent that, use:
+        $DOMXPath = new \DOMXPath($dom);
         $nodes = $DOMXPath->query('/html/body//*[not(node())]');
         foreach ($nodes as $nodes__value) {
             $nodes__value->nodeValue = '';
