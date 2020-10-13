@@ -459,18 +459,13 @@ class __
         // prevent html parsing
         array_walk_recursive($data, function (&$data__value) {
             if (is_string($data__value)) {
-                $data__value = htmlspecialchars($data__value);
+                $data__value = htmlspecialchars($data__value, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8');
             }
         });
         foreach ($data as $data__value) {
-            if (is_array($data__value) || is_object($data__value) || $data__value instanceof \Traversable) {
-                echo '<pre>';
-            }
+            echo '<pre>';
             var_dump($data__value);
-            if (is_array($data__value) || is_object($data__value) || $data__value instanceof \Traversable) {
-                echo '</pre>';
-            }
-            echo '<br/>';
+            echo '</pre>';
         }
     }
 
