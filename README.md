@@ -1001,6 +1001,7 @@ __json_response([
 
 // extract all urls of (potentially nested) remote sitemap
 __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml') // ['https://vielhuber.de','https://vielhuber.de/impressum/', ...]
+__extract_urls_from_sitemap('https://foo:bar@vielhuber.de/sitemap_index.xml') // supports basic auth
 
 // get meta tags from url
 __extract_title_from_url('https://vielhuber.de') // David Vielhuber > Full-Stack Developer aus München

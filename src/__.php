@@ -2451,8 +2451,21 @@ class __
         die();
     }
 
-    public static function extract_urls_from_sitemap($url)
+    public static function extract_urls_from_sitemap($url, $basic_auth = null)
     {
+        // auto detect basic auth
+        if ($basic_auth === null && strpos($url, '@') !== false) {
+            preg_match_all('/^https?:\/\/(.+)?:(.+)?@.*$/', $url, $matches, PREG_SET_ORDER);
+            if (!empty($matches) && !empty($matches[0])) {
+                $basic_auth = $matches[0][1] . ':' . $matches[0][2];
+            }
+        }
+        // inject basic auth in url
+        if ($basic_auth !== null && strpos($url, '@') === false) {
+            $url = str_replace('http://', 'http://' . $basic_auth . '@', $url);
+            $url = str_replace('https://', 'https://' . $basic_auth . '@', $url);
+        }
+
         $urls = [];
         if (self::nx($url)) {
             return $urls;
@@ -2461,7 +2474,16 @@ class __
         if (strpos($url, '?') === false) {
             $url .= '?no_cache=1';
         }
-        $data = json_decode(json_encode(@simplexml_load_file($url)), true);
+
+        $data = self::fetch($url);
+        $data = @simplexml_load_string($data);
+
+        // fallback
+        if (self::nx($data)) {
+            $data = @simplexml_load_file($url);
+        }
+
+        $data = json_decode(json_encode($data), true);
         if (self::nx($data)) {
             return $urls;
         }
@@ -2486,7 +2508,7 @@ class __
                     is_string($sitemap__value['loc']) &&
                     $sitemap__value['loc'] != ''
                 ) {
-                    $urls = array_merge($urls, self::extract_urls_from_sitemap($sitemap__value['loc']));
+                    $urls = array_merge($urls, self::extract_urls_from_sitemap($sitemap__value['loc'], $basic_auth));
                 }
             }
         }

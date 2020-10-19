@@ -605,7 +605,7 @@ House'
         }
     }
 
-    function test_age_from_date()
+    function test__age_from_date()
     {
         foreach (
             [
@@ -640,6 +640,104 @@ House'
             $this->assertSame(__age_from_date($date_birth, $date_relative), $data__value[1]);
             $this->assertSame(__age_from_date_weeks($date_birth, $date_relative), $data__value[2]);
             $this->assertSame(__age_from_date_days($date_birth, $date_relative), $data__value[3]);
+        }
+    }
+
+    function test__curl()
+    {
+        $response = __curl('https://httpbin.org/anything');
+        $this->assertSame($response->result->method, 'GET');
+        $this->assertSame($response->status, 200);
+        $this->assertSame(!empty($response->headers), true);
+        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST');
+        $this->assertSame($response->result->method, 'POST');
+        $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
+        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT');
+        $this->assertSame($response->result->method, 'PUT');
+        $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
+        $response = __curl('https://httpbin.org/anything', null, 'DELETE');
+        $this->assertSame($response->result->method, 'DELETE');
+        $this->assertSame($response->result->data, '');
+        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', [
+            'Bar' => 'baz'
+        ]);
+        $this->assertSame($response->result->headers->Bar, 'baz');
+        $response = __curl('https://vielhuber.de');
+        $this->assertTrue(strpos($response->result, '<html') !== false);
+
+        $response = __curl('https://httpbin.org/basic-auth/foo/bar');
+        $this->assertSame($response->status, 401);
+        $response = __curl('https://httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, [
+            'foo' => 'bar'
+        ]);
+        $this->assertSame($response->status, 200);
+        $response = __curl('https://foo:bar@httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, null);
+        $this->assertSame($response->status, 200);
+
+        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, null);
+        $this->assertSame(empty((array) $response->result->cookies), true);
+        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, [
+            'foo' => 'bar',
+            'bar' => 'baz'
+        ]);
+        $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
+
+        // changed host due to https://github.com/postmanlabs/httpbin/issues/617
+        $response = __curl(
+            'https://httpbingo.org/absolute-redirect/1',
+            null,
+            null,
+            null,
+            false,
+            false,
+            60,
+            null,
+            null,
+            true
+        );
+        $this->assertSame($response->status, 200);
+        $response = __curl(
+            'https://httpbingo.org/absolute-redirect/1',
+            null,
+            null,
+            null,
+            false,
+            false,
+            60,
+            null,
+            null,
+            false
+        );
+        $this->assertSame($response->status, 302);
+        $response = __curl(
+            'https://httpbingo.org/absolute-redirect/1',
+            null,
+            null,
+            null,
+            false,
+            false,
+            60,
+            null,
+            null,
+            true
+        );
+        $this->assertSame($response->url, 'https://httpbingo.org/get');
+
+        // fill in your wp credentials to test this
+        if (1 == 0) {
+            $wp_url = 'https://vielhuber.de';
+            $wp_username = 'username';
+            $wp_password = 'password';
+            __curl(
+                $wp_url . '/wp-login.php',
+                ['log' => $wp_username, 'pwd' => $wp_password],
+                'POST',
+                null,
+                true,
+                false
+            );
+            $response = __curl($wp_url . '/wp-admin/options.php', null, 'GET', null, true); // gets the html code of wp backend
+            $this->assertTrue(strpos($response->result, 'show_avatars') !== false);
         }
     }
 
@@ -1673,100 +1771,6 @@ baz'
         $this->assertSame($response->method, 'GET');
         $response = __fetch('https://httpbin.org/anything', 'php');
         $this->assertSame($response->method, 'GET');
-
-        $response = __curl('https://httpbin.org/anything');
-        $this->assertSame($response->result->method, 'GET');
-        $this->assertSame($response->status, 200);
-        $this->assertSame(!empty($response->headers), true);
-        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST');
-        $this->assertSame($response->result->method, 'POST');
-        $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
-        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT');
-        $this->assertSame($response->result->method, 'PUT');
-        $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
-        $response = __curl('https://httpbin.org/anything', null, 'DELETE');
-        $this->assertSame($response->result->method, 'DELETE');
-        $this->assertSame($response->result->data, '');
-        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', [
-            'Bar' => 'baz'
-        ]);
-        $this->assertSame($response->result->headers->Bar, 'baz');
-        $response = __curl('https://vielhuber.de');
-        $this->assertTrue(strpos($response->result, '<html') !== false);
-        $response = __curl('https://httpbin.org/basic-auth/foo/bar');
-        $this->assertSame($response->status, 401);
-        $response = __curl('https://httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, [
-            'foo' => 'bar'
-        ]);
-        $this->assertSame($response->status, 200);
-
-        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, null);
-        $this->assertSame(empty((array) $response->result->cookies), true);
-        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, [
-            'foo' => 'bar',
-            'bar' => 'baz'
-        ]);
-        $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
-
-        // disabled due to https://github.com/postmanlabs/httpbin/issues/617
-        if (1 == 0) {
-            $response = __curl(
-                'https://httpbin.org/absolute-redirect/1',
-                null,
-                null,
-                null,
-                false,
-                false,
-                60,
-                null,
-                null,
-                true
-            );
-            $this->assertSame($response->status, 200);
-            $response = __curl(
-                'https://httpbin.org/absolute-redirect/1',
-                null,
-                null,
-                null,
-                false,
-                false,
-                60,
-                null,
-                null,
-                false
-            );
-            $this->assertSame($response->status, 302);
-            $response = __curl(
-                'https://httpbin.org/absolute-redirect/1',
-                null,
-                null,
-                null,
-                false,
-                false,
-                60,
-                null,
-                null,
-                true
-            );
-            $this->assertSame($response->url, 'http://httpbin.org/get');
-        }
-
-        // fill in your wp credentials to test this
-        if (1 == 0) {
-            $wp_url = 'https://vielhuber.de';
-            $wp_username = 'username';
-            $wp_password = 'password';
-            __curl(
-                $wp_url . '/wp-login.php',
-                ['log' => $wp_username, 'pwd' => $wp_password],
-                'POST',
-                null,
-                true,
-                false
-            );
-            $response = __curl($wp_url . '/wp-admin/options.php', null, 'GET', null, true); // gets the html code of wp backend
-            $this->assertTrue(strpos($response->result, 'show_avatars') !== false);
-        }
 
         $this->assertEquals(__success(), ((object) ['success' => true, 'message' => '']));
         $this->assertEquals(__success('foo'), (object) ['success' => true, 'message' => 'foo']);
