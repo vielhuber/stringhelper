@@ -2575,6 +2575,18 @@ class __
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         }
 
+        // while you can provide your basic auth information inside the url,
+        // this sometimes leads to problems (e.g. by redirects)
+        // this function strips out the basic auth if available
+        // and uses it properly
+        if (self::nx($basic_auth) && strpos($url, '@') !== false) {
+            preg_match_all('/^https?:\/\/(.+)?:(.+)?@.*$/', $url, $matches, PREG_SET_ORDER);
+            if (!empty($matches) && !empty($matches[0])) {
+                $url = str_replace($matches[0][1] . ':' . $matches[0][2] . '@', '', $url);
+                $basic_auth = [$matches[0][1] => $matches[0][2]];
+            }
+        }
+
         if (self::x($basic_auth)) {
             curl_setopt(
                 $curl,
