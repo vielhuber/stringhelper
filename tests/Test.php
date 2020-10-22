@@ -605,6 +605,39 @@ House'
         }
     }
 
+    function test__is_repetitive_action()
+    {
+        $default = $_SERVER['REMOTE_ADDR'];
+
+        $_SERVER['REMOTE_ADDR'] =
+            mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999);
+        $this->assertSame(__is_repetitive_action(), false);
+        $this->assertSame(__is_repetitive_action(), true);
+
+        $_SERVER['REMOTE_ADDR'] =
+            mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999);
+        $this->assertSame(__is_repetitive_action('foo'), false);
+        $this->assertSame(__is_repetitive_action('bar'), false);
+        $this->assertSame(__is_repetitive_action('foo'), true);
+        $this->assertSame(__is_repetitive_action('bar'), true);
+
+        $_SERVER['REMOTE_ADDR'] =
+            mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999);
+        $this->assertSame(__is_repetitive_action('foo'), false);
+        sleep(2);
+        $this->assertSame(__is_repetitive_action('foo', 1 / 60), false);
+        $this->assertSame(__is_repetitive_action('foo'), true);
+
+        $_SERVER['REMOTE_ADDR'] =
+            mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999) . '.' . mt_rand(100, 999);
+        $this->assertSame(__is_repetitive_action('foo'), false);
+        $this->assertSame(__is_repetitive_action('foo', null, $_SERVER['REMOTE_ADDR']), false);
+        $this->assertSame(__is_repetitive_action('foo', null, [$_SERVER['REMOTE_ADDR']]), false);
+        $this->assertSame(__is_repetitive_action('foo', null, [$_SERVER['REMOTE_ADDR'] . '.111']), true);
+
+        $_SERVER['REMOTE_ADDR'] = $default;
+    }
+
     function test__age_from_date()
     {
         foreach (

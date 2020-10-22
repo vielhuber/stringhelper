@@ -680,6 +680,13 @@ if (!function_exists('__clean_up')) {
     }
 }
 
+if (!function_exists('__is_repetitive_action')) {
+    function __is_repetitive_action(...$args)
+    {
+        return \vielhuber\stringhelper\__::is_repetitive_action(...$args);
+    }
+}
+
 if (!function_exists('__get')) {
     function __get(...$args)
     {

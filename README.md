@@ -952,6 +952,13 @@ __clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
 __clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
 __clean_up() // same as __clean_up_get() and __clean_up_post()
 
+// check for repetitive actions, e.g. to prevent mass spam mailing (based on hashed client ip address)
+__is_repetitive_action(); // any action
+__is_repetitive_action('name'); // specific action
+__is_repetitive_action('name', 60); // allow 1 action per 60 minutes (this is the default if not specified)
+__is_repetitive_action('name', 1/60); // allow 1 action per 1 second
+__is_repetitive_action('name', 60, ['127.0.0.1','0.0.0.0']); // whitelist ip addresses
+
 // get referrer
 __referer() // $_SERVER['HTTP_REFERER'], if not available null
 

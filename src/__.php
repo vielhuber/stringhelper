@@ -1902,6 +1902,46 @@ class __
         self::clean_up_post();
     }
 
+    public static function is_repetitive_action($name = '', $minutes = 60, $whitelist = [])
+    {
+        if (!isset($_SERVER['REMOTE_ADDR']) || $_SERVER['REMOTE_ADDR'] == '') {
+            return false;
+        }
+        $ip = $_SERVER['REMOTE_ADDR'];
+
+        if (is_string($whitelist)) {
+            $whitelist = [$whitelist];
+        }
+        if (!is_array($whitelist)) {
+            $whitelist = [];
+        }
+        if (in_array($ip, $whitelist)) {
+            return false;
+        }
+
+        if (!is_numeric($minutes)) {
+            $minutes = 60;
+        }
+        if (!self::is_integer($minutes)) {
+            $seconds = round($minutes * 60);
+        } else {
+            $seconds = $minutes * 60;
+        }
+
+        $filename = sys_get_temp_dir() . '/' . md5($name . $ip) . '.throttle';
+
+        if (!file_exists($filename)) {
+            touch($filename);
+            return false;
+        }
+        $time = filemtime($filename);
+        touch($filename);
+        if (strtotime('now - ' . $seconds . ' seconds') < $time) {
+            return true;
+        }
+        return false;
+    }
+
     public static function get($var)
     {
         if (self::nx(@$_GET[$var])) {
