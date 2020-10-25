@@ -1422,16 +1422,26 @@ class __
 
     public static function array_map_deep($array, $callback, $array__key = null, $key_chain = [])
     {
+        // auto decode json strings (and encode them later on)
+        $is_json = __string_is_json($array);
+        if ($is_json) {
+            $array = json_decode($array);
+        }
+
         if (is_array($array) || is_object($array)) {
             $new = [];
             if (is_object($array)) {
                 $new = (object) $new;
             }
             foreach ($array as $array__key => $array__value) {
+                $is_json_iterable =
+                    __string_is_json($array__value) &&
+                    (is_array(json_decode($array__value)) || is_object(json_decode($array__value)));
+
                 $key_chain_this = $key_chain;
                 $key_chain_this[] = $array__key;
                 if (is_array($array)) {
-                    if (is_array($array__value) || is_object($array__value)) {
+                    if (is_array($array__value) || is_object($array__value) || $is_json_iterable) {
                         $new[$array__key] = self::array_map_deep(
                             $array__value,
                             $callback,
@@ -1443,7 +1453,7 @@ class __
                     }
                 }
                 if (is_object($array)) {
-                    if (is_array($array__value) || is_object($array__value)) {
+                    if (is_array($array__value) || is_object($array__value) || $is_json_iterable) {
                         $new->{$array__key} = self::array_map_deep(
                             $array__value,
                             $callback,
@@ -1458,6 +1468,11 @@ class __
         } else {
             $new = call_user_func($callback, $array, $array__key, $key_chain);
         }
+
+        if ($is_json) {
+            $new = json_encode($new);
+        }
+
         return $new;
     }
 

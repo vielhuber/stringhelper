@@ -540,8 +540,9 @@ array_map_deep(
 )
 echo implode(' - ', $output) // ok1: 1.2.3.4.5, ok2: 1.2.3.6.7, ok3: 8
 __array_map_deep(['foo','bar'=>(object)['baz','gnarr']], function($a) { return $a.'!'; }) // ['foo!','bar'=>(object)['baz!','gnarr!']]
+__array_map_deep(['foo','bar'=>json_encode(['baz','gnarr'])], function($a) { return $a.'!'; }) // ['foo!', 'bar'=>json_encode(['baz!', 'gnarr!'])]
 
-// recursively change values of array of arrays (with leaf nodes; be careful when changing the array structure)
+// recursively change values of array of arrays (with parent nodes; be careful when changing the array structure)
 __array_map_deep_all(['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz']], function($value, $key, $key_chain) {
     if (is_array($value) && array_key_exists('baz', $value) && $value['baz'] === 'gnarr') {
         $value['gnarr'] = 'baz2';
@@ -549,7 +550,7 @@ __array_map_deep_all(['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz']], func
     return $value;
 }) // ['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz2']]
 
-// array walk recursive (with leaf nodes; be careful when changing the array structure)
+// array walk recursive (with parent nodes; be careful when changing the array structure)
 $arr = ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz']]
 __array_walk_recursive_all($arr, function (&$value, $key, $key_chain) {
     if (is_array($value) && array_key_exists('baz', $value) && $value['baz'] === 'gnarr') {

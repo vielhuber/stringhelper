@@ -920,6 +920,12 @@ string'
             [[[[[[[[[[[[[[[[[[[[false]]]]]]]]]]]]]]]]]]]]
         );
         $this->assertSame(
+            __array_map_deep([[[[[[[[[[[[[[[json_encode([[[[[true]]]]])]]]]]]]]]]]]]]], function ($a) {
+                return !$a;
+            }),
+            [[[[[[[[[[[[[[[json_encode([[[[[false]]]]])]]]]]]]]]]]]]]]
+        );
+        $this->assertSame(
             __array_map_deep([[[[[[[[[[[[[[[[[[[[42 => 'no', 7 => 'ok']]]]]]]]]]]]]]]]]]]], function ($value, $key) {
                 return $key === 42 ? $value : $value . '!';
             }),
@@ -961,6 +967,13 @@ string'
             }
         );
         $this->assertSame(implode(' - ', $output), 'ok1: 1.2.3.4.5 - ok2: 1.2.3.6.7 - ok3: 8');
+
+        $this->assertEquals(
+            __array_map_deep(['foo', 'bar' => json_encode(['baz', 'gnarr'])], function ($a) {
+                return $a . '!';
+            }),
+            ['foo!', 'bar' => json_encode(['baz!', 'gnarr!'])]
+        );
     }
 
     function test__anonymize_ip()
