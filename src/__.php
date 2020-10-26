@@ -1423,7 +1423,7 @@ class __
     public static function array_map_deep($array, $callback, $array__key = null, $key_chain = [])
     {
         // auto decode json strings (and encode them later on)
-        $is_json = __string_is_json($array);
+        $is_json = self::string_is_json($array);
         if ($is_json) {
             $array = json_decode($array);
         }
@@ -1435,7 +1435,7 @@ class __
             }
             foreach ($array as $array__key => $array__value) {
                 $is_json_iterable =
-                    __string_is_json($array__value) &&
+                    self::string_is_json($array__value) &&
                     (is_array(json_decode($array__value)) || is_object(json_decode($array__value)));
 
                 $key_chain_this = $key_chain;
