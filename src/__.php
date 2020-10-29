@@ -1238,6 +1238,15 @@ class __
 
     public static function translate_deepl($str, $from_lng, $to_lng, $api_key)
     {
+        // deepl has problems on self enclosed tags (<br>, <hr>)
+        // see http://xahlee.info/js/html5_non-closing_tag.html
+        // fix that
+        $str = preg_replace(
+            '/(<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)[^\/]*?)(>)/i',
+            '$1/>',
+            $str
+        );
+
         $response = self::curl(
             'https://api.deepl.com/v2/translate?auth_key=' . $api_key,
             [

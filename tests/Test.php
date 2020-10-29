@@ -598,6 +598,16 @@ House'
             'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> is almost equal to the primary rock <a p="3">jQuery</a> in all areas and is now far superior.'
         );
 
+        $this->assertSame(
+            __translate_deepl(
+                'Das ist <br> ein<br> Haus <br> und Hund.<hr>Cool!',
+                'de',
+                'en',
+                $_SERVER['DEEPL_TRANSLATION_API_KEY']
+            ),
+            'This is <br/> an<br/> house <br/> and dog.<hr/>Cool!'
+        );
+
         try {
             __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
         } catch (\Throwable $t) {
