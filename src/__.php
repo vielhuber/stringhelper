@@ -880,7 +880,7 @@ class __
         if (self::nx($str)) {
             return $str;
         }
-        if ($api_key === 'free') {
+        if ($api_key === 'free' || $api_key == '42') {
             return self::translate_google_inofficial($str, $from_lng, $to_lng);
         }
         return self::translate_google_api($str, $from_lng, $to_lng, $api_key);
