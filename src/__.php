@@ -2576,6 +2576,7 @@ class __
                 }
             }
         }
+        natsort($urls);
         return $urls;
     }
 
