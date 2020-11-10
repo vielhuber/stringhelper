@@ -2577,6 +2577,7 @@ class __
             }
         }
         natsort($urls);
+        $urls = array_values($urls);
         return $urls;
     }
 
