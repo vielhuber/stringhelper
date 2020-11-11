@@ -868,7 +868,7 @@ class __
         }
         // if domdocument added previously a default header, we squish that
         if (mb_stripos($html, 'data-please-remove-wrapper') !== false) {
-            $pos1 = mb_strpos($html, '<body>') + mb_strlen('<body>');
+            $pos1 = mb_strpos($html, '>', mb_strpos($html, '<body')) + 1;
             $pos2 = mb_strpos($html, '</body>');
             $html = mb_substr($html, $pos1, $pos2 - $pos1);
         }

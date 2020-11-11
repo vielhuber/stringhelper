@@ -424,6 +424,11 @@ EOD;
 </html>
 EOD;
         $this->assertSame(__minify_html(__dom_to_str(__str_to_dom($in))), __minify_html($out));
+
+        $domdocument = __str_to_dom('Test');
+        $domxpath = new \DOMXPath($domdocument);
+        $domxpath->query('/html/body')[0]->setAttribute('data-foo', 'bar');
+        $this->assertSame(__dom_to_str($domdocument), 'Test');
     }
 
     function test__translate()
