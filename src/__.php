@@ -2515,7 +2515,7 @@ class __
         die();
     }
 
-    public static function extract_urls_from_sitemap($url, $basic_auth = null)
+    public static function extract_urls_from_sitemap($url, $basic_auth = null, $include_last_modified = false)
     {
         // auto detect basic auth
         if ($basic_auth === null && strpos($url, '@') !== false) {
@@ -2530,55 +2530,70 @@ class __
             $url = str_replace('https://', 'https://' . $basic_auth . '@', $url);
         }
 
-        $urls = [];
-        if (self::nx($url)) {
-            return $urls;
-        }
-        // prevent cached sitemaps
-        if (strpos($url, '?') === false) {
-            $url .= '?no_cache=1';
-        }
+        $return = [];
+        if (self::x($url)) {
+            // prevent cached sitemaps
+            if (strpos($url, '?') === false) {
+                $url .= '?no_cache=1';
+            }
 
-        $data = self::fetch($url);
-        $data = @simplexml_load_string($data);
+            $data = self::fetch($url);
+            $data = @simplexml_load_string($data);
 
-        // fallback
-        if (self::nx($data)) {
-            $data = @simplexml_load_file($url);
-        }
+            // fallback
+            if (self::nx($data)) {
+                $data = @simplexml_load_file($url);
+            }
 
-        $data = json_decode(json_encode($data), true);
-        if (self::nx($data)) {
-            return $urls;
-        }
-        // normalize
-        if (isset($data['url']) && is_array($data['url']) && isset($data['url']['loc'])) {
-            $data['url'] = [$data['url']];
-        }
-        if (isset($data['sitemap']) && is_array($data['sitemap']) && isset($data['sitemap']['loc'])) {
-            $data['sitemap'] = [$data['sitemap']];
-        }
-        if (isset($data['url']) && is_array($data['url']) && !empty($data['url'])) {
-            foreach ($data['url'] as $url__value) {
-                if (isset($url__value['loc']) && is_string($url__value['loc']) && $url__value['loc'] != '') {
-                    $urls[] = $url__value['loc'];
+            $data = json_decode(json_encode($data), true);
+
+            if (self::x($data)) {
+                // normalize
+                if (isset($data['url']) && is_array($data['url']) && isset($data['url']['loc'])) {
+                    $data['url'] = [$data['url']];
+                }
+                if (isset($data['sitemap']) && is_array($data['sitemap']) && isset($data['sitemap']['loc'])) {
+                    $data['sitemap'] = [$data['sitemap']];
+                }
+                if (isset($data['url']) && is_array($data['url']) && !empty($data['url'])) {
+                    foreach ($data['url'] as $url__value) {
+                        if (isset($url__value['loc']) && is_string($url__value['loc']) && $url__value['loc'] != '') {
+                            $return[] = [
+                                'url' => $url__value['loc'],
+                                'lastmod' =>
+                                    isset($url__value['lastmod']) && $url__value['lastmod'] != ''
+                                        ? __date('Y-m-d H:i:s', $url__value['lastmod'])
+                                        : null
+                            ];
+                        }
+                    }
+                }
+                if (isset($data['sitemap']) && is_array($data['sitemap']) && !empty($data['sitemap'])) {
+                    foreach ($data['sitemap'] as $sitemap__value) {
+                        if (
+                            isset($sitemap__value['loc']) &&
+                            is_string($sitemap__value['loc']) &&
+                            $sitemap__value['loc'] != ''
+                        ) {
+                            $return = array_merge(
+                                $return,
+                                self::extract_urls_from_sitemap($sitemap__value['loc'], $basic_auth, true)
+                            );
+                        }
+                    }
                 }
             }
         }
-        if (isset($data['sitemap']) && is_array($data['sitemap']) && !empty($data['sitemap'])) {
-            foreach ($data['sitemap'] as $sitemap__value) {
-                if (
-                    isset($sitemap__value['loc']) &&
-                    is_string($sitemap__value['loc']) &&
-                    $sitemap__value['loc'] != ''
-                ) {
-                    $urls = array_merge($urls, self::extract_urls_from_sitemap($sitemap__value['loc'], $basic_auth));
-                }
-            }
+        $return = self::array_unique($return);
+        usort($return, function ($a, $b) {
+            return strnatcmp($a['url'], $b['url']);
+        });
+        if ($include_last_modified === false) {
+            $return = array_map(function ($a) {
+                return $a['url'];
+            }, $return);
         }
-        natsort($urls);
-        $urls = array_values($urls);
-        return $urls;
+        return $return;
     }
 
     public static function extract_title_from_url($url)

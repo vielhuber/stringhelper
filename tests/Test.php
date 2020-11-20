@@ -831,6 +831,12 @@ House'
         $this->assertSame(__extract_urls_from_sitemap(true), []);
         $this->assertSame(__extract_urls_from_sitemap(false), []);
         $this->assertSame(__extract_urls_from_sitemap('foo'), []);
+
+        $urls = __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml', null, true);
+        $this->assertSame(count($urls) > 100, true);
+        $this->assertSame(count($urls[0]) === 2, true);
+        $this->assertSame(strpos($urls[0]['url'], 'https://') !== false, true);
+        $this->assertSame(__validate_date($urls[0]['lastmod']), true);
     }
 
     function test__trim_whitespace()
