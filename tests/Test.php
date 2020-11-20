@@ -620,6 +620,26 @@ House'
         }
     }
 
+    function test__atrim()
+    {
+        $this->assertSame(__atrim(null), null);
+        $this->assertSame(__atrim(false), false);
+        $this->assertSame(__atrim(true), true);
+        $this->assertSame(__atrim([]), []);
+        $this->assertSame(__atrim(['foo', 'bar', 'baz']), ['foo', 'bar', 'baz']);
+        $this->assertSame(
+            __atrim([
+                'foo
+',
+                'bar',
+                '
+baz'
+            ]),
+            ['foo', 'bar', 'baz']
+        );
+        $this->assertSame(__atrim(['�']), ['�']);
+    }
+
     function test__is_repetitive_action()
     {
         $default = $_SERVER['REMOTE_ADDR'];
@@ -1553,22 +1573,6 @@ string'
             'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'
         );
         $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
-
-        $this->assertSame(__atrim(null), null);
-        $this->assertSame(__atrim(false), false);
-        $this->assertSame(__atrim(true), true);
-        $this->assertSame(__atrim([]), []);
-        $this->assertSame(__atrim(['foo', 'bar', 'baz']), ['foo', 'bar', 'baz']);
-        $this->assertSame(
-            __atrim([
-                'foo
-',
-                'bar',
-                '
-baz'
-            ]),
-            ['foo', 'bar', 'baz']
-        );
 
         $this->assertSame(__string_is_json('[]'), true);
         $this->assertSame(__string_is_json('{"foo":"bar"}'), true);
