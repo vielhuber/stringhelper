@@ -2562,7 +2562,7 @@ class __
                                 'url' => $url__value['loc'],
                                 'lastmod' =>
                                     isset($url__value['lastmod']) && $url__value['lastmod'] != ''
-                                        ? __date('Y-m-d H:i:s', $url__value['lastmod'])
+                                        ? self::date('Y-m-d H:i:s', $url__value['lastmod'])
                                         : null
                             ];
                         }
