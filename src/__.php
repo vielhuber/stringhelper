@@ -875,18 +875,18 @@ class __
         return $html;
     }
 
-    public static function translate_google($str, $from_lng, $to_lng, $api_key)
+    public static function translate_google($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
         if (self::nx($str)) {
             return $str;
         }
         if ($api_key === 'free' || $api_key == '42') {
-            return self::translate_google_inofficial($str, $from_lng, $to_lng);
+            return self::translate_google_inofficial($str, $from_lng, $to_lng, $proxy);
         }
-        return self::translate_google_api($str, $from_lng, $to_lng, $api_key);
+        return self::translate_google_api($str, $from_lng, $to_lng, $api_key, $proxy);
     }
 
-    public static function translate_google_api($str, $from_lng, $to_lng, $api_key)
+    public static function translate_google_api($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
         $response = self::curl(
             'https://translation.googleapis.com/language/translate/v2?key=' . $api_key,
@@ -897,7 +897,15 @@ class __
                 'format' => self::string_is_html($str) ? 'html' : 'text',
                 'model' => 'nmt'
             ],
-            'POST'
+            'POST',
+            null,
+            false,
+            true,
+            6,
+            null,
+            null,
+            true,
+            $proxy
         );
 
         if ($response->status == 200 && @$response->result->data->translations[0]->translatedText != '') {
@@ -922,7 +930,7 @@ class __
         return $trans;
     }
 
-    public static function translate_google_inofficial($str, $from_lng, $to_lng)
+    public static function translate_google_inofficial($str, $from_lng, $to_lng, $proxy = null)
     {
         /* more info: https://vielhuber.de/blog/google-translate-api-hacking */
         $str = self::translate_google_inofficial_parse_result_pre($str);
@@ -941,7 +949,7 @@ class __
             'sr' => 1,
             'tk' => self::translate_google_inofficial_generate_tk(
                 $str,
-                self::translate_google_inofficial_generate_tkk()
+                self::translate_google_inofficial_generate_tkk($proxy)
             ),
             'mode' => 1
         ];
@@ -956,7 +964,11 @@ class __
             ],
             false,
             false,
-            3
+            6,
+            null,
+            null,
+            true,
+            $proxy
         );
         if ($response->status != 200 || self::nx($response->result)) {
             self::exception($response);
@@ -1083,13 +1095,25 @@ class __
         return $output;
     }
 
-    private static function translate_google_inofficial_generate_tkk()
+    private static function translate_google_inofficial_generate_tkk($proxy = null)
     {
         $cache = sys_get_temp_dir() . '/tkk.cache';
         if (file_exists($cache) && filemtime($cache) > strtotime('now - 1 hour')) {
             return file_get_contents($cache);
         }
-        $data = self::curl('https://translate.googleapis.com/translate_a/element.js', null, 'GET');
+        $data = self::curl(
+            'https://translate.googleapis.com/translate_a/element.js',
+            null,
+            'GET',
+            null,
+            false,
+            true,
+            60,
+            null,
+            null,
+            true,
+            $proxy
+        );
         $response = $data->result;
         $pos1 = mb_strpos($response, 'c._ctkk=\'') + mb_strlen('c._ctkk=\'');
         $pos2 = mb_strpos($response, '\'', $pos1);
@@ -1209,7 +1233,18 @@ class __
         return $f0 . '.' . ($f0 ^ $n2);
     }
 
-    public static function translate_microsoft($str, $from_lng, $to_lng, $api_key)
+    public static function translate_microsoft($str, $from_lng, $to_lng, $api_key, $proxy = null)
+    {
+        if (self::nx($str)) {
+            return $str;
+        }
+        if ($api_key === 'free' || $api_key == '42') {
+            return self::translate_microsoft_inofficial($str, $from_lng, $to_lng, $proxy);
+        }
+        return self::translate_microsoft_api($str, $from_lng, $to_lng, $api_key, $proxy);
+    }
+
+    public static function translate_microsoft_api($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
         $response = self::curl(
             'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=' .
@@ -1223,7 +1258,12 @@ class __
                 'Ocp-Apim-Subscription-Key' => $api_key
             ],
             false,
-            true
+            true,
+            6,
+            null,
+            null,
+            true,
+            $proxy
         );
 
         if ($response->status == 200 && @$response->result[0]->translations[0]->text != '') {
@@ -1236,8 +1276,72 @@ class __
         return $trans;
     }
 
-    public static function translate_deepl($str, $from_lng, $to_lng, $api_key)
+    public static function translate_microsoft_inofficial($str, $from_lng, $to_lng, $proxy = null)
     {
+        $response = self::curl(
+            'https://www.bing.com/translator',
+            null,
+            'GET',
+            null,
+            false,
+            true,
+            6,
+            null,
+            null,
+            true,
+            $proxy
+        );
+        $html = $response->result;
+        preg_match('/,IG:"(.+?)",/', $html, $matches);
+        if (empty($matches) || !isset($matches[1]) || $matches[1] == '') {
+            self::exception($response);
+            return null;
+        }
+        $ig = $matches[1];
+        preg_match('/data-iid="(.+?)"/', $html, $matches);
+        if (empty($matches) || !isset($matches[1]) || $matches[1] == '') {
+            self::exception($response);
+            return null;
+        }
+        $iid = $matches[1];
+
+        $response = self::curl(
+            'https://www.bing.com/ttranslatev3?isVertical=1&IG=' . $ig . '&IID=' . $iid,
+            [
+                'fromLang' => $from_lng,
+                'text' => $str,
+                'to' => $to_lng
+            ],
+            'POST',
+            null,
+            false,
+            false,
+            60,
+            null,
+            null,
+            true,
+            $proxy
+        );
+
+        if (
+            $response->status != 200 ||
+            self::nx($response->result) ||
+            !is_array($response->result) ||
+            self::nx(@$response->result[0]->translations[0]->text)
+        ) {
+            self::exception($response);
+            return null;
+        }
+
+        return $response->result[0]->translations[0]->text;
+    }
+
+    public static function translate_deepl($str, $from_lng, $to_lng, $api_key, $proxy = null)
+    {
+        if (self::nx($str)) {
+            return $str;
+        }
+
         // deepl has problems on self enclosed tags (<br>, <hr>)
         // see http://xahlee.info/js/html5_non-closing_tag.html
         // fix that
@@ -1247,6 +1351,15 @@ class __
             $str
         );
 
+        if ($api_key === 'free' || $api_key == '42') {
+            return self::translate_deepl_inofficial($str, $from_lng, $to_lng, $proxy);
+        }
+
+        return self::translate_deepl_api($str, $from_lng, $to_lng, $api_key, $proxy);
+    }
+
+    public static function translate_deepl_api($str, $from_lng, $to_lng, $api_key, $proxy = null)
+    {
         $response = self::curl(
             'https://api.deepl.com/v2/translate?auth_key=' . $api_key,
             [
@@ -1261,7 +1374,12 @@ class __
             'POST',
             null,
             false,
-            false
+            false,
+            6,
+            null,
+            null,
+            true,
+            $proxy
         );
 
         if ($response->status != 200 || self::nx(@$response->result->translations[0]->text)) {
@@ -1270,6 +1388,70 @@ class __
         }
 
         return $response->result->translations[0]->text;
+    }
+
+    public static function translate_deepl_inofficial($str, $from_lng, $to_lng, $proxy = null)
+    {
+        $id = pow(1 * 10, 4) * round((pow(1 * 10, 4) * (float) rand()) / (float) getrandmax());
+        $priority = 1;
+        $timestamp_shift = 1;
+        $timestamp = round(microtime(true) * 1000);
+        $timestamp_shift += substr_count($str, 'i');
+        $timestamp = $timestamp + ($timestamp_shift - ($timestamp % $timestamp_shift));
+
+        $data = [
+            'jsonrpc' => '2.0',
+            'method' => 'LMT_handle_jobs',
+            'params' => [
+                'jobs' => [
+                    [
+                        'kind' => 'default',
+                        'raw_en_sentence' => $str,
+                        'raw_en_context_before' => [],
+                        'raw_en_context_after' => [],
+                        'preferred_num_beams' => 1,
+                        'quality' => 'fast'
+                    ]
+                ],
+                'lang' => [
+                    'user_preferred_langs' => ['DE', 'EN'],
+                    'source_lang_user_selected' => mb_strtoupper($from_lng),
+                    'target_lang' => mb_strtoupper($to_lng)
+                ],
+                'priority' => $priority,
+                'commonJobParams' => [
+                    'formality' => null
+                ],
+                'timestamp' => $timestamp
+            ],
+            'id' => $id
+        ];
+        $data = json_encode($data);
+        $data = str_replace('hod":"', ($id + 3) % 13 == 0 || ($id + 5) % 29 == 0 ? 'hod" : "' : 'hod": "', $data);
+
+        $response = self::curl(
+            'https://www2.deepl.com/jsonrpc',
+            $data,
+            'POST',
+            null,
+            false,
+            true,
+            60,
+            null,
+            null,
+            true,
+            $proxy
+        );
+
+        if (
+            $response->status != 200 ||
+            self::nx(@$response->result->result->translations[0]->beams[0]->postprocessed_sentence)
+        ) {
+            self::exception($response);
+            return null;
+        }
+
+        return $response->result->result->translations[0]->beams[0]->postprocessed_sentence;
     }
 
     public static function first_char_is_uppercase($str)
@@ -2701,7 +2883,7 @@ class __
         }
 
         /* encode data */
-        if (self::x($data)) {
+        if (self::x($data) && (is_array($data) || is_object($data))) {
             if ($send_as_json === true) {
                 $data = json_encode($data);
             } else {

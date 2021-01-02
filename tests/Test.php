@@ -431,7 +431,7 @@ EOD;
         $this->assertSame(__dom_to_str($domdocument), 'Test');
     }
 
-    function test__translate()
+    function test__translate_google()
     {
         foreach (['free', $_SERVER['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
             foreach (
@@ -481,7 +481,7 @@ EOD;
                         'en'
                     ],
                     ['<b>Hund</b><span>Haus</span>', '<b>Dog</b><span>House</span>', 'de', 'en'],
-                    ['Hallo. Welt.', 'Hello. World.', 'de', 'en'],
+                    ['Haus. Welt.', 'House. World.', 'de', 'en'],
                     ['<i>Haus.</i><b>Hund.</b>', '<i>House.</i><b>Dog.</b>', 'de', 'en'],
                     ['<b>Haus.</b><span>Hund.</span>', '<b>House.</b><span>Dog.</span>', 'de', 'en'],
                     ['<b>Haus.</b><i>Hund.</i>', '<b>House.</b><i>Dog.</i>', 'de', 'en'],
@@ -547,35 +547,47 @@ House'
             $this->assertSame(strpos($t->getMessage(), 'API key not valid') !== false, true);
         }
 
-        $this->assertSame(
-            __translate_microsoft(
-                'Sein oder Nichtsein; das ist hier die Frage.',
-                'de',
-                'en',
-                $_SERVER['MICROSOFT_TRANSLATION_API_KEY']
-            ),
-            'Being or not being; that is the question here.'
-        );
+        if (isset($_SERVER['PROXY'])) {
+            foreach ([$_SERVER['GOOGLE_TRANSLATION_API_KEY'], 'free'] as $api_keys__value) {
+                $this->assertSame(__translate_google('Haus', 'de', 'en', $api_keys__value, $_SERVER['PROXY']), 'House');
+            }
+        }
+    }
 
-        $this->assertSame(
-            __translate_microsoft(
-                '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                'de',
-                'en',
-                $_SERVER['MICROSOFT_TRANSLATION_API_KEY']
-            ),
-            'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.'
-        );
+    function test__translate_microsoft()
+    {
+        foreach (['free', $_SERVER['MICROSOFT_TRANSLATION_API_KEY']] as $api_keys__value) {
+            $this->assertSame(
+                __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
+                'Being or not being; that is the question here.'
+            );
 
-        $this->assertSame(
-            __translate_microsoft(
-                '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                'de',
-                'en',
-                $_SERVER['MICROSOFT_TRANSLATION_API_KEY']
-            ),
-            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.'
-        );
+            $this->assertContains(
+                __translate_microsoft(
+                    '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                    'de',
+                    'en',
+                    $api_keys__value
+                ),
+                [
+                    'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.',
+                    '<a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
+                ]
+            );
+
+            $this->assertContains(
+                __translate_microsoft(
+                    '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                    'de',
+                    'en',
+                    $api_keys__value
+                ),
+                [
+                    'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.',
+                    '<a p="1">VanillaJS</a> has been equal to the original rock <a p="3">jQuery</a> since <a p="2">ES6</a> in virtually all areas.'
+                ]
+            );
+        }
 
         try {
             __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
@@ -583,40 +595,57 @@ House'
             $this->assertSame(strpos($t->getMessage(), 'credentials are missing') !== false, true);
         }
 
-        $this->assertSame(
-            __translate_deepl(
-                'Sein oder Nichtsein; das ist hier die Frage.',
-                'de',
-                'en',
-                $_SERVER['DEEPL_TRANSLATION_API_KEY']
-            ),
-            'To be or not to be; that is the question here.'
-        );
+        if (isset($_SERVER['PROXY'])) {
+            foreach ([$_SERVER['MICROSOFT_TRANSLATION_API_KEY'], 'free'] as $api_keys__value) {
+                $this->assertSame(
+                    __translate_microsoft('Haus', 'de', 'en', $api_keys__value, $_SERVER['PROXY']),
+                    'House'
+                );
+            }
+        }
+    }
 
-        $this->assertSame(
-            __translate_deepl(
-                '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                'de',
-                'en',
-                $_SERVER['DEEPL_TRANSLATION_API_KEY']
-            ),
-            'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> is almost equal to the primary rock <a p="3">jQuery</a> in all areas and is now far superior.'
-        );
+    function test__translate_deepl()
+    {
+        foreach (['free', $_SERVER['DEEPL_TRANSLATION_API_KEY']] as $api_keys__value) {
+            $this->assertSame(
+                __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
+                'To be or not to be; that is the question here.'
+            );
 
-        $this->assertSame(
-            __translate_deepl(
-                'Das ist <br> ein<br> Haus <br> und Hund.<hr>Cool!',
-                'de',
-                'en',
-                $_SERVER['DEEPL_TRANSLATION_API_KEY']
-            ),
-            'This is <br/> an<br/> house <br/> and dog.<hr/>Cool!'
-        );
+            $this->assertContains(
+                __translate_deepl(
+                    '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                    'de',
+                    'en',
+                    $api_keys__value
+                ),
+                [
+                    'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in all areas and is now far superior.',
+                    'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
+                    '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually in all areas the equal of the Urgestein <a p="3">jQuery</a> and now far superior.'
+                ]
+            );
+
+            $this->assertContains(
+                __translate_deepl('Das ist <br> ein<br> Haus <br> und Hund.<hr>Cool!', 'de', 'en', $api_keys__value),
+                [
+                    'This is <br/> a<br/> house <br/> and dog.<hr/>Cool!',
+                    'That\'s<br/> a<br/> house<br/> and dog.<hr/>Cool!'
+                ]
+            );
+        }
 
         try {
             __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
         } catch (\Throwable $t) {
             $this->assertSame(strpos($t->getMessage(), 'WRONG_KEY') !== false, true);
+        }
+
+        if (isset($_SERVER['PROXY'])) {
+            foreach ([$_SERVER['DEEPL_TRANSLATION_API_KEY'], 'free'] as $api_keys__value) {
+                $this->assertSame(__translate_deepl('Haus', 'de', 'en', $api_keys__value, $_SERVER['PROXY']), 'House');
+            }
         }
     }
 
@@ -790,6 +819,27 @@ baz'
             true
         );
         $this->assertSame($response->url, 'https://httpbingo.org/get');
+
+        if (isset($_SERVER['PROXY'])) {
+            $response = __curl(
+                'https://httpbingo.org/ip',
+                null,
+                'GET',
+                null,
+                false,
+                true,
+                3,
+                null,
+                null,
+                true,
+                $_SERVER['PROXY']
+            );
+            $this->assertSame($response->status, 200);
+            $this->assertSame(
+                strpos($response->result->origin, explode(':', explode('@', $_SERVER['PROXY'])[1])[0]) !== false,
+                true
+            );
+        }
 
         // fill in your wp credentials to test this
         if (1 == 0) {

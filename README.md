@@ -475,15 +475,6 @@ __dom_to_str(__str_to_dom('<ul><li></li><li></li></ul>')) // <ul><li></li><li></
 __dom_to_str(__str_to_dom('<custom-component @click.prevent="foo()"></custom-component>')) // <custom-component @click.prevent="foo()"></custom-component>
 
 // translate strings
-/*
-    short steps to generate google api keys
-        - go to google cloud console
-        - create a new project
-        - gcp console > enable "Cloud Translation API"
-        - add billing information
-        - api's and services > accounts > add a new api key (suitable for v2)
-        - iam & admin > create a new service account (role: owner) > download json file (suitable for v3, see https://gist.github.com/vielhuber/751046e142d2a5eedcd8cc09bf027bfe)
-*/
 __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // To be or not to be; that is the question.
 __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // Being or not being; that is the question here.
 __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // To be or not to be; that is the question here.
