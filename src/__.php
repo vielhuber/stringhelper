@@ -1098,7 +1098,11 @@ class __
     private static function translate_google_inofficial_generate_tkk($proxy = null)
     {
         $cache = sys_get_temp_dir() . '/tkk.cache';
-        if (file_exists($cache) && filemtime($cache) > strtotime('now - 1 hour')) {
+        if (
+            file_exists($cache) &&
+            filemtime($cache) > strtotime('now - 1 hour') &&
+            self::x(file_get_contents($cache))
+        ) {
             return file_get_contents($cache);
         }
         $data = self::curl(
