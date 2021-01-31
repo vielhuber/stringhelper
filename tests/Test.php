@@ -37,6 +37,10 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__x('b:0;'));
         $this->assertFalse(__x(new stdClass()));
         $this->assertFalse(__x(@$_GET['undefined']));
+        $this->assertFalse(__x(fn() => $var));
+        $this->assertFalse(__x(fn() => $var['undefined']));
+        $this->assertFalse(__x(fn() => $var['undefined']['foo']['bar']));
+        $this->assertFalse(__x(fn() => $var()));
     }
 
     function test__nx()
