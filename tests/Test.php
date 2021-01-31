@@ -41,6 +41,8 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__x(fn() => $var['undefined']));
         $this->assertFalse(__x(fn() => $var['undefined']['foo']['bar']));
         $this->assertFalse(__x(fn() => $var()));
+        $this->assertTrue(__x(fn() => 'false'));
+        $this->assertTrue(__x(fn() => 'true'));
     }
 
     function test__nx()

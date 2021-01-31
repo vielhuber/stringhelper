@@ -235,6 +235,17 @@ class __
         if (self::is_serialized($val)) {
             return self::true(unserialize($val));
         }
+        if (is_callable($val)) {
+            try {
+                $current_state = error_reporting();
+                error_reporting(0);
+                $return = $val();
+                error_reporting($current_state);
+                return self::true($return);
+            } catch (\Error $e) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -275,6 +286,17 @@ class __
         }
         if (self::is_serialized($val)) {
             return self::false(unserialize($val));
+        }
+        if (is_callable($val)) {
+            try {
+                $current_state = error_reporting();
+                error_reporting(0);
+                $return = $val();
+                error_reporting($current_state);
+                return self::false($return);
+            } catch (\Error $e) {
+                return false;
+            }
         }
         return false;
     }
