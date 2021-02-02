@@ -501,6 +501,11 @@ __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '*
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med
 
+// remove accents from string
+__remove_accents('Çººĺ') // Cool
+__remove_accents('Äťśçĥ') // Ätsch
+__remove_accents('Äťśçĥ', true) // Aetsch
+
 // string to slug (sanitize string)
 __slug('This string will be sanitized!') // this-string-will-be-sanitized
 

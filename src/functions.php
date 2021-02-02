@@ -379,6 +379,13 @@ if (!function_exists('__remove_emoji')) {
     }
 }
 
+if (!function_exists('__remove_accents')) {
+    function __remove_accents(...$args)
+    {
+        return \vielhuber\stringhelper\__::remove_accents(...$args);
+    }
+}
+
 if (!function_exists('__minify_html')) {
     function __minify_html(...$args)
     {
