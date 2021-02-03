@@ -37,12 +37,45 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__x('b:0;'));
         $this->assertFalse(__x(new stdClass()));
         $this->assertFalse(__x(@$_GET['undefined']));
-        $this->assertFalse(__x(fn() => $var));
-        $this->assertFalse(__x(fn() => $var['undefined']));
-        $this->assertFalse(__x(fn() => $var['undefined']['foo']['bar']));
-        $this->assertFalse(__x(fn() => $var()));
-        $this->assertTrue(__x(fn() => 'false'));
-        $this->assertTrue(__x(fn() => 'true'));
+
+        $this->assertFalse(
+            __x(function () use (&$var) {
+                return $var;
+            })
+        );
+        $this->assertFalse(
+            __x(function () use (&$var) {
+                return $var['undefined'];
+            })
+        );
+        $this->assertFalse(
+            __x(function () use (&$var) {
+                return $var['undefined']['foo']['bar'];
+            })
+        );
+        $this->assertFalse(
+            __x(function () use (&$var) {
+                return $var();
+            })
+        );
+        $this->assertTrue(
+            __x(function () {
+                return 'false';
+            })
+        );
+        $this->assertTrue(
+            __x(function () {
+                return 'true';
+            })
+        );
+        if (version_compare(PHP_VERSION, '7.4') >= 0) {
+            $this->assertFalse(__x(fn() => $var));
+            $this->assertFalse(__x(fn() => $var['undefined']));
+            $this->assertFalse(__x(fn() => $var['undefined']['foo']['bar']));
+            $this->assertFalse(__x(fn() => $var()));
+            $this->assertTrue(__x(fn() => 'false'));
+            $this->assertTrue(__x(fn() => 'true'));
+        }
     }
 
     function test__nx()

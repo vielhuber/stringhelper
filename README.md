@@ -190,9 +190,17 @@ For that there is also another more sophisticated way of checking the existence 
 If `$var` is totally undefined, the following expressions evaluate correctly to false:
 
 ```php
-if( __x(fn()=>$var) )
-if( __x(fn()=>$var['foo']['bar']['baz']) )
-if( __x(fn()=>$var()) )
+__x(fn()=>$var)
+__x(fn()=>$var['foo']['bar']['baz'])
+__x(fn()=>$var())
+```
+
+Be aware that arrow functions are only available from php 7.4; Prior versions should use:
+
+```php
+__x(function () use (&$var) {
+    return $var['foo']['bar']['baz'];
+});
 ```
 
 ### classes
