@@ -68,14 +68,15 @@ class Test extends \PHPUnit\Framework\TestCase
                 return 'true';
             })
         );
-        if (version_compare(PHP_VERSION, '7.4') >= 0) {
+        /* this cannot be used since we support php <7.4
+        /*
             $this->assertFalse(__x(fn() => $var));
             $this->assertFalse(__x(fn() => $var['undefined']));
             $this->assertFalse(__x(fn() => $var['undefined']['foo']['bar']));
             $this->assertFalse(__x(fn() => $var()));
             $this->assertTrue(__x(fn() => 'false'));
             $this->assertTrue(__x(fn() => 'true'));
-        }
+        */
     }
 
     function test__nx()
