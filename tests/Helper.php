@@ -59,9 +59,7 @@ $items = [
     '\'b:0;\'' => 'b:0;',
     'new stdClass' => new stdClass(),
     '$_GET[\'undefined\']' => 'error',
-    '@$_GET[\'undefined\']' => @$_GET['undefined'],
-    'fn()=>$_GET[\'undefined\']' => fn() => $_GET['undefined'],
-    'fn()=>true' => fn() => true
+    '@$_GET[\'undefined\']' => @$_GET['undefined']
 ];
 echo '<textarea>';
 function outputRow($input)

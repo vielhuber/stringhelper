@@ -37,46 +37,11 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__x('b:0;'));
         $this->assertFalse(__x(new stdClass()));
         $this->assertFalse(__x(@$_GET['undefined']));
-
-        $this->assertFalse(
-            __x(function () use (&$var) {
-                return $var;
-            })
-        );
-        $this->assertFalse(
-            __x(function () use (&$var) {
-                return $var['undefined'];
-            })
-        );
-        $this->assertFalse(
-            __x(function () use (&$var) {
-                return $var['undefined']['foo']['bar'];
-            })
-        );
-        $this->assertFalse(
-            __x(function () use (&$var) {
-                return $var();
-            })
-        );
         $this->assertTrue(
-            __x(function () {
-                return 'false';
+            __x(function ($foo, $bar) {
+                return false;
             })
         );
-        $this->assertTrue(
-            __x(function () {
-                return 'true';
-            })
-        );
-        /* this cannot be used since we support php <7.4
-        /*
-            $this->assertFalse(__x(fn() => $var));
-            $this->assertFalse(__x(fn() => $var['undefined']));
-            $this->assertFalse(__x(fn() => $var['undefined']['foo']['bar']));
-            $this->assertFalse(__x(fn() => $var()));
-            $this->assertTrue(__x(fn() => 'false'));
-            $this->assertTrue(__x(fn() => 'true'));
-        */
     }
 
     function test__nx()
@@ -105,6 +70,45 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertTrue(__nx('b:0;'));
         $this->assertTrue(__nx(new stdClass()));
         $this->assertTrue(__nx(@$_GET['undefined']));
+        $this->assertFalse(
+            __nx(function ($foo, $bar) {
+                return false;
+            })
+        );
+    }
+
+    function test__fx()
+    {
+        $this->assertFalse(
+            __fx(function () use (&$var) {
+                return $var;
+            })
+        );
+        $this->assertFalse(
+            __fx(function () use (&$var) {
+                return $var['undefined'];
+            })
+        );
+        $this->assertFalse(
+            __fx(function () use (&$var) {
+                return $var['undefined']['foo']['bar'];
+            })
+        );
+        $this->assertFalse(
+            __fx(function () use (&$var) {
+                return $var();
+            })
+        );
+        $this->assertTrue(
+            __fx(function () {
+                return 'foo';
+            })
+        );
+        $this->assertFalse(
+            __fx(function () {
+                return false;
+            })
+        );
     }
 
     function test__true()

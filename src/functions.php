@@ -15,6 +15,20 @@ if (!function_exists('__nx')) {
     }
 }
 
+if (!function_exists('__fx')) {
+    function __fx(...$args)
+    {
+        return \vielhuber\stringhelper\__::fx(...$args);
+    }
+}
+
+if (!function_exists('__fnx')) {
+    function __fnx(...$args)
+    {
+        return \vielhuber\stringhelper\__::fnx(...$args);
+    }
+}
+
 if (!function_exists('__v')) {
     function __v(...$args)
     {

@@ -5,17 +5,6 @@ class __
 {
     public static function x($input)
     {
-        if (is_callable($input)) {
-            try {
-                $current_state = error_reporting();
-                error_reporting(0);
-                $return = $input();
-                error_reporting($current_state);
-                return self::x($return);
-            } catch (\Error $e) {
-                return false;
-            }
-        }
         if (
             $input === null ||
             $input === false ||
@@ -50,9 +39,29 @@ class __
         return true;
     }
 
-    public static function nx($var)
+    public static function nx($input)
     {
-        return !self::x(@$var);
+        return !self::x(@$input);
+    }
+
+    public static function fx($input)
+    {
+        if ($input instanceof \Closure) {
+            try {
+                $current_state = error_reporting();
+                error_reporting(0);
+                $return = $input();
+                error_reporting($current_state);
+                return self::x(@$return);
+            } catch (\Error $e) {
+                return false;
+            }
+        }
+    }
+
+    public static function fnx($input)
+    {
+        return !self::fx(@$input);
     }
 
     public static function v(...$args)
