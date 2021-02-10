@@ -601,6 +601,9 @@ House'
     function test__translate_microsoft()
     {
         foreach (['free', $_SERVER['MICROSOFT_TRANSLATION_API_KEY']] as $api_keys__value) {
+            if ($api_keys__value === 'free' && @$_SERVER['CI'] === true) {
+                continue;
+            }
             $this->assertSame(
                 __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
                 'Being or not being; that is the question here.'
