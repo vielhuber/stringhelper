@@ -974,6 +974,20 @@ if (!function_exists('__error')) {
     }
 }
 
+if (!function_exists('__hook_init')) {
+    function __hook_init(...$args)
+    {
+        return \vielhuber\stringhelper\__::hook_init(...$args);
+    }
+}
+
+if (!function_exists('__hook_run')) {
+    function __hook_run(...$args)
+    {
+        return \vielhuber\stringhelper\__::hook_run(...$args);
+    }
+}
+
 if (!function_exists('__os')) {
     function __os(...$args)
     {

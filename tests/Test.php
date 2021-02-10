@@ -1188,6 +1188,21 @@ string'
         $this->assertSame(__referer(), 'https://google.de/');
     }
 
+    function test__hook()
+    {
+        $GLOBALS['hook_test'] = 0;
+        __hook_init('hook_name');
+        $this->assertSame($GLOBALS['hook_test'], 0);
+        __hook_run('hook_name', function () {
+            $GLOBALS['hook_test']++;
+        });
+        $this->assertSame($GLOBALS['hook_test'], 0);
+        __hook_init('hook_name');
+        $this->assertSame($GLOBALS['hook_test'], 1);
+        __hook_init('hook_name');
+        $this->assertSame($GLOBALS['hook_test'], 2);
+    }
+
     function test__array_walk_recursive_all()
     {
         $arr = ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz']];

@@ -913,6 +913,13 @@ catch(\Exception $t) {
 __success() // { success: true, message: '' }
 __error('missing data') // { success: false, message: 'missing data' }
 
+// simple hook system
+$GLOBALS['hook_test'] = 0;
+__hook_init('hook_name'); // $GLOBALS['hook_test'] = 0
+__hook_run('hook_name', function() { $GLOBALS['hook_test']++; });
+__hook_init('hook_name'); // $GLOBALS['hook_test'] = 1
+__hook_init('hook_name'); // $GLOBALS['hook_test'] = 2
+
 // get current os
 __os() // ['windows','mac','linux']
 

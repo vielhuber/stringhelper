@@ -3382,6 +3382,29 @@ class __
         return (object) ['success' => false, 'message' => $message];
     }
 
+    public static function hook_init($hook_name)
+    {
+        if (!isset($GLOBALS['hook']) || !is_array($GLOBALS['hook'])) {
+            $GLOBALS['hook'] = [];
+        }
+        if (isset($GLOBALS['hook'][$hook_name])) {
+            foreach ($GLOBALS['hook'][$hook_name] as $fun) {
+                $fun();
+            }
+        }
+    }
+
+    public static function hook_run($hook_name, $fun)
+    {
+        if (!isset($GLOBALS['hook']) || !is_array($GLOBALS['hook'])) {
+            $GLOBALS['hook'] = [];
+        }
+        if (!isset($GLOBALS['hook'][$hook_name])) {
+            $GLOBALS['hook'][$hook_name] = [];
+        }
+        array_push($GLOBALS['hook'][$hook_name], $fun);
+    }
+
     public static function os()
     {
         if (stristr(PHP_OS, 'DAR')) {
