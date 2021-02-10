@@ -3557,9 +3557,12 @@ class __
         return true;
     }
 
-    public static function sed_replace($replacements = [], $filename)
+    public static function sed_replace($replacements, $filename)
     {
         if (!file_exists($filename)) {
+            return;
+        }
+        if (!is_array($replacements)) {
             return;
         }
         $command = 'sed -i' . (self::os() === 'mac' ? " ''" : '') . '';
