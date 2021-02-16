@@ -582,6 +582,9 @@ __array_walk_recursive_all($arr, function (&$value, $key, $key_chain) {
 })
 $arr // ['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz2']]
 
+// array map for keys
+__array_map_keys(function($k) { return $k.'!'; }, ['foo' => 'bar', 'bar' => 'baz']) // ['foo!' => 'bar', 'bar!' => 'baz']
+
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
 

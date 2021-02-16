@@ -916,6 +916,63 @@ baz'
         $this->assertSame(__timestamp_str_to_excel('2000-01-01 08:15:30'), 36526.3440972222);
     }
 
+    function test_array_map_keys()
+    {
+        $this->assertSame(__array_map_keys(null, null), null);
+        $this->assertSame(__array_map_keys(function () {}, false), false);
+        $this->assertSame(
+            __array_map_keys(function ($k) {
+                return $k . '!';
+            }, true),
+            true
+        );
+        $this->assertSame(
+            __array_map_keys(function ($k) {
+                return $k . '!';
+            }, 1337),
+            1337
+        );
+        $this->assertSame(
+            __array_map_keys(function ($k) {
+                return $k . '!';
+            }, 'foo'),
+            'foo'
+        );
+        $this->assertSame(
+            __array_map_keys(function ($k) {
+                return $k . '!';
+            }, []),
+            []
+        );
+        $this->assertSame(
+            __array_map_keys(
+                function ($k) {
+                    return $k;
+                },
+                ['foo' => 'bar']
+            ),
+            ['foo' => 'bar']
+        );
+        $this->assertSame(
+            __array_map_keys(
+                function () {
+                    return '';
+                },
+                ['foo' => 'bar', 'foo' => 'bar', 'bar' => 'baz']
+            ),
+            ['' => 'baz']
+        );
+        $this->assertSame(
+            __array_map_keys(
+                function ($k) {
+                    return $k . '!';
+                },
+                ['foo' => 'bar', 'bar' => 'baz']
+            ),
+            ['foo!' => 'bar', 'bar!' => 'baz']
+        );
+    }
+
     function test_encode_decode_string()
     {
         $data = ['foo' => 'bar', 'bar' => 'baz'];

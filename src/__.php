@@ -2096,6 +2096,20 @@ class __
         return $new;
     }
 
+    public static function array_map_keys($callback, $arr)
+    {
+        if (__::nx($arr)) {
+            return $arr;
+        }
+        if (!is_array($arr)) {
+            return $arr;
+        }
+        if (!is_callable($callback)) {
+            return $arr;
+        }
+        return array_combine(array_map($callback, array_keys($arr)), $arr);
+    }
+
     public static function encode_data(...$data)
     {
         if (count($data) === 1) {

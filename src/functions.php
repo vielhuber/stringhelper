@@ -526,6 +526,13 @@ if (!function_exists('__array_walk_recursive_all')) {
     }
 }
 
+if (!function_exists('__array_map_keys')) {
+    function __array_map_keys(...$args)
+    {
+        return \vielhuber\stringhelper\__::array_map_keys(...$args);
+    }
+}
+
 if (!function_exists('__encode_data')) {
     function __encode_data(...$args)
     {
