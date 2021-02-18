@@ -916,6 +916,18 @@ baz'
         $this->assertSame(__timestamp_str_to_excel('2000-01-01 08:15:30'), 36526.3440972222);
     }
 
+    function test_has_basic_auth()
+    {
+        $this->assertSame(__has_basic_auth('https://httpbin.org/basic-auth/foo/bar'), true);
+        $this->assertSame(__has_basic_auth('https://vielhuber.de'), false);
+        $this->assertSame(__has_basic_auth('http://dewuiztgchdnhbvwsvdhzu.com'), false);
+        $this->assertSame(__has_basic_auth(''), false);
+        $this->assertSame(__has_basic_auth(false), false);
+        $this->assertSame(__has_basic_auth(null), false);
+        $this->assertSame(__has_basic_auth(true), false);
+        $this->assertSame(__has_basic_auth('foo'), false);
+    }
+
     function test_array_map_keys()
     {
         $this->assertSame(__array_map_keys(null, null), null);

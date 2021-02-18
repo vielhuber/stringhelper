@@ -2098,7 +2098,7 @@ class __
 
     public static function array_map_keys($callback, $arr)
     {
-        if (__::nx($arr)) {
+        if (self::nx($arr)) {
             return $arr;
         }
         if (!is_array($arr)) {
@@ -3370,6 +3370,29 @@ class __
             'headers' => $headers,
             'url' => $curl_url
         ];
+    }
+
+    public static function has_basic_auth($url)
+    {
+        if (self::nx($url)) {
+            return false;
+        }
+        if (!self::validate_url($url)) {
+            return false;
+        }
+        $response = self::curl($url, null, 'GET');
+        if (self::nx($response)) {
+            return false;
+        }
+        if (
+            is_object($response) &&
+            isset($response->headers) &&
+            is_array($response->headers) &&
+            array_key_exists('www-authenticate', $response->headers)
+        ) {
+            return true;
+        }
+        return false;
     }
 
     public static function exception($message = '')
