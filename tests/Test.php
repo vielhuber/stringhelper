@@ -921,11 +921,24 @@ baz'
         $this->assertSame(__has_basic_auth('https://httpbin.org/basic-auth/foo/bar'), true);
         $this->assertSame(__has_basic_auth('https://vielhuber.de'), false);
         $this->assertSame(__has_basic_auth('http://dewuiztgchdnhbvwsvdhzu.com'), false);
-        $this->assertSame(__has_basic_auth(''), false);
-        $this->assertSame(__has_basic_auth(false), false);
         $this->assertSame(__has_basic_auth(null), false);
+        $this->assertSame(__has_basic_auth(false), false);
         $this->assertSame(__has_basic_auth(true), false);
         $this->assertSame(__has_basic_auth('foo'), false);
+        $this->assertSame(__has_basic_auth(''), false);
+    }
+
+    function test_check_basic_auth()
+    {
+        $this->assertSame(__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo', 'bar'), true);
+        $this->assertSame(__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo', 'baz'), false);
+        $this->assertSame(__check_basic_auth('https://vielhuber.de', 'foo', 'baz'), true);
+        $this->assertSame(__check_basic_auth('https://vielhuber.de', 'foo', ''), true);
+        $this->assertSame(__check_basic_auth(null), true);
+        $this->assertSame(__check_basic_auth(false), true);
+        $this->assertSame(__check_basic_auth(true), true);
+        $this->assertSame(__check_basic_auth('foo'), true);
+        $this->assertSame(__check_basic_auth(''), true);
     }
 
     function test_array_map_keys()

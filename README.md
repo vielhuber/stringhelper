@@ -1028,9 +1028,11 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 // you can also hijack the current browser session if logged in
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 
-// check if basic auth is enabled on page
-__has_basic_auth('https://httpbin.org/basic-auth/foo/bar'); // true
+// check basic auth
 __has_basic_auth('https://vielhuber.de'); // false
+__has_basic_auth('https://httpbin.org/basic-auth/foo/bar'); // true
+__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo','baz'); // false
+__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo','bar'); // true
 
 // output json response with status code for apis
 __json_response([

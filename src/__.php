@@ -3395,6 +3395,29 @@ class __
         return false;
     }
 
+    public static function check_basic_auth($url, $username = '', $password = '')
+    {
+        if (self::nx($url)) {
+            return true;
+        }
+        if (!self::validate_url($url)) {
+            return true;
+        }
+        $response = self::curl($url, null, 'GET', null, false, false, 5, [$username => $password]);
+        if (self::nx($response)) {
+            return true;
+        }
+        if (
+            is_object($response) &&
+            isset($response->headers) &&
+            is_array($response->headers) &&
+            array_key_exists('www-authenticate', $response->headers)
+        ) {
+            return false;
+        }
+        return true;
+    }
+
     public static function exception($message = '')
     {
         throw new \ExtendedException($message);

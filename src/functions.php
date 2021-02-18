@@ -932,6 +932,13 @@ if (!function_exists('__has_basic_auth')) {
     }
 }
 
+if (!function_exists('__check_basic_auth')) {
+    function __check_basic_auth(...$args)
+    {
+        return \vielhuber\stringhelper\__::check_basic_auth(...$args);
+    }
+}
+
 if (!function_exists('__json_response')) {
     function __json_response(...$args)
     {
