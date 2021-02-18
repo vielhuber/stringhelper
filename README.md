@@ -1029,7 +1029,7 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 
 // check if basic auth is enabled on page
-__has_basic_auth('http://httpbin.org/basic-auth/foo/bar'); // true
+__has_basic_auth('https://httpbin.org/basic-auth/foo/bar'); // true
 __has_basic_auth('https://vielhuber.de'); // false
 
 // output json response with status code for apis
