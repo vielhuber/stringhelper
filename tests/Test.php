@@ -1320,6 +1320,10 @@ string'
         $this->assertSame($foo, 0);
         $foo = __hook_fire('filter_name', $foo);
         $this->assertSame($foo, -2);
+
+        $foo = true;
+        $foo = __hook_fire('unknown_hook', $foo);
+        $this->assertSame($foo, true);
     }
 
     function test__array_walk_recursive_all()
