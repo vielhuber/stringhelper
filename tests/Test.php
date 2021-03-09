@@ -1276,16 +1276,43 @@ string'
     function test__hook()
     {
         $GLOBALS['hook_test'] = 0;
-        __hook_init('hook_name');
+        __hook_fire('hook_name');
         $this->assertSame($GLOBALS['hook_test'], 0);
-        __hook_run('hook_name', function () {
+        __hook_add('hook_name', function () {
             $GLOBALS['hook_test']++;
         });
         $this->assertSame($GLOBALS['hook_test'], 0);
-        __hook_init('hook_name');
+        __hook_fire('hook_name');
         $this->assertSame($GLOBALS['hook_test'], 1);
-        __hook_init('hook_name');
+        __hook_fire('hook_name');
         $this->assertSame($GLOBALS['hook_test'], 2);
+        __hook_add('hook_name', function () {
+            $GLOBALS['hook_test'] *= 2;
+        });
+        __hook_fire('hook_name');
+        $this->assertSame($GLOBALS['hook_test'], 6);
+        __hook_fire('hook_name');
+        $this->assertSame($GLOBALS['hook_test'], 14);
+
+        $foo = 1;
+        __hook_add(
+            'filter_name',
+            function ($a) {
+                return $a + 1;
+            },
+            20
+        );
+        __hook_add(
+            'filter_name',
+            function ($a) {
+                return $a * 2;
+            },
+            10
+        );
+        $foo = __hook_fire('filter_name', $foo);
+        $this->assertSame($foo, 3);
+        $foo = __hook_fire('filter_name', $foo);
+        $this->assertSame($foo, 7);
     }
 
     function test__array_walk_recursive_all()

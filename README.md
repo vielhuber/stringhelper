@@ -916,12 +916,20 @@ catch(\Exception $t) {
 __success() // { success: true, message: '' }
 __error('missing data') // { success: false, message: 'missing data' }
 
-// simple hook system
+// simple hook system that supports actions/filters with priorities
 $GLOBALS['t'] = 0;
-__hook_init('hook_name'); // $GLOBALS['t'] = 0
-__hook_run('hook_name', function() { $GLOBALS['t']++; }); // $GLOBALS['t'] = 0
-__hook_init('hook_name'); // $GLOBALS['t'] = 1
-__hook_init('hook_name'); // $GLOBALS['t'] = 2
+__hook_fire('hook_name'); // $GLOBALS['t'] = 0
+__hook_add('hook_name', function() { $GLOBALS['t']++; }); // $GLOBALS['t'] = 0
+__hook_fire('hook_name'); // $GLOBALS['t'] = 1
+__hook_fire('hook_name'); // $GLOBALS['t'] = 2
+__hook_add('hook_name', function() { $GLOBALS['t'] *= 2; }); // $GLOBALS['t'] = 2
+__hook_fire('hook_name'); // $GLOBALS['t'] = 6
+__hook_fire('hook_name'); // $GLOBALS['t'] = 14
+$foo = 1;
+__hook_add('filter_name', function($a) { return $a+1; }, 20);
+__hook_add('filter_name', function($a) { return $a*2; }, 10);
+$foo = __hook_fire('filter_name', $foo); // $foo = 3
+$foo = __hook_fire('filter_name', $foo); // $foo = 7
 
 // get current os
 __os() // ['windows','mac','linux']

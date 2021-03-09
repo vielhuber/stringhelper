@@ -3442,19 +3442,35 @@ class __
         return (object) ['success' => false, 'message' => $message];
     }
 
-    public static function hook_init($hook_name)
+    public static function hook_fire($hook_name, $arg = null)
     {
         if (!isset($GLOBALS['hook']) || !is_array($GLOBALS['hook'])) {
             $GLOBALS['hook'] = [];
         }
         if (isset($GLOBALS['hook'][$hook_name])) {
-            foreach ($GLOBALS['hook'][$hook_name] as $fun) {
-                $fun();
+            usort($GLOBALS['hook'][$hook_name], function ($a, $b) {
+                if ($a['priority'] < $b['priority']) {
+                    return -1;
+                }
+                if ($a['priority'] > $b['priority']) {
+                    return 1;
+                }
+                if ($a['timestamp'] < $b['timestamp']) {
+                    return -1;
+                }
+                if ($a['timestamp'] > $b['timestamp']) {
+                    return 1;
+                }
+                return 0;
+            });
+            foreach ($GLOBALS['hook'][$hook_name] as $value) {
+                $arg = $value['function']($arg);
             }
         }
+        return $arg;
     }
 
-    public static function hook_run($hook_name, $fun)
+    public static function hook_add($hook_name, $fun, $priority = 0)
     {
         if (!isset($GLOBALS['hook']) || !is_array($GLOBALS['hook'])) {
             $GLOBALS['hook'] = [];
@@ -3462,7 +3478,7 @@ class __
         if (!isset($GLOBALS['hook'][$hook_name])) {
             $GLOBALS['hook'][$hook_name] = [];
         }
-        array_push($GLOBALS['hook'][$hook_name], $fun);
+        $GLOBALS['hook'][$hook_name][] = ['function' => $fun, 'priority' => $priority, 'timestamp' => microtime()];
     }
 
     public static function os()
