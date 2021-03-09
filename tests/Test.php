@@ -1309,10 +1309,17 @@ string'
             },
             10
         );
+        __hook_add(
+            'filter_name',
+            function ($a) {
+                return $a - 3;
+            },
+            PHP_INT_MAX
+        );
         $foo = __hook_fire('filter_name', $foo);
-        $this->assertSame($foo, 3);
+        $this->assertSame($foo, 0);
         $foo = __hook_fire('filter_name', $foo);
-        $this->assertSame($foo, 7);
+        $this->assertSame($foo, -2);
     }
 
     function test__array_walk_recursive_all()

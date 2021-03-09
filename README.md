@@ -928,8 +928,9 @@ __hook_fire('hook_name'); // $GLOBALS['t'] = 14
 $foo = 1;
 __hook_add('filter_name', function($a) { return $a+1; }, 20);
 __hook_add('filter_name', function($a) { return $a*2; }, 10);
-$foo = __hook_fire('filter_name', $foo); // $foo = 3
-$foo = __hook_fire('filter_name', $foo); // $foo = 7
+__hook_add('filter_name', function($a) { return $a-3; }, PHP_INT_MAX);
+$foo = __hook_fire('filter_name', $foo); // $foo = 0
+$foo = __hook_fire('filter_name', $foo); // $foo = -2
 
 // get current os
 __os() // ['windows','mac','linux']
