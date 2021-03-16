@@ -507,13 +507,19 @@ EOD;
                     ],
                     [
                         '<a>VanillaJS</a> ist seit <a>ES6</a> quasi in allen Bereichen dem Urgestein <a>jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                        '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
+                        [
+                            '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
+                            'VanillaJS has been on <a>par with</a><a>the veteran jQuery</a> in almost all areas <a>since ES6</a> and is now far superior.'
+                        ],
                         'de',
                         'en'
                     ],
                     [
                         '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                        '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.',
+                        [
+                            '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.',
+                            'VanillaJS has been on <a p="1">par with</a> <a p="3">the veteran jQuery</a> in almost all areas <a p="2">since ES6</a> and is now far superior.'
+                        ],
                         'de',
                         'en'
                     ],
@@ -544,21 +550,27 @@ EOD;
                         'en'
                     ]
                 ]
-                as $examples__value
+                as $examples__key => $examples__value
             ) {
-                $this->assertSame(
-                    __minify_html(
-                        mb_strtolower(
-                            __translate_google(
-                                $examples__value[0],
-                                $examples__value[2],
-                                $examples__value[3],
-                                $api_keys__value
-                            )
-                        )
-                    ),
-                    __minify_html(mb_strtolower($examples__value[1]))
+                $trans = __translate_google(
+                    $examples__value[0],
+                    $examples__value[2],
+                    $examples__value[3],
+                    $api_keys__value
                 );
+                if (!is_array($examples__value[1])) {
+                    $examples__value[1] = [$examples__value[1]];
+                }
+                $match = false;
+                foreach ($examples__value[1] as $examples__value__value) {
+                    if (__minify_html(mb_strtolower($trans)) == __minify_html(mb_strtolower($examples__value__value))) {
+                        $match = true;
+                        break;
+                    }
+                }
+                if ($match === false) {
+                    $this->assertSame($examples__key, $trans);
+                }
             }
         }
 
@@ -642,12 +654,15 @@ House'
             $this->assertSame(strpos($t->getMessage(), 'credentials are missing') !== false, true);
         }
 
-        if (isset($_SERVER['PROXY'])) {
-            foreach ([$_SERVER['MICROSOFT_TRANSLATION_API_KEY'], 'free'] as $api_keys__value) {
-                $this->assertSame(
-                    __translate_microsoft('Haus', 'de', 'en', $api_keys__value, $_SERVER['PROXY']),
-                    'House'
-                );
+        /* this is currently disabled because microsoft is very good at detecting proxies (showCaptcha is responded) */
+        if (1 == 0) {
+            if (isset($_SERVER['PROXY'])) {
+                foreach ([$_SERVER['MICROSOFT_TRANSLATION_API_KEY'], 'free'] as $api_keys__value) {
+                    $this->assertSame(
+                        __translate_microsoft('Haus', 'de', 'en', $api_keys__value, $_SERVER['PROXY']),
+                        'House'
+                    );
+                }
             }
         }
     }
@@ -1391,6 +1406,84 @@ string'
         }
     }
 
+    function test__minify_html()
+    {
+        $this->assertSame(__minify_html('VanillaJS is <strong>cool</strong>'), 'VanillaJS is <strong>cool</strong>');
+        $this->assertSame(__minify_html('<p>foo</p>'), '<p>foo</p>');
+        $this->assertSame(__minify_html(null), null);
+        $this->assertSame(__minify_html(true), true);
+        $this->assertSame(__minify_html(false), false);
+        $this->assertSame(__minify_html('Dies ist ein Test'), 'Dies ist ein Test');
+        $this->assertSame(__minify_html('  Dies ist ein Test '), 'Dies ist ein Test');
+        $this->assertSame(__minify_html(''), '');
+        $this->assertSame(__minify_html('<br/>'), '<br>');
+        $this->assertSame(__minify_html('<br />'), '<br>');
+        $this->assertSame(
+            __minify_html('<!DOCTYPE html>
+<title>shortest valid html5 document</title>
+<p>cool stuff</p>'),
+            '<!DOCTYPE html><title>shortest valid html5 document</title><p>cool stuff</p>'
+        );
+        $this->assertSame(
+            __minify_html('<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+<link href="http://example.com/style.css" rel="stylesheet" />
+<link rel="icon" href="http://example.com/favicon.png" />
+
+<title>Tiny Html Minifier</title>
+
+</head>
+<body class="body">
+
+<div class="main-wrap">
+    <main>
+        <textarea>
+            Some text
+            with newlines
+            and some spaces
+        </textarea>
+
+        <div class="test">
+            <p>This text</p>
+            <p>should not</p>
+            <p>wrap on multiple lines</p>
+        </div>
+    </main>
+</div>
+<script>
+    console.log("Script tags are not minified");
+    console.log("This is inside a script tag");
+</script></body>
+</html>'),
+            '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><link href="http://example.com/style.css" rel="stylesheet"><link rel="icon" href="http://example.com/favicon.png"><title>Tiny Html Minifier</title></head><body class="body"><div class="main-wrap"><main><textarea>
+            Some text
+            with newlines
+            and some spaces
+        </textarea><div class="test"><p>This text</p><p>should not</p><p>wrap on multiple lines</p></div></main></div><script>
+    console.log("Script tags are not minified");
+    console.log("This is inside a script tag");
+</script></body></html>'
+        );
+    }
+
+    function test__is_serialized()
+    {
+        $this->assertSame(__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true);
+        $this->assertSame(__is_serialized(''), false);
+        $this->assertSame(__is_serialized(null), false);
+        $this->assertSame(__is_serialized(false), false);
+        $this->assertSame(__is_serialized(true), false);
+        $this->assertSame(__is_serialized([]), false);
+        $this->assertSame(__is_serialized((object) []), false);
+        $this->assertSame(__is_serialized('idkfa'), false);
+        $this->assertSame(__is_serialized('b:0;'), true);
+    }
+
     function test__array_multisort()
     {
         $arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]];
@@ -1573,67 +1666,6 @@ string'
         $this->assertSame(__url_normalize(false), false);
         $this->assertSame(__url_normalize(42), 42);
         $this->assertSame(__url_normalize('http://www.foo.com/bar/'), 'http://www.foo.com/bar');
-
-        $this->assertSame(__minify_html('<p>foo</p>'), '<p>foo</p>');
-        $this->assertSame(__minify_html(null), null);
-        $this->assertSame(__minify_html(true), true);
-        $this->assertSame(__minify_html(false), false);
-        $this->assertSame(__minify_html('Dies ist ein Test'), 'Dies ist ein Test');
-        $this->assertSame(__minify_html('  Dies ist ein Test '), 'Dies ist ein Test');
-        $this->assertSame(__minify_html(''), '');
-        $this->assertSame(__minify_html('<br/>'), '<br>');
-        $this->assertSame(__minify_html('<br />'), '<br>');
-        $this->assertSame(
-            __minify_html('<!DOCTYPE html>
-<title>shortest valid html5 document</title>
-<p>cool stuff</p>'),
-            '<!DOCTYPE html><title>shortest valid html5 document</title><p>cool stuff</p>'
-        );
-        $this->assertSame(
-            __minify_html('<!doctype html>
-<html lang="en">
-<head>
-
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-
-<link href="http://example.com/style.css" rel="stylesheet" />
-<link rel="icon" href="http://example.com/favicon.png" />
-
-<title>Tiny Html Minifier</title>
-
-</head>
-<body class="body">
-
-<div class="main-wrap">
-    <main>
-        <textarea>
-            Some text
-            with newlines
-            and some spaces
-        </textarea>
-
-        <div class="test">
-            <p>This text</p>
-            <p>should not</p>
-            <p>wrap on multiple lines</p>
-        </div>
-    </main>
-</div>
-<script>
-    console.log("Script tags are not minified");
-    console.log("This is inside a script tag");
-</script></body>
-</html>'),
-            '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><link href="http://example.com/style.css" rel="stylesheet"><link rel="icon" href="http://example.com/favicon.png"><title>Tiny Html Minifier</title></head><body class="body"><div class="main-wrap"><main><textarea>
-            Some text
-            with newlines
-            and some spaces
-        </textarea><div class="test"><p>This text</p><p>should not</p><p>wrap on multiple lines</p></div></main></div><script>
-    console.log("Script tags are not minified");
-    console.log("This is inside a script tag");
-</script></body></html>'
-        );
 
         $this->assertSame(__remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med'), 'Lorem  ipsum  dolor  med');
         $this->assertSame(__remove_emoji('OK!🥊'), 'OK!');
@@ -1840,12 +1872,6 @@ string'
         $this->assertSame(__string_is_html(false), false);
         $this->assertSame(__string_is_html(true), false);
         $this->assertSame(__string_is_html([]), false);
-
-        $this->assertSame(__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true);
-        $this->assertSame(__is_serialized(''), false);
-        $this->assertSame(__is_serialized(null), false);
-        $this->assertSame(__is_serialized('idkfa'), false);
-        $this->assertSame(__is_serialized('b:0;'), true);
 
         $this->assertSame(__is_base64_encoded('dGhpcyBpcyBjb29sIHN0dWZm'), true);
         $this->assertSame(__is_base64_encoded('#ib3498r'), false);
