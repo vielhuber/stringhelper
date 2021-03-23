@@ -1065,6 +1065,14 @@ __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml', null, true
 __extract_title_from_url('https://vielhuber.de') // David Vielhuber > Full-Stack Developer aus München
 __extract_meta_desc_from_url('https://vielhuber.de') // 🌀 Vielhuber David ist ein Web-Geek mit einem Faible für schönes Design, einer Prise Perfektionismus und Augen für klare Konturen. 🌀
 
+// extract youtube/vimeo video information from string
+__video_info('https://www.youtube.com/watch?v=WAZlcK7FUic') // ['id' => 'WAZlcK7FUic', 'provider' => 'youtube', 'thumbnail' => 'data:image/jpeg;base64,/9j/4AA...']
+__video_info('https://vimeo.com/527316428') // ['id' => '527316428', 'provider' => 'vimeo', 'thumbnail' => 'data:image/jpeg;base64,/9j/4AA...']
+__video_info('https://www.youtube.com/embed/WAZlcK7FUic?feature=oembed') // several different formats are accepted
+__video_info('WAZlcK7FUic')
+__video_info('527316428')
+__video_info('https://www.youtube.com/watch?v=WAZlcK7FUiZ') // null (strong id detection is also included)
+
 // char helpers for excel columns
 __char_to_int('D') // 4
 __int_to_char(4) // 'D'

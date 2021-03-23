@@ -1375,6 +1375,58 @@ string'
         );
     }
 
+    function test__video_info()
+    {
+        $base64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents('tests/assets/thumbnail_youtube.jpg'));
+        $this->assertSame(__video_info('https://www.youtube.com/watch?v=WAZlcK7FUic'), [
+            'id' => 'WAZlcK7FUic',
+            'provider' => 'youtube',
+            'thumbnail' => $base64
+        ]);
+        $this->assertSame(__video_info('https://www.youtube.com/embed/WAZlcK7FUic?feature=oembed'), [
+            'id' => 'WAZlcK7FUic',
+            'provider' => 'youtube',
+            'thumbnail' => $base64
+        ]);
+        $this->assertSame(__video_info('WAZlcK7FUic'), [
+            'id' => 'WAZlcK7FUic',
+            'provider' => 'youtube',
+            'thumbnail' => $base64
+        ]);
+
+        $base64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents('tests/assets/thumbnail_vimeo.jpg'));
+        $this->assertSame(__video_info('https://vimeo.com/527316428'), [
+            'id' => '527316428',
+            'provider' => 'vimeo',
+            'thumbnail' => $base64
+        ]);
+        $this->assertSame(__video_info('https://vimeo.com/channels/foo/527316428'), [
+            'id' => '527316428',
+            'provider' => 'vimeo',
+            'thumbnail' => $base64
+        ]);
+        $this->assertSame(__video_info('https://vimeo.com/groups/foo/videos/527316428'), [
+            'id' => '527316428',
+            'provider' => 'vimeo',
+            'thumbnail' => $base64
+        ]);
+        $this->assertSame(__video_info('527316428'), [
+            'id' => '527316428',
+            'provider' => 'vimeo',
+            'thumbnail' => $base64
+        ]);
+
+        $this->assertSame(__video_info('https://www.youtube.com/watch?v=WAZlcK7FUiZ'), null);
+        $this->assertSame(__video_info('https://www.youtube.com/watch?v=abc'), null);
+        $this->assertSame(__video_info('https://vimeo.com/abc'), null);
+        $this->assertSame(__video_info('https://foo.com/27366'), null);
+        $this->assertSame(__video_info(''), null);
+        $this->assertSame(__video_info([]), null);
+        $this->assertSame(__video_info(null), null);
+        $this->assertSame(__video_info(false), null);
+        $this->assertSame(__video_info(true), null);
+    }
+
     function test__exception()
     {
         try {

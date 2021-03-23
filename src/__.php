@@ -3624,6 +3624,85 @@ class __
         return 25569 + $dt->getTimestamp() / 86400;
     }
 
+    public static function video_info($str)
+    {
+        $response = __::video_info_suggestion($str);
+        if ($response === null) {
+            return null;
+        }
+        if (__::video_info_check($response['id'], $response['provider']) === false) {
+            return null;
+        }
+        return [
+            'id' => $response['id'],
+            'provider' => $response['provider'],
+            'thumbnail' => __::video_info_thumbnail($response['id'], $response['provider'])
+        ];
+    }
+
+    public static function video_info_suggestion($str)
+    {
+        if (__::nx($str)) {
+            return null;
+        }
+        preg_match(
+            '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/\s]{11})%i',
+            $str,
+            $matches
+        );
+        if (!empty($matches)) {
+            return ['id' => $matches[1], 'provider' => 'youtube'];
+        }
+        preg_match(
+            '/(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|)(\d+)(?:|\/\?)/i',
+            $str,
+            $matches
+        );
+        if (!empty($matches)) {
+            return ['id' => $matches[4], 'provider' => 'vimeo'];
+        }
+        if (strpos($str, 'http') === false) {
+            if (mb_strlen($str) == 11) {
+                return ['id' => $str, 'provider' => 'youtube'];
+            }
+            if (__::is_integer($str)) {
+                return ['id' => $str, 'provider' => 'vimeo'];
+            }
+        }
+        return null;
+    }
+
+    public static function video_info_check($id, $provider)
+    {
+        if ($provider === 'youtube') {
+            $url = 'https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' . $id . '&format=json';
+            $code = substr(get_headers($url)[0], 9, 3);
+            return strpos($code, '4') !== 0;
+        }
+        if ($provider === 'vimeo') {
+            return @file_get_contents('http://vimeo.com/api/v2/video/' . $id . '.json') != '';
+        }
+    }
+
+    public static function video_info_thumbnail($id, $provider)
+    {
+        $content = '';
+        if ($provider === 'youtube') {
+            $content = @file_get_contents('https://img.youtube.com/vi/' . $id . '/0.jpg');
+        }
+        if ($provider === 'vimeo') {
+            $content = @file_get_contents('http://vimeo.com/api/v2/video/' . $id . '.json');
+            if ($content != '') {
+                $content = json_decode($content);
+                $content = @file_get_contents($content[0]->thumbnail_large);
+            }
+        }
+        if ($content == '') {
+            return null;
+        }
+        return 'data:image/jpeg;base64,' . base64_encode($content);
+    }
+
     public static function char_to_int($letters)
     {
         $num = 0;

@@ -1058,6 +1058,13 @@ if (!function_exists('__timestamp_str_to_excel')) {
     }
 }
 
+if (!function_exists('__video_info')) {
+    function __video_info(...$args)
+    {
+        return \vielhuber\stringhelper\__::video_info(...$args);
+    }
+}
+
 if (!function_exists('__char_to_int')) {
     function __char_to_int(...$args)
     {
