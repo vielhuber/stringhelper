@@ -3654,12 +3654,12 @@ class __
             return ['id' => $matches[1], 'provider' => 'youtube'];
         }
         preg_match(
-            '/(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|)(\d+)(?:|\/\?)/i',
+            '/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?/i',
             $str,
             $matches
         );
         if (!empty($matches)) {
-            return ['id' => $matches[4], 'provider' => 'vimeo'];
+            return ['id' => $matches[1], 'provider' => 'vimeo'];
         }
         if (strpos($str, 'http') === false) {
             if (mb_strlen($str) == 11) {

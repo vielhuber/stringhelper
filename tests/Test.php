@@ -1400,6 +1400,11 @@ string'
             'provider' => 'vimeo',
             'thumbnail' => $base64
         ]);
+        $this->assertSame(__video_info('https://player.vimeo.com/video/527316428?dnt=1&app_id=122963'), [
+            'id' => '527316428',
+            'provider' => 'vimeo',
+            'thumbnail' => $base64
+        ]);
         $this->assertSame(__video_info('https://vimeo.com/channels/foo/527316428'), [
             'id' => '527316428',
             'provider' => 'vimeo',
