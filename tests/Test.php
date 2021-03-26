@@ -1713,6 +1713,38 @@ string'
             ),
             [['a' => 17, 'b' => 42, 'c' => 'foo, baz'], ['a' => 19, 'b' => 20, 'c' => 'bar']]
         );
+
+        $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
+        $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];
+        $c = ['a' => 17, 'b' => 43, 'c' => 'baz'];
+        $arr = [$a, $b, $c];
+        $this->assertSame(
+            __array_group_by_aggregate(
+                $arr,
+                ['a'],
+                [
+                    'b' => function ($a, $b) {
+                        return max($a, $b);
+                    },
+                    'c' => function ($a, $b) {
+                        return $a . ', ' . $b;
+                    }
+                ]
+            ),
+            [['a' => 17, 'b' => 43, 'c' => 'foo, baz'], ['a' => 19, 'b' => 20, 'c' => 'bar']]
+        );
+        $this->assertSame(
+            __array_group_by_aggregate(
+                $arr,
+                ['a'],
+                [
+                    'c' => function ($a, $b) {
+                        return $a . ', ' . $b;
+                    }
+                ]
+            ),
+            [['a' => 17, 'b' => 42, 'c' => 'foo, baz'], ['a' => 19, 'b' => 20, 'c' => 'bar']]
+        );
     }
 
     function test__helpers()
