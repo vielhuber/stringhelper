@@ -498,6 +498,13 @@ if (!function_exists('__array_group_by')) {
     }
 }
 
+if (!function_exists('__array_group_by_aggregate')) {
+    function __array_group_by_aggregate(...$args)
+    {
+        return \vielhuber\stringhelper\__::array_group_by_aggregate(...$args);
+    }
+}
+
 if (!function_exists('__array_unique')) {
     function __array_unique(...$args)
     {
@@ -810,6 +817,13 @@ if (!function_exists('__remove_zero_decimals')) {
     function __remove_zero_decimals(...$args)
     {
         return \vielhuber\stringhelper\__::remove_zero_decimals(...$args);
+    }
+}
+
+if (!function_exists('__remove_leading_zeros')) {
+    function __remove_leading_zeros(...$args)
+    {
+        return \vielhuber\stringhelper\__::remove_leading_zeros(...$args);
     }
 }
 

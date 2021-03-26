@@ -1998,6 +1998,42 @@ class __
         return $grouped;
     }
 
+    public static function array_group_by_aggregate($array, $keys, $aggregate_functions)
+    {
+        if (!is_array($keys)) {
+            $keys = [$keys];
+        }
+        $grouped = [];
+        foreach ($array as $array__value) {
+            $grouped_key = [];
+            foreach ($keys as $keys__value) {
+                if (!array_key_exists($keys__value, $array__value)) {
+                    continue;
+                }
+                $grouped_key[] = $array__value[$keys__value];
+            }
+            $grouped_key = implode('❤️', $grouped_key);
+            if (!array_key_exists($grouped_key, $grouped)) {
+                $grouped[$grouped_key] = $array__value;
+            } else {
+                foreach ($array__value as $array__value__key => $array__value__value) {
+                    if (in_array($array__value__key, $keys, true)) {
+                        continue;
+                    }
+                    if (!array_key_exists($array__value__key, $aggregate_functions)) {
+                        continue;
+                    }
+                    $grouped[$grouped_key][$array__value__key] = $aggregate_functions[$array__value__key](
+                        $grouped[$grouped_key][$array__value__key],
+                        $array__value__value
+                    );
+                }
+            }
+        }
+        $grouped = array_values($grouped);
+        return $grouped;
+    }
+
     public static function array_unique($array)
     {
         if (self::nx($array) || !is_array($array)) {
@@ -2981,6 +3017,20 @@ class __
             $num = intval($num);
         }
         return $num;
+    }
+
+    public static function remove_leading_zeros($str)
+    {
+        if (__nx($str)) {
+            return $str;
+        }
+        if (!is_string($str)) {
+            return $str;
+        }
+        if (ltrim($str, '0') != '') {
+            return ltrim($str, '0');
+        }
+        return '0';
     }
 
     public static function flatten_keys($array)

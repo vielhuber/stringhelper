@@ -478,6 +478,9 @@ __remove_zero_decimals(1337.4) // 1337.4
 __remove_zero_decimals(1337.42) // 1337.42
 __remove_zero_decimals(1337.424) // 1337.424
 
+// remove leading zeros
+__remove_leading_zeros('01337') // 1337
+
 // normalizes phone numbers (din, germany)
 __phone_normalize('(0)89-12 456 666') // +49 89 12456666
 __phone_tokenize('(0)89-12 456 666') // ['country_code' => '49', 'area_code' => '89', 'number' => '12456666']
@@ -540,6 +543,19 @@ __array_group_by($arr, 'a') // [17 => [$a, $c], 19 => [$b]]
 __array_group_by($arr, 'a', 'b') // [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
 __array_group_by($arr, function($v) { return $v['a']; }) // [17 => [$a, $c], 19 => [$b]]
 __array_group_by($arr, function($v) { return $v['a']; }, function($v) { return $v['b']; }) // [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
+
+// array group by aggregate
+$a = ['a' => 17, 'b' => 42, 'c' => 'foo']
+$b = ['a' => 19, 'b' => 20, 'c' => 'bar']
+$c = ['a' => 17, 'b' => 42, 'c' => 'baz']
+$arr = [$a, $b, $c]
+__array_group_by_aggregate($arr, 'a', [
+    'b' => function($a, $b) { return $a+$b; },
+    'c' => function($a, $b) { return $a.', '.$b; },
+]) // [['a' => 17, 'b' => 84, 'c' => 'foo, baz'], ['a' => 19, 'b' => 20, 'c' => 'bar']]
+__array_group_by_aggregate($arr, ['a','b'], [
+    'c' => function($a, $b) { return $a.', '.$b; },
+]) // [['a' => 17, 'b' => 42, 'c' => 'foo, baz'], ['a' => 19, 'b' => 20, 'c' => 'bar']]
 
 // array unique (that works with multidimensional arrays)
 __array_unique([1,2,2]) // [1,2]

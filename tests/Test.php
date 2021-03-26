@@ -1626,6 +1626,95 @@ string'
         $this->assertEquals($arr, [['a' => __empty(), 'b' => 42], ['a' => 13, 'b' => 19]]);
     }
 
+    function test__remove_leading_zeros()
+    {
+        $this->assertSame(__remove_leading_zeros('00001337'), '1337');
+        $this->assertSame(__remove_leading_zeros('1337'), '1337');
+        $this->assertSame(__remove_leading_zeros(1337), 1337);
+        $this->assertSame(__remove_leading_zeros('0'), '0');
+        $this->assertSame(__remove_leading_zeros(0), 0);
+        $this->assertSame(__remove_leading_zeros(null), null);
+        $this->assertSame(__remove_leading_zeros(true), true);
+        $this->assertSame(__remove_leading_zeros(false), false);
+        $this->assertSame(__remove_leading_zeros(''), '');
+        $this->assertSame(__remove_leading_zeros([]), []);
+    }
+
+    function test__remove_zero_decimals()
+    {
+        $this->assertSame(__remove_zero_decimals(1337), 1337);
+        $this->assertSame(__remove_zero_decimals('1337'), 1337);
+        $this->assertSame(__remove_zero_decimals('1337.40'), 1337.4);
+        $this->assertSame(__remove_zero_decimals('1337,40'), 1337.4);
+        $this->assertSame(__remove_zero_decimals(1337.0), 1337);
+        $this->assertSame(__remove_zero_decimals(1337.4), 1337.4);
+        $this->assertSame(__remove_zero_decimals(1337.42), 1337.42);
+        $this->assertSame(__remove_zero_decimals(1337.424), 1337.424);
+        $this->assertSame(__remove_zero_decimals(null), null);
+        $this->assertSame(__remove_zero_decimals(false), null);
+        $this->assertSame(__remove_zero_decimals(''), null);
+        $this->assertSame(__remove_zero_decimals('foo'), null);
+    }
+
+    function test__array_group_by()
+    {
+        $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
+        $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];
+        $c = ['a' => 17, 'b' => 42, 'c' => 'baz'];
+        $arr = [$a, $b, $c];
+        $this->assertSame(__array_group_by($arr, 'a'), [17 => [$a, $c], 19 => [$b]]);
+        $this->assertSame(__array_group_by($arr, 'a', 'b'), [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]);
+        $this->assertSame(
+            __array_group_by($arr, function ($v) {
+                return $v['a'];
+            }),
+            [17 => [$a, $c], 19 => [$b]]
+        );
+        $this->assertSame(
+            __array_group_by(
+                $arr,
+                function ($v) {
+                    return $v['a'];
+                },
+                function ($v) {
+                    return $v['b'];
+                }
+            ),
+            [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
+        );
+    }
+
+    function test__array_group_by_aggregate()
+    {
+        $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
+        $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];
+        $c = ['a' => 17, 'b' => 42, 'c' => 'baz'];
+        $arr = [$a, $b, $c];
+        $this->assertSame(
+            __array_group_by_aggregate($arr, 'a', [
+                'b' => function ($a, $b) {
+                    return $a + $b;
+                },
+                'c' => function ($a, $b) {
+                    return $a . ', ' . $b;
+                }
+            ]),
+            [['a' => 17, 'b' => 84, 'c' => 'foo, baz'], ['a' => 19, 'b' => 20, 'c' => 'bar']]
+        );
+        $this->assertSame(
+            __array_group_by_aggregate(
+                $arr,
+                ['a', 'b'],
+                [
+                    'c' => function ($a, $b) {
+                        return $a . ', ' . $b;
+                    }
+                ]
+            ),
+            [['a' => 17, 'b' => 42, 'c' => 'foo, baz'], ['a' => 19, 'b' => 20, 'c' => 'bar']]
+        );
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -1811,19 +1900,6 @@ string'
 
         $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
 
-        $this->assertSame(__remove_zero_decimals(1337), 1337);
-        $this->assertSame(__remove_zero_decimals('1337'), 1337);
-        $this->assertSame(__remove_zero_decimals('1337.40'), 1337.4);
-        $this->assertSame(__remove_zero_decimals('1337,40'), 1337.4);
-        $this->assertSame(__remove_zero_decimals(1337.0), 1337);
-        $this->assertSame(__remove_zero_decimals(1337.4), 1337.4);
-        $this->assertSame(__remove_zero_decimals(1337.42), 1337.42);
-        $this->assertSame(__remove_zero_decimals(1337.424), 1337.424);
-        $this->assertSame(__remove_zero_decimals(null), null);
-        $this->assertSame(__remove_zero_decimals(false), null);
-        $this->assertSame(__remove_zero_decimals(''), null);
-        $this->assertSame(__remove_zero_decimals('foo'), null);
-
         $this->assertSame(mb_strlen(__random_string()), 8);
         $this->assertSame(mb_strlen(__random_string(10)), 10);
         $this->assertSame(mb_strlen(__random_string(16, 'idkfa')), 16);
@@ -1838,31 +1914,6 @@ string'
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['foo'] === 'bar', true);
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz', true);
         $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo', true);
-
-        $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
-        $b = ['a' => 19, 'b' => 20, 'c' => 'bar'];
-        $c = ['a' => 17, 'b' => 42, 'c' => 'baz'];
-        $arr = [$a, $b, $c];
-        $this->assertSame(__array_group_by($arr, 'a'), [17 => [$a, $c], 19 => [$b]]);
-        $this->assertSame(__array_group_by($arr, 'a', 'b'), [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]);
-        $this->assertSame(
-            __array_group_by($arr, function ($v) {
-                return $v['a'];
-            }),
-            [17 => [$a, $c], 19 => [$b]]
-        );
-        $this->assertSame(
-            __array_group_by(
-                $arr,
-                function ($v) {
-                    return $v['a'];
-                },
-                function ($v) {
-                    return $v['b'];
-                }
-            ),
-            [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
-        );
 
         $this->assertSame(__array_unique([1, 2, 2]), [1, 2]);
         $this->assertSame(__array_unique([['foo' => 'bar'], ['bar' => 'baz'], ['foo' => 'bar']]), [
