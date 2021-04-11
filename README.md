@@ -689,6 +689,9 @@ baz ') // foo
 //bar
 //baz
 
+// reverse string (grapheme safe, works also without intl extension)
+__strrev('hello❤️world') // dlrow❤️olleh
+
 // check if string is json
 __string_is_json('[]') // true
 __string_is_json('{"foo":"bar"}') // true

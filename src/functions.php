@@ -260,6 +260,13 @@ if (!function_exists('__trim_every_line')) {
     }
 }
 
+if (!function_exists('__strrev')) {
+    function __strrev(...$args)
+    {
+        return \vielhuber\stringhelper\__::strrev(...$args);
+    }
+}
+
 if (!function_exists('__atrim')) {
     function __atrim(...$args)
     {

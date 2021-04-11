@@ -1656,6 +1656,18 @@ string'
         $this->assertSame(__remove_zero_decimals('foo'), null);
     }
 
+    function test__strrev()
+    {
+        $this->assertSame(__strrev('hello❤️world'), 'dlrow❤️olleh');
+        $this->assertSame(__strrev('Hello world!'), '!dlrow olleH');
+        $this->assertSame(__strrev('o'), 'o');
+        $this->assertSame(__strrev(''), '');
+        $this->assertSame(__strrev(null), null);
+        $this->assertSame(__strrev(false), false);
+        $this->assertSame(__strrev(true), true);
+        $this->assertSame(__strrev([]), []);
+    }
+
     function test__array_group_by()
     {
         $a = ['a' => 17, 'b' => 42, 'c' => 'foo'];
