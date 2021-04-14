@@ -1022,6 +1022,10 @@ __is_repetitive_action('name', 60); // allow 1 action per 60 minutes (this is th
 __is_repetitive_action('name', 1/60); // allow 1 action per 1 second
 __is_repetitive_action('name', 60, ['127.0.0.1','0.0.0.0']); // whitelist ip addresses
 
+// check for spam words in string (blacklist blocker utilizing https://github.com/splorp/wordpress-comment-blacklist)
+__has_spamwords('This is cool stuff.') // false
+__has_spamwords('I do spy software your website.') // true
+
 // get referrer
 __referer() // $_SERVER['HTTP_REFERER'], if not available null
 

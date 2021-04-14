@@ -2722,6 +2722,40 @@ class __
         return false;
     }
 
+    public static function has_spamwords($message)
+    {
+        if (!is_string($message)) {
+            return false;
+        }
+        $filename = sys_get_temp_dir() . '/spam-blacklist.txt';
+        if (!file_exists($filename) || filemtime($filename) < strtotime('now - 1 month')) {
+            $content = @file_get_contents(
+                'https://raw.githubusercontent.com/splorp/wordpress-comment-blacklist/master/blacklist.txt'
+            );
+            if ($content != '') {
+                file_put_contents($filename, $content);
+            }
+        }
+        $blacklist = file_get_contents($filename);
+        if ($blacklist != '' && strpos($blacklist, 'cannabis') !== false) {
+            $message = strip_tags($message);
+            $blacklist = trim($blacklist);
+            $words = explode(PHP_EOL, $blacklist);
+            foreach ($words as $words__value) {
+                $words__value = trim($words__value);
+                if ($words__value == '') {
+                    continue;
+                }
+                $words__value = preg_quote($words__value, '#');
+                $pattern = '#' . $words__value . '#i';
+                if (preg_match($pattern, $message)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static function get($var)
     {
         if (self::nx(@$_GET[$var])) {

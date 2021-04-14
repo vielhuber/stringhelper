@@ -731,6 +731,42 @@ baz'
         $this->assertSame(__atrim(['�']), ['�']);
     }
 
+    function test__has_spamwords()
+    {
+        $this->assertSame(__has_spamwords('This is cool stuff.'), false);
+        $this->assertSame(__has_spamwords('I do spy software your website.'), true);
+        $this->assertSame(
+            __has_spamwords(
+                'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.'
+            ),
+            false
+        );
+        $this->assertSame(
+            __has_spamwords(
+                'Es gibt im Moment in diese Mannschaft, oh, einige Spieler vergessen ihnen Profi was sie sind. Ich lese nicht sehr viele Zeitungen, aber ich habe gehört viele Situationen. Erstens: wir haben nicht offensiv gespielt. Es gibt keine deutsche Mannschaft spielt offensiv und die Name offensiv wie Bayern. Letzte Spiel hatten wir in Platz drei Spitzen: Elber, Jancka und dann Zickler. Wir müssen nicht vergessen Zickler. Zickler ist eine Spitzen mehr, Mehmet eh mehr Basler. Ist klar diese Wörter, ist möglich verstehen, was ich hab gesagt? Danke.'
+            ),
+            false
+        );
+        $this->assertSame(
+            __has_spamwords(
+                'Lorem ipsum dolor sit amet 100% Plagiaris, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.'
+            ),
+            true
+        );
+        $this->assertSame(
+            __has_spamwords(
+                'Es gibt im Moment in diese Mannschaft 100% Plagiaris, oh, einige Spieler vergessen ihnen Profi was sie sind. Ich lese nicht sehr viele Zeitungen, aber ich habe gehört viele Situationen. Erstens: wir haben nicht offensiv gespielt. Es gibt keine deutsche Mannschaft spielt offensiv und die Name offensiv wie Bayern. Letzte Spiel hatten wir in Platz drei Spitzen: Elber, Jancka und dann Zickler. Wir müssen nicht vergessen Zickler. Zickler ist eine Spitzen mehr, Mehmet eh mehr Basler. Ist klar diese Wörter, ist möglich verstehen, was ich hab gesagt? Danke.'
+            ),
+            true
+        );
+        $this->assertSame(__has_spamwords(' '), false);
+        $this->assertSame(__has_spamwords(''), false);
+        $this->assertSame(__has_spamwords(null), false);
+        $this->assertSame(__has_spamwords(true), false);
+        $this->assertSame(__has_spamwords(false), false);
+        $this->assertSame(__has_spamwords([]), false);
+    }
+
     function test__is_repetitive_action()
     {
         $default = $_SERVER['REMOTE_ADDR'];

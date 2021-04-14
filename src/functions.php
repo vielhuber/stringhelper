@@ -729,6 +729,13 @@ if (!function_exists('__is_repetitive_action')) {
     }
 }
 
+if (!function_exists('__has_spamwords')) {
+    function __has_spamwords(...$args)
+    {
+        return \vielhuber\stringhelper\__::has_spamwords(...$args);
+    }
+}
+
 if (!function_exists('__get')) {
     function __get(...$args)
     {
