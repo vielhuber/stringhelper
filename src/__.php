@@ -2724,7 +2724,7 @@ class __
 
     public static function has_spamwords($message)
     {
-        if (!is_string($message)) {
+        if (!is_string($message) || trim($message) == '') {
             return false;
         }
         $filename = sys_get_temp_dir() . '/spam-blacklist.txt';
