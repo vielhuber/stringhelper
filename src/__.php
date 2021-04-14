@@ -2925,6 +2925,16 @@ class __
         elseif ($date instanceof \DateTime) {
             $date = $date->format('Y-m-d H:i:s');
         }
+        // special fix for 01.01.20
+        elseif (preg_match('/^\d{1,2}\.\d{1,2}\.\d{1,2}$/', $date)) {
+            $date =
+                explode('.', $date)[0] .
+                '.' .
+                explode('.', $date)[1] .
+                '.' .
+                substr(date('Y'), 0, 2) .
+                explode('.', $date)[2];
+        }
 
         // default value for format
         if (self::nx($format)) {

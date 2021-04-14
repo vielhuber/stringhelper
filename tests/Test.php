@@ -1759,6 +1759,50 @@ string'
         );
     }
 
+    function test__date()
+    {
+        $this->assertSame(__date('2000-01-01'), '2000-01-01');
+        $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');
+        $this->assertSame(__date('2001-02-29', 'd.m.Y'), null);
+        $this->assertSame(__date('2000-01-01', '+6 months'), '2000-07-01');
+        $this->assertSame(__date('2000-01-01', null, '+6 months'), '2000-07-01');
+        $this->assertSame(__date('2000-01-01', 'd.m.Y', '+6 months'), '01.07.2000');
+        $this->assertSame(__date('01.01.2000'), '2000-01-01');
+        $this->assertSame(__date('01.01.20'), '2020-01-01');
+        $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));
+        $this->assertSame(__date('2019-12-02 12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
+        $this->assertSame(__date('2019-12-02T12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
+        $this->assertSame(__date('2019-12-02T12:01:02', 'd.m.Y\TH:i:s'), '02.12.2019T12:01:02');
+        $this->assertSame(__date(strtotime('2000-01-01'), 'd.m.Y'), '01.01.2000');
+        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y'), '01.01.2000');
+        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y H:i:s'), '01.01.2000 13:14:15');
+        $this->assertSame(__date(strtotime('2000-01-01'), 'd.m.Y', '+6 months'), '01.07.2000');
+        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y', '+6 months'), '01.07.2000');
+        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y H:i:s', '+6 months'), '01.07.2000 13:14:15');
+        $this->assertSame(__date(), date('Y-m-d', strtotime('now')));
+        $this->assertSame(__date(null), null);
+        $this->assertSame(__date(true), null);
+        $this->assertSame(__date(false), null);
+        $this->assertSame(__date(''), null);
+        $this->assertSame(__date('d.m.Y', null), null);
+        $this->assertSame(__date('d.m.Y', true), null);
+        $this->assertSame(__date('d.m.Y', false), null);
+        $this->assertSame(__date('d.m.Y', ''), null);
+        $this->assertSame(__date(null, 'd.m.Y'), null);
+        $this->assertSame(__date(true, 'd.m.Y'), null);
+        $this->assertSame(__date(false, 'd.m.Y'), null);
+        $this->assertSame(__date('', 'd.m.Y'), null);
+        $this->assertSame(__date('2008-31-31'), null);
+        $this->assertSame(__date('now + 6 days'), date('Y-m-d', strtotime('now + 6 days')));
+        $this->assertSame(__date('rfkjh lkjerhflk kjekj'), null);
+        $this->assertSame(__date(new DateTime('2000-01-01'), 'd.m.Y'), '01.01.2000');
+        $this->assertSame(__date(new DateTime('2000-01-01 17:37:38'), 'd.m.Y H:i:s'), '01.01.2000 17:37:38');
+        $this->assertSame(__date('d.m.Y'), date('d.m.Y', strtotime('now')));
+        $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
+        $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
+        $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -1864,46 +1908,6 @@ string'
         $this->assertSame(__remove_emoji(true), true);
         $this->assertSame(__remove_emoji(false), false);
         $this->assertSame(__remove_emoji(42), 42);
-
-        $this->assertSame(__date('2000-01-01'), '2000-01-01');
-        $this->assertSame(__date('2000-01-01', 'd.m.Y'), '01.01.2000');
-        $this->assertSame(__date('2001-02-29', 'd.m.Y'), null);
-        $this->assertSame(__date('2000-01-01', '+6 months'), '2000-07-01');
-        $this->assertSame(__date('2000-01-01', null, '+6 months'), '2000-07-01');
-        $this->assertSame(__date('2000-01-01', 'd.m.Y', '+6 months'), '01.07.2000');
-        $this->assertSame(__date('01.01.2000'), '2000-01-01');
-        $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));
-        $this->assertSame(__date('2019-12-02 12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
-        $this->assertSame(__date('2019-12-02T12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
-        $this->assertSame(__date('2019-12-02T12:01:02', 'd.m.Y\TH:i:s'), '02.12.2019T12:01:02');
-        $this->assertSame(__date(strtotime('2000-01-01'), 'd.m.Y'), '01.01.2000');
-        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y'), '01.01.2000');
-        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y H:i:s'), '01.01.2000 13:14:15');
-        $this->assertSame(__date(strtotime('2000-01-01'), 'd.m.Y', '+6 months'), '01.07.2000');
-        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y', '+6 months'), '01.07.2000');
-        $this->assertSame(__date(strtotime('2000-01-01 13:14:15'), 'd.m.Y H:i:s', '+6 months'), '01.07.2000 13:14:15');
-        $this->assertSame(__date(), date('Y-m-d', strtotime('now')));
-        $this->assertSame(__date(null), null);
-        $this->assertSame(__date(true), null);
-        $this->assertSame(__date(false), null);
-        $this->assertSame(__date(''), null);
-        $this->assertSame(__date('d.m.Y', null), null);
-        $this->assertSame(__date('d.m.Y', true), null);
-        $this->assertSame(__date('d.m.Y', false), null);
-        $this->assertSame(__date('d.m.Y', ''), null);
-        $this->assertSame(__date(null, 'd.m.Y'), null);
-        $this->assertSame(__date(true, 'd.m.Y'), null);
-        $this->assertSame(__date(false, 'd.m.Y'), null);
-        $this->assertSame(__date('', 'd.m.Y'), null);
-        $this->assertSame(__date('2008-31-31'), null);
-        $this->assertSame(__date('now + 6 days'), date('Y-m-d', strtotime('now + 6 days')));
-        $this->assertSame(__date('rfkjh lkjerhflk kjekj'), null);
-        $this->assertSame(__date(new DateTime('2000-01-01'), 'd.m.Y'), '01.01.2000');
-        $this->assertSame(__date(new DateTime('2000-01-01 17:37:38'), 'd.m.Y H:i:s'), '01.01.2000 17:37:38');
-        $this->assertSame(__date('d.m.Y'), date('d.m.Y', strtotime('now')));
-        $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
-        $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
-        $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
 
         $this->assertSame(__date('Y'), date('Y', strtotime('now')));
         $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));
