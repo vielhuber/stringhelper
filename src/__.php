@@ -2722,7 +2722,30 @@ class __
         return false;
     }
 
-    public static function has_spamwords($message)
+    public static function ip_is_on_spamlist($ip)
+    {
+        $dnsbl_lookup = [
+            'dnsbl-1.uceprotect.net',
+            'dnsbl-2.uceprotect.net',
+            'dnsbl-3.uceprotect.net',
+            'dnsbl.dronebl.org',
+            'dnsbl.sorbs.net',
+            'zen.spamhaus.org',
+            'bl.spamcop.net',
+            'list.dsbl.org'
+        ];
+        if (self::x($ip) && is_string($ip)) {
+            $reverse_ip = implode('.', array_reverse(explode('.', $ip)));
+            foreach ($dnsbl_lookup as $host) {
+                if (checkdnsrr($reverse_ip . '.' . $host . '.', 'A')) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static function has_spamwords($message, $custom_list = [])
     {
         if (!is_string($message) || trim($message) == '') {
             return false;
@@ -2741,6 +2764,7 @@ class __
             $message = strip_tags($message);
             $blacklist = trim($blacklist);
             $words = explode(PHP_EOL, $blacklist);
+            $words = array_merge($words, $custom_list);
             foreach ($words as $words__value) {
                 $words__value = trim($words__value);
                 if ($words__value == '') {

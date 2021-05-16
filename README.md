@@ -1025,6 +1025,12 @@ __is_repetitive_action('name', 60, ['127.0.0.1','0.0.0.0']); // whitelist ip add
 // check for spam words in string (blacklist blocker utilizing https://github.com/splorp/wordpress-comment-blacklist)
 __has_spamwords('This is cool stuff.') // false
 __has_spamwords('I do spy software your website.') // true
+__has_spamwords('Hongsheng Ltd') // false
+__has_spamwords('Hongsheng Ltd', ['hongsheng']) // true (add custom blacklist keywords)
+
+// check if ip is blacklisted on multiple dnsbls (dns based blackhole lists)
+__ip_is_on_spamlist('191.101.31.148') // true
+__ip_is_on_spamlist('127.0.0.1') // false
 
 // get referrer
 __referer() // $_SERVER['HTTP_REFERER'], if not available null

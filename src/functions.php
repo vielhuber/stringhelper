@@ -736,6 +736,13 @@ if (!function_exists('__has_spamwords')) {
     }
 }
 
+if (!function_exists('__ip_is_on_spamlist')) {
+    function __ip_is_on_spamlist(...$args)
+    {
+        return \vielhuber\stringhelper\__::ip_is_on_spamlist(...$args);
+    }
+}
+
 if (!function_exists('__get')) {
     function __get(...$args)
     {

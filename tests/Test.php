@@ -759,12 +759,26 @@ baz'
             ),
             true
         );
+        $this->assertSame(__has_spamwords('Hongsheng Ltd'), false);
+        $this->assertSame(__has_spamwords('Hongsheng Ltd', ['hongsheng']), true);
         $this->assertSame(__has_spamwords(' '), false);
         $this->assertSame(__has_spamwords(''), false);
         $this->assertSame(__has_spamwords(null), false);
         $this->assertSame(__has_spamwords(true), false);
         $this->assertSame(__has_spamwords(false), false);
         $this->assertSame(__has_spamwords([]), false);
+    }
+
+    function test__ip_is_on_spamlist()
+    {
+        $this->assertSame(__ip_is_on_spamlist('191.101.31.148'), true);
+        $this->assertSame(__ip_is_on_spamlist('127.0.0.1'), false);
+        $this->assertSame(__ip_is_on_spamlist('foo'), false);
+        $this->assertSame(__ip_is_on_spamlist(''), false);
+        $this->assertSame(__ip_is_on_spamlist(null), false);
+        $this->assertSame(__ip_is_on_spamlist([]), false);
+        $this->assertSame(__ip_is_on_spamlist(true), false);
+        $this->assertSame(__ip_is_on_spamlist(false), false);
     }
 
     function test__is_repetitive_action()
