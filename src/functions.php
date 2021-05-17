@@ -407,6 +407,13 @@ if (!function_exists('__remove_accents')) {
     }
 }
 
+if (!function_exists('__remove_non_printable_chars')) {
+    function __remove_non_printable_chars(...$args)
+    {
+        return \vielhuber\stringhelper\__::remove_non_printable_chars(...$args);
+    }
+}
+
 if (!function_exists('__minify_html')) {
     function __minify_html(...$args)
     {

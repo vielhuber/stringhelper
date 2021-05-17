@@ -1201,6 +1201,15 @@ class __
         return $string;
     }
 
+    public static function remove_non_printable_chars($str)
+    {
+        if (self::nx($str) || !is_string($str)) {
+            return $str;
+        }
+        $str = preg_replace('/[\x00-\x1F\x7F]/u', '', $str);
+        return $str;
+    }
+
     // (uses https://github.com/jenstornell/tiny-html-minifier, which is currently not installable via composer)
     public static function minify_html($html)
     {

@@ -1122,6 +1122,17 @@ baz'
         $this->assertSame(__remove_accents(42), 42);
     }
 
+    function test__remove_non_printable_chars()
+    {
+        $this->assertSame(__remove_non_printable_chars('foobar'), 'foobar');
+        $this->assertSame(__remove_non_printable_chars(''), '');
+        $this->assertSame(__remove_non_printable_chars([]), []);
+        $this->assertSame(__remove_non_printable_chars(null), null);
+        $this->assertSame(__remove_non_printable_chars(true), true);
+        $this->assertSame(__remove_non_printable_chars(false), false);
+        $this->assertSame(__remove_non_printable_chars(42), 42);
+    }
+
     function test__trim_whitespace()
     {
         $this->assertSame(
