@@ -484,6 +484,13 @@ if (!function_exists('__random_string')) {
     }
 }
 
+if (!function_exists('__arr_without')) {
+    function __arr_without(...$args)
+    {
+        return \vielhuber\stringhelper\__::arr_without(...$args);
+    }
+}
+
 if (!function_exists('__shuffle')) {
     function __shuffle(...$args)
     {

@@ -696,6 +696,9 @@ baz ') // foo
 //bar
 //baz
 
+// remove keys from associative array
+__arr_without(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'], ['bar', 'baz']) // ['foo' => 'bar']
+
 // reverse string (grapheme safe, works also without intl extension)
 __strrev('hello❤️world') // dlrow❤️olleh
 

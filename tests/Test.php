@@ -1820,6 +1820,28 @@ string'
         );
     }
 
+    function test__arr_without()
+    {
+        $this->assertSame(__arr_without(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'], ['bar', 'baz']), [
+            'foo' => 'bar'
+        ]);
+        $this->assertSame(__arr_without(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'], []), [
+            'foo' => 'bar',
+            'bar' => 'baz',
+            'baz' => 'foo'
+        ]);
+        $this->assertSame(__arr_without(['foo', 'bar'], [1]), [
+            0 => 'foo'
+        ]);
+        $this->assertSame(__arr_without(['foo', 'bar'], [0]), [
+            1 => 'bar'
+        ]);
+        $this->assertSame(__arr_without(['foo' => 'bar'], ['foo']), []);
+        $this->assertSame(__arr_without([], []), []);
+        $this->assertSame(__arr_without([], null), []);
+        $this->assertSame(__arr_without(null, []), null);
+    }
+
     function test__shuffle()
     {
         for ($i = 0; $i < 10; $i++) {

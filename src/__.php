@@ -1976,6 +1976,17 @@ class __
         return $random_string;
     }
 
+    public static function arr_without($array, $cols)
+    {
+        if (!is_array($array) || !is_array($cols)) {
+            return $array;
+        }
+        foreach ($cols as $cols__value) {
+            unset($array[$cols__value]);
+        }
+        return $array;
+    }
+
     public static function shuffle($array)
     {
         if (!is_array($array)) {
