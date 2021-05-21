@@ -1976,10 +1976,19 @@ class __
         return $random_string;
     }
 
+    public static function shuffle($array)
+    {
+        if (!is_array($array)) {
+            return $array;
+        }
+        shuffle($array);
+        return $array;
+    }
+
     public static function shuffle_assoc($array)
     {
         if (!is_array($array)) {
-            return null;
+            return $array;
         }
         $new = [];
         $keys = array_keys($array);

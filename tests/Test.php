@@ -1820,6 +1820,45 @@ string'
         );
     }
 
+    function test__shuffle()
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $this->assertSame(
+                in_array(__shuffle(['foo', 'bar', 'baz']), [
+                    ['foo', 'bar', 'baz'],
+                    ['foo', 'baz', 'bar'],
+                    ['bar', 'foo', 'baz'],
+                    ['bar', 'baz', 'foo'],
+                    ['baz', 'foo', 'bar'],
+                    ['baz', 'bar', 'foo']
+                ]),
+                true
+            );
+        }
+        $this->assertSame(__shuffle([]), []);
+        $this->assertSame(__shuffle(['foo']), ['foo']);
+        $this->assertSame(__shuffle(['']), ['']);
+        $this->assertSame(__shuffle(null), null);
+        $this->assertSame(__shuffle(true), true);
+        $this->assertSame(__shuffle(false), false);
+        $this->assertSame(__shuffle('foo'), 'foo');
+        $this->assertSame(__shuffle(1337), 1337);
+    }
+
+    function test__shuffle_assoc()
+    {
+        $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
+        $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['foo'] === 'bar', true);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz', true);
+        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo', true);
+        $this->assertSame(__shuffle_assoc(null), null);
+        $this->assertSame(__shuffle_assoc(false), false);
+        $this->assertSame(__shuffle_assoc(true), true);
+        $this->assertSame(__shuffle_assoc(1337), 1337);
+        $this->assertSame(__shuffle_assoc([]), []);
+    }
+
     function test__date()
     {
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
@@ -2012,17 +2051,6 @@ string'
         $this->assertSame(mb_strlen(__random_string()), 8);
         $this->assertSame(mb_strlen(__random_string(10)), 10);
         $this->assertSame(mb_strlen(__random_string(16, 'idkfa')), 16);
-
-        $this->assertSame(__shuffle_assoc(null), null);
-        $this->assertSame(__shuffle_assoc(false), null);
-        $this->assertSame(__shuffle_assoc(true), null);
-        $this->assertSame(__shuffle_assoc(1337), null);
-        $this->assertSame(__shuffle_assoc([]), []);
-        $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
-        $this->assertSame(__shuffle_assoc(['foo']), ['foo']);
-        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['foo'] === 'bar', true);
-        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['bar'] === 'baz', true);
-        $this->assertSame(__shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'])['baz'] === 'foo', true);
 
         $this->assertSame(__array_unique([1, 2, 2]), [1, 2]);
         $this->assertSame(__array_unique([['foo' => 'bar'], ['bar' => 'baz'], ['foo' => 'bar']]), [

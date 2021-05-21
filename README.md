@@ -529,6 +529,9 @@ __random_string() // edPhi34d
 __random_string(10) // abCa321aC6
 __random_string(16, 'idkfa') // idifafafifaifafk
 
+// shuffle array (no reference)
+__shuffle(['foo','bar','baz']); // ['bar','baz','foo']
+
 // shuffle associative array and preserve keys
 __shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo']) // ['bar' => 'baz', 'baz' => 'foo', 'foo' => 'bar']
 
