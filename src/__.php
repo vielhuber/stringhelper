@@ -2759,7 +2759,7 @@ class __
             'dnsbl-3.uceprotect.net',
             'dnsbl.dronebl.org',
             'dnsbl.sorbs.net',
-            'zen.spamhaus.org',
+            //'zen.spamhaus.org', // detects lots of false positives
             'bl.spamcop.net',
             'list.dsbl.org'
         ];

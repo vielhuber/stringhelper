@@ -771,7 +771,7 @@ baz'
 
     function test__ip_is_on_spamlist()
     {
-        $this->assertSame(__ip_is_on_spamlist('191.101.31.148'), true);
+        $this->assertSame(__ip_is_on_spamlist('94.181.47.232'), true);
         $this->assertSame(__ip_is_on_spamlist('127.0.0.1'), false);
         $this->assertSame(__ip_is_on_spamlist('foo'), false);
         $this->assertSame(__ip_is_on_spamlist(''), false);
