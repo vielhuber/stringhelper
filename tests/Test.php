@@ -613,12 +613,15 @@ House'
     function test__translate_microsoft()
     {
         foreach (['free', $_SERVER['MICROSOFT_TRANSLATION_API_KEY']] as $api_keys__value) {
+            if ($api_keys__value === 'free') {
+                continue;
+            }
             if ($api_keys__value === 'free' && @$_SERVER['CI'] === true) {
                 continue;
             }
-            $this->assertSame(
+            $this->assertContains(
                 __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
-                'Being or not being; that is the question here.'
+                ['To be or not to be; that is the question here.', 'Being or not being; that is the question here.']
             );
 
             $this->assertContains(
@@ -630,7 +633,8 @@ House'
                 ),
                 [
                     'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.',
-                    '<a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.'
+                    '<a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
+                    '<a>VanillaJS</a> is since <a>ES6</a> virtually equal to the veteran <a>jQuery</a> in all areas and is now far superior.'
                 ]
             );
 
@@ -643,7 +647,8 @@ House'
                 ),
                 [
                     'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.',
-                    '<a p="1">VanillaJS</a> has been equal to the original rock <a p="3">jQuery</a> since <a p="2">ES6</a> in virtually all areas.'
+                    '<a p="1">VanillaJS</a> has been equal to the original rock <a p="3">jQuery</a> since <a p="2">ES6</a> in virtually all areas.',
+                    '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually equal to the veteran <a p="3">jQuery</a> in all areas and is now far superior.'
                 ]
             );
         }
@@ -771,7 +776,7 @@ baz'
 
     function test__ip_is_on_spamlist()
     {
-        $this->assertSame(__ip_is_on_spamlist('94.181.47.232'), true);
+        $this->assertSame(__ip_is_on_spamlist('5.2.69.42'), true);
         $this->assertSame(__ip_is_on_spamlist('127.0.0.1'), false);
         $this->assertSame(__ip_is_on_spamlist('foo'), false);
         $this->assertSame(__ip_is_on_spamlist(''), false);
@@ -1592,6 +1597,14 @@ string'
     function test__is_serialized()
     {
         $this->assertSame(__is_serialized('a:1:{s:3:"foo";s:3:"bar";}'), true);
+        $this->assertSame(__is_serialized('a:1:{s:3:\"foo\";s:3:\"bar\";}'), false);
+        $this->assertSame(__is_serialized('i:1;'), true);
+        $this->assertSame(__is_serialized('a:1:{42}'), false);
+        $this->assertSame(__is_serialized('s:9:"foo " bar";'), true);
+        $this->assertSame(__is_serialized('s:9:\"foo \" bar\";'), false);
+        $this->assertSame(__is_serialized('s:10:"foo \" bar";'), true);
+        $this->assertSame(__is_serialized('s:10:\"foo \\\" bar\";'), false);
+        $this->assertSame(__is_serialized('s:12:"foo \\\" bar";'), false);
         $this->assertSame(__is_serialized(''), false);
         $this->assertSame(__is_serialized(null), false);
         $this->assertSame(__is_serialized(false), false);

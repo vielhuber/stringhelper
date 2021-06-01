@@ -719,6 +719,8 @@ __string_is_html('foo&nbsp;bar') // true
 __is_serialized('a:1:{s:3:"foo";s:3:"bar";}') // true
 __is_serialized('idkfa') // false
 __is_serialized('b:0;') // true
+__is_serialized('a:1:{s:3:\"foo\";s:3:\"bar\";}') // false
+__is_serialized('a:1:{42}') // false
 
 // check if string is base64 encoded
 __is_base64_encoded('dGhpcyBpcyBjb29sIHN0dWZm') // true

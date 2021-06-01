@@ -2273,9 +2273,20 @@ class __
         return trim($line);
     }
 
-    public static function is_serialized($data, $strict = true)
+    public static function is_serialized($data)
     {
-        /* this approach uses @ and leads to debug mode in wp backend */
+        if (!is_string($data) || $data == '') {
+            return false;
+        }
+        set_error_handler(function ($errno, $errstr) {});
+        $unserialized = unserialize($data);
+        restore_error_handler();
+        if ($data !== 'b:0;' && $unserialized === false) {
+            return false;
+        }
+        return true;
+
+        /* this approach uses @ and leads to an ugly margin at the top when debug mode is on in wordpress */
         /*
         if (!is_string($string) || $string == '') {
             return false;
@@ -2287,8 +2298,10 @@ class __
         return true;
         */
 
-        /* we therefore use a more sophisticated approach from */
-        /* https://developer.wordpress.org/reference/functions/is_serialized/ */
+        /* the following function borrowed from https://developer.wordpress.org/reference/functions/is_serialized/
+         /* falsely detects strings like a:1:{s:3:\"foo\";s:3:\"bar\";} and also does not check e.g. arrays */
+        /*
+        $strict = true;
         // If it isn't a string, it isn't serialized.
         if (!is_string($data)) {
             return false;
@@ -2344,6 +2357,7 @@ class __
                 return (bool) preg_match("/^{$token}:[0-9.E+-]+;$end/", $data);
         }
         return false;
+        */
     }
 
     public static function is_integer($input)
