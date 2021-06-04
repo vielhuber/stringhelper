@@ -1945,6 +1945,12 @@ class __
 
     public static function slug($string)
     {
+        if (!is_string($string) || trim($string) == '') {
+            return '';
+        }
+
+        $string = self::remove_accents($string, true);
+
         // replace non letter or digits by -
         $string = preg_replace('~[^\pL\d]+~u', '-', $string);
         // transliterate

@@ -1855,6 +1855,18 @@ string'
         $this->assertSame(__arr_without(null, []), null);
     }
 
+    function test__slug()
+    {
+        $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
+        $this->assertSame(__slug('Äťśçĥ Foo'), 'aetsch-foo');
+        $this->assertSame(__slug('  '), '');
+        $this->assertSame(__slug(''), '');
+        $this->assertSame(__slug(null), '');
+        $this->assertSame(__slug(false), '');
+        $this->assertSame(__slug(true), '');
+        $this->assertSame(__slug([]), '');
+    }
+
     function test__shuffle()
     {
         for ($i = 0; $i < 10; $i++) {
@@ -2080,8 +2092,6 @@ string'
         $this->assertSame(__set_first_char_uppercase('Foo'), 'Foo');
         $this->assertSame(__set_first_char_uppercase('übel'), 'Übel');
         $this->assertSame(__set_first_char_uppercase('Übel'), 'Übel');
-
-        $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
 
         $this->assertSame(mb_strlen(__random_string()), 8);
         $this->assertSame(mb_strlen(__random_string(10)), 10);
