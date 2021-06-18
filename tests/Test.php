@@ -1953,6 +1953,7 @@ string'
     function test__validate_email() {
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
         $this->assertSame(__validate_email('david@straßäölöälöääÄÖLÖÄL.de'), true);
+        $this->assertSame(__validate_email('test@test.de﻿'), false);
         $this->assertSame(__validate_email(''), false);
         $this->assertSame(__validate_email('@'), false);
         $this->assertSame(__validate_email(true), false);
