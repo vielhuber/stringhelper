@@ -1950,6 +1950,17 @@ string'
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
     }
 
+    function test__validate_email() {
+        $this->assertSame(__validate_email('david@vielhuber.de'), true);
+        $this->assertSame(__validate_email('david@straßäölöälöääÄÖLÖÄL.de'), true);
+        $this->assertSame(__validate_email(''), false);
+        $this->assertSame(__validate_email('@'), false);
+        $this->assertSame(__validate_email(true), false);
+        $this->assertSame(__validate_email(false), false);
+        $this->assertSame(__validate_email(null), false);
+        $this->assertSame(__validate_email([]), false);
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -1981,7 +1992,6 @@ string'
         $this->assertSame(__false_one(false), true);
 
         $this->assertSame(__validate_url('https://vielhuber.de'), true);
-        $this->assertSame(__validate_email('david@vielhuber.de'), true);
 
         $this->assertSame(__validate_date('2000-01-01'), true);
         $this->assertSame(__validate_date('01.01.2000'), true);

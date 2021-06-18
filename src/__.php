@@ -716,8 +716,11 @@ class __
         if (self::nx(@$value)) {
             return false;
         }
+        if( !is_string($value) ) {
+            return false;
+        }
         $value = mb_strtolower($value);
-        $value = str_replace(['ä', 'ö', 'ü'], ['ae', 'oe', 'ue'], $value);
+        $value = str_replace(['ä', 'ö', 'ü', 'ß'], ['ae', 'oe', 'ue', 'ss'], $value);
         if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
             return false;
         }
