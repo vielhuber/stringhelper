@@ -1254,6 +1254,34 @@ if (!function_exists('__image_orientate')) {
     }
 }
 
+if (!function_exists('__iptc_codes')) {
+    function __iptc_codes(...$args)
+    {
+        return \vielhuber\stringhelper\__::iptc_codes(...$args);
+    }
+}
+
+if (!function_exists('__iptc_code')) {
+    function __iptc_code(...$args)
+    {
+        return \vielhuber\stringhelper\__::iptc_code(...$args);
+    }
+}
+
+if (!function_exists('__iptc_read')) {
+    function __iptc_read(...$args)
+    {
+        return \vielhuber\stringhelper\__::iptc_read(...$args);
+    }
+}
+
+if (!function_exists('__iptc_write')) {
+    function __iptc_write(...$args)
+    {
+        return \vielhuber\stringhelper\__::iptc_write(...$args);
+    }
+}
+
 if (!function_exists('__encrypt')) {
     function __encrypt(...$args)
     {

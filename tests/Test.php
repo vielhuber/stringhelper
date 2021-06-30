@@ -1855,6 +1855,64 @@ string'
         $this->assertSame(__arr_without(null, []), null);
     }
 
+    function test__iptc()
+    {
+        $this->assertSame(array_key_exists('2#116', __iptc_codes()), true);
+        $this->assertSame(in_array('Copyright', __iptc_codes()), true);
+
+        $this->assertSame(__iptc_code('Copyright'), '2#116');
+        $this->assertSame(__iptc_code('foo'), null);
+
+        $this->assertEquals(
+            __iptc_read('tests/assets/iptc_raw.jpg', '2#116'),
+            '© Copyright 2020 IPTC (Test Images) - www.iptc.org'
+        );
+        $this->assertSame(
+            __iptc_read('tests/assets/iptc_raw.jpg', 'Copyright'),
+            '© Copyright 2020 IPTC (Test Images) - www.iptc.org'
+        );
+        $this->assertSame(__iptc_read('tests/assets/iptc_raw.jpg', 'foobar'), null);
+        $this->assertSame(__iptc_read('foobar', 'foobar'), null);
+
+        __iptc_write('tests/assets/iptc_write.jpg', [
+            'AuthorTitle' => 'foo',
+            'Copyright' => 'bar'
+        ]);
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('AuthorTitle') => 'foo',
+            __iptc_code('Copyright') => 'bar'
+        ]);
+
+        __iptc_write('tests/assets/iptc_write.jpg', 'Copyright', 'baz');
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('AuthorTitle') => 'foo',
+            __iptc_code('Copyright') => 'baz'
+        ]);
+
+        __iptc_write('tests/assets/iptc_write.jpg', [
+            'AuthorTitle' => 'foo'
+        ]);
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('AuthorTitle') => 'foo'
+        ]);
+        __iptc_write('tests/assets/iptc_write.jpg', [
+            'Copyright' => 'foo'
+        ]);
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('Copyright') => 'foo'
+        ]);
+        __iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', 'baz');
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('Copyright') => 'foo',
+            __iptc_code('AuthorTitle') => 'baz'
+        ]);
+
+        __iptc_write('tests/assets/iptc_write.jpg', []);
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), []);
+        __iptc_write('tests/assets/iptc_write.jpg', null);
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), []);
+    }
+
     function test__slug()
     {
         $this->assertSame(__slug('This string will be sanitized!'), 'this-string-will-be-sanitized');
@@ -1950,7 +2008,8 @@ string'
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
     }
 
-    function test__validate_email() {
+    function test__validate_email()
+    {
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
         $this->assertSame(__validate_email('david@straßäölöälöääÄÖLÖÄL.de'), true);
         $this->assertSame(__validate_email('test@test.de﻿'), false);

@@ -716,7 +716,7 @@ class __
         if (self::nx(@$value)) {
             return false;
         }
-        if( !is_string($value) ) {
+        if (!is_string($value)) {
             return false;
         }
         $value = mb_strtolower($value);
@@ -4193,6 +4193,137 @@ class __
             }
         }
         return true;
+    }
+
+    public static function iptc_codes()
+    {
+        return [
+            '2#005' => 'DocumentTitle',
+            '2#010' => 'Urgency',
+            '2#015' => 'Category',
+            '2#020' => 'Subcategories',
+            '2#040' => 'SpecialInstructions',
+            '2#055' => 'CreationDate',
+            '2#080' => 'AuthorByline',
+            '2#085' => 'AuthorTitle',
+            '2#090' => 'City',
+            '2#095' => 'State',
+            '2#101' => 'Country',
+            '2#103' => 'OTR',
+            '2#105' => 'Headline',
+            '2#110' => 'Source',
+            '2#115' => 'PhotoSource',
+            '2#116' => 'Copyright',
+            '2#120' => 'Caption',
+            '2#122' => 'CaptionWriter'
+        ];
+    }
+
+    public static function iptc_code($code)
+    {
+        if ($code !== null && is_string($code) && in_array($code, self::iptc_codes())) {
+            foreach (self::iptc_codes() as $codes__key => $codes__value) {
+                if ($codes__value == $code) {
+                    return $codes__key;
+                    break;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static function iptc_read($filename, $field = null)
+    {
+        if (!is_string($filename) || __nx($filename) || !file_exists($filename)) {
+            return null;
+        }
+        if ($field !== null && self::iptc_code($field) !== null) {
+            $field = self::iptc_code($field);
+        }
+        $size = getimagesize($filename, $info);
+        if (isset($info['APP13'])) {
+            $iptc = iptcparse($info['APP13']);
+            if (__x($iptc)) {
+                if ($field !== null && !array_key_exists($field, $iptc)) {
+                    return null;
+                }
+                $ret = [];
+                foreach ($iptc as $iptc__key => $iptc__value) {
+                    // utf8 support
+                    if (isset($iptc['1#090']) && $iptc['1#090'][0] == "\x1B%G") {
+                        $iptc__value[0] = utf8_decode($iptc__value[0]);
+                    } else {
+                        $iptc__value[0] = utf8_encode($iptc__value[0]);
+                    }
+                    if ($field !== null && $iptc__key == $field) {
+                        return $iptc__value[0];
+                    }
+                    if ($iptc__key === '1#090') {
+                        continue;
+                    }
+                    $ret[$iptc__key] = $iptc__value[0];
+                }
+                return $ret;
+            }
+        }
+        return null;
+    }
+    public static function iptc_write($filename, $field, $value = null)
+    {
+        if ($field === null) {
+            $field = [];
+        }
+
+        if (!is_string($filename) || __nx($filename) || !file_exists($filename)) {
+            return null;
+        }
+
+        $values = [];
+        if (is_string($field)) {
+            $values = [$field => $value];
+        } elseif (is_array($field)) {
+            $values = $field;
+        }
+
+        $iptc = [];
+        if (is_string($field)) {
+            $iptc = self::iptc_read($filename);
+        }
+        foreach ($values as $values__key => $values__value) {
+            if (self::iptc_code($values__key) !== null) {
+                $values__key = self::iptc_code($values__key);
+            }
+            $iptc[$values__key] = $values__value;
+        }
+
+        $data = '';
+        $utf8seq = chr(0x1b) . chr(0x25) . chr(0x47);
+        $utf8length = strlen($utf8seq);
+        $data .= chr(0x1c) . chr(1) . chr('090') . chr($utf8length >> 8) . chr($utf8length & 0xff) . $utf8seq;
+        foreach ($iptc as $tag => $string) {
+            $tag = substr($tag, 2);
+            $iptc_rec = 2;
+            $iptc_data = $tag;
+            $iptc_value = $string;
+            $iptc_length = strlen($iptc_value);
+            $iptc_retval = chr(0x1c) . chr($iptc_rec) . chr($iptc_data);
+            if ($iptc_length < 0x8000) {
+                $iptc_retval .= chr($iptc_length >> 8) . chr($iptc_length & 0xff);
+            } else {
+                $iptc_retval .=
+                    chr(0x80) .
+                    chr(0x04) .
+                    chr(($iptc_length >> 24) & 0xff) .
+                    chr(($iptc_length >> 16) & 0xff) .
+                    chr(($iptc_length >> 8) & 0xff) .
+                    chr($iptc_length & 0xff);
+            }
+            $data .= $iptc_retval . $iptc_value;
+        }
+        $content = iptcembed($data, $filename);
+        $fp = fopen($filename, 'wb');
+        fwrite($fp, $content);
+        fclose($fp);
     }
 
     public static function encrypt($string, $salt = null)

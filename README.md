@@ -981,6 +981,19 @@ __image_orientate('input.jpg')
 __image_orientate('input.jpg', 70)
 __image_orientate('input.jpg', 70, 'output.jpg')
 
+// read/write iptc tags (with full utf8 support)
+__iptc_codes() // returns important codes in human readable format: ['2#116' => 'Copyright', ...]
+__iptc_code('Copyright') // 2#116
+
+__iptc_read('input.jpg') // ['2#116' => '© Copyright 2021 by foobar', ...]
+__iptc_read('input.jpg', '2#116') // '© Copyright 2021 by foobar
+__iptc_read('input.jpg', 'Copyright') // '© Copyright 2021 by foobar
+
+__iptc_write('input.jpg', ['2#116' => '© Copyright 2021 by foobar']) // this overwrites all existing data and only sets one field
+__iptc_write('input.jpg', '2#116', '© Copyright 2021 by foobar') // this only sets the specific field and leaves the rest intact
+__iptc_write('input.jpg', 'Copyright', '© Copyright 2021 by foobar') // also accepts human readable codes
+__iptc_write('input.jpg', []) // reset all tags
+
 // poor mans encryption (via openssl)
 define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319')  // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
 __decrypt(__encrypt('foo')) // 'foo' (hard, with individual one-time salt)
