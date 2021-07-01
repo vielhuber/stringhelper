@@ -4309,6 +4309,9 @@ class __
         $utf8length = strlen($utf8seq);
         $data .= chr(0x1c) . chr(1) . chr('090') . chr($utf8length >> 8) . chr($utf8length & 0xff) . $utf8seq;
         foreach ($iptc as $tag => $string) {
+            if ($string === null) {
+                continue;
+            }
             $tag = substr($tag, 2);
             $iptc_rec = 2;
             $iptc_data = $tag;

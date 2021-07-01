@@ -993,6 +993,7 @@ __iptc_read('input.jpg', 'Copyright') // '© Copyright 2021 by foobar
 __iptc_write('input.jpg', ['2#116' => '© Copyright 2021 by foobar']) // this overwrites all existing data and only sets one field
 __iptc_write('input.jpg', '2#116', '© Copyright 2021 by foobar') // this only sets the specific field and leaves the rest intact
 __iptc_write('input.jpg', 'Copyright', '© Copyright 2021 by foobar') // also accepts human readable codes
+__iptc_write('input.jpg', 'Copyright', null) // delete specific tag
 __iptc_write('input.jpg', []) // reset all tags
 
 // poor mans encryption (via openssl)

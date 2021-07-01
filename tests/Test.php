@@ -1909,6 +1909,16 @@ string'
             __iptc_code('AuthorTitle') => 'baz'
         ]);
 
+        __iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', '');
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('Copyright') => 'foo',
+            __iptc_code('AuthorTitle') => ''
+        ]);
+        __iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', null);
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('Copyright') => 'foo'
+        ]);
+
         __iptc_write('tests/assets/iptc_write.jpg', []);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), []);
         __iptc_write('tests/assets/iptc_write.jpg', null);
