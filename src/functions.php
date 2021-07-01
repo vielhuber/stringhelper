@@ -1268,6 +1268,13 @@ if (!function_exists('__iptc_code')) {
     }
 }
 
+if (!function_exists('__iptc_keyword')) {
+    function __iptc_keyword(...$args)
+    {
+        return \vielhuber\stringhelper\__::iptc_keyword(...$args);
+    }
+}
+
 if (!function_exists('__iptc_read')) {
     function __iptc_read(...$args)
     {

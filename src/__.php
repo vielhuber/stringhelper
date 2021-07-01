@@ -4232,10 +4232,18 @@ class __
         return null;
     }
 
+    public static function iptc_keyword($code)
+    {
+        if ($code !== null && is_string($code) && array_key_exists($code, self::iptc_codes())) {
+            return self::iptc_codes()[$code];
+        }
+        return null;
+    }
+
     public static function iptc_read($filename, $field = null)
     {
         if (!is_string($filename) || __nx($filename) || !file_exists($filename)) {
-            return null;
+            return $field === null ? [] : null;
         }
         if ($field !== null && self::iptc_code($field) !== null) {
             $field = self::iptc_code($field);
@@ -4266,7 +4274,7 @@ class __
                 return $ret;
             }
         }
-        return null;
+        return $field === null ? [] : null;
     }
     public static function iptc_write($filename, $field, $value = null)
     {

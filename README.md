@@ -984,6 +984,7 @@ __image_orientate('input.jpg', 70, 'output.jpg')
 // read/write iptc tags (with full utf8 support)
 __iptc_codes() // returns important codes in human readable format: ['2#116' => 'Copyright', ...]
 __iptc_code('Copyright') // 2#116
+__iptc_keyword('2#116') // Copyright
 
 __iptc_read('input.jpg') // ['2#116' => '© Copyright 2021 by foobar', ...]
 __iptc_read('input.jpg', '2#116') // '© Copyright 2021 by foobar

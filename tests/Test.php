@@ -1862,6 +1862,8 @@ string'
 
         $this->assertSame(__iptc_code('Copyright'), '2#116');
         $this->assertSame(__iptc_code('foo'), null);
+        $this->assertSame(__iptc_keyword('2#116'), 'Copyright');
+        $this->assertSame(__iptc_keyword('foo'), null);
 
         $this->assertEquals(
             __iptc_read('tests/assets/iptc_raw.jpg', '2#116'),
