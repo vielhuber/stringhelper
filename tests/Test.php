@@ -1855,6 +1855,19 @@ string'
         $this->assertSame(__arr_without(null, []), null);
     }
 
+    function test__file_extension()
+    {
+        $this->assertSame(__file_extension('foo.jpg'), 'jpg');
+        $this->assertSame(__file_extension('foo.jpeg'), 'jpeg');
+        $this->assertSame(__file_extension('foo.png'), 'png');
+        $this->assertSame(__file_extension('FooBar.PDF'), 'pdf');
+        $this->assertSame(__file_extension('foo'), null);
+        $this->assertSame(__file_extension(''), null);
+        $this->assertSame(__file_extension(null), null);
+        $this->assertSame(__file_extension(false), null);
+        $this->assertSame(__file_extension([]), null);
+    }
+
     function test__iptc()
     {
         $this->assertSame(array_key_exists('2#116', __iptc_codes()), true);
@@ -1876,53 +1889,66 @@ string'
         $this->assertSame(__iptc_read('tests/assets/iptc_raw.jpg', 'foobar'), null);
         $this->assertSame(__iptc_read('foobar', 'foobar'), null);
 
-        __iptc_write('tests/assets/iptc_write.jpg', [
-            'AuthorTitle' => 'foo',
-            'Copyright' => 'bar'
-        ]);
+        $this->assertSame(
+            __iptc_write('tests/assets/iptc_write.jpg', [
+                'AuthorTitle' => 'foo',
+                'Copyright' => 'bar'
+            ]),
+            true
+        );
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('AuthorTitle') => 'foo',
             __iptc_code('Copyright') => 'bar'
         ]);
 
-        __iptc_write('tests/assets/iptc_write.jpg', 'Copyright', 'baz');
+        $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', 'Copyright', 'baz'), true);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('AuthorTitle') => 'foo',
             __iptc_code('Copyright') => 'baz'
         ]);
 
-        __iptc_write('tests/assets/iptc_write.jpg', [
-            'AuthorTitle' => 'foo'
-        ]);
+        $this->assertSame(
+            __iptc_write('tests/assets/iptc_write.jpg', [
+                'AuthorTitle' => 'foo'
+            ]),
+            true
+        );
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('AuthorTitle') => 'foo'
         ]);
-        __iptc_write('tests/assets/iptc_write.jpg', [
-            'Copyright' => 'foo'
-        ]);
+        $this->assertSame(
+            __iptc_write('tests/assets/iptc_write.jpg', [
+                'Copyright' => 'foo'
+            ]),
+            true
+        );
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('Copyright') => 'foo'
         ]);
-        __iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', 'baz');
+        $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', 'baz'), true);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('Copyright') => 'foo',
             __iptc_code('AuthorTitle') => 'baz'
         ]);
 
-        __iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', '');
+        $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', ''), true);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('Copyright') => 'foo',
             __iptc_code('AuthorTitle') => ''
         ]);
-        __iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', null);
+        $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', null), true);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('Copyright') => 'foo'
         ]);
 
-        __iptc_write('tests/assets/iptc_write.jpg', []);
+        $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', []), true);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), []);
-        __iptc_write('tests/assets/iptc_write.jpg', null);
+        $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', null), true);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), []);
+
+        $this->assertSame(__iptc_read('tests/assets/iptc_not_supported.png'), []);
+        $this->assertSame(__iptc_write('tests/assets/iptc_not_supported.png', 'Copyright', 'foo'), false);
+        $this->assertSame(__iptc_read('tests/assets/iptc_not_supported.png'), []);
     }
 
     function test__slug()

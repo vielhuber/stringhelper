@@ -4195,6 +4195,20 @@ class __
         return true;
     }
 
+    public static function file_extension($filename)
+    {
+        if (!is_string($filename)) {
+            return null;
+        }
+        if (strpos($filename, '.') === false) {
+            return null;
+        }
+        $filename = explode('.', $filename);
+        $filename = $filename[count($filename) - 1];
+        $filename = mb_strtolower($filename);
+        return $filename;
+    }
+
     public static function iptc_codes()
     {
         return [
@@ -4244,7 +4258,12 @@ class __
 
     public static function iptc_read($filename, $field = null)
     {
-        if (!is_string($filename) || __nx($filename) || !file_exists($filename)) {
+        if (
+            !is_string($filename) ||
+            __nx($filename) ||
+            !file_exists($filename) ||
+            !in_array(self::file_extension($filename), ['jpg', 'jpeg'])
+        ) {
             return $field === null ? [] : null;
         }
         if ($field !== null && self::iptc_code($field) !== null) {
@@ -4281,8 +4300,13 @@ class __
             $field = [];
         }
 
-        if (!is_string($filename) || __nx($filename) || !file_exists($filename)) {
-            return null;
+        if (
+            !is_string($filename) ||
+            __nx($filename) ||
+            !file_exists($filename) ||
+            !in_array(self::file_extension($filename), ['jpg', 'jpeg'])
+        ) {
+            return false;
         }
 
         $values = [];
@@ -4335,6 +4359,8 @@ class __
         $fp = fopen($filename, 'wb');
         fwrite($fp, $content);
         fclose($fp);
+
+        return true;
     }
 
     public static function encrypt($string, $salt = null)

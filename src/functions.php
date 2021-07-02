@@ -1254,6 +1254,13 @@ if (!function_exists('__image_orientate')) {
     }
 }
 
+if (!function_exists('__file_extension')) {
+    function __file_extension(...$args)
+    {
+        return \vielhuber\stringhelper\__::file_extension(...$args);
+    }
+}
+
 if (!function_exists('__iptc_codes')) {
     function __iptc_codes(...$args)
     {

@@ -981,6 +981,9 @@ __image_orientate('input.jpg')
 __image_orientate('input.jpg', 70)
 __image_orientate('input.jpg', 70, 'output.jpg')
 
+// get file extension from filename
+__file_extension('foo.jpg') // jpg
+
 // read/write iptc tags (with full utf8 support)
 __iptc_codes() // returns important codes in human readable format: ['2#116' => 'Copyright', ...]
 __iptc_code('Copyright') // 2#116
