@@ -4204,6 +4204,7 @@ class __
             '2#020' => 'Subcategories',
             '2#040' => 'SpecialInstructions',
             '2#055' => 'CreationDate',
+            '2#060' => 'CreationTime',
             '2#080' => 'AuthorByline',
             '2#085' => 'AuthorTitle',
             '2#090' => 'City',
@@ -4215,7 +4216,8 @@ class __
             '2#115' => 'PhotoSource',
             '2#116' => 'Copyright',
             '2#120' => 'Caption',
-            '2#122' => 'CaptionWriter'
+            '2#122' => 'CaptionWriter',
+            '2#000' => 'Unknown'
         ];
     }
 
@@ -4257,12 +4259,9 @@ class __
                 }
                 $ret = [];
                 foreach ($iptc as $iptc__key => $iptc__value) {
-                    // utf8 support
-                    if (isset($iptc['1#090']) && $iptc['1#090'][0] == "\x1B%G") {
-                        $iptc__value[0] = utf8_decode($iptc__value[0]);
-                    } else {
-                        $iptc__value[0] = utf8_encode($iptc__value[0]);
-                    }
+                    // utf8 support: always convert from iso to utf8
+                    //if (isset($iptc['1#090']) && $iptc['1#090'][0] == "\x1B%G") {}
+                    $iptc__value[0] = utf8_encode($iptc__value[0]);
                     if ($field !== null && $iptc__key == $field) {
                         return $iptc__value[0];
                     }
@@ -4315,7 +4314,8 @@ class __
             $tag = substr($tag, 2);
             $iptc_rec = 2;
             $iptc_data = $tag;
-            $iptc_value = $string;
+            // always convert from utf8 to iso
+            $iptc_value = utf8_decode($string);
             $iptc_length = strlen($iptc_value);
             $iptc_retval = chr(0x1c) . chr($iptc_rec) . chr($iptc_data);
             if ($iptc_length < 0x8000) {
