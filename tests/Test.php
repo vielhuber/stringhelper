@@ -1868,6 +1868,18 @@ string'
         $this->assertSame(__file_extension([]), null);
     }
 
+    function test__utf8()
+    {
+        $this->assertSame(__is_utf8('foo'), true);
+        $this->assertSame(__is_utf8(''), true);
+        $this->assertSame(__is_utf8(null), false);
+        $this->assertSame(__is_utf8(false), false);
+        $this->assertSame(__is_utf8([]), false);
+        $this->assertSame(__is_utf8('This is a test älüß!'), true);
+        $this->assertSame(__is_utf8(utf8_decode('This is a test älüß!')), false);
+        $this->assertSame(__is_utf8(__to_utf8(utf8_decode('This is a test älüß!'))), true);
+    }
+
     function test__iptc()
     {
         $this->assertSame(array_key_exists('2#116', __iptc_codes()), true);
@@ -1939,6 +1951,10 @@ string'
         $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', 'AuthorTitle', null), true);
         $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
             __iptc_code('Copyright') => 'foo'
+        ]);
+        $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', 'Copyright', '®©–äöüß"\''), true);
+        $this->assertSame(__iptc_read('tests/assets/iptc_write.jpg'), [
+            __iptc_code('Copyright') => '®©–äöüß"\''
         ]);
 
         $this->assertSame(__iptc_write('tests/assets/iptc_write.jpg', []), true);

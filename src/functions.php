@@ -1261,6 +1261,20 @@ if (!function_exists('__file_extension')) {
     }
 }
 
+if (!function_exists('__is_utf8')) {
+    function __is_utf8(...$args)
+    {
+        return \vielhuber\stringhelper\__::is_utf8(...$args);
+    }
+}
+
+if (!function_exists('__to_utf8')) {
+    function __to_utf8(...$args)
+    {
+        return \vielhuber\stringhelper\__::to_utf8(...$args);
+    }
+}
+
 if (!function_exists('__iptc_codes')) {
     function __iptc_codes(...$args)
     {

@@ -4209,6 +4209,30 @@ class __
         return $filename;
     }
 
+    public static function is_utf8($str)
+    {
+        if (!is_string($str)) {
+            return false;
+        }
+        if ($str == '') {
+            return true;
+        }
+        $current_encoding = mb_detect_encoding($str, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252']);
+        return $current_encoding === 'UTF-8';
+    }
+
+    public static function to_utf8($str)
+    {
+        if (!is_string($str) || $str == '') {
+            return $str;
+        }
+        $current_encoding = mb_detect_encoding($str, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252']);
+        if ($current_encoding !== 'UTF-8') {
+            $str = iconv($current_encoding, 'UTF-8', $str);
+        }
+        return $str;
+    }
+
     public static function iptc_codes()
     {
         return [
@@ -4280,7 +4304,7 @@ class __
                 foreach ($iptc as $iptc__key => $iptc__value) {
                     // utf8 support: always convert from iso to utf8
                     //if (isset($iptc['1#090']) && $iptc['1#090'][0] == "\x1B%G") {}
-                    $iptc__value[0] = utf8_encode($iptc__value[0]);
+                    $iptc__value[0] = self::to_utf8($iptc__value[0]);
                     if ($field !== null && $iptc__key == $field) {
                         return $iptc__value[0];
                     }
@@ -4338,8 +4362,9 @@ class __
             $tag = substr($tag, 2);
             $iptc_rec = 2;
             $iptc_data = $tag;
-            // always convert from utf8 to iso
-            $iptc_value = utf8_decode($string);
+            $iptc_value = $string;
+            // always store in utf8
+            $iptc_value = self::to_utf8($iptc_value);
             $iptc_length = strlen($iptc_value);
             $iptc_retval = chr(0x1c) . chr($iptc_rec) . chr($iptc_data);
             if ($iptc_length < 0x8000) {

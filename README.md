@@ -984,6 +984,10 @@ __image_orientate('input.jpg', 70, 'output.jpg')
 // get file extension from filename
 __file_extension('foo.jpg') // jpg
 
+// utf8 conversions
+__is_utf8('foo') // true; checks if a string is utf8 encoded
+__to_utf8('foo') // tries to convert any string to utf8
+
 // read/write iptc tags (with full utf8 support)
 __iptc_codes() // returns important codes in human readable format: ['2#116' => 'Copyright', ...]
 __iptc_code('Copyright') // 2#116
