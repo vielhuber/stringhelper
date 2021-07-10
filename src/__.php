@@ -4337,11 +4337,25 @@ class __
         // we first have to add a header by using this workaround
         // (this is the only workaround i could find that works properly)
         getimagesize($filename, $info);
-        if(!isset($info['APP13']))
-        {
-            $img = imagecreatefromjpeg ($filename);
-            imagejpeg ($img, $filename, 100);
-            imagedestroy ($img);   
+        if (!isset($info['APP13'])) {
+            // this works and does not change the compression
+            if (extension_loaded('imagick')) {
+                $img = new \Imagick($filename);
+                $profiles = $img->getImageProfiles('icc', true);
+                $img->stripImage();
+                if (!empty($profiles)) {
+                    $img->profileImage('icc', $profiles['icc']);
+                }
+                $img->writeImage($filename);
+                $img->clear();
+                $img->destroy();
+            }
+            // problem: this changes the compression of the file(!)
+            else {
+                $img = imagecreatefromjpeg($filename);
+                imagejpeg($img, $filename, -1);
+                imagedestroy($img);
+            }
         }
 
         $values = [];
