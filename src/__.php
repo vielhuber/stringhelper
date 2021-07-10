@@ -4333,6 +4333,17 @@ class __
             return false;
         }
 
+        // files without any iptc tag won't work when using iptcembed
+        // we first have to add a header by using this workaround
+        // (this is the only workaround i could find that works properly)
+        getimagesize($filename, $info);
+        if(!isset($info['APP13']))
+        {
+            $img = imagecreatefromjpeg ($filename);
+            imagejpeg ($img, $filename, 100);
+            imagedestroy ($img);   
+        }
+
         $values = [];
         if (is_string($field)) {
             $values = [$field => $value];

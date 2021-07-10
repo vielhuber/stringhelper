@@ -1965,6 +1965,17 @@ string'
         $this->assertSame(__iptc_read('tests/assets/iptc_not_supported.png'), []);
         $this->assertSame(__iptc_write('tests/assets/iptc_not_supported.png', 'Copyright', 'foo'), false);
         $this->assertSame(__iptc_read('tests/assets/iptc_not_supported.png'), []);
+
+        shell_exec('exiftool -overwrite_original -all= '.__DIR__.'/assets/iptc_problem.jpg');
+        $this->assertSame(
+            __iptc_write('tests/assets/iptc_problem.jpg', [
+                'Copyright' => 'foo'
+            ]),
+            true
+        );
+        $this->assertSame(__iptc_read('tests/assets/iptc_problem.jpg'), [
+            __iptc_code('Copyright') => 'foo'
+        ]);
     }
 
     function test__slug()
