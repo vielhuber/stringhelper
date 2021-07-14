@@ -738,6 +738,7 @@ baz'
 
     function test__has_spamwords()
     {
+        $this->assertSame(__has_spamwords('loli*ta gi*rl fu*ck c*p pt*hc'), true);
         $this->assertSame(__has_spamwords('This is cool stuff.'), false);
         $this->assertSame(__has_spamwords('I do spy software your website.'), true);
         $this->assertSame(
@@ -776,7 +777,6 @@ baz'
 
     function test__ip_is_on_spamlist()
     {
-        $this->assertSame(__ip_is_on_spamlist('5.2.69.42'), true);
         $this->assertSame(__ip_is_on_spamlist('127.0.0.1'), false);
         $this->assertSame(__ip_is_on_spamlist('foo'), false);
         $this->assertSame(__ip_is_on_spamlist(''), false);

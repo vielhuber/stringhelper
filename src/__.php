@@ -2814,6 +2814,7 @@ class __
         $blacklist = file_get_contents($filename);
         if ($blacklist != '' && strpos($blacklist, 'cannabis') !== false) {
             $message = strip_tags($message);
+            $message = str_replace('*', '', $message);
             $blacklist = trim($blacklist);
             $words = explode(PHP_EOL, $blacklist);
             $words = array_merge($words, $custom_list);
