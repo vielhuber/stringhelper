@@ -2073,6 +2073,28 @@ string'
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
     }
 
+    function test__char()
+    {
+        $this->assertSame(__char_to_int('D'), 4);
+        $this->assertSame(__char_to_int('d'), 4);
+        $this->assertSame(__char_to_int('A'), 1);
+        $this->assertSame(__char_to_int('Z'), 26);
+        $this->assertSame(__char_to_int('AA'), 27);
+
+        $this->assertSame(__int_to_char(4), 'D');
+        $this->assertSame(__int_to_char(1), 'A');
+        $this->assertSame(__int_to_char(26), 'Z');
+        $this->assertSame(__int_to_char(27), 'AA');
+
+        $this->assertSame(__inc_char('D'), 'E');
+        $this->assertSame(__inc_char('Z'), 'AA');
+        $this->assertSame(__inc_char('A', 2), 'C');
+
+        $this->assertSame(__dec_char('U'), 'T');
+        $this->assertSame(__dec_char('U', 2), 'S');
+        $this->assertSame(__dec_char('A'), '');
+    }
+
     function test__validate_email()
     {
         $this->assertSame(__validate_email('david@vielhuber.de'), true);
@@ -2608,22 +2630,6 @@ string'
         __clean_up_post();
         $this->assertSame($_GET, ['page_id' => '13', 'code' => 'Hello World!']);
         $this->assertSame($_POST, ['foo' => 'bar', 42 => '']);
-
-        $this->assertSame(__char_to_int('D'), 4);
-        $this->assertSame(__char_to_int('d'), 4);
-        $this->assertSame(__char_to_int('A'), 1);
-        $this->assertSame(__char_to_int('Z'), 26);
-        $this->assertSame(__char_to_int('AA'), 27);
-        $this->assertSame(__int_to_char(4), 'D');
-        $this->assertSame(__int_to_char(1), 'A');
-        $this->assertSame(__int_to_char(26), 'Z');
-        $this->assertSame(__int_to_char(27), 'AA');
-        $this->assertSame(__inc_char('D'), 'E');
-        $this->assertSame(__inc_char('Z'), 'AA');
-        $this->assertSame(__inc_char('A', 2), 'C');
-        $this->assertSame(__dec_char('U'), 'T');
-        $this->assertSame(__dec_char('U', 2), 'S');
-        $this->assertSame(__dec_char('A'), '');
 
         $this->assertSame(__str_replace_first('foo', 'bar', 'foofoo'), 'barfoo');
         $this->assertSame(__str_replace_last('foo', 'bar', 'foofoo'), 'foobar');
