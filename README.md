@@ -605,6 +605,12 @@ __array_walk_recursive_all($arr, function (&$value, $key, $key_chain) {
 })
 $arr // ['foo'=>'bar','bar'=>['baz'=>'gnarr','gnarr'=>'baz2']]
 
+// array filter recursive
+__array_filter_recursive_all(
+    ['foo' => ['foo' => ['foo' => ['foo' => ['foo' => []]]]]],
+    function($value, $key, $key_chain) { return $key === 'foo' && empty($value); }
+) // []
+
 // array map for keys
 __array_map_keys(function($k) { return $k.'!'; }, ['foo' => 'bar', 'bar' => 'baz']) // ['foo!' => 'bar', 'bar!' => 'baz']
 
@@ -812,8 +818,12 @@ print_r($output);
 // ['135', '136', '145', '146', '235', '236', '245', '246']
 
 // removes recursively all items from array or object or collection that are considered empty (indexes are not reindexed)
-__remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]]) // [0 => ['foo',0,'0']]
-__remove_empty([0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]], [0,'0']) // [0 => ['foo']]
+$arr = [0 => ['foo',0,'0',null,''], null, 2 => [['',''],[null]]];
+__remove_empty($arr) // [0 => ['foo',0,'0']]
+__remove_empty($arr, [0,'0']) // [0 => ['foo']] (provide additional values that are considered empty)
+__remove_empty($arr, null, function ($value) {
+    return (is_array($value) && empty($value)) || (is_string($value) && $value === '');
+}) // [0 => ['foo',0,'0',null], null, 2 => [1 => [null]]] (provide a callback function)
 
 // remove item from array or object and fill up gaps (if numeric keys are available)
 __remove_by_key([0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // [0 => 'foo', 1 => 'baz']
@@ -822,6 +832,9 @@ __remove_by_key((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 1) // (object)[0 =
 __remove_by_value([0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // [0 => 'foo', 1 => 'baz']
 __remove_by_value(['foo' => 1, 'bar' => 2, 'baz' => 3], 1) // ['bar' => 2, 'baz' => 3]
 __remove_by_value((object)[0 => 'foo', 1 => 'bar', 2 => 'baz'], 'bar') // (object)[0 => 'foo', 1 => 'baz']
+
+// get max array depth
+__arr_depth(['foo' => 'bar', 'bar' => ['baz' => ['gnarr' => 'gnaz']]]) // 3
 
 // (conditional) append/prepend to array
 __arr_append(['foo'], 'bar') // ['foo','bar']

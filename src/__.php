@@ -2204,6 +2204,40 @@ class __
         return $new;
     }
 
+    public static function array_filter_recursive_all($arr, $callback)
+    {
+        if (!is_array($arr)) {
+            return $arr;
+        }
+        $depth = self::arr_depth($arr);
+        $random_str = null;
+        $match = true;
+        while ($match === true) {
+            $random_str = self::random_string();
+            $match = false;
+            self::array_walk_recursive_all($arr, function ($value) use ($random_str, &$match) {
+                if (is_string($value) && $value === $random_str) {
+                    $match = true;
+                }
+            });
+        }
+        for ($i = 0; $i < $depth; $i++) {
+            self::array_walk_recursive_all($arr, function (&$value, $key, $key_chain) use ($callback, $random_str) {
+                $ret = $callback($value, $key, $key_chain);
+                if ($ret === true) {
+                    $value = $random_str;
+                }
+            });
+            if (is_string($arr) && $arr === $random_str) {
+                $arr = [];
+            }
+            $arr = __remove_empty($arr, null, function ($arr__value) use ($random_str) {
+                return $arr__value === $random_str;
+            });
+        }
+        return $arr;
+    }
+
     public static function array_walk_recursive_all(&$array, $callback, $array__key = null, $key_chain = [])
     {
         call_user_func_array($callback, [&$array, $array__key, $key_chain]);
@@ -2419,7 +2453,7 @@ class __
         return $positions[$index - 1];
     }
 
-    public static function remove_empty($a, $additional = null)
+    public static function remove_empty($a, $additional = null, $callback = null)
     {
         if (
             ($a instanceof \Illuminate\Database\Eloquent\Collection || $a instanceof \Illuminate\Support\Collection) &&
@@ -2427,39 +2461,60 @@ class __
         ) {
             foreach ($a as $a__key => $a__value) {
                 if (self::can_be_looped(@$a__value)) {
-                    $result = self::remove_empty(@$a__value, $additional);
-                    if (self::nx($result)) {
+                    $result = self::remove_empty(@$a__value, $additional, $callback);
+                    if (
+                        ($callback !== null && $callback($result) === true) ||
+                        ($callback === null && self::nx($result))
+                    ) {
                         $a->forget($a__key);
                     } else {
                         $a->put($a__key, $result);
                     }
-                } elseif (self::nx(@$a__value) || ($additional !== null && in_array($a__value, $additional))) {
+                } elseif (
+                    ($callback !== null && $callback(@$a__value) === true) ||
+                    ($callback === null &&
+                        (self::nx(@$a__value) || ($additional !== null && in_array($a__value, $additional))))
+                ) {
                     $a->forget($a__key);
                 }
             }
         } elseif (is_array($a) && !empty($a)) {
             foreach ($a as $a__key => $a__value) {
                 if (self::can_be_looped(@$a__value)) {
-                    $result = self::remove_empty(@$a__value, $additional);
-                    if (self::nx($result)) {
+                    $result = self::remove_empty(@$a__value, $additional, $callback);
+                    if (
+                        ($callback !== null && $callback($result) === true) ||
+                        ($callback === null && self::nx($result))
+                    ) {
                         unset($a[$a__key]);
                     } else {
                         $a[$a__key] = $result;
                     }
-                } elseif (self::nx(@$a__value) || ($additional !== null && in_array($a__value, $additional, true))) {
+                } elseif (
+                    ($callback !== null && $callback(@$a__value) === true) ||
+                    ($callback === null &&
+                        (self::nx(@$a__value) || ($additional !== null && in_array($a__value, $additional, true))))
+                ) {
                     unset($a[$a__key]);
                 }
             }
         } elseif (is_object($a) && !empty((array) $a)) {
             foreach ($a as $a__key => $a__value) {
                 if (self::can_be_looped(@$a__value)) {
-                    $result = self::remove_empty(@$a__value, $additional);
-                    if (self::nx($result)) {
+                    $result = self::remove_empty(@$a__value, $additional, $callback);
+                    if (
+                        ($callback !== null && $callback($result) === true) ||
+                        ($callback === null && self::nx($result))
+                    ) {
                         unset($a->$a__key);
                     } else {
                         $a->$a__key = $result;
                     }
-                } elseif (self::nx(@$a__value) || ($additional !== null && in_array($a__value, $additional, true))) {
+                } elseif (
+                    ($callback !== null && $callback(@$a__value) === true) ||
+                    ($callback === null &&
+                        (self::nx(@$a__value) || ($additional !== null && in_array($a__value, $additional, true))))
+                ) {
                     unset($a->$a__key);
                 }
             }
@@ -2528,6 +2583,23 @@ class __
             $arr = (object) $arr;
         }
         return $arr;
+    }
+
+    public static function arr_depth($a)
+    {
+        if (!is_array($a)) {
+            return 0;
+        }
+        $max = 0;
+        foreach ($a as $val) {
+            if (is_array($val)) {
+                $tmp_depth = self::arr_depth($val);
+                if ($max < $tmp_depth) {
+                    $max = $tmp_depth;
+                }
+            }
+        }
+        return $max + 1;
     }
 
     public static function arr_append($array, $value, $condition = true)

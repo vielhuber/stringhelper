@@ -561,6 +561,13 @@ if (!function_exists('__array_walk_recursive_all')) {
     }
 }
 
+if (!function_exists('__array_filter_recursive_all')) {
+    function __array_filter_recursive_all(...$args)
+    {
+        return \vielhuber\stringhelper\__::array_filter_recursive_all(...$args);
+    }
+}
+
 if (!function_exists('__array_map_keys')) {
     function __array_map_keys(...$args)
     {
@@ -649,6 +656,13 @@ if (!function_exists('__remove_by_value')) {
     function __remove_by_value(...$args)
     {
         return \vielhuber\stringhelper\__::remove_by_value(...$args);
+    }
+}
+
+if (!function_exists('__arr_depth')) {
+    function __arr_depth(...$args)
+    {
+        return \vielhuber\stringhelper\__::arr_depth(...$args);
     }
 }
 

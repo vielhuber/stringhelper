@@ -1407,6 +1407,90 @@ string'
         $this->assertSame($foo, true);
     }
 
+    function test__arr_depth()
+    {
+        $this->assertSame(__arr_depth(['foo' => 'bar', 'bar' => ['baz' => ['gnarr' => 'gnaz']]]), 3);
+        $this->assertSame(__arr_depth(['foo' => 'bar']), 1);
+        $this->assertSame(__arr_depth([]), 1);
+        $this->assertSame(__arr_depth('foo'), 0);
+    }
+
+    function test__array_filter_recursive_all()
+    {
+        $this->assertSame(
+            __array_filter_recursive_all(['foo' => ['foo' => ['foo' => ['foo' => ['foo' => []]]]]], function (
+                $value,
+                $key,
+                $key_chain
+            ) {
+                return $key == 'foo' && empty($value);
+            }),
+            []
+        );
+
+        $this->assertSame(
+            __array_filter_recursive_all(
+                ['bar' => ['foo' => ['foo' => ['foo' => ['foo' => ['foo' => []]]]]]],
+                function ($value, $key, $key_chain) {
+                    return $key == 'foo' && empty($value);
+                }
+            ),
+            ['bar' => []]
+        );
+
+        $arr = [
+            [
+                'children' => [
+                    [
+                        'children' => [
+                            [
+                                'permission' => true
+                            ],
+                            [
+                                'permission' => false
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            ['permission' => true],
+            [
+                'children' => [
+                    [
+                        'children' => [
+                            [
+                                'permission' => false
+                            ],
+                            [
+                                'permission' => false
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $arr = __array_filter_recursive_all($arr, function ($value, $key, $key_chain) {
+            return is_array($value) && array_key_exists('permission', $value) && $value['permission'] === false;
+        });
+        $arr = __array_filter_recursive_all($arr, function ($value, $key, $key_chain) {
+            return is_array($value) && array_key_exists('children', $value) && empty($value['children']);
+        });
+        $this->assertSame($arr, [
+            [
+                'children' => [
+                    [
+                        'children' => [
+                            [
+                                'permission' => true
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            ['permission' => true]
+        ]);
+    }
+
     function test__array_walk_recursive_all()
     {
         $arr = ['foo' => 'bar', 'bar' => ['baz' => 'gnarr', 'gnarr' => 'baz']];
@@ -2108,6 +2192,22 @@ string'
         $this->assertSame(__validate_email([]), false);
     }
 
+    function test__remove_empty()
+    {
+        $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]]), [
+            0 => ['foo', 0, '0']
+        ]);
+        $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]], [0, '0']), [
+            0 => ['foo']
+        ]);
+        $this->assertSame(
+            __remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]], null, function ($value) {
+                return (is_array($value) && empty($value)) || (is_string($value) && $value === '');
+            }),
+            [0 => ['foo', 0, '0', null], null, 2 => [1 => [null]]]
+        );
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -2391,13 +2491,6 @@ string'
             __object(['foo', 'bar' => ['foo', 'bar']]),
             (object) ['foo', 'bar' => (object) ['foo', 'bar']]
         );
-
-        $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]]), [
-            0 => ['foo', 0, '0']
-        ]);
-        $this->assertSame(__remove_empty([0 => ['foo', 0, '0', null, ''], null, 2 => [['', ''], [null]]], [0, '0']), [
-            0 => ['foo']
-        ]);
 
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
         $arr = __remove_by_key($arr, 1);
