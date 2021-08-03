@@ -349,6 +349,20 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
 
+    function test__truncate_string() {
+        $this->assertSame(__truncate_string('foo', 50), 'foo');
+        $this->assertSame(__truncate_string('', 50), '');
+        $this->assertSame(__truncate_string([], 50), []);
+        $this->assertSame(__truncate_string(null, 50), null);
+        $this->assertSame(__truncate_string(false, 50), false);
+        $this->assertSame(__truncate_string(true, 50), true);
+        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5), 50), str_repeat('aaaaaaaaa ',5));
+        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaaa',5).'a', 50), str_repeat('aaaaaaaaaa',5).' ...');
+        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5).'a', 50), str_repeat('aaaaaaaaa ',4).'...');
+        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5).'a', 50, '…'), str_repeat('aaaaaaaaa ',4).'…');
+        $this->assertSame(__truncate_string('Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.', 30), 'Lorem ipsum dolor sit amet, consectetuer ...');
+    }
+
     function test__trim_every_line()
     {
         $this->assertSame(__trim_every_line("foo\n bar"), "foo\nbar");

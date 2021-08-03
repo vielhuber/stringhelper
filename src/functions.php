@@ -246,6 +246,13 @@ if (!function_exists('__br2nl')) {
     }
 }
 
+if (!function_exists('__truncate_string')) {
+    function __truncate_string(...$args)
+    {
+        return \vielhuber\stringhelper\__::truncate_string(...$args);
+    }
+}
+
 if (!function_exists('__trim_whitespace')) {
     function __trim_whitespace(...$args)
     {

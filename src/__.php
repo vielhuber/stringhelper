@@ -462,6 +462,28 @@ class __
         return preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $string);
     }
 
+    public static function truncate_string($str, $len = 50, $chars = '...') {
+        if( self::nx($str) || !is_string($str) ) {
+            return $str;
+        }
+        if( mb_strlen(self::trim_whitespace($str)) > $len ) {            
+            $str = self::trim_whitespace($str);
+            if( mb_strpos($str, ' ') === false ) {
+                $str = mb_substr($str, 0, 50);
+            }
+            else {
+                $str = mb_substr($str, 0, 50);
+                $str = self::trim_whitespace($str);
+                if( mb_strrpos($str, ' ') !== false ) {
+                    $str = mb_substr($str, 0, mb_strrpos($str, ' '));
+                    $str = self::trim_whitespace($str);
+                }
+            }
+            $str .= ' '.$chars;
+        }
+        return $str;
+    }
+
     public static function trim_whitespace($str)
     {
         if (self::nx($str) || !is_string($str)) {
