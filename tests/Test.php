@@ -360,7 +360,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__truncate_string(str_repeat('aaaaaaaaaa',5).'a', 50), str_repeat('aaaaaaaaaa',5).' ...');
         $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5).'a', 50), str_repeat('aaaaaaaaa ',4).'...');
         $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5).'a', 50, '…'), str_repeat('aaaaaaaaa ',4).'…');
-        $this->assertSame(__truncate_string('Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.', 30), 'Lorem ipsum dolor sit amet, consectetuer ...');
+        $this->assertSame(__truncate_string('Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', 20), 'Lorem ipsum dolor ...');
     }
 
     function test__trim_every_line()

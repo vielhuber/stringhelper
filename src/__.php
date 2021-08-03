@@ -469,10 +469,10 @@ class __
         if( mb_strlen(self::trim_whitespace($str)) > $len ) {            
             $str = self::trim_whitespace($str);
             if( mb_strpos($str, ' ') === false ) {
-                $str = mb_substr($str, 0, 50);
+                $str = mb_substr($str, 0, $len);
             }
             else {
-                $str = mb_substr($str, 0, 50);
+                $str = mb_substr($str, 0, $len);
                 $str = self::trim_whitespace($str);
                 if( mb_strrpos($str, ' ') !== false ) {
                     $str = mb_substr($str, 0, mb_strrpos($str, ' '));
