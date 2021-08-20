@@ -462,24 +462,24 @@ class __
         return preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $string);
     }
 
-    public static function truncate_string($str, $len = 50, $chars = '...') {
-        if( self::nx($str) || !is_string($str) ) {
+    public static function truncate_string($str, $len = 50, $chars = '...')
+    {
+        if (self::nx($str) || !is_string($str)) {
             return $str;
         }
-        if( mb_strlen(self::trim_whitespace($str)) > $len ) {            
+        if (mb_strlen(self::trim_whitespace($str)) > $len) {
             $str = self::trim_whitespace($str);
-            if( mb_strpos($str, ' ') === false ) {
+            if (mb_strpos($str, ' ') === false) {
                 $str = mb_substr($str, 0, $len);
-            }
-            else {
+            } else {
                 $str = mb_substr($str, 0, $len);
                 $str = self::trim_whitespace($str);
-                if( mb_strrpos($str, ' ') !== false ) {
+                if (mb_strrpos($str, ' ') !== false) {
                     $str = mb_substr($str, 0, mb_strrpos($str, ' '));
                     $str = self::trim_whitespace($str);
                 }
             }
-            $str .= ' '.$chars;
+            $str .= ' ' . $chars;
         }
         return $str;
     }
@@ -2077,7 +2077,15 @@ class __
     {
         $order = null;
         if (is_string($a) && is_string($b)) {
-            $order = strcasecmp($a, $b) < 0;
+            // DIN 5007-2
+            foreach (['a', 'b'] as $strings__value) {
+                ${$strings__value} = str_replace(
+                    ['Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', 'ß', '-'],
+                    ['Ae', 'ae', 'Oe', 'oe', 'Ue', 'ue', 'ss', ' '],
+                    ${$strings__value}
+                );
+            }
+            $order = strnatcasecmp($a, $b) < 0;
         } elseif (self::nx($a) || self::nx($b)) {
             if (self::nx($a)) {
                 $order = true;

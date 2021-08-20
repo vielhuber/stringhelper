@@ -349,17 +349,27 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
 
-    function test__truncate_string() {
+    function test__truncate_string()
+    {
         $this->assertSame(__truncate_string('foo', 50), 'foo');
         $this->assertSame(__truncate_string('', 50), '');
         $this->assertSame(__truncate_string([], 50), []);
         $this->assertSame(__truncate_string(null, 50), null);
         $this->assertSame(__truncate_string(false, 50), false);
         $this->assertSame(__truncate_string(true, 50), true);
-        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5), 50), str_repeat('aaaaaaaaa ',5));
-        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaaa',5).'a', 50), str_repeat('aaaaaaaaaa',5).' ...');
-        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5).'a', 50), str_repeat('aaaaaaaaa ',4).'...');
-        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ',5).'a', 50, '…'), str_repeat('aaaaaaaaa ',4).'…');
+        $this->assertSame(__truncate_string(str_repeat('aaaaaaaaa ', 5), 50), str_repeat('aaaaaaaaa ', 5));
+        $this->assertSame(
+            __truncate_string(str_repeat('aaaaaaaaaa', 5) . 'a', 50),
+            str_repeat('aaaaaaaaaa', 5) . ' ...'
+        );
+        $this->assertSame(
+            __truncate_string(str_repeat('aaaaaaaaa ', 5) . 'a', 50),
+            str_repeat('aaaaaaaaa ', 4) . '...'
+        );
+        $this->assertSame(
+            __truncate_string(str_repeat('aaaaaaaaa ', 5) . 'a', 50, '…'),
+            str_repeat('aaaaaaaaa ', 4) . '…'
+        );
         $this->assertSame(__truncate_string('Lorem ipsum dolor sit amet, consectetuer.', 20), 'Lorem ipsum dolor ...');
     }
 
@@ -1764,6 +1774,13 @@ string'
             ['id' => 3, 'date1' => '2002-01-01', 'date2' => '2008-01-01'],
             ['id' => 2, 'date1' => '2002-01-01', 'date2' => '2009-01-01']
         ]);
+
+        $arr = [['foo' => 'zoo'], ['foo' => 'Äther']];
+        usort($arr, __array_multisort([['foo', 'asc']]));
+        $this->assertEquals($arr, [['foo' => 'Äther'], ['foo' => 'zoo']]);
+        $arr = [['foo' => 'Äther'], ['foo' => 'zoo'], ['foo' => 'Arbeit'], ['foo' => 'Übung']];
+        usort($arr, __array_multisort([['foo', 'asc']]));
+        $this->assertEquals($arr, [['foo' => 'Äther'], ['foo' => 'Arbeit'], ['foo' => 'Übung'], ['foo' => 'zoo']]);
 
         $arr = [['foo' => 'baz', 'bar' => 'baz'], ['foo' => 'baz', 'bar' => 'gnarr']];
         usort($arr, __array_multisort([['foo', 'desc'], ['bar', 'desc']]));
