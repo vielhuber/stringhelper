@@ -553,6 +553,8 @@ __array_group_by($arr, 'a') // [17 => [$a, $c], 19 => [$b]]
 __array_group_by($arr, 'a', 'b') // [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
 __array_group_by($arr, function($v) { return $v['a']; }) // [17 => [$a, $c], 19 => [$b]]
 __array_group_by($arr, function($v) { return $v['a']; }, function($v) { return $v['b']; }) // [17 => [42 => [$a, $c]], 19 => [20 => [$b]]]
+$arr = collect([collect($a), collect($b), collect($c)])
+__array_group_by($arr, function($v) { return $v->get('a'); })  // can also be used by laravel collections
 
 // array group by aggregate
 $a = ['a' => 17, 'b' => 42, 'c' => 'foo']
