@@ -447,10 +447,13 @@ class __
         return preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", PHP_EOL, $string);
     }
 
-    public static function remove_newlines($string)
+    public static function remove_newlines($string, $replace = '')
     {
-        $string = preg_replace('~[\r\n]+~', '', $string); // remove nl
-        $string = str_ireplace(['<br/>', '<br />', '<br>'], '', $string); // remove brs
+        if (!is_string($string)) {
+            return $string;
+        }
+        $string = preg_replace('~[\r\n]+~', $replace, $string); // remove nl
+        $string = str_ireplace(['<br/>', '<br />', '<br>'], $replace, $string); // remove brs
         return $string;
     }
 

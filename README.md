@@ -687,6 +687,9 @@ baz') // foo\nbar\nbaz
 __remove_newlines('foo
 bar<br/>
 baz') // foobarbaz
+__remove_newlines('foo
+bar<br/>
+baz', ' ') // foo bar baz
 
 // reverse of nl2br
 __br2nl('foo<br/>bar') // foo

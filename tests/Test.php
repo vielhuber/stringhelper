@@ -2239,6 +2239,17 @@ string'
         );
     }
 
+    function test__remove_newlines()
+    {
+        $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
+        $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz', ' '), 'foo bar baz');
+        $this->assertSame(__remove_newlines(null), null);
+        $this->assertSame(__remove_newlines([]), []);
+        $this->assertSame(__remove_newlines(true), true);
+        $this->assertSame(__remove_newlines(false), false);
+        $this->assertSame(__remove_newlines(''), '');
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -2433,7 +2444,6 @@ string'
             __remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'),
             'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'
         );
-        $this->assertSame(__remove_newlines('foo' . PHP_EOL . 'bar<br/>' . PHP_EOL . 'baz'), 'foobarbaz');
 
         $this->assertSame(__string_is_json('[]'), true);
         $this->assertSame(__string_is_json('{"foo":"bar"}'), true);
