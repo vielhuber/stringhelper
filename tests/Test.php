@@ -2250,6 +2250,22 @@ string'
         $this->assertSame(__remove_newlines(''), '');
     }
 
+    function test__true_false_one()
+    {
+        $this->assertSame(__true_one(true, true, true), true);
+        $this->assertSame(__true_one([true, true, null]), true);
+        $this->assertSame(__true_one(true, '1'), true);
+        $this->assertSame(__true_one([true, false]), true);
+        $this->assertSame(__true_one(''), false);
+        $this->assertSame(__true_one([]), false);
+        $this->assertSame(__true_one(null), false);
+        $this->assertSame(__true_one(true), true);
+        $this->assertSame(__true_one(false), false);
+
+        $this->assertSame(__false_one('foo', 'bar', null), false);
+        $this->assertSame(__false_one(false), true);
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -2272,13 +2288,6 @@ string'
         $this->assertSame(__true_all([true, false]), false);
         $this->assertSame(__false_all('foo', 'bar', null), false);
         $this->assertSame(__false_all(false), true);
-
-        $this->assertSame(__true_one(true, true, true), true);
-        $this->assertSame(__true_one([true, true, null]), true);
-        $this->assertSame(__true_one(true, '1'), true);
-        $this->assertSame(__true_one([true, false]), true);
-        $this->assertSame(__false_one('foo', 'bar', null), false);
-        $this->assertSame(__false_one(false), true);
 
         $this->assertSame(__validate_url('https://vielhuber.de'), true);
 
