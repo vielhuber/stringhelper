@@ -2902,11 +2902,19 @@ class __
         return false;
     }
 
-    public static function has_spamwords($message, $custom_list = [])
+    public static function has_spamwords($message, $custom_blacklist = [], $custom_whitelist = [])
     {
         if (!is_string($message) || trim($message) == '') {
             return false;
         }
+        if (!is_array($custom_blacklist)) {
+            $custom_blacklist = [];
+        }
+        if (!is_array($custom_whitelist)) {
+            $custom_whitelist = [];
+        }
+        // always provide the following strings (blacklist.txt has some weaknesses)
+        $custom_whitelist[] = 't-online.de';
         $filename = sys_get_temp_dir() . '/spam-blacklist.txt';
         if (!file_exists($filename) || filemtime($filename) < strtotime('now - 1 month')) {
             $content = @file_get_contents(
@@ -2922,7 +2930,9 @@ class __
             $message = str_replace('*', '', $message);
             $blacklist = trim($blacklist);
             $words = explode(PHP_EOL, $blacklist);
-            $words = array_merge($words, $custom_list);
+            if (is_array($custom_blacklist) && !empty($custom_blacklist)) {
+                $words = array_merge($words, $custom_blacklist);
+            }
             foreach ($words as $words__value) {
                 $words__value = trim($words__value);
                 if ($words__value == '') {
@@ -2931,6 +2941,19 @@ class __
                 $words__value = preg_quote($words__value, '#');
                 $pattern = '#' . $words__value . '#i';
                 if (preg_match($pattern, $message)) {
+                    if (is_array($custom_whitelist) && !empty($custom_whitelist)) {
+                        foreach ($custom_whitelist as $custom_whitelist__value) {
+                            $custom_whitelist__value = trim($custom_whitelist__value);
+                            if ($custom_whitelist__value == '') {
+                                continue;
+                            }
+                            $custom_whitelist__value = preg_quote($custom_whitelist__value, '#');
+                            $custom_whitelist_pattern = '#' . $custom_whitelist__value . '#i';
+                            if (preg_match($custom_whitelist_pattern, $message)) {
+                                continue 2;
+                            }
+                        }
+                    }
                     return true;
                 }
             }
