@@ -1736,6 +1736,27 @@ string'
         $this->assertSame(__is_serialized('b:0;'), true);
     }
 
+    function test__strcmp()
+    {
+        $arr = ['äther', 'Äther2', 'Ü12.pdf', 'Ü2.pdf'];
+        usort($arr, function ($a, $b) {
+            return __mb_strcmp($a, $b);
+        });
+        $this->assertSame($arr, ['Äther2', 'Ü12.pdf', 'Ü2.pdf', 'äther']);
+        usort($arr, function ($a, $b) {
+            return __mb_strcasecmp($a, $b);
+        });
+        $this->assertSame($arr, ['äther', 'Äther2', 'Ü12.pdf', 'Ü2.pdf']);
+        usort($arr, function ($a, $b) {
+            return __mb_strnatcmp($a, $b);
+        });
+        $this->assertSame($arr, ['Äther2', 'Ü2.pdf', 'Ü12.pdf', 'äther']);
+        usort($arr, function ($a, $b) {
+            return __mb_strnatcasecmp($a, $b);
+        });
+        $this->assertSame($arr, ['äther', 'Äther2', 'Ü2.pdf', 'Ü12.pdf']);
+    }
+
     function test__array_multisort()
     {
         $arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]];

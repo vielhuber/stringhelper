@@ -535,6 +535,13 @@ __shuffle(['foo','bar','baz']); // ['bar','baz','foo']
 // shuffle associative array and preserve keys
 __shuffle_assoc(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo']) // ['bar' => 'baz', 'baz' => 'foo', 'foo' => 'bar']
 
+// sort with umlauts (DIN-5007-2)
+$arr = ['äther', 'Äther2', 'Ü12.pdf', 'Ü2.pdf'];
+usort($arr, function($a, $b) { return __mb_strcmp($a, $b); }); // ['Äther2', 'Ü12.pdf', 'Ü2.pdf', 'äther']
+usort($arr, function($a, $b) { return __mb_strcasecmp($a, $b); }); // ['äther', 'Äther2', 'Ü12.pdf', 'Ü2.pdf']
+usort($arr, function($a, $b) { return __mb_strnatcmp($a, $b); }); // ['Äther2', 'Ü2.pdf', 'Ü12.pdf', 'äther']
+usort($arr, function($a, $b) { return __mb_strnatcasecmp($a, $b); }); // ['äther', 'Äther2', 'Ü2.pdf', 'Ü12.pdf']
+
 // array order sort by many
 $arr = [['a' => 17, 'b' => 42], ['a' => 13, 'b' => 19]]
 usort($arr, __array_multisort([ ['a', 'asc'], ['b', 'asc'] ])) // [['a' => 13, 'b' => 19], ['a' => 17, 'b' => 42]]

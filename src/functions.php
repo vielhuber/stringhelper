@@ -512,6 +512,34 @@ if (!function_exists('__shuffle_assoc')) {
     }
 }
 
+if (!function_exists('__mb_strcmp')) {
+    function __mb_strcmp(...$args)
+    {
+        return \vielhuber\stringhelper\__::mb_strcmp(...$args);
+    }
+}
+
+if (!function_exists('__mb_strcasecmp')) {
+    function __mb_strcasecmp(...$args)
+    {
+        return \vielhuber\stringhelper\__::mb_strcasecmp(...$args);
+    }
+}
+
+if (!function_exists('__mb_strnatcmp')) {
+    function __mb_strnatcmp(...$args)
+    {
+        return \vielhuber\stringhelper\__::mb_strnatcmp(...$args);
+    }
+}
+
+if (!function_exists('__mb_strnatcasecmp')) {
+    function __mb_strnatcasecmp(...$args)
+    {
+        return \vielhuber\stringhelper\__::mb_strnatcasecmp(...$args);
+    }
+}
+
 if (!function_exists('__array_multisort')) {
     function __array_multisort(...$args)
     {

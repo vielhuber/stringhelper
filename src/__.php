@@ -2044,6 +2044,54 @@ class __
         return $new;
     }
 
+    public static function str_convert_din_5007_2($str)
+    {
+        if (is_string($str)) {
+            $str = str_replace(
+                ['Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', 'ß', '-'],
+                ['Ae', 'ae', 'Oe', 'oe', 'Ue', 'ue', 'ss', ' '],
+                $str
+            );
+        }
+        return $str;
+    }
+
+    public static function mb_strcmp($a, $b)
+    {
+        foreach (['a', 'b'] as $strings__value) {
+            ${$strings__value} = self::str_convert_din_5007_2(${$strings__value});
+        }
+        return strcmp($a, $b);
+    }
+
+    public static function mb_strcasecmp($a, $b)
+    {
+        foreach (['a', 'b'] as $strings__value) {
+            ${$strings__value} = self::str_convert_din_5007_2(${$strings__value});
+        }
+        return strcasecmp($a, $b);
+    }
+
+    public static function mb_strnatcmp($a, $b)
+    {
+        foreach (['a', 'b'] as $strings__value) {
+            if (is_string(${$strings__value})) {
+                ${$strings__value} = self::str_convert_din_5007_2(${$strings__value});
+            }
+        }
+        return strnatcmp($a, $b);
+    }
+
+    public static function mb_strnatcasecmp($a, $b)
+    {
+        foreach (['a', 'b'] as $strings__value) {
+            if (is_string(${$strings__value})) {
+                ${$strings__value} = self::str_convert_din_5007_2(${$strings__value});
+            }
+        }
+        return strnatcasecmp($a, $b);
+    }
+
     public static function array_multisort($args)
     {
         return function ($a, $b) use ($args) {
@@ -2080,13 +2128,8 @@ class __
     {
         $order = null;
         if (is_string($a) && is_string($b)) {
-            // DIN 5007-2
             foreach (['a', 'b'] as $strings__value) {
-                ${$strings__value} = str_replace(
-                    ['Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', 'ß', '-'],
-                    ['Ae', 'ae', 'Oe', 'oe', 'Ue', 'ue', 'ss', ' '],
-                    ${$strings__value}
-                );
+                ${$strings__value} = self::str_convert_din_5007_2(${$strings__value});
             }
             $order = strnatcasecmp($a, $b) < 0;
         } elseif (self::nx($a) || self::nx($b)) {
