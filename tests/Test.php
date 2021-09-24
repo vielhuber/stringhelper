@@ -1133,6 +1133,14 @@ baz'
         }
     }
 
+    function test_mb_sprintf()
+    {
+        $this->assertSame(sprintf('%7.7s', 'foo'), '    foo');
+        $this->assertSame(__mb_sprintf('%7.7s', 'foo'), '    foo');
+        $this->assertSame(sprintf('%7.7s', 'mäh'), '   mäh');
+        $this->assertSame(__mb_sprintf('%7.7s', 'mäh'), '    mäh');
+    }
+
     function test_encode_decode_string()
     {
         $data = ['foo' => 'bar', 'bar' => 'baz'];

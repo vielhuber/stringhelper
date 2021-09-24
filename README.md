@@ -644,6 +644,10 @@ Loading... [####################################################################
 Answer: 42
 */
 
+// simple multibyte version of sprintf
+sprintf('%7.7s', 'mäh') // '   mäh'
+__mb_sprintf('%7.7s', 'mäh') // '    mäh'
+
 // encode arbitrary data to string
 $data = ['foo' => 'bar', 'bar' => 'baz'];
 $str = __encode_data($data) // 'YToyOntzOjM6ImZvbyI7czozOiJiYXIiO3M6MzoiYmFyIjtzOjM6ImJheiI7fQ=='

@@ -638,6 +638,13 @@ if (!function_exists('__progress')) {
     }
 }
 
+if (!function_exists('__mb_sprintf')) {
+    function __mb_sprintf(...$args)
+    {
+        return \vielhuber\stringhelper\__::mb_sprintf(...$args);
+    }
+}
+
 if (!function_exists('__is_serialized')) {
     function __is_serialized(...$args)
     {

@@ -2405,6 +2405,14 @@ class __
         );
     }
 
+    public static function mb_sprintf($format, ...$args)
+    {
+        foreach ($args as $args__key => $args__value) {
+            $args[$args__key] = utf8_decode($args__value);
+        }
+        return utf8_encode(sprintf($format, ...$args));
+    }
+
     public static function is_serialized($data)
     {
         if (!is_string($data) || $data == '') {
