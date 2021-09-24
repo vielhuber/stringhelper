@@ -1105,6 +1105,34 @@ baz'
         );
     }
 
+    function test_progress()
+    {
+        foreach (
+            [
+                [
+                    [0, 100, 'Loading...', 75, '#'],
+                    'Loading... [>                                                                           ]   0%'
+                ],
+                [
+                    [50, 100, 'Loading...', 75, '#'],
+                    'Loading... [######################################>                                     ]  50%'
+                ],
+                [
+                    [100, 100, 'Loading...', 75, '#'],
+                    'Loading... [############################################################################] 100%'
+                ]
+            ]
+            as $tests
+        ) {
+            ob_start();
+            __progress($tests[0][0], $tests[0][1], $tests[0][2], $tests[0][3], $tests[0][4]);
+            echo PHP_EOL;
+            $output = trim(ob_get_contents());
+            ob_end_clean();
+            $this->assertSame($tests[1], $output);
+        }
+    }
+
     function test_encode_decode_string()
     {
         $data = ['foo' => 'bar', 'bar' => 'baz'];

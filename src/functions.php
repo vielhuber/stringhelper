@@ -631,6 +631,13 @@ if (!function_exists('__ask')) {
     }
 }
 
+if (!function_exists('__progress')) {
+    function __progress(...$args)
+    {
+        return \vielhuber\stringhelper\__::progress(...$args);
+    }
+}
+
 if (!function_exists('__is_serialized')) {
     function __is_serialized(...$args)
     {

@@ -629,6 +629,21 @@ __array_map_keys(function($k) { return $k.'!'; }, ['foo' => 'bar', 'bar' => 'baz
 // ask question on cli
 $answer = __ask('What\'s your name?') // David
 
+// show progress on cli
+echo 'Searching for TOE (theory of everything)...'.PHP_EOL;
+$i = 0;
+while($i <= 100) {
+    __progress($i, 100, 'Loading...', 75, '#');
+    usleep($i < 90 ? 10000 : 250000);
+    $i++;
+}
+echo PHP_EOL.'Answer: 42';
+/*
+Searching for TOE (theory of everything)...
+Loading... [############################################################################] 100%
+Answer: 42
+*/
+
 // encode arbitrary data to string
 $data = ['foo' => 'bar', 'bar' => 'baz'];
 $str = __encode_data($data) // 'YToyOntzOjM6ImZvbyI7czozOiJiYXIiO3M6MzoiYmFyIjtzOjM6ImJheiI7fQ=='
