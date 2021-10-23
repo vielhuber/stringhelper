@@ -2382,14 +2382,35 @@ class __
         return unserialize(base64_decode($str));
     }
 
-    public static function ask($question)
+    public static function ask($question, $whitelist = [])
     {
         echo $question;
         echo PHP_EOL;
-        $handle = fopen('php://stdin', 'r');
-        $line = fgets($handle);
-        fclose($handle);
-        return trim($line);
+
+        if( empty($whitelist) ) {
+            $handle = fopen('php://stdin', 'r');
+            $line = fgets($handle);
+            fclose($handle);
+            return trim($line);
+        }
+        else {
+            $answer = '';
+            // read char by char and hide output
+            system('stty -icanon -echo');
+            while ($c = fread(STDIN, 16)) {
+                // clean
+                if( !in_array($c, $whitelist) ) {
+                    continue;
+                }
+                // restore tty
+                system('stty sane');
+                // output
+                $answer = trim($c);
+                echo $answer;
+                break;
+            }
+            return $answer;
+        }
     }
 
     public static function progress($done, $total, $info = '', $width = 50, $char = '=')

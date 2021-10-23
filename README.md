@@ -627,7 +627,10 @@ __array_filter_recursive_all(
 __array_map_keys(function($k) { return $k.'!'; }, ['foo' => 'bar', 'bar' => 'baz']) // ['foo!' => 'bar', 'bar!' => 'baz']
 
 // ask question on cli
-$answer = __ask('What\'s your name?') // David
+$answer = __ask('What\'s your name?') // free input
+$answer = __ask('Choose your destiny:
+[1] red pill
+[2] blue pill', [1,2]) // only accept specific chars/integers
 
 // show progress on cli
 echo 'Searching for TOE (theory of everything)...'.PHP_EOL;
