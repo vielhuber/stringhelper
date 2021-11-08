@@ -189,32 +189,16 @@ function outputRow($input)
     }
     echo '</sub>';
     echo ' | <sub>';
-    if ($input === 'error') {
-        echo 'error';
-    } else {
-        echo $input ?? true === true ? 'true' : 'false';
-    }
+    echo ($input ?? true) === true ? 'true' : 'false';
     echo '</sub>';
     echo ' | <sub>';
-    if ($input === 'error') {
-        echo 'error';
-    } else {
-        echo $input ?? true == true ? 'true' : 'false';
-    }
+    echo ($input ?? true) == true ? 'true' : 'false';
     echo '</sub>';
     echo ' | <sub>';
-    if ($input === 'error') {
-        echo 'error';
-    } else {
-        echo $input ?? true === false ? 'true' : 'false';
-    }
+    echo ($input ?? true) === false ? 'true' : 'false';
     echo '</sub>';
     echo ' | <sub>';
-    if ($input === 'error') {
-        echo 'error';
-    } else {
-        echo $input ?? true === false ? 'true' : 'false';
-    }
+    echo ($input ?? true) === false ? 'true' : 'false';
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
@@ -260,10 +244,10 @@ echo '| <sub>isset()</sub> ';
 echo '| <sub>!empty()</sub> ';
 echo '| <sub>if/else</sub> ';
 echo '| <sub>?true:false</sub> ';
-echo '| <sub>??true === true</sub> ';
-echo '| <sub>??true == true</sub> ';
-echo '| <sub>??false === true</sub> ';
-echo '| <sub>??false == true</sub> ';
+echo '| <sub>(??true) === true</sub> ';
+echo '| <sub>(??true) == true</sub> ';
+echo '| <sub>(??true) === false</sub> ';
+echo '| <sub>(??true) == false</sub> ';
 echo '| <sub>count() > 0</sub> ';
 echo '| <sub>!= \'\'</sub> ';
 echo '| <sub>!== \'\'</sub> ';
