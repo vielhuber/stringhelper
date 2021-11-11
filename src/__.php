@@ -1350,7 +1350,21 @@ class __
             $nodes__value->nodeValue = '';
         }
         $html = $dom->saveHTML();
+
+        // domdocument closes <source> tags (see: https://bugs.php.net/bug.php?id=73175)
+        $DOMXPath = new \DOMXPath($dom);
+        $nodes = $DOMXPath->query(
+            '/html/body//command|/html/body//embed|/html/body//keygen|/html/body//source|/html/body//track|/html/body//wbr'
+        );
+        foreach ($nodes as $nodes__value) {
+            $nodes__value->nodeValue = 'DELETE';
+        }
+        $html = $dom->saveHTML();
+        $html = preg_replace('/DELETE<\/(command|embed|keygen|source|track|wbr)>/', '>', $html);
+
+        // revert vuejs modifications
         $html = preg_replace('/( |\r\n|\r|\n)(___)([a-zA-Z-_:\.]+=)/', '$1@$3', $html);
+
         // domdocument converts all umlauts to html entities, revert that
         // $html = html_entity_decode($html);
         // this method is bad when we use intentionally encoded code e.g. in <pre> tags; another option to prevent html entities (and leave everything intact)
@@ -2387,19 +2401,18 @@ class __
         echo $question;
         echo PHP_EOL;
 
-        if( empty($whitelist) ) {
+        if (empty($whitelist)) {
             $handle = fopen('php://stdin', 'r');
             $line = fgets($handle);
             fclose($handle);
             return trim($line);
-        }
-        else {
+        } else {
             $answer = '';
             // read char by char and hide output
             system('stty -icanon -echo');
             while ($c = fread(STDIN, 16)) {
                 // clean
-                if( !in_array($c, $whitelist) ) {
+                if (!in_array($c, $whitelist)) {
                     continue;
                 }
                 // restore tty

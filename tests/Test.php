@@ -403,6 +403,12 @@ class Test extends \PHPUnit\Framework\TestCase
     {
         foreach (
             [
+                '<command data-foo="bar" />',
+                '<embed data-foo="bar" />',
+                '<keygen data-foo="bar" />',
+                '<source data-foo="bar" />',
+                '<track data-foo="bar" />',
+                '<wbr data-foo="bar" />',
                 '<ul><li></li><li></li></ul>',
                 '<custom-component @click.prevent="foo()"></custom-component>',
                 '<custom-component
