@@ -1360,7 +1360,7 @@ class __
             $nodes__value->nodeValue = 'DELETE';
         }
         $html = $dom->saveHTML();
-        $html = preg_replace('/DELETE<\/(command|embed|keygen|source|track|wbr)>/', '>', $html);
+        $html = preg_replace('/DELETE<\/(command|embed|keygen|source|track|wbr)>/', '', $html);
 
         // revert vuejs modifications
         $html = preg_replace('/( |\r\n|\r|\n)(___)([a-zA-Z-_:\.]+=)/', '$1@$3', $html);
