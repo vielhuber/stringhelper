@@ -1240,6 +1240,20 @@ if (!function_exists('__array2csv')) {
     }
 }
 
+if (!function_exists('__xml2array')) {
+    function __xml2array(...$args)
+    {
+        return \vielhuber\stringhelper\__::xml2array(...$args);
+    }
+}
+
+if (!function_exists('__array2xml')) {
+    function __array2xml(...$args)
+    {
+        return \vielhuber\stringhelper\__::array2xml(...$args);
+    }
+}
+
 if (!function_exists('__sed_replace')) {
     function __sed_replace(...$args)
     {

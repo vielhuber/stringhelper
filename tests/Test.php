@@ -2071,6 +2071,47 @@ string'
         $this->assertSame(__is_utf8(__to_utf8(utf8_decode('This is a test älüß!'))), true);
     }
 
+    function test__array2xml()
+    {
+        $arr = [
+            [
+                'tag' => 'tag1',
+                'attrs' => ['attr1' => 'val1', 'attr2' => 'val2'],
+                'content' => [
+                    [
+                        'tag' => 'tag2',
+                        'attrs' => ['attr3' => 'val3', 'attr4' => 'val4'],
+                        'content' => 'äöüß'
+                    ],
+                    [
+                        'tag' => 'tag3',
+                        'attrs' => ['attr5' => 'val5', 'attr5' => 'val5'],
+                        'content' => [
+                            [
+                                'tag' => 'tag4',
+                                'attrs' => ['attr6' => 'val6', 'attr7' => 'val7'],
+                                'content' => 'äöüß'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+<tag1 attr1="val1" attr2="val2">
+ <tag2 attr3="val3" attr4="val4">äöüß</tag2>
+ <tag3 attr5="val5">
+  <tag4 attr6="val6" attr7="val7">äöüß</tag4>
+ </tag3>
+</tag1>
+';
+        $filename = sys_get_temp_dir() . '/' . md5(uniqid());
+        __array2xml($arr, $filename);
+        $this->assertSame(file_get_contents($filename), $xml);
+        $arr2 = __xml2array($filename);
+        $this->assertSame($arr2, $arr);
+    }
+
     function test__iptc()
     {
         $this->assertSame(array_key_exists('2#116', __iptc_codes()), true);

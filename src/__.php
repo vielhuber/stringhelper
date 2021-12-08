@@ -4245,6 +4245,71 @@ class __
         return true;
     }
 
+    public static function array2xml($arr, $filename)
+    {
+        $xw = xmlwriter_open_memory();
+        xmlwriter_set_indent($xw, 1);
+        $res = xmlwriter_set_indent_string($xw, ' ');
+        xmlwriter_start_document($xw, '1.0', 'UTF-8');
+        if (is_array($arr)) {
+            self::array2xml_rec($arr, $xw);
+        }
+        xmlwriter_end_document($xw);
+        $xml = xmlwriter_output_memory($xw);
+        // check (this throws an exception is something is wrong, e.g. 2 root elements)
+        simplexml_load_string($xml);
+        file_put_contents($filename, $xml);
+    }
+    private static function array2xml_rec($arr, &$xw)
+    {
+        foreach ($arr as $arr__value) {
+            xmlwriter_start_element($xw, $arr__value['tag']);
+            foreach ($arr__value['attrs'] as $attrs__key => $attrs__value) {
+                xmlwriter_start_attribute($xw, $attrs__key);
+                xmlwriter_text($xw, $attrs__value);
+                xmlwriter_end_attribute($xw);
+            }
+            if (isset($arr__value['content'])) {
+                if (is_array($arr__value['content'])) {
+                    self::array2xml_rec($arr__value['content'], $xw);
+                } elseif (is_string($arr__value['content'])) {
+                    xmlwriter_text($xw, $arr__value['content']);
+                }
+            }
+            xmlwriter_end_element($xw);
+        }
+    }
+
+    public static function xml2array($filename)
+    {
+        $xml = file_get_contents($filename);
+        $SimpleXMLElement = simplexml_load_string($xml);
+        $data = self::xml2array_rec($SimpleXMLElement);
+        return $data;
+    }
+    private static function xml2array_rec($SimpleXMLElement)
+    {
+        $data = [];
+        $data_this = [];
+        $data_this['tag'] = $SimpleXMLElement->getName();
+        if (!empty($SimpleXMLElement->attributes())) {
+            $data_this['attrs'] = [];
+            foreach ($SimpleXMLElement->attributes() as $attrs__key => $attrs__value) {
+                $data_this['attrs'][$attrs__key] = (string) $attrs__value;
+            }
+        }
+        if ($SimpleXMLElement->count() === 0) {
+            $data_this['content'] = (string) $SimpleXMLElement;
+        } else {
+            $data_this['content'] = [];
+            foreach ($SimpleXMLElement->children() as $children__value) {
+                $data_this['content'] = array_merge($data_this['content'], self::xml2array_rec($children__value));
+            }
+        }
+        $data[] = $data_this;
+        return $data;
+    }
+
     public static function sed_replace($replacements, $filename)
     {
         if (!file_exists($filename)) {
