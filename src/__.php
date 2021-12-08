@@ -4299,7 +4299,9 @@ class __
             }
         }
         if ($SimpleXMLElement->count() === 0) {
-            $data_this['content'] = (string) $SimpleXMLElement;
+            if ((string) $SimpleXMLElement != '') {
+                $data_this['content'] = (string) $SimpleXMLElement;
+            }
         } else {
             $data_this['content'] = [];
             foreach ($SimpleXMLElement->children() as $children__value) {
