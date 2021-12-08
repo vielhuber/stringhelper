@@ -4264,10 +4264,12 @@ class __
     {
         foreach ($arr as $arr__value) {
             xmlwriter_start_element($xw, $arr__value['tag']);
-            foreach ($arr__value['attrs'] as $attrs__key => $attrs__value) {
-                xmlwriter_start_attribute($xw, $attrs__key);
-                xmlwriter_text($xw, $attrs__value);
-                xmlwriter_end_attribute($xw);
+            if (isset($arr__value['attrs'])) {
+                foreach ($arr__value['attrs'] as $attrs__key => $attrs__value) {
+                    xmlwriter_start_attribute($xw, $attrs__key);
+                    xmlwriter_text($xw, $attrs__value);
+                    xmlwriter_end_attribute($xw);
+                }
             }
             if (isset($arr__value['content'])) {
                 if (is_array($arr__value['content'])) {

@@ -2118,6 +2118,16 @@ string'
                 '<?xml version="1.0" encoding="UTF-8"?>
 <tag1 attr1="val1" attr2="val2"/>
 '
+            ],
+            [
+                [
+                    [
+                        'tag' => 'tag1'
+                    ]
+                ],
+                '<?xml version="1.0" encoding="UTF-8"?>
+<tag1/>
+'
             ]
         ];
         foreach ($tests as $tests__value) {
