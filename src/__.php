@@ -421,6 +421,27 @@ class __
         return implode(' ', self::remove_empty(explode(' ', $string)));
     }
 
+    public static function strip_tags($string, $tags, $with_content = false)
+    {
+        if (!is_string($string)) {
+            return $string;
+        }
+        if (self::nx($tags)) {
+            return $string;
+        }
+        if (!is_array($tags)) {
+            $tags = [$tags];
+        }
+        foreach ($tags as $tags__value) {
+            $string = preg_replace(
+                '/<' . $tags__value . '.*?>(.*)?<\/' . $tags__value . '>/ims',
+                $with_content === false ? '$1' : '',
+                $string
+            );
+        }
+        return $string;
+    }
+
     public static function split_newline($string)
     {
         return preg_split('/\r\n|\n|\r/', $string);

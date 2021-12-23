@@ -211,6 +211,13 @@ if (!function_exists('__strip_whitespace_collapsed')) {
     }
 }
 
+if (!function_exists('__strip_tags')) {
+    function __strip_tags(...$args)
+    {
+        return \vielhuber\stringhelper\__::strip_tags(...$args);
+    }
+}
+
 if (!function_exists('__split_newline')) {
     function __split_newline(...$args)
     {

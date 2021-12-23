@@ -1494,6 +1494,57 @@ string'
         $this->assertSame(__arr_depth('foo'), 0);
     }
 
+    function test__strip_tags()
+    {
+        foreach (
+            [
+                [
+                    '<p>foo</p><iframe src="#"></iframe><script>alert();</script><p>bar</p>',
+                    '<p>foo</p><p>bar</p>',
+                    ['iframe', 'script'],
+                    true
+                ],
+                [
+                    '<p>foo</p><iframe src="#"></iframe><script>alert();</script><p>bar</p>',
+                    '<p>foo</p>alert();<p>bar</p>',
+                    ['iframe', 'script'],
+                    false
+                ],
+                [
+                    '<p>foo</p><iframe src="#"></iframe><script>alert();</script><p>bar</p>',
+                    '<p>foo</p><script>alert();</script><p>bar</p>',
+                    'iframe',
+                    true
+                ],
+                [
+                    '<iframe id="google_ads_iframe.html" 
+data-attr="foo">
+</iframe>',
+                    '',
+                    'iframe',
+                    true
+                ],
+                [
+                    '<p>foo</p><iframe src="#">
+</iframe><script>alert();</script><p>bar</p>',
+                    '<p>foo</p><script>alert();</script><p>bar</p>',
+                    'iframe',
+                    true
+                ],
+
+                [
+                    '<p>foo</p><iframe src="#"></iframe><script>alert();</script><p>bar</p>',
+                    '<p>foo</p><iframe src="#"></iframe>alert();<p>bar</p>',
+                    'script',
+                    false
+                ]
+            ]
+            as $tests__value
+        ) {
+            $this->assertSame(__strip_tags($tests__value[0], $tests__value[2], $tests__value[3]), $tests__value[1]);
+        }
+    }
+
     function test__array_filter_recursive_all()
     {
         $this->assertSame(

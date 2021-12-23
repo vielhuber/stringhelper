@@ -697,6 +697,10 @@ __strip_whitespace('the     answeris42') // theansweris42
 __strip_whitespace_collapsed('the answer is 42') // the answer is 42
 __strip_whitespace_collapsed('the     answer             is 42 ') // the answer is 42
 
+// strip specific tags (optionally with content) of html string
+__strip_tags('<p>foo</p><iframe src="#"></iframe><script>alert();</script><p>bar</p>', 'script') // <p>foo</p><iframe src="#"></iframe>alert();<p>bar</p>
+__strip_tags('<p>foo</p><iframe src="#"></iframe><script>alert();</script><p>bar</p>', ['iframe','script'], true) // <p>foo</p><p>bar</p>
+
 // split string by new line
 __split_newline('foo
 bar
