@@ -1378,7 +1378,7 @@ class __
             '/html/body//command|/html/body//embed|/html/body//keygen|/html/body//source|/html/body//track|/html/body//wbr'
         );
         foreach ($nodes as $nodes__value) {
-            $nodes__value->nodeValue = 'DELETE';
+            $nodes__value->appendChild($dom->createTextNode('DELETE'));
         }
         $html = $dom->saveHTML();
         $html = preg_replace('/DELETE<\/(command|embed|keygen|source|track|wbr)>/', '', $html);

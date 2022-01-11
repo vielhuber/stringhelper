@@ -403,6 +403,14 @@ class Test extends \PHPUnit\Framework\TestCase
     {
         foreach (
             [
+                '
+                <!DOCTYPE html><html><body>
+                <picture>
+                    <source media="(max-width: 300px)" srcset="#" data-size="360x">
+                    <source media="(max-width: 600px)" srcset="#" data-size="768x">
+                </picture>
+                </body></html>
+                ',
                 '<command data-foo="bar" />',
                 '<embed data-foo="bar" />',
                 '<keygen data-foo="bar" />',
