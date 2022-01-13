@@ -4844,6 +4844,11 @@ class __
         }
     }
 
+    public static function is_eloquent_builder($data)
+    {
+        return is_object($data) && get_class($data) === 'Illuminate\Database\Eloquent\Builder';
+    }
+
     public static function is_external($link)
     {
         if (self::nx($link)) {

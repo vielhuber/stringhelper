@@ -1443,6 +1443,13 @@ if (!function_exists('__is_base64_encoded')) {
     }
 }
 
+if (!function_exists('__is_eloquent_builder')) {
+    function __is_eloquent_builder(...$args)
+    {
+        return \vielhuber\stringhelper\__::is_eloquent_builder(...$args);
+    }
+}
+
 if (!function_exists('__is_external')) {
     function __is_external(...$args)
     {

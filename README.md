@@ -779,6 +779,9 @@ __is_base64_encoded('#ib3498r') // false
 __is_base64_encoded('al3Vna##2dqa#Gdm') // false
 __is_base64_encoded((object)[]) // false
 
+// check if variable is of laravel type 'Illuminate\Database\Eloquent\Builder'
+__is_eloquent_builder($var) // true|false
+
 // extract part from string
 __extract('<a href="#foo">bar</a>','href="','">') // #foo
 __extract('<a href="#foo">bar</a>','">','</a') // bar
