@@ -1895,8 +1895,12 @@ class __
 
     public static function translate_deepl_api($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
+        $domain = 'api.deepl.com';
+        if (strpos($api_key, ':fx') !== false) {
+            $domain = 'api-free.deepl.com';
+        }
         $response = self::curl(
-            'https://api.deepl.com/v2/translate?auth_key=' . $api_key,
+            'https://' . $domain . '/v2/translate?auth_key=' . $api_key,
             [
                 'text' => $str,
                 'source_lang' => $from_lng,
