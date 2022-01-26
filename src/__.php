@@ -1537,6 +1537,10 @@ class __
 
     private static function translate_google_inofficial_parse_result_post($input)
     {
+        // sometimes google returns an array
+        if (is_array($input) && !empty($input)) {
+            $input = $input[0];
+        }
         // discard the (outer) <i>-tags and take the content of the <b>-tags
         $output = '';
         $pointer = 0;
