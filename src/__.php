@@ -2275,9 +2275,9 @@ class __
             $array = json_decode($array);
         }
 
-        if (is_array($array) || is_object($array)) {
+        if (is_array($array) || (is_object($array) && !($array instanceof \__empty_helper))) {
             $new = [];
-            if (is_object($array)) {
+            if (is_object($array) && !($array instanceof \__empty_helper)) {
                 $new = (object) $new;
             }
             foreach ($array as $array__key => $array__value) {
@@ -2288,7 +2288,11 @@ class __
                 $key_chain_this = $key_chain;
                 $key_chain_this[] = $array__key;
                 if (is_array($array)) {
-                    if (is_array($array__value) || is_object($array__value) || $is_json_iterable) {
+                    if (
+                        is_array($array__value) ||
+                        (is_object($array__value) && !($array__value instanceof \__empty_helper)) ||
+                        $is_json_iterable
+                    ) {
                         $new[$array__key] = self::array_map_deep(
                             $array__value,
                             $callback,
@@ -2299,8 +2303,12 @@ class __
                         $new[$array__key] = call_user_func($callback, $array__value, $array__key, $key_chain_this);
                     }
                 }
-                if (is_object($array)) {
-                    if (is_array($array__value) || is_object($array__value) || $is_json_iterable) {
+                if (is_object($array) && !($array instanceof \__empty_helper)) {
+                    if (
+                        is_array($array__value) ||
+                        (is_object($array__value) && !($array__value instanceof \__empty_helper)) ||
+                        $is_json_iterable
+                    ) {
                         $new->{$array__key} = self::array_map_deep(
                             $array__value,
                             $callback,

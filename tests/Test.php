@@ -176,6 +176,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__v('', [], 'baz'), 'baz');
         $this->assertSame(__v('', [], null), null);
         $this->assertSame(__v(), null);
+        $this->assertSame(__v(__e()), null);
     }
 
     function test__e()
@@ -1320,6 +1321,12 @@ string'
 
     function test__array_map_deep()
     {
+        $this->assertSame(
+            __array_map_deep([__e(), 'bar' => [__e(), __e()]], function ($a) {
+                return __v($a);
+            }),
+            [null, 'bar' => [null, null]]
+        );
         $this->assertSame(
             __array_map_deep(['foo', 'bar' => ['baz', 'gnarr']], function ($a) {
                 return $a . '!';
