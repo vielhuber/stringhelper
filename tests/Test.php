@@ -667,8 +667,6 @@ House'
 
     function test__translate_microsoft()
     {
-        $this->assertTrue(true);
-        return;
         foreach (['free', $_SERVER['MICROSOFT_TRANSLATION_API_KEY']] as $api_keys__value) {
             if ($api_keys__value === 'free') {
                 continue;
@@ -678,7 +676,11 @@ House'
             }
             $this->assertContains(
                 __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
-                ['To be or not to be; that is the question here.', 'Being or not being; that is the question here.']
+                [
+                    'To be or not to be; that is the question here.',
+                    'To be or not to be; that\'s the question here.',
+                    'Being or not being; that is the question here.'
+                ]
             );
 
             $this->assertContains(
@@ -691,7 +693,8 @@ House'
                 [
                     'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.',
                     '<a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
-                    '<a>VanillaJS</a> is since <a>ES6</a> virtually equal to the veteran <a>jQuery</a> in all areas and is now far superior.'
+                    '<a>VanillaJS</a> is since <a>ES6</a> virtually equal to the veteran <a>jQuery</a> in all areas and is now far superior.',
+                    'Since <a>ES6</a><a>, VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.'
                 ]
             );
 
@@ -705,7 +708,8 @@ House'
                 [
                     'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.',
                     '<a p="1">VanillaJS</a> has been equal to the original rock <a p="3">jQuery</a> since <a p="2">ES6</a> in virtually all areas.',
-                    '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually equal to the veteran <a p="3">jQuery</a> in all areas and is now far superior.'
+                    '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually equal to the veteran <a p="3">jQuery</a> in all areas and is now far superior.',
+                    'Since <a p="2">ES6</a><a p="1">, VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in virtually all areas and is now far superior.'
                 ]
             );
         }
