@@ -1253,6 +1253,49 @@ baz'
         $this->assertSame(__remove_non_printable_chars(42), 42);
     }
 
+    function test__trim()
+    {
+        $this->assertSame(__trim('<br>foo bar<br>', '<br>'), 'foo bar');
+        $this->assertSame(__trim('<p>foo bar</p>', '<br>'), '<p>foo bar</p>');
+        $this->assertSame(__trim('<br>foo bar</p>', ['<br>', '</p>']), 'foo bar');
+        $this->assertSame(__trim('<br><p><br><p><br><p><br><p>foo bar<br><br><br><p>', ['<br>', '<p>']), 'foo bar');
+        $this->assertSame(__trim('<br>foo bar</p>', '<br>', '<p>'), '<p>foo bar</p>');
+        $this->assertSame(
+            __trim('<br><br/><p></p>foo bar baz<br/><br/><br><br/>', ['<br/>', '<br>', '<p></p>']),
+            'foo bar baz'
+        );
+        $this->assertSame(__trim('foo bar', null), 'foo bar');
+        $this->assertSame(__trim('foo bar', false), 'foo bar');
+        $this->assertSame(__trim('foo bar', [true]), 'foo bar');
+        $this->assertSame(
+            __trim('. \ + * ? [ ^ ] $ ( ) { } = ! / < > | : -', [
+                '.',
+                '\\',
+                '+',
+                '*',
+                '?',
+                '[',
+                '^',
+                ']',
+                '$',
+                '(',
+                ')',
+                '{',
+                '}',
+                '=',
+                '!',
+                '<',
+                '>',
+                '|',
+                ':',
+                '-',
+                '/',
+                ' '
+            ]),
+            ''
+        );
+    }
+
     function test__trim_whitespace()
     {
         $this->assertSame(

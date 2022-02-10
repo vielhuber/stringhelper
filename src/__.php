@@ -519,6 +519,35 @@ class __
         return $str;
     }
 
+    public static function trim($str, $arr, $replace = '')
+    {
+        if (!is_string($str)) {
+            return $str;
+        }
+        if (!is_array($arr)) {
+            $arr = [$arr];
+        }
+        $had_something_to_remove = true;
+        while ($had_something_to_remove === true) {
+            $had_something_to_remove = false;
+            foreach ($arr as $arr__value) {
+                if (!is_string($arr__value)) {
+                    continue;
+                }
+                $str_new = preg_replace(
+                    '/^(' . preg_quote($arr__value, '/') . ')|' . preg_quote($arr__value, '/') . '$/',
+                    $replace,
+                    $str
+                );
+                if ($str_new !== $str) {
+                    $str = $str_new;
+                    $had_something_to_remove = true;
+                }
+            }
+        }
+        return $str;
+    }
+
     public static function trim_every_line($str)
     {
         if (!is_string($str)) {

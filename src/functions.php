@@ -274,6 +274,13 @@ if (!function_exists('__trim_every_line')) {
     }
 }
 
+if (!function_exists('__trim')) {
+    function __trim(...$args)
+    {
+        return \vielhuber\stringhelper\__::trim(...$args);
+    }
+}
+
 if (!function_exists('__strrev')) {
     function __strrev(...$args)
     {
