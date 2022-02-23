@@ -735,10 +735,11 @@ House'
 
     function test__translate_deepl()
     {
-        $this->assertTrue(true);
-        return;
         foreach (['free', @$_SERVER['DEEPL_TRANSLATION_API_KEY']] as $api_keys__value) {
             if ($api_keys__value == '') {
+                continue;
+            }
+            if ($api_keys__value == 'free') {
                 continue;
             }
             $this->assertSame(
