@@ -4311,7 +4311,7 @@ class __
         return true;
     }
 
-    public static function array2xml($arr, $filename)
+    public static function array2xml($arr, $filename = null)
     {
         $xw = xmlwriter_open_memory();
         xmlwriter_set_indent($xw, 1);
@@ -4324,7 +4324,11 @@ class __
         $xml = xmlwriter_output_memory($xw);
         // check (this throws an exception is something is wrong, e.g. 2 root elements)
         simplexml_load_string($xml);
-        file_put_contents($filename, $xml);
+        if ($filename !== null) {
+            file_put_contents($filename, $xml);
+        } else {
+            return $xml;
+        }
     }
     private static function array2xml_rec($arr, &$xw)
     {

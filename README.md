@@ -1282,7 +1282,8 @@ $xml = '<?xml version="1.0" encoding="UTF-8"?>
         </tag3>
     </tag1>
 ';
-__array2xml($arr, 'file.xml'); // $xml
+__array2xml($arr); // $xml
+__array2xml($arr, 'file.xml'); // directly save to file
 __xml2array('file.xml'); // $arr
 
 // measure performance
