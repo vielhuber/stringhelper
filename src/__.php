@@ -4333,6 +4333,9 @@ class __
     private static function array2xml_rec($arr, &$xw)
     {
         foreach ($arr as $arr__value) {
+            if (!isset($arr__value['tag'])) {
+                continue;
+            }
             xmlwriter_start_element($xw, $arr__value['tag']);
             if (isset($arr__value['attrs'])) {
                 foreach ($arr__value['attrs'] as $attrs__key => $attrs__value) {
@@ -4342,7 +4345,7 @@ class __
                 }
             }
             if (isset($arr__value['content'])) {
-                if (is_array($arr__value['content'])) {
+                if (is_array($arr__value['content']) && !empty($arr__value['content'])) {
                     self::array2xml_rec($arr__value['content'], $xw);
                 } elseif (is_string($arr__value['content'])) {
                     xmlwriter_text($xw, $arr__value['content']);
