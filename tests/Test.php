@@ -2297,11 +2297,26 @@ data-attr="foo">
  <tag4 attr1="val1" attr2="val2"/>
 </tag1>
 '
+            ],
+            [
+                [
+                    [
+                        'tag' => 'tag1'
+                    ]
+                ],
+                '<?xml version="2.1" type="standard"?>
+<tag1/>
+',
+                ['version' => '2.1', 'type' => 'standard']
             ]
         ];
         foreach ($tests as $tests__value) {
             $filename = sys_get_temp_dir() . '/' . md5(uniqid());
-            __array2xml($tests__value[0], $filename);
+            $prolog_attrs = null;
+            if (isset($tests__value[2])) {
+                $prolog_attrs = $tests__value[2];
+            }
+            __array2xml($tests__value[0], $filename, $prolog_attrs);
             $this->assertSame(file_get_contents($filename), $tests__value[1]);
             $arr2 = __xml2array($filename);
             // normalization (strip out empty content)

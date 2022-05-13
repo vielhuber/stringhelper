@@ -4311,7 +4311,7 @@ class __
         return true;
     }
 
-    public static function array2xml($arr, $filename = null)
+    public static function array2xml($arr, $filename = null, $prolog_attrs = null)
     {
         $xw = xmlwriter_open_memory();
         xmlwriter_set_indent($xw, 1);
@@ -4324,6 +4324,14 @@ class __
         $xml = xmlwriter_output_memory($xw);
         // check (this throws an exception is something is wrong, e.g. 2 root elements)
         simplexml_load_string($xml);
+        // finally modify prolog attributes (this must be done manually since php has no functions for it)
+        if (is_array($prolog_attrs) && !empty($prolog_attrs)) {
+            $prolog_attrs_prep = [];
+            foreach ($prolog_attrs as $prolog_attrs__key => $prolog_attrs__value) {
+                $prolog_attrs_prep[] = $prolog_attrs__key . '="' . $prolog_attrs__value . '"';
+            }
+            $xml = str_replace('version="1.0" encoding="UTF-8"', implode(' ', $prolog_attrs_prep), $xml);
+        }
         if ($filename !== null) {
             file_put_contents($filename, $xml);
         } else {
@@ -4358,6 +4366,8 @@ class __
     public static function xml2array($filename)
     {
         $xml = file_get_contents($filename);
+        // the parser accepts only version 1.0; try to fallback
+        $xml = preg_replace('/^(<\?xml version=")(.+)(")/i', '${1}1.0${3}', $xml);
         $SimpleXMLElement = simplexml_load_string($xml);
         $data = self::xml2array_rec($SimpleXMLElement);
         return $data;

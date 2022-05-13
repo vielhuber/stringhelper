@@ -1284,6 +1284,7 @@ $xml = '<?xml version="1.0" encoding="UTF-8"?>
 ';
 __array2xml($arr); // $xml
 __array2xml($arr, 'file.xml'); // directly save to file
+__array2xml($arr, null, ['version' => '2.1', 'type' => 'standard']); // manually modify prolog attributes
 __xml2array('file.xml'); // $arr
 
 // measure performance
