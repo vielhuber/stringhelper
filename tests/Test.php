@@ -2304,10 +2304,10 @@ data-attr="foo">
                         'tag' => 'tag1'
                     ]
                 ],
-                '<?xml version="2.1" type="standard"?>
+                '<?xml version="1.1"?>
 <tag1/>
 ',
-                ['version' => '2.1', 'type' => 'standard']
+                ['version' => '1.1']
             ]
         ];
         foreach ($tests as $tests__value) {
