@@ -751,6 +751,8 @@ baz ') // foo
 // - works recursively
 // - works with whole words
 __trim('<br><br/><p></p>foo bar baz<br/><br/><br><br/>', ['<br/>','<br>','<p></p>']) // foo bar baz
+__ltrim('<br><br/><p></p>foo bar baz<br/><br/><br><br/>', ['<br/>','<br>','<p></p>']) // foo bar baz<br/><br/><br><br/>
+__rtrim('<br><br/><p></p>foo bar baz<br/><br/><br><br/>', ['<br/>','<br>','<p></p>']) // <br><br/><p></p>foo bar baz
 
 // remove keys from associative array
 __arr_without(['foo' => 'bar', 'bar' => 'baz', 'baz' => 'foo'], ['bar', 'baz']) // ['foo' => 'bar']

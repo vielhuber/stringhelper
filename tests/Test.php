@@ -1295,6 +1295,15 @@ baz'
             ]),
             ''
         );
+        $this->assertSame(__trim('ffoo ooff', 'f'), 'oo oo');
+        $this->assertSame(
+            __ltrim('<br><br/><p></p>foo bar baz<br/><br/><br><br/>', ['<br/>', '<br>', '<p></p>']),
+            'foo bar baz<br/><br/><br><br/>'
+        );
+        $this->assertSame(
+            __rtrim('<br><br/><p></p>foo bar baz<br/><br/><br><br/>', ['<br/>', '<br>', '<p></p>']),
+            '<br><br/><p></p>foo bar baz'
+        );
     }
 
     function test__trim_whitespace()

@@ -519,7 +519,7 @@ class __
         return $str;
     }
 
-    public static function trim($str, $arr, $replace = '')
+    public static function trim($str, $arr, $replace = '', $mode = null)
     {
         if (!is_string($str)) {
             return $str;
@@ -534,11 +534,16 @@ class __
                 if (!is_string($arr__value)) {
                     continue;
                 }
-                $str_new = preg_replace(
-                    '/^(' . preg_quote($arr__value, '/') . ')|' . preg_quote($arr__value, '/') . '$/',
-                    $replace,
-                    $str
-                );
+                if ($mode === null) {
+                    $regex = '/^(' . preg_quote($arr__value, '/') . ')+|(' . preg_quote($arr__value, '/') . ')+$/';
+                }
+                if ($mode === 'left') {
+                    $regex = '/^(' . preg_quote($arr__value, '/') . ')+/';
+                }
+                if ($mode === 'right') {
+                    $regex = '/(' . preg_quote($arr__value, '/') . ')+$/';
+                }
+                $str_new = preg_replace($regex, $replace, $str);
                 if ($str_new !== $str) {
                     $str = $str_new;
                     $had_something_to_remove = true;
@@ -546,6 +551,16 @@ class __
             }
         }
         return $str;
+    }
+
+    public static function ltrim($str, $arr)
+    {
+        return self::trim($str, $arr, '', 'left');
+    }
+
+    public static function rtrim($str, $arr)
+    {
+        return self::trim($str, $arr, '', 'right');
     }
 
     public static function trim_every_line($str)

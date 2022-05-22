@@ -281,6 +281,20 @@ if (!function_exists('__trim')) {
     }
 }
 
+if (!function_exists('__ltrim')) {
+    function __ltrim(...$args)
+    {
+        return \vielhuber\stringhelper\__::ltrim(...$args);
+    }
+}
+
+if (!function_exists('__rtrim')) {
+    function __rtrim(...$args)
+    {
+        return \vielhuber\stringhelper\__::rtrim(...$args);
+    }
+}
+
 if (!function_exists('__strrev')) {
     function __strrev(...$args)
     {
