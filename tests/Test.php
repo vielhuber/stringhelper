@@ -1224,13 +1224,28 @@ baz'
         $this->assertSame(__validate_date($urls[0]['lastmod']), true);
     }
 
+    function test__remove_emojis()
+    {
+        $this->assertSame(__remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med'), 'Lorem  ipsum  dolor  med');
+        $this->assertSame(__remove_emoji('OK!🥊'), 'OK!');
+        $this->assertSame(__remove_emoji('OK!❤️'), 'OK!');
+        $this->assertSame(__remove_emoji('❤️OK!'), 'OK!');
+        $this->assertSame(__remove_emoji('                 OK???!❤️ ???????? '), '                 OK???! ???????? ');
+        $this->assertSame(__remove_emoji('äölöä´ß´ßßß""""e´´eéeeádöälÈsd '), 'äölöä´ß´ßßß""""e´´eéeeádöälÈsd ');
+        $this->assertSame(__remove_emoji(''), '');
+        $this->assertSame(__remove_emoji(null), null);
+        $this->assertSame(__remove_emoji(true), true);
+        $this->assertSame(__remove_emoji(false), false);
+        $this->assertSame(__remove_emoji(42), 42);
+    }
+
     function test__remove_accents()
     {
         $this->assertSame(__remove_accents('Çººĺ'), 'Cool');
         $this->assertSame(__remove_accents('Äťśçĥ'), 'Atsch');
         $this->assertSame(__remove_accents('Äťśçĥ', true), 'Aetsch');
         $this->assertSame(
-            __remove_emoji(
+            __remove_accents(
                 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.',
                 true
             ),
@@ -2707,14 +2722,6 @@ data-attr="foo">
         $this->assertSame(__url_normalize(false), false);
         $this->assertSame(__url_normalize(42), 42);
         $this->assertSame(__url_normalize('http://www.foo.com/bar/'), 'http://www.foo.com/bar');
-
-        $this->assertSame(__remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med'), 'Lorem  ipsum  dolor  med');
-        $this->assertSame(__remove_emoji('OK!🥊'), 'OK!');
-        $this->assertSame(__remove_emoji(''), '');
-        $this->assertSame(__remove_emoji(null), null);
-        $this->assertSame(__remove_emoji(true), true);
-        $this->assertSame(__remove_emoji(false), false);
-        $this->assertSame(__remove_emoji(42), 42);
 
         $this->assertSame(__date('Y'), date('Y', strtotime('now')));
         $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));

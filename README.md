@@ -1169,6 +1169,32 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 // you can also hijack the current browser session if logged in
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 
+// reverse proxy
+__reverse_proxy(
+    $_GET['url'],
+    [
+        '*' => [
+            'dom' => function($DOMXPath) {
+                $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('bar','baz');
+                return $DOMXPath;
+            },
+            'css' => '
+                .ads { display:none; }
+            ',
+            'js' => '
+                alert("ok");
+            ',
+            'replacements' => [
+                ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'], /* simple replacements (like origin checks) */
+                ['/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/', $proxy_url . '?url=$1'], /* regex is also possible */
+                ['</head>', '<style>.ads { display:none; }</style></head>'] /* inject your own styles */
+            ],
+        ],
+        'example.js' => [/*...*/],
+        '/regex-match-v.*\.js/' => [/*...*/]
+    ]
+)
+
 // check basic auth
 __has_basic_auth('https://vielhuber.de'); // false
 __has_basic_auth('https://httpbin.org/basic-auth/foo/bar'); // true
