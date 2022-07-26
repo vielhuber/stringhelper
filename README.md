@@ -1171,7 +1171,7 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, fa
 
 // reverse proxy
 __reverse_proxy(
-    $_GET['url'],
+    'https://tld.com',
     [
         '*' => [
             'dom' => function($DOMXPath) {
@@ -1186,8 +1186,8 @@ __reverse_proxy(
             ',
             'replacements' => [
                 ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'], /* simple replacements (like origin checks) */
-                ['/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/', $proxy_url . '?url=$1'], /* regex is also possible */
-                ['</head>', '<style>.ads { display:none; }</style></head>'] /* inject your own styles */
+                ['/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/', __urlWithoutArgs().'?url=$1'], /* regex is also possible */
+                ['</head>', '<style>.ads { display:none; }</style></head>'] /* dirty inject */
             ],
         ],
         'example.js' => [/*...*/],

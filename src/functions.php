@@ -1114,6 +1114,13 @@ if (!function_exists('__extract_meta_desc_from_url')) {
     }
 }
 
+if (!function_exists('__reverse_proxy')) {
+    function __reverse_proxy(...$args)
+    {
+        return \vielhuber\stringhelper\__::reverse_proxy(...$args);
+    }
+}
+
 if (!function_exists('__exception')) {
     function __exception(...$args)
     {

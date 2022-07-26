@@ -1239,6 +1239,44 @@ baz'
         $this->assertSame(__remove_emoji(42), 42);
     }
 
+    function test__reverse_proxy()
+    {
+        $proxied = __reverse_proxy(
+            'https://httpbin.org/html',
+            [
+                '*' => [
+                    'dom' => function ($DOMXPath) {
+                        $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('bar', 'baz');
+                        return $DOMXPath;
+                    },
+                    'css' => '
+                    .ads { display:none; }
+                ',
+                    'js' => '
+                    alert("ok");
+                ',
+                    'replacements' => [
+                        ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'],
+                        [
+                            '/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/',
+                            __urlWithoutArgs() . '?url=$1'
+                        ],
+                        ['</head>', '<style>.ads { display:none; }</style></head>']
+                    ]
+                ],
+                'example.js' => [
+                    /*...*/
+                ],
+                '/regex-match-v.*\.js/' => [
+                    /*...*/
+                ]
+            ],
+            false
+        );
+        $orig = __curl('https://httpbin.org/html')->result;
+        $this->assertSame(str_replace('</head>', '<style>.ads { display:none; }</style></head>', $orig), $proxied);
+    }
+
     function test__remove_accents()
     {
         $this->assertSame(__remove_accents('Çººĺ'), 'Cool');

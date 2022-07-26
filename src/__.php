@@ -3818,6 +3818,74 @@ class __
         return @$tags['description'] ? htmlspecialchars_decode($tags['description']) : '';
     }
 
+    public static function reverse_proxy($url, $receipts, $output_and_die = true)
+    {
+        $receipts_OFF = [
+            'example.js' => [
+                [
+                    'location.origin!==n.origin',
+                    '1===0&&location.origin!==n.origin'
+                ] /* simple replacements (like origin checks) */,
+                [
+                    '/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/',
+                    '%EXAMPLE_URL%?url=$1'
+                ] /* regex is also possible */,
+                ['</head>', '<style>.ads { display:none; }</style></head>'] /* inject your own styles */
+            ],
+            '/regex-match-v.*\.js/' => [
+                /*...*/
+            ]
+        ];
+
+        if (!isset($url) || $url == '') {
+            die();
+        }
+
+        $mime_types = [
+            '.js' => 'text/javascript',
+            '.css' => 'text/css'
+        ];
+        $mime_type = 'text/html';
+        foreach ($mime_types as $mime_types__key => $mime_types__value) {
+            if (stripos($url, $mime_types__key) !== false) {
+                $mime_type = $mime_types__value;
+                break;
+            }
+        }
+
+        if ($output_and_die === true) {
+            header('Content-Type: ' . $mime_type);
+        }
+
+        $response = __curl($url);
+
+        $output = $response->result;
+
+        foreach ($receipts as $receipts__key => $receipts__value) {
+            $is_regex_key = preg_match('/^\/.+\/[a-z]*$/i', $receipts__key);
+            if (
+                $receipts__key === '*' ||
+                ($is_regex_key && preg_match($receipts__key, $url)) ||
+                (!$is_regex_key && stripos($url, $receipts__key) !== false)
+            ) {
+                foreach ($receipts__value['replacements'] as $receipts__value__value) {
+                    $is_regex_value = preg_match('/^\/.+\/[a-z]*$/i', $receipts__value__value[0]);
+                    if ($is_regex_value) {
+                        $output = preg_replace($receipts__value__value[0], $receipts__value__value[1], $output);
+                    } else {
+                        $output = str_replace($receipts__value__value[0], $receipts__value__value[1], $output);
+                    }
+                }
+            }
+        }
+
+        if ($output_and_die === true) {
+            echo $output;
+            die();
+        }
+        return $output;
+    }
+
     public static function curl(
         $url = '',
         $data = null,
