@@ -1241,40 +1241,81 @@ baz'
 
     function test__reverse_proxy()
     {
-        $proxied = __reverse_proxy(
-            'https://httpbin.org/html',
+        foreach (
             [
-                '*' => [
-                    'dom' => function ($DOMXPath) {
-                        $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('bar', 'baz');
-                        return $DOMXPath;
-                    },
-                    'css' => '
-                    .ads { display:none; }
-                ',
-                    'js' => '
-                    alert("ok");
-                ',
-                    'replacements' => [
-                        ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'],
-                        [
-                            '/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/',
-                            __urlWithoutArgs() . '?url=$1'
-                        ],
-                        ['</head>', '<style>.ads { display:none; }</style></head>']
-                    ]
+                [
+                    [
+                        '*' => [
+                            'replacements' => [['</head>', '<style>.ads { display:none; }</style></head>']]
+                        ]
+                    ],
+                    '</head>',
+                    '<style>.ads { display:none; }</style></head>'
                 ],
-                'example.js' => [
-                    /*...*/
+                [
+                    [
+                        '*' => [
+                            'css' => '.ads { display:none; }'
+                        ]
+                    ],
+                    '</head>',
+                    '<style>.ads { display:none; }</style></head>'
                 ],
-                '/regex-match-v.*\.js/' => [
-                    /*...*/
+                [
+                    [
+                        '*' => [
+                            'js' => 'alert("ok");'
+                        ]
+                    ],
+                    '</head>',
+                    '<script>alert("ok");</script></head>'
+                ],
+                [
+                    [
+                        '*' => [
+                            'dom' => function ($DOMXPath) {
+                                $DOMXPath->query('/html/body//div')[0]->setAttribute('data-bar', 'baz');
+                            }
+                        ]
+                    ],
+                    '<div>',
+                    '<div data-bar="baz">'
+                ],
+                [
+                    [
+                        'html' => [
+                            'replacements' => [['</head>', '<style>.ads { display:none; }</style></head>']]
+                        ]
+                    ],
+                    '</head>',
+                    '<style>.ads { display:none; }</style></head>'
+                ],
+                [
+                    [
+                        '/h.{1}ml/' => [
+                            'replacements' => [['</head>', '<style>.ads { display:none; }</style></head>']]
+                        ]
+                    ],
+                    '</head>',
+                    '<style>.ads { display:none; }</style></head>'
+                ],
+                [
+                    [
+                        'foo' => [
+                            'replacements' => [['</head>', '<style>.ads { display:none; }</style></head>']]
+                        ]
+                    ],
+                    '</head>',
+                    '</head>'
                 ]
-            ],
-            false
-        );
-        $orig = __curl('https://httpbin.org/html')->result;
-        $this->assertSame(str_replace('</head>', '<style>.ads { display:none; }</style></head>', $orig), $proxied);
+            ]
+            as $tests__value
+        ) {
+            $this->assertSame(
+                trim(__reverse_proxy('https://httpbin.org/html', $tests__value[0], false)),
+                trim(str_replace($tests__value[1], $tests__value[2], __curl('https://httpbin.org/html')->result))
+            );
+        }
     }
 
     function test__remove_accents()

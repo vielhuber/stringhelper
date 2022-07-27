@@ -1175,7 +1175,7 @@ __reverse_proxy(
     [
         '*' => [
             'dom' => function($DOMXPath) {
-                $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('bar','baz');
+                $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('data-bar','baz');
                 return $DOMXPath;
             },
             'css' => '

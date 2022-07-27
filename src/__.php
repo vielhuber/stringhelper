@@ -3868,12 +3868,37 @@ class __
                 ($is_regex_key && preg_match($receipts__key, $url)) ||
                 (!$is_regex_key && stripos($url, $receipts__key) !== false)
             ) {
-                foreach ($receipts__value['replacements'] as $receipts__value__value) {
-                    $is_regex_value = preg_match('/^\/.+\/[a-z]*$/i', $receipts__value__value[0]);
-                    if ($is_regex_value) {
-                        $output = preg_replace($receipts__value__value[0], $receipts__value__value[1], $output);
-                    } else {
-                        $output = str_replace($receipts__value__value[0], $receipts__value__value[1], $output);
+                if (isset($receipts__value['dom']) && $receipts__value['dom'] != '') {
+                    $domdocument = __str_to_dom($output);
+                    $domxpath = new \DOMXPath($domdocument);
+                    $receipts__value['dom']($domxpath);
+                    $output = __dom_to_str($domdocument);
+                }
+                foreach (['css' => 'style', 'js' => 'script'] as $embed__key => $embed__value) {
+                    if (isset($receipts__value[$embed__key]) && $receipts__value[$embed__key] != '') {
+                        $domdocument = __str_to_dom($output);
+                        $domxpath = new \DOMXPath($domdocument);
+                        $target = $domxpath->query('/html/head');
+                        if ($target->length === 0) {
+                            $target = $domxpath->query('/html/body');
+                        }
+                        if ($target->length === 0) {
+                            continue;
+                        }
+                        $child = $domdocument->createElement($embed__value, '');
+                        $child->nodeValue = $receipts__value[$embed__key];
+                        $target[0]->appendChild($child);
+                        $output = __dom_to_str($domdocument);
+                    }
+                }
+                if (isset($receipts__value['replacements']) && !empty($receipts__value['replacements'])) {
+                    foreach ($receipts__value['replacements'] as $receipts__value__value) {
+                        $is_regex_value = preg_match('/^\/.+\/[a-z]*$/i', $receipts__value__value[0]);
+                        if ($is_regex_value) {
+                            $output = preg_replace($receipts__value__value[0], $receipts__value__value[1], $output);
+                        } else {
+                            $output = str_replace($receipts__value__value[0], $receipts__value__value[1], $output);
+                        }
                     }
                 }
             }
