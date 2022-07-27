@@ -2291,7 +2291,7 @@ data-attr="foo">
                                     [
                                         'tag' => 'tag4',
                                         'attrs' => ['attr6' => 'val6', 'attr7' => 'val7'],
-                                        'content' => 'äöüß'
+                                        'content' => 1337
                                     ]
                                 ]
                             ]
@@ -2302,7 +2302,7 @@ data-attr="foo">
 <tag1 attr1="val1" attr2="val2">
  <tag2 attr3="val3" attr4="val4">äöüß</tag2>
  <tag3 attr5="val5">
-  <tag4 attr6="val6" attr7="val7">äöüß</tag4>
+  <tag4 attr6="val6" attr7="val7">1337</tag4>
  </tag3>
 </tag1>
 '
@@ -2383,12 +2383,12 @@ data-attr="foo">
             $arr2 = __xml2array($filename);
             // normalization (strip out empty content)
             $tests__value[0] = __array_map_deep_all($tests__value[0], function ($a) {
-                if (
-                    is_array($a) &&
-                    array_key_exists('content', $a) &&
-                    ($a['content'] === '' || $a['content'] === [] || $a['content'] === null)
-                ) {
-                    unset($a['content']);
+                if (is_array($a) && array_key_exists('content', $a)) {
+                    if ($a['content'] === '' || $a['content'] === [] || $a['content'] === null) {
+                        unset($a['content']);
+                    } elseif (!is_array($a['content']) && !is_string($a['content'])) {
+                        $a['content'] = (string) $a['content'];
+                    }
                 }
                 return $a;
             });

@@ -4439,7 +4439,11 @@ class __
             if (isset($arr__value['content'])) {
                 if (is_array($arr__value['content']) && !empty($arr__value['content'])) {
                     self::array2xml_rec($arr__value['content'], $xw);
-                } elseif (is_string($arr__value['content'])) {
+                } elseif (!is_array($arr__value['content'])) {
+                    // map to string
+                    if (!is_string($arr__value['content'])) {
+                        $arr__value['content'] = (string) $arr__value['content'];
+                    }
                     xmlwriter_text($xw, $arr__value['content']);
                 }
             }
