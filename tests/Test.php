@@ -1239,6 +1239,21 @@ baz'
         $this->assertSame(__remove_emoji(42), 42);
     }
 
+    function test__mime_type_to_extension()
+    {
+        $this->assertSame(
+            __mime_type_to_extension('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            'xlsx'
+        );
+        $this->assertSame(__extension_to_mime_types('xlsx'), [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel'
+        ]);
+        $this->assertSame(__mime_type_to_extension('foo'), null);
+        $this->assertSame(__extension_to_mime_types('foo'), []);
+        $this->assertSame(count(__extension_to_mime_types('bmp')), 11);
+    }
+
     function test__reverse_proxy()
     {
         foreach (

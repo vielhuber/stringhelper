@@ -1114,6 +1114,20 @@ if (!function_exists('__extract_meta_desc_from_url')) {
     }
 }
 
+if (!function_exists('__mime_type_to_extension')) {
+    function __mime_type_to_extension(...$args)
+    {
+        return \vielhuber\stringhelper\__::mime_type_to_extension(...$args);
+    }
+}
+
+if (!function_exists('__extension_to_mime_types')) {
+    function __extension_to_mime_types(...$args)
+    {
+        return \vielhuber\stringhelper\__::extension_to_mime_types(...$args);
+    }
+}
+
 if (!function_exists('__reverse_proxy')) {
     function __reverse_proxy(...$args)
     {

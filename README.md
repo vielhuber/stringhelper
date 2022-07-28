@@ -1169,6 +1169,10 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 // you can also hijack the current browser session if logged in
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 
+// mime type
+__mime_type_to_extension('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') // 'xlsx'
+__extension_to_mime_types('xlsx') // ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
+
 // reverse proxy
 __reverse_proxy(
     'https://tld.com',
