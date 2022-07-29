@@ -1128,6 +1128,13 @@ if (!function_exists('__extract_meta_desc_from_url')) {
     }
 }
 
+if (!function_exists('__get_mime_type')) {
+    function __get_mime_type(...$args)
+    {
+        return \vielhuber\stringhelper\__::get_mime_type(...$args);
+    }
+}
+
 if (!function_exists('__mime_type_to_extension')) {
     function __mime_type_to_extension(...$args)
     {

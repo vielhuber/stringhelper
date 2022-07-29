@@ -1275,7 +1275,7 @@ baz'
         );
     }
 
-    function test__mime_type_to_extension()
+    function test__mime_type()
     {
         $this->assertSame(
             __mime_type_to_extension('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
@@ -1288,6 +1288,8 @@ baz'
         $this->assertSame(__mime_type_to_extension('foo'), null);
         $this->assertSame(__extension_to_mime_types('foo'), []);
         $this->assertSame(count(__extension_to_mime_types('bmp')), 11);
+        $this->assertSame(__get_mime_type('not-existing.png'), 'image/png');
+        $this->assertSame(__get_mime_type('tests/Test.php'), 'text/x-php; charset=utf-8');
     }
 
     function test__reverse_proxy()

@@ -1176,6 +1176,7 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 
 // mime type
+__get_mime_type('foo.png') // image/png
 __mime_type_to_extension('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') // 'xlsx'
 __extension_to_mime_types('xlsx') // ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
 

@@ -3894,13 +3894,13 @@ class __
             'audio/x-aiff' => 'aif',
             'audio/aiff' => 'aif',
             'audio/x-au' => 'au',
-            'video/x-msvideo' => 'avi',
-            'video/msvideo' => 'avi',
             'video/avi' => 'avi',
+            'video/msvideo' => 'avi',
+            'video/x-msvideo' => 'avi',
             'application/x-troff-msvideo' => 'avi',
+            'application/x-binary' => 'bin',
             'application/macbinary' => 'bin',
             'application/mac-binary' => 'bin',
-            'application/x-binary' => 'bin',
             'application/x-macbinary' => 'bin',
             'image/bmp' => 'bmp',
             'image/x-bmp' => 'bmp',
@@ -3926,8 +3926,8 @@ class __
             'application/x-x509-ca-cert' => 'crt',
             'application/pkix-cert' => 'crt',
             'text/css' => 'css',
-            'text/x-comma-separated-values' => 'csv',
             'text/comma-separated-values' => 'csv',
+            'text/x-comma-separated-values' => 'csv',
             'application/vnd.msexcel' => 'csv',
             'application/x-director' => 'dcr',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
@@ -3941,13 +3941,13 @@ class __
             'application/gpg-keys' => 'gpg',
             'application/x-gtar' => 'gtar',
             'application/x-gzip' => 'gzip',
+            'application/x-binhex40' => 'hqx',
             'application/mac-binhex40' => 'hqx',
             'application/mac-binhex' => 'hqx',
-            'application/x-binhex40' => 'hqx',
             'application/x-mac-binhex40' => 'hqx',
             'text/html' => 'html',
-            'image/x-icon' => 'ico',
             'image/x-ico' => 'ico',
+            'image/x-icon' => 'ico',
             'image/vnd.microsoft.icon' => 'ico',
             'text/calendar' => 'ics',
             'application/java-archive' => 'jar',
@@ -3972,10 +3972,10 @@ class __
             'application/vnd.mif' => 'mif',
             'video/quicktime' => 'mov',
             'video/x-sgi-movie' => 'movie',
+            'audio/mp3' => 'mp3',
             'audio/mpeg' => 'mp3',
             'audio/mpg' => 'mp3',
             'audio/mpeg3' => 'mp3',
-            'audio/mp3' => 'mp3',
             'video/mp4' => 'mp4',
             'video/mpeg' => 'mpeg',
             'application/oda' => 'oda',
@@ -3996,8 +3996,8 @@ class __
             'application/x-x509-user-cert' => 'pem',
             'application/x-pem-file' => 'pem',
             'application/pgp' => 'pgp',
-            'application/x-httpd-php' => 'php',
             'application/php' => 'php',
+            'application/x-httpd-php' => 'php',
             'application/x-php' => 'php',
             'text/php' => 'php',
             'text/x-php' => 'php',
@@ -4069,6 +4069,38 @@ class __
             'multipart/x-zip' => 'zip',
             'text/x-scriptzsh' => 'zsh'
         ];
+    }
+
+    public static function get_mime_type($filename)
+    {
+        $mime = null;
+        // method 1
+        if (function_exists('finfo_open')) {
+            if (file_exists($filename)) {
+                $finfo = finfo_open(FILEINFO_MIME);
+                if ($finfo !== false) {
+                    $mime = finfo_file($finfo, $filename);
+                    finfo_close($finfo);
+                }
+            }
+        }
+        // method 2
+        if (is_null($mime) && function_exists('mime_content_type')) {
+            if (file_exists($filename)) {
+                $mime = mime_content_type($filename);
+            }
+        }
+        // method 3
+        if (is_null($mime)) {
+            $extension = mb_strtolower(explode('.', $filename)[count(explode('.', $filename)) - 1]);
+            $mime_types = self::extension_to_mime_types($extension);
+            if (__x($mime_types)) {
+                $mime = $mime_types[0];
+            } else {
+                $mime = 'application/octet-stream';
+            }
+        }
+        return $mime;
     }
 
     public static function mime_type_to_extension($mime_type)
