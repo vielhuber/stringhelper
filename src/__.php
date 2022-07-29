@@ -817,6 +817,66 @@ class __
         return true;
     }
 
+    public static function email_tokenize_str2arr($str)
+    {
+        $arr = [];
+        $parts = explode(';', $str);
+        foreach ($parts as $parts__value) {
+            $sep = ' ';
+            if (
+                mb_strpos($parts__value, '<') !== false &&
+                (mb_strpos($parts__value, ' ') === false ||
+                    mb_strpos($parts__value, ' ') > mb_strpos($parts__value, '<'))
+            ) {
+                $sep = '<';
+            }
+            $parts2 = explode($sep, trim($parts__value));
+            $email = trim($parts2[0]);
+            $name = null;
+            if (count($parts2) > 1) {
+                unset($parts2[0]);
+                $parts2 = array_values($parts2);
+                $parts2 = implode($sep, $parts2);
+                $parts2 = trim($parts2);
+                if (mb_strpos($parts2, '<') === 0) {
+                    $parts2 = mb_substr($parts2, 1);
+                }
+                if (mb_strpos($parts2, '>') === mb_strlen($parts2) - 1) {
+                    $parts2 = mb_substr($parts2, 0, -1);
+                }
+                $name = $parts2;
+            }
+            $arr[] = ['email' => $email, 'name' => $name];
+        }
+        return $arr;
+    }
+
+    public static function email_tokenize_arr2str($arr)
+    {
+        $str = [];
+        if (__nx($arr) || !is_array($arr) || empty($arr)) {
+            return '';
+        }
+        foreach ($arr as $arr__value) {
+            $str_this = [];
+            if (
+                __nx($arr__value) ||
+                !is_array($arr__value) ||
+                empty($arr__value) ||
+                !array_key_exists('email', $arr__value)
+            ) {
+                continue;
+            }
+            $str_this[] = trim($arr__value['email']);
+            if (array_key_exists('name', $arr__value) && __x($arr__value['name'])) {
+                $str_this[] = '<' . trim($arr__value['name']) . '>';
+            }
+            $str[] = implode(' ', $str_this);
+        }
+        $str = implode('; ', $str);
+        return $str;
+    }
+
     public static function phone_tokenize($value)
     {
         $return = [

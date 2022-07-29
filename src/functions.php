@@ -365,6 +365,20 @@ if (!function_exists('__validate_email')) {
     }
 }
 
+if (!function_exists('__email_tokenize_str2arr')) {
+    function __email_tokenize_str2arr(...$args)
+    {
+        return \vielhuber\stringhelper\__::email_tokenize_str2arr(...$args);
+    }
+}
+
+if (!function_exists('__email_tokenize_arr2str')) {
+    function __email_tokenize_arr2str(...$args)
+    {
+        return \vielhuber\stringhelper\__::email_tokenize_arr2str(...$args);
+    }
+}
+
 if (!function_exists('__phone_tokenize')) {
     function __phone_tokenize(...$args)
     {
