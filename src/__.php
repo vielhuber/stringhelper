@@ -857,6 +857,9 @@ class __
         if (__nx($arr) || !is_array($arr) || empty($arr)) {
             return '';
         }
+        if (array_key_exists('email', $arr)) {
+            $arr = [$arr];
+        }
         foreach ($arr as $arr__value) {
             $str_this = [];
             if (
