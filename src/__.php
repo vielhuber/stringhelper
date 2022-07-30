@@ -4144,15 +4144,11 @@ class __
             die();
         }
 
-        $mime_types = [
-            '.js' => 'text/javascript',
-            '.css' => 'text/css'
-        ];
         $mime_type = 'text/html';
-        foreach ($mime_types as $mime_types__key => $mime_types__value) {
-            if (stripos($url, $mime_types__key) !== false) {
-                $mime_type = $mime_types__value;
-                break;
+        if (mb_strrpos($url, '.') !== false && mb_substr($url, -1) !== '/') {
+            $mime_type = self::get_mime_type(mb_substr($url, mb_strrpos($url, '.')));
+            if ($mime_type === 'application/octet-stream') {
+                $mime_type = 'text/html';
             }
         }
 
@@ -4160,9 +4156,13 @@ class __
             header('Content-Type: ' . $mime_type);
         }
 
-        $response = __curl($url);
+        $response = self::curl($url);
 
         $output = $response->result;
+
+        if (!is_string($output) && is_object($output)) {
+            $output = json_encode($output);
+        }
 
         foreach ($receipts as $receipts__key => $receipts__value) {
             $is_regex_key = preg_match('/^\/.+\/[a-z]*$/i', $receipts__key);
@@ -4171,27 +4171,29 @@ class __
                 ($is_regex_key && preg_match($receipts__key, $url)) ||
                 (!$is_regex_key && stripos($url, $receipts__key) !== false)
             ) {
-                if (isset($receipts__value['dom']) && $receipts__value['dom'] != '') {
-                    $domdocument = __str_to_dom($output);
-                    $domxpath = new \DOMXPath($domdocument);
-                    $receipts__value['dom']($domxpath);
-                    $output = __dom_to_str($domdocument);
-                }
-                foreach (['css' => 'style', 'js' => 'script'] as $embed__key => $embed__value) {
-                    if (isset($receipts__value[$embed__key]) && $receipts__value[$embed__key] != '') {
+                if ($mime_type === 'text/html') {
+                    if (isset($receipts__value['dom']) && $receipts__value['dom'] != '') {
                         $domdocument = __str_to_dom($output);
                         $domxpath = new \DOMXPath($domdocument);
-                        $target = $domxpath->query('/html/head');
-                        if ($target->length === 0) {
-                            $target = $domxpath->query('/html/body');
-                        }
-                        if ($target->length === 0) {
-                            continue;
-                        }
-                        $child = $domdocument->createElement($embed__value, '');
-                        $child->nodeValue = $receipts__value[$embed__key];
-                        $target[0]->appendChild($child);
+                        $receipts__value['dom']($domdocument, $domxpath);
                         $output = __dom_to_str($domdocument);
+                    }
+                    foreach (['css' => 'style', 'js' => 'script'] as $embed__key => $embed__value) {
+                        if (isset($receipts__value[$embed__key]) && $receipts__value[$embed__key] != '') {
+                            $domdocument = __str_to_dom($output);
+                            $domxpath = new \DOMXPath($domdocument);
+                            $target = $domxpath->query('/html/head');
+                            if ($target->length === 0) {
+                                $target = $domxpath->query('/html/body');
+                            }
+                            if ($target->length === 0) {
+                                continue;
+                            }
+                            $child = $domdocument->createElement($embed__value, '');
+                            $child->nodeValue = $receipts__value[$embed__key];
+                            $target[0]->appendChild($child);
+                            $output = __dom_to_str($domdocument);
+                        }
                     }
                 }
                 if (isset($receipts__value['replacements']) && !empty($receipts__value['replacements'])) {

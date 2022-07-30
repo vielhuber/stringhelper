@@ -1290,6 +1290,7 @@ baz'
         $this->assertSame(count(__extension_to_mime_types('bmp')), 11);
         $this->assertSame(__get_mime_type('not-existing.png'), 'image/png');
         $this->assertSame(__get_mime_type('tests/Test.php'), 'text/x-php; charset=utf-8');
+        $this->assertSame(__get_mime_type('.php'), 'application/php');
     }
 
     function test__reverse_proxy()

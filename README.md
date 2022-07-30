@@ -1185,21 +1185,20 @@ __reverse_proxy(
     'https://tld.com',
     [
         '*' => [
-            'dom' => function($DOMXPath) {
+            'replacements' => [
+                ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'], /* simple replacements (like origin checks) */
+                ['/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/', __urlWithoutArgs().'?url=$1'], /* regex is also possible */
+                ['</head>', '<style>.ads { display:none; }</style></head>'] /* dirty inject */
+            ],
+            'dom' => function($DOMDocument, $DOMXPath) {
                 $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('data-bar','baz');
-                return $DOMXPath;
             },
             'css' => '
                 .ads { display:none; }
             ',
             'js' => '
                 alert("ok");
-            ',
-            'replacements' => [
-                ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'], /* simple replacements (like origin checks) */
-                ['/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/', __urlWithoutArgs().'?url=$1'], /* regex is also possible */
-                ['</head>', '<style>.ads { display:none; }</style></head>'] /* dirty inject */
-            ],
+            '
         ],
         'example.js' => [/*...*/],
         '/regex-match-v.*\.js/' => [/*...*/]
