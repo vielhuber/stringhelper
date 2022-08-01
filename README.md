@@ -1225,7 +1225,7 @@ else {
                 ],
                 'dom' => function($DOMDocument, $DOMXPath) {
                     $el = $DOMDocument->createElement('marquee', '');
-                    $el->nodeValue = 'Hello world!';
+                    $el->nodeValue = 'Hello world.';
                     $DOMXPath->query('/html/body//*[@id="js-lang-list-button"]')[0]->appendChild($el);
                 },
                 'css' => '
