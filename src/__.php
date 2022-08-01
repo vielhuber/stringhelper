@@ -4123,23 +4123,6 @@ class __
 
     public static function reverse_proxy($url, $receipts, $output_and_die = true)
     {
-        $receipts_OFF = [
-            'example.js' => [
-                [
-                    'location.origin!==n.origin',
-                    '1===0&&location.origin!==n.origin'
-                ] /* simple replacements (like origin checks) */,
-                [
-                    '/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/',
-                    '%EXAMPLE_URL%?url=$1'
-                ] /* regex is also possible */,
-                ['</head>', '<style>.ads { display:none; }</style></head>'] /* inject your own styles */
-            ],
-            '/regex-match-v.*\.js/' => [
-                /*...*/
-            ]
-        ];
-
         if (!isset($url) || $url == '') {
             die();
         }

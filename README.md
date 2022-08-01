@@ -1204,6 +1204,45 @@ __reverse_proxy(
         '/regex-match-v.*\.js/' => [/*...*/]
     ]
 )
+// full example
+require_once(__DIR__ . '/vendor/autoload.php');
+if( !isset($_GET['url']) ) {
+    echo '<!DOCTYPE html><head><title>proxy test</title></head><body>
+        <iframe
+        src="'.__urlWithoutArgs().'?url=https://www.wikipedia.org/"
+        height="800"
+        width="600"
+        ></iframe>
+    </body></html>';
+}
+else {
+    __reverse_proxy(
+        $_GET['url'],
+        [
+            '*' => [
+                'replacements' => [
+                    ['/(\/static|portal\/)/', __urlWithoutArgs().'?url=https://wikipedia.org/$1'],
+                ],
+                'dom' => function($DOMDocument, $DOMXPath) {
+                    $el = $DOMDocument->createElement('marquee', '');
+                    $el->nodeValue = 'Hello world!';
+                    $DOMXPath->query('/html/body//*[@id="js-lang-list-button"]')[0]->appendChild($el);
+                },
+                'css' => '
+                    .pure-button { box-shadow: 0px 0px 20px 20px #f800ff }
+                ',
+                'js' => '
+                    alert("proxied!");
+                '
+            ],
+            '/l10n\/.+\.json/' => [
+                'replacements' => [
+                    ['Die freie Enzyklop\u00e4die', 'Die coole Enzyklop\u00e4die']
+                ],
+            ]
+        ]
+    );
+}
 
 // check basic auth
 __has_basic_auth('https://vielhuber.de'); // false
