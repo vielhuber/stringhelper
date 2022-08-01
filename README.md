@@ -1181,67 +1181,49 @@ __mime_type_to_extension('application/vnd.openxmlformats-officedocument.spreadsh
 __extension_to_mime_types('xlsx') // ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
 
 // reverse proxy
-__reverse_proxy(
-    'https://tld.com',
-    [
-        '*' => [
-            'replacements' => [
-                ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'], /* simple replacements (like origin checks) */
-                ['/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/', __urlWithoutArgs().'?url=$1'], /* regex is also possible */
-                ['</head>', '<style>.ads { display:none; }</style></head>'] /* dirty inject */
-            ],
-            'dom' => function($DOMDocument, $DOMXPath) {
-                $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('data-bar','baz');
-            },
-            'css' => '
-                .ads { display:none; }
-            ',
-            'js' => '
-                alert("ok");
-            '
+__reverse_proxy('https://tld.com', [
+    '*' => [
+        'replacements' => [
+            ['location.origin!==n.origin', '1===0&&location.origin!==n.origin'], /* simple replacements (like origin checks) */
+            ['/(https:\/\/.+\.example\.net\/assets\/js\/another\/asset.js)/', __urlWithoutArgs().'?url=$1'], /* regex is also possible */
+            ['</head>', '<style>.ads { display:none; }</style></head>'] /* dirty inject */
         ],
-        'example.js' => [/*...*/],
-        '/regex-match-v.*\.js/' => [/*...*/]
-    ]
-)
+        'dom' => function($DOMDocument, $DOMXPath) {
+            $DOMXPath->query('/html/body//*[@id="foo"]')[0]->setAttribute('data-bar','baz');
+        },
+        'css' => '.ads { display:none; }',
+        'js' => 'alert("ok");'
+    ],
+    'example.js' => [/*...*/],
+    '/regex-match-v.*\.js/' => [/*...*/]
+])
 // full example
 require_once(__DIR__ . '/vendor/autoload.php');
 if( !isset($_GET['url']) ) {
     echo '<!DOCTYPE html><head><title>proxy test</title></head><body>
-        <iframe
-        src="'.__urlWithoutArgs().'?url=https://www.wikipedia.org/"
-        height="800"
-        width="600"
-        ></iframe>
+        <iframe src="'.__urlWithoutArgs().'?url=https://www.wikipedia.org/" height="800" width="600"></iframe>
     </body></html>';
 }
 else {
-    __reverse_proxy(
-        $_GET['url'],
-        [
-            '*' => [
-                'replacements' => [
-                    ['/(\/static|portal\/)/', __urlWithoutArgs().'?url=https://wikipedia.org/$1'],
-                ],
-                'dom' => function($DOMDocument, $DOMXPath) {
-                    $el = $DOMDocument->createElement('marquee', '');
-                    $el->nodeValue = 'Hello world.';
-                    $DOMXPath->query('/html/body//*[@id="js-lang-list-button"]')[0]->appendChild($el);
-                },
-                'css' => '
-                    .pure-button { box-shadow: 0px 0px 20px 20px #f800ff }
-                ',
-                'js' => '
-                    alert("proxied!");
-                '
+    __reverse_proxy($_GET['url'], [
+        '*' => [
+            'replacements' => [
+                ['/(\/static|portal\/)/', __urlWithoutArgs().'?url=https://wikipedia.org/$1'],
             ],
-            '/l10n\/.+\.json/' => [
-                'replacements' => [
-                    ['Die freie Enzyklop\u00e4die', 'Die coole Enzyklop\u00e4die']
-                ],
-            ]
+            'dom' => function($DOMDocument, $DOMXPath) {
+                $el = $DOMDocument->createElement('marquee', '');
+                $el->nodeValue = 'Hello world.';
+                $DOMXPath->query('/html/body//*[@id="js-lang-list-button"]')[0]->appendChild($el);
+            },
+            'css' => '.pure-button { box-shadow: 0px 0px 20px 20px #f800ff }',
+            'js' => 'alert("proxied!");'
+        ],
+        '/l10n\/.+\.json/' => [
+            'replacements' => [
+                ['Die freie Enzyklop\u00e4die', 'Die coole Enzyklop\u00e4die']
+            ],
         ]
-    );
+    ]);
 }
 
 // check basic auth
