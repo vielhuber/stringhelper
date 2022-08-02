@@ -4708,8 +4708,23 @@ class __
         return true;
     }
 
-    public static function array2xml($arr, $filename = null, $prolog_attrs = null)
+    public static function array2xml($arr, $filename = null, $prolog_attrs = null, $strip_empty_tags = false)
     {
+        if ($strip_empty_tags === true) {
+            $arr = self::array_filter_recursive_all($arr, function ($value, $key, $key_chain) {
+                if ($key === 'content' && self::nx($value)) {
+                    return true;
+                }
+                if (is_array($value) && array_key_exists('content', $value) && self::nx($value['content'])) {
+                    return true;
+                }
+                if (is_array($value) && array_key_exists('tag', $value) && !array_key_exists('content', $value)) {
+                    return true;
+                }
+                return false;
+            });
+        }
+
         $xw = xmlwriter_open_memory();
         xmlwriter_set_indent($xw, 1);
         $res = xmlwriter_set_indent_string($xw, ' ');

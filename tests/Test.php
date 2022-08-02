@@ -2493,6 +2493,56 @@ data-attr="foo">
                 __d($arr2, $tests__value[0]);
             }
         }
+
+        $this->assertSame(
+            '<?xml version="1.0" encoding="UTF-8"?>
+<tag1 attr1="val1" attr2="val2">
+ <tag2ok attr3="val3" attr4="val4">ok</tag2ok>
+</tag1>
+',
+            __array2xml(
+                [
+                    [
+                        'tag' => 'tag1',
+                        'attrs' => ['attr1' => 'val1', 'attr2' => 'val2'],
+                        'content' => [
+                            [
+                                'tag' => 'tag2',
+                                'attrs' => ['attr3' => 'val3', 'attr4' => 'val4'],
+                                'content' => ''
+                            ],
+                            [
+                                'tag' => 'tag2ok',
+                                'attrs' => ['attr3' => 'val3', 'attr4' => 'val4'],
+                                'content' => 'ok'
+                            ],
+                            [
+                                'tag' => 'tag2',
+                                'attrs' => ['attr3' => 'val3', 'attr4' => 'val4'],
+                                'content' => ''
+                            ],
+                            [
+                                'tag' => 'tag3',
+                                'attrs' => ['attr5' => 'val5', 'attr5' => 'val5'],
+                                'content' => [
+                                    [
+                                        'tag' => 'tag4',
+                                        'attrs' => ['attr6' => 'val6', 'attr7' => 'val7'],
+                                        'content' => [
+                                            'tag' => 'tag4',
+                                            'content' => ''
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                null,
+                null,
+                true
+            )
+        );
     }
 
     function test__iptc()
