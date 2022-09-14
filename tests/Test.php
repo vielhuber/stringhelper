@@ -2365,6 +2365,25 @@ data-attr="foo">
         $this->assertSame(__is_utf8(__to_utf8(utf8_decode('This is a test älüß!'))), true);
     }
 
+    function test__filter_url_args()
+    {
+        $this->assertSame(
+            __filter_url_args('https://ai?foo=bar&bar=baz&baz=foo', ['foo', 'bar']),
+            'https://ai?baz=foo'
+        );
+        $this->assertSame(
+            __filter_url_args('https://ai/?foo=bar&bar=baz&baz=foo', ['foo', 'bar']),
+            'https://ai/?baz=foo'
+        );
+        $this->assertSame(__filter_url_args('https://ai', ['foo', 'bar']), 'https://ai');
+        $this->assertSame(
+            __filter_url_args('https://ai?foo=bar&bar=baz&baz=foo', ['bar', 'baz', 'gnarr']),
+            'https://ai?foo=bar'
+        );
+        $this->assertSame(__filter_url_args(null, null), null);
+        $this->assertSame(__filter_url_args(false, ''), false);
+    }
+
     function test__array2xml()
     {
         $tests = [

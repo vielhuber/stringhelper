@@ -883,6 +883,13 @@ if (!function_exists('__post')) {
     }
 }
 
+if (!function_exists('__filter_url_args')) {
+    function __filter_url_args(...$args)
+    {
+        return \vielhuber\stringhelper\__::filter_url_args(...$args);
+    }
+}
+
 if (!function_exists('__expl')) {
     function __expl(...$args)
     {

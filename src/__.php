@@ -3220,6 +3220,29 @@ class __
         return $_POST[$var];
     }
 
+    public static function filter_url_args($url, $filter = [])
+    {
+        if (__nx($url) || __nx($filter)) {
+            return $url;
+        }
+        if (!empty($filter) && strpos($url, '?') !== false) {
+            $url_components = parse_url($url);
+            if (!empty($url_components) && @$url_components['query'] != '') {
+                parse_str($url_components['query'], $params);
+                $params_new = [];
+                foreach ($params as $params__key => $params__value) {
+                    if (in_array($params__key, $filter)) {
+                        continue;
+                    }
+                    $params_new[$params__key] = $params__value;
+                }
+                $query_new = http_build_query($params_new, '', '&');
+                $url = str_replace('?' . $url_components['query'], $query_new != '' ? '?' . $query_new : '', $url);
+            }
+        }
+        return $url;
+    }
+
     public static function expl($separator = ' ', $array = [], $pos = 0)
     {
         return current(array_slice(explode($separator, $array), $pos, 1));
