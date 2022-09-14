@@ -1118,7 +1118,7 @@ __get('page_id') // '13'
 __post('foo') // bar
 
 // filter get parameters from url
-__filter_url_args('https://github.com/vielhuber/stringhelper?foo=bar&bar=baz&baz=foo', ['foo','bar']) // https://github.com/vielhuber/stringhelper?baz=foo
+__filter_url_args('https://ai?foo=bar&bar=baz&baz=foo', ['foo','bar']) // https://ai?baz=foo
 
 // clean up post/get from malicious content using filter_var_array
 __clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
