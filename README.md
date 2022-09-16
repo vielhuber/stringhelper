@@ -989,7 +989,9 @@ system_message('bar', 'error')
 $system_messages = system_messages(); // must be before any output
 echo '<!DOCTYPE html><html lang="de"><body>';
 foreach ($system_messages as $system_messages__value) {
-    echo '<div class="system-message system-message--'.$system_messages__value->type.'">'.$system_messages__value->content.'</div>';
+    echo '<div class="system-message system-message--'.$system_messages__value->type.'">';
+    echo $system_messages__value->content;
+    echo '</div>';
 }
 echo '</body></html>';
 
