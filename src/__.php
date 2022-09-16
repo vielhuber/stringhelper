@@ -3082,6 +3082,26 @@ class __
         self::clean_up_post();
     }
 
+    public static function read_env($filename)
+    {
+        $env_data = [];
+        if (file_exists($filename)) {
+            $env_content = file_get_contents($filename);
+            $env_content = preg_split('/\r\n|\n|\r/', $env_content);
+            if (!empty($env_content)) {
+                foreach ($env_content as $env_content__value) {
+                    if (strpos($env_content__value, '=') === false) {
+                        continue;
+                    }
+                    $env_data[explode('=', $env_content__value)[0]] = trim(
+                        trim(explode('=', $env_content__value)[1], '"')
+                    );
+                }
+            }
+        }
+        return $env_data;
+    }
+
     public static function is_repetitive_action($name = '', $minutes = 60, $whitelist = [])
     {
         if (!isset($_SERVER['REMOTE_ADDR']) || $_SERVER['REMOTE_ADDR'] == '') {

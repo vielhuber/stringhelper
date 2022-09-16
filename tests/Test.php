@@ -866,6 +866,18 @@ baz'
         $this->assertSame(__ip_is_on_spamlist(false), false);
     }
 
+    function test__read_env()
+    {
+        $this->assertSame(__read_env('tests/assets/.env'), [
+            'DB_HOST' => 'localhost',
+            'DB_DATABASE' => 'foo',
+            'DB_USERNAME' => 'root',
+            'DB_PASSWORD' => 'root',
+            'ÖÖÖÖÖÖ' => 'ß04590+rlü# pdw´´ß´´A ---'
+        ]);
+        $this->assertSame(__read_env('tests/assets/.env_NA'), []);
+    }
+
     function test__is_repetitive_action()
     {
         $default = $_SERVER['REMOTE_ADDR'];

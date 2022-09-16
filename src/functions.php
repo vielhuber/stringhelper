@@ -848,6 +848,13 @@ if (!function_exists('__clean_up')) {
     }
 }
 
+if (!function_exists('__read_env')) {
+    function __read_env(...$args)
+    {
+        return \vielhuber\stringhelper\__::read_env(...$args);
+    }
+}
+
 if (!function_exists('__is_repetitive_action')) {
     function __is_repetitive_action(...$args)
     {

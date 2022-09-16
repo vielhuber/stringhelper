@@ -1125,6 +1125,9 @@ __clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
 __clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
 __clean_up() // same as __clean_up_get() and __clean_up_post()
 
+// read .env file (poor mans version)
+__read_env('.env') // ['foo' => 'bar', 'bar' => 'baz']
+
 // check for repetitive actions, e.g. to prevent mass spam mailing (based on hashed client ip address)
 __is_repetitive_action(); // any action
 __is_repetitive_action('name'); // specific action
