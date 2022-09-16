@@ -3281,6 +3281,30 @@ class __
         die();
     }
 
+    public static function system_message($content, $type = 'success')
+    {
+        if (isset($_COOKIE['system_messages']) && $_COOKIE['system_messages'] != '') {
+            $messages = unserialize(base64_decode($_COOKIE['system_messages']));
+        } else {
+            $messages = [];
+        }
+        $messages[] = (object) ['content' => $content, 'type' => $type];
+        $messages = base64_encode(serialize($messages));
+        setcookie('system_messages', $messages, time() + 60 * 60 * 24 * 1, '/');
+        $_COOKIE['system_messages'] = $messages;
+    }
+
+    public static function system_messages()
+    {
+        $messages = [];
+        if (isset($_COOKIE['system_messages']) && $_COOKIE['system_messages'] != '') {
+            $messages = unserialize(base64_decode($_COOKIE['system_messages']));
+            unset($_COOKIE['system_messages']);
+            setcookie('system_messages', '', time() - 3600, '/');
+        }
+        return $messages;
+    }
+
     public static function redirect_to($url = null, $code_or_seconds = null, $mode = 'php')
     {
         if ($mode === 'php') {

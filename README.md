@@ -981,6 +981,18 @@ __redirect_to('https://test.de', 301) // with "Moved permanently"
 __redirect_to('https://test.de', 302) // with "Moved temporarily"
 __redirect_to('https://test.de', 7, 'html') // redirect in 7 seconds (via html)
 
+// show system messages
+// -- in your controller
+system_message('foo')
+system_message('bar', 'error')
+// -- in your view
+$system_messages = system_messages(); // must be before any output
+echo '<!DOCTYPE html><html lang="de"><body>';
+foreach ($system_messages as $system_messages__value) {
+    echo '<div class="system-message system-message--'.$system_messages__value->type.'">'.$system_messages__value->content.'</div>';
+}
+echo '</body></html>';
+
 // throw exceptions (with arrays as messages)
 try {
     __exception('foo');

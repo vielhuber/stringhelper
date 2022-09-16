@@ -911,6 +911,20 @@ if (!function_exists('__prg')) {
     }
 }
 
+if (!function_exists('__system_message')) {
+    function __system_message(...$args)
+    {
+        return \vielhuber\stringhelper\__::system_message(...$args);
+    }
+}
+
+if (!function_exists('__system_messages')) {
+    function __system_messages(...$args)
+    {
+        return \vielhuber\stringhelper\__::system_messages(...$args);
+    }
+}
+
 if (!function_exists('__redirect_to')) {
     function __redirect_to(...$args)
     {
