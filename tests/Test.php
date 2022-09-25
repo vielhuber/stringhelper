@@ -1285,6 +1285,10 @@ baz'
             __email_tokenize_arr2str(['email' => 'mail1@tld.com', 'name' => 'Max Mustermann']),
             'Max Mustermann <mail1@tld.com>'
         );
+        // we also accept this mistake
+        $this->assertSame(__email_tokenize_str2arr('mail1@tld.com <Max Mustermann>'), [
+            ['email' => 'mail1@tld.com', 'name' => 'Max Mustermann']
+        ]);
     }
 
     function test__mime_type()

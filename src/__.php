@@ -841,6 +841,10 @@ class __
                 $name = $email;
                 $email = $parts2;
             }
+            // also accept wrong order
+            if (self::validate_email($name) && !self::validate_email($email)) {
+                [$name, $email] = [$email, $name];
+            }
             $arr[] = ['email' => $email, 'name' => $name];
         }
         return $arr;
