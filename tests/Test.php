@@ -1253,7 +1253,7 @@ baz'
 
     function test__email_tokenize()
     {
-        $this->assertSame(__email_tokenize_str2arr('mail1@tld.com <Max Mustermann>; mail2@tld.com'), [
+        $this->assertSame(__email_tokenize_str2arr('Max Mustermann <mail1@tld.com>; mail2@tld.com'), [
             ['email' => 'mail1@tld.com', 'name' => 'Max Mustermann'],
             ['email' => 'mail2@tld.com', 'name' => null]
         ]);
@@ -1262,28 +1262,28 @@ baz'
                 ['email' => 'mail1@tld.com', 'name' => 'Max Mustermann'],
                 ['email' => 'mail2@tld.com', 'name' => null]
             ]),
-            'mail1@tld.com <Max Mustermann>; mail2@tld.com'
+            'Max Mustermann <mail1@tld.com>; mail2@tld.com'
         );
         foreach (
             [
                 'mail1@tld.com',
-                'mail1@tld.com <Max Mustermann>',
-                'mail1@tld.com <Max Mustermann>; mail2@tld.com',
-                'mail1@tld.com <Max Mustermann>; mail2@tld.com <Max Mustermann>'
+                'Max Mustermann <mail1@tld.com>',
+                'Max Mustermann <mail1@tld.com>; mail2@tld.com',
+                'Max Mustermann <mail1@tld.com>; Eva Musterfrau <mail2@tld.com>'
             ]
             as $tests__value
         ) {
             $this->assertSame(__email_tokenize_arr2str(__email_tokenize_str2arr($tests__value)), $tests__value);
         }
-        $this->assertSame(__email_tokenize_str2arr('mail1@tld.com<Max Mustermann>'), [
+        $this->assertSame(__email_tokenize_str2arr('Max Mustermann<mail1@tld.com>'), [
             ['email' => 'mail1@tld.com', 'name' => 'Max Mustermann']
         ]);
-        $this->assertSame(__email_tokenize_str2arr('mail1@tld.com<Maxüß´0ß#äö>'), [
+        $this->assertSame(__email_tokenize_str2arr('Maxüß´0ß#äö<mail1@tld.com>'), [
             ['email' => 'mail1@tld.com', 'name' => 'Maxüß´0ß#äö']
         ]);
         $this->assertSame(
             __email_tokenize_arr2str(['email' => 'mail1@tld.com', 'name' => 'Max Mustermann']),
-            'mail1@tld.com <Max Mustermann>'
+            'Max Mustermann <mail1@tld.com>'
         );
     }
 

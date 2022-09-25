@@ -492,11 +492,11 @@ __phone_area_codes_mobile() // ['151', ...]
 __phone_is_landline('(0)89-12 456 666') // true
 __phone_is_mobile('(0)89-12 456 666') // false
 
-// parse cumulated mail string
-__email_tokenize_str2arr('mail1@tld.com <Max Mustermann>; mail2@tld.com')
+// parse cumulated mail string (RFC5322)
+__email_tokenize_str2arr('Max Mustermann <mail1@tld.com>; mail2@tld.com')
 // [['email' => 'mail1@tld.com', 'name' => 'Max Mustermann'],['email' => 'mail2@tld.com', 'name' => null]];
 __email_tokenize_arr2str([['email' => 'mail1@tld.com', 'name' => 'Max Mustermann'],['email' => 'mail2@tld.com', 'name' => null]]);
-// 'mail1@tld.com <Max Mustermann>; mail2@tld.com'
+// 'Max Mustermann <mail1@tld.com>; mail2@tld.com'
 
 // normalize url
 __url_normalize('www.tld.com') // https://www.tld.com

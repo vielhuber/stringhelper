@@ -822,15 +822,9 @@ class __
         $arr = [];
         $parts = explode(';', $str);
         foreach ($parts as $parts__value) {
-            $sep = ' ';
-            if (
-                mb_strpos($parts__value, '<') !== false &&
-                (mb_strpos($parts__value, ' ') === false ||
-                    mb_strpos($parts__value, ' ') > mb_strpos($parts__value, '<'))
-            ) {
-                $sep = '<';
-            }
+            $sep = '<';
             $parts2 = explode($sep, trim($parts__value));
+
             $email = trim($parts2[0]);
             $name = null;
             if (count($parts2) > 1) {
@@ -844,7 +838,8 @@ class __
                 if (mb_strpos($parts2, '>') === mb_strlen($parts2) - 1) {
                     $parts2 = mb_substr($parts2, 0, -1);
                 }
-                $name = $parts2;
+                $name = $email;
+                $email = $parts2;
             }
             $arr[] = ['email' => $email, 'name' => $name];
         }
@@ -870,10 +865,13 @@ class __
             ) {
                 continue;
             }
-            $str_this[] = trim($arr__value['email']);
             if (array_key_exists('name', $arr__value) && __x($arr__value['name'])) {
-                $str_this[] = '<' . trim($arr__value['name']) . '>';
+                $str_this[] = trim($arr__value['name']);
+                $str_this[] = '<' . trim($arr__value['email']) . '>';
+            } else {
+                $str_this[] = trim($arr__value['email']);
             }
+
             $str[] = implode(' ', $str_this);
         }
         $str = implode('; ', $str);
