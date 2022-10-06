@@ -953,6 +953,10 @@ __is_integer(null) // false
 __is_integer(false) // false
 __is_integer(true) // false
 
+// convert float to nice ratio
+__float_to_ratio(1920/600) // 16:5
+__float_to_ratio(1/3) // 1:3
+
 // output arguments in a reader friendly way
 __o($var)
 __o($var1, $var2, $var3)

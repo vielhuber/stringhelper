@@ -701,6 +701,13 @@ if (!function_exists('__is_integer')) {
     }
 }
 
+if (!function_exists('__float_to_ratio')) {
+    function __float_to_ratio(...$args)
+    {
+        return \vielhuber\stringhelper\__::float_to_ratio(...$args);
+    }
+}
+
 if (!function_exists('__extract')) {
     function __extract(...$args)
     {

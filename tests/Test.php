@@ -2835,6 +2835,15 @@ data-attr="foo">
         $this->assertSame(__remove_newlines(''), '');
     }
 
+    function test__float_to_ratio()
+    {
+        $this->assertSame(__float_to_ratio(1920 / 600), '16:5');
+        $this->assertSame(__float_to_ratio(1 / 3), '1:3');
+        $this->assertSame(__float_to_ratio(1), '1:1');
+        $this->assertSame(__float_to_ratio(16 / 9), '16:9');
+        $this->assertSame(__float_to_ratio(pi()), '355:113');
+    }
+
     function test__true_false_one()
     {
         $this->assertSame(__true_one(true, true, true), true);
