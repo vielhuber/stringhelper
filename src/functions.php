@@ -1247,6 +1247,13 @@ if (!function_exists('__uuid')) {
     }
 }
 
+if (!function_exists('__validate_uuid')) {
+    function __validate_uuid(...$args)
+    {
+        return \vielhuber\stringhelper\__::validate_uuid(...$args);
+    }
+}
+
 if (!function_exists('__url')) {
     function __url(...$args)
     {

@@ -4590,6 +4590,16 @@ class __
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
+    public static function validate_uuid($str)
+    {
+        if (__nx($str)) {
+            return false;
+        }
+        return preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $str)
+            ? true
+            : false;
+    }
+
     public static function url()
     {
         if (self::nx(@$_SERVER['HTTP_HOST']) || self::nx(@$_SERVER['REQUEST_URI'])) {

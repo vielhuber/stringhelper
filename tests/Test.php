@@ -2879,6 +2879,18 @@ data-attr="foo">
         $this->assertSame(__decrypt('unknown'), 'unknown');
     }
 
+    function test__uuid()
+    {
+        $this->assertSame(__uuid() === __uuid(), false);
+        $this->assertSame(strlen(__uuid()) === 36, true);
+        $this->assertSame(substr_count(__uuid(), '-') === 4, true);
+
+        for ($i = 0; $i < 100; $i++) {
+            $this->assertSame(__validate_uuid(__uuid()), true);
+        }
+        $this->assertSame(__validate_uuid('19028aea-ccb6ß4b32-9e5d-1243c3a77bb1'), false);
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -3021,10 +3033,6 @@ data-attr="foo">
         $this->assertSame(__array_unique(0), 0);
         $this->assertSame(__array_unique(true), true);
         $this->assertSame(__array_unique(false), false);
-
-        $this->assertSame(__uuid() === __uuid(), false);
-        $this->assertSame(strlen(__uuid()) === 36, true);
-        $this->assertSame(substr_count(__uuid(), '-') === 4, true);
 
         $this->assertSame(__pushId() === __pushId(), false);
         $this->assertSame(strlen(__pushId()) === 20, true);

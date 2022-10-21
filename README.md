@@ -674,6 +674,9 @@ foreach($b as $b__value) { if(array_key_exists(__encode_data($b__value['foo'],$b
 // generate uuid/guid v4
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
 
+// validate uuid
+__validate_uuid('19028aea-ccb6-4b32-9e5d-1243c3a77bb1') // true
+
 // create lexicographically ordered string ids like in firebase
 __pushId() // -LMsSyccg4OavBCZxRAA
 
