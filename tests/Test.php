@@ -2860,6 +2860,25 @@ data-attr="foo">
         $this->assertSame(__false_one(false), true);
     }
 
+    function test__encrypt_decrypt()
+    {
+        define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319'); // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
+        $this->assertSame(__decrypt(__encrypt('foo')), 'foo');
+        $this->assertSame(__decrypt(__encrypt('bar', 'known_salt')), 'bar');
+
+        $this->assertSame(__decrypt_poor(__encrypt_poor('foo')), 'foo');
+        $token = __encrypt_poor('bar');
+        $this->assertSame(__decrypt_poor($token, true), 'bar');
+        $this->assertSame(__decrypt_poor($token, true), null);
+
+        define('ENCRYPTION_FOLDER', __DIR__ . '/');
+        $token = __encrypt_poor('bar');
+        $this->assertSame(__decrypt_poor($token, true), 'bar');
+        $this->assertSame(__decrypt_poor($token, true), null);
+
+        $this->assertSame(__decrypt('unknown'), 'unknown');
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);
@@ -3306,20 +3325,6 @@ data-attr="foo">
 
         $this->assertSame(__url(), 'https://github.com/vielhuber/stringhelper');
         $this->assertSame(__baseurl(), 'https://github.com');
-
-        define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319'); // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
-        $this->assertSame(__decrypt(__encrypt('foo')), 'foo');
-        $this->assertSame(__decrypt(__encrypt('bar', 'known_salt')), 'bar');
-
-        $this->assertSame(__decrypt_poor(__encrypt_poor('foo')), 'foo');
-        $token = __encrypt_poor('bar');
-        $this->assertSame(__decrypt_poor($token, true), 'bar');
-        $this->assertSame(__decrypt_poor($token, true), null);
-
-        define('ENCRYPTION_FOLDER', __DIR__ . '/');
-        $token = __encrypt_poor('bar');
-        $this->assertSame(__decrypt_poor($token, true), 'bar');
-        $this->assertSame(__decrypt_poor($token, true), null);
 
         $this->assertSame(count(__files_in_folder()) >= 6, true);
         $this->assertSame(count(__files_in_folder('.')) >= 6, true);

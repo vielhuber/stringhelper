@@ -5319,6 +5319,9 @@ class __
 
     public static function decrypt($string)
     {
+        if (count(explode(':', $string)) !== 2) {
+            return $string;
+        }
         $salt = explode(':', $string)[1];
         $string = explode(':', $string)[0]; // read salt from entry
         return openssl_decrypt(
