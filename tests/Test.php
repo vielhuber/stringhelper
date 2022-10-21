@@ -2890,6 +2890,11 @@ data-attr="foo">
         }
         $this->assertSame(__validate_uuid('19028aea-ccb6ß4b32-9e5d-1243c3a77bb1'), false);
         $this->assertSame(__validate_uuid('00000000-0000-0000-0000-00000001aecd'), false);
+        $this->assertSame(__validate_uuid('00000000-0000-0000-0000-00000001aecd', false), true);
+        $this->assertSame(__validate_uuid('00000000-0000-0000-0000-000000000000', false), true);
+        $this->assertSame(__validate_uuid(null), false);
+        $this->assertSame(__validate_uuid(true), false);
+        $this->assertSame(__validate_uuid(false), false);
     }
 
     function test__helpers()
