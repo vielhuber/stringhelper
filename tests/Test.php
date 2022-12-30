@@ -521,7 +521,11 @@ EOD;
                 [
                     [
                         'Das ist das <span>Haus</span> vom Nikolaus',
-                        ['This is the <span>house</span> of Santa Claus', 'This is Santa\'s <span>house</span>'],
+                        [
+                            'This is the <span>house</span> of Santa Claus',
+                            'This is Santa\'s <span>house</span>',
+                            'This is Santa&#39;s <span>house</span>'
+                        ],
                         'de',
                         'en'
                     ],
@@ -529,7 +533,8 @@ EOD;
                         'Das ist das <span class="notranslate">Haus</span> vom Nikolaus',
                         [
                             'This is the <span class="notranslate">Haus</span> of Santa Claus',
-                            'This is Santa\'s <span class="notranslate">Haus</span>'
+                            'This is Santa\'s <span class="notranslate">Haus</span>',
+                            'This is Santa&#39;s <span class="notranslate">Haus</span>'
                         ],
                         'de',
                         'en'
@@ -624,7 +629,7 @@ EOD;
                     }
                 }
                 if ($match === false) {
-                    $this->assertSame($examples__key, $trans);
+                    $this->assertSame($examples__value[1], $trans);
                 }
             }
         }
@@ -679,6 +684,7 @@ House'
                 [
                     'To be or not to be; that is the question here.',
                     'To be or not to be; that\'s the question here.',
+                    'To be or not to be; that is the question.',
                     'Being or not being; that is the question here.'
                 ]
             );
@@ -692,6 +698,7 @@ House'
                 ),
                 [
                     'Since <a>ES6,</a> <a>VanillaJS</a> has been on an equal footing with the original <a>rock jQuery</a> in virtually all areas and is now far superior.',
+                    'Since <a>ES6</a>, <a>VanillaJS</a> is almost equal to the veteran <a>jQuery</a> in almost all areas and is now far superior.',
                     '<a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
                     '<a>VanillaJS</a> is since <a>ES6</a> virtually equal to the veteran <a>jQuery</a> in all areas and is now far superior.',
                     'Since <a>ES6</a><a>, VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.'
@@ -707,6 +714,7 @@ House'
                 ),
                 [
                     'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on an equal footing with the original <a p="3">rock jQuery</a> in virtually all areas and is now far superior.',
+                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> is almost equal to the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.',
                     '<a p="1">VanillaJS</a> has been equal to the original rock <a p="3">jQuery</a> since <a p="2">ES6</a> in virtually all areas.',
                     '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually equal to the veteran <a p="3">jQuery</a> in all areas and is now far superior.',
                     'Since <a p="2">ES6</a><a p="1">, VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in virtually all areas and is now far superior.'
@@ -757,6 +765,7 @@ House'
                 [
                     'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in all areas and is now far superior.',
                     'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
+                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
                     '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually in all areas the equal of the Urgestein <a p="3">jQuery</a> and now far superior.'
                 ]
             );
@@ -923,8 +932,8 @@ baz'
                 [null, null, null, null],
                 [false, null, null, null],
                 ['foo', null, null, null],
-                [[date(strtotime('now - 20 years - 30 days')), date(strtotime('now - 10 years'))], 10, 526, 3682],
-                [[date(strtotime('now - 20 years')), date(strtotime('now - 10 years'))], 10, 521, 3652],
+                [[date(strtotime('now - 20 years - 30 days')), date(strtotime('now - 10 years'))], 10, 526, 3683],
+                [[date(strtotime('now - 20 years')), date(strtotime('now - 10 years'))], 10, 521, 3653],
                 [[date(strtotime('now - 20 years - 30 days')), null], 20, 1047, 7335],
                 [[date(strtotime('now - 20 years - 30 days')), ''], 20, 1047, 7335],
                 [[date(strtotime('now - 20 years - 30 days')), 'foo'], null, null, null],
@@ -1029,7 +1038,7 @@ baz'
         );
         $this->assertSame($response->url, 'https://httpbingo.org/get');
 
-        if (isset($_SERVER['PROXY'])) {
+        if (isset($_SERVER['PROXY']) && $_SERVER['PROXY'] != '') {
             $response = __curl(
                 'https://httpbingo.org/ip',
                 null,
@@ -1075,7 +1084,7 @@ baz'
         $this->assertSame(__timestamp_excel_to_str(36526.3440972222), '2000-01-01 08:15:30');
         $this->assertSame(__timestamp_str_to_excel('2000-01-01'), 36526);
         $this->assertSame(__timestamp_str_to_excel('2000-01-01 00:00:00'), 36526);
-        $this->assertSame(__timestamp_str_to_excel('2000-01-01 08:15:30'), 36526.3440972222);
+        $this->assertSame(round(__timestamp_str_to_excel('2000-01-01 08:15:30'), 8), round(36526.3440972222, 8));
     }
 
     function test_has_basic_auth()
@@ -1343,7 +1352,7 @@ baz'
                 [
                     [
                         '*' => [
-                            'dom' => function ($DOMXPath) {
+                            'dom' => function ($DOMDocument, $DOMXPath) {
                                 $DOMXPath->query('/html/body//div')[0]->setAttribute('data-bar', 'baz');
                             }
                         ]
@@ -1512,11 +1521,11 @@ string'
     {
         $this->assertSame(
             __extract_title_from_url('https://vielhuber.de'),
-            'David Vielhuber > Full-Stack Developer aus München'
+            'Vielhuber David > Full-Stack Developer aus München'
         );
         $this->assertSame(
             __extract_title_from_url('https://vielhuber.de/'),
-            'David Vielhuber > Full-Stack Developer aus München'
+            'Vielhuber David > Full-Stack Developer aus München'
         );
         $this->assertSame(__extract_title_from_url(null), '');
         $this->assertSame(__extract_title_from_url(true), '');

@@ -1590,7 +1590,7 @@ if (!class_exists('__empty_helper')) {
         {
             return 0;
         }
-        public function jsonSerialize()
+        public function jsonSerialize() : mixed
         {
             return null;
         }
