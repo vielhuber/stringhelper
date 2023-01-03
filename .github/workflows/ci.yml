@@ -12,16 +12,19 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout Code
+            - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: Install composer and dependencies
+            - name: Install libraries
+              run: sudo apt-get install -y diffutils exiftool
+
+            - name: Install composer
               uses: php-actions/composer@v6
               with:
                   php_version: '8.1'
                   version: 2.x
 
-            - name: PHPUnit Tests
+            - name: PHPUnit tests
               uses: php-actions/phpunit@v3
               with:
                   php_extensions: gd
