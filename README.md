@@ -1,4 +1,4 @@
-![build status](https://github.com/vielhuber/stringhelper/actions/workflows/ci.yml/badge.svg)
+[![build status](https://github.com/vielhuber/stringhelper/actions/workflows/ci.yml/badge.svg)](https://github.com/vielhuber/stringhelper/actions)
 
 # ⛏️ stringhelper ⛏️
 
