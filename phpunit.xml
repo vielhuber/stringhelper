@@ -3,7 +3,7 @@
     bootstrap="src/__.php"
     colors="true"
     verbose="true"
-    stopOnFailure="true"
+    stopOnFailure="false"
 >
     <testsuites>
         <testsuite
