@@ -3086,7 +3086,7 @@ class __
     {
         if (self::x(@$_GET)) {
             foreach ($_GET as $key => $value) {
-                $_GET[$key] = filter_var($value, FILTER_SANITIZE_STRING);
+                $_GET[$key] = filter_var(strip_tags($value), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             }
         }
     }
@@ -3095,7 +3095,7 @@ class __
     {
         if (self::x(@$_POST)) {
             foreach ($_POST as $key => $value) {
-                $_POST[$key] = filter_var($value, FILTER_SANITIZE_STRING);
+                $_POST[$key] = filter_var(strip_tags($value), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             }
         }
     }
@@ -4971,7 +4971,11 @@ class __
         $filename2 = sys_get_temp_dir() . '/' . md5(uniqid());
         file_put_contents($filename1, $str1);
         file_put_contents($filename2, $str2);
-        $diff = trim(shell_exec('diff ' . $filename1 . ' ' . $filename2));
+        $result = shell_exec('diff ' . $filename1 . ' ' . $filename2);
+        if ($result === null) {
+            $result = '';
+        }
+        $diff = trim($result);
         @unlink($filename1);
         @unlink($filename2);
         return $diff;

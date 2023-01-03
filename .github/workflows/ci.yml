@@ -17,15 +17,6 @@ jobs:
 
             - name: Install composer and dependencies
               uses: php-actions/composer@v6
-              with:
-                  working_dir: ./
-                  version: 1
-                  php_version: 7.3
 
             - name: PHPUnit Tests
               uses: php-actions/phpunit@v3
-              with:
-                  php_extensions: xdebug
-                  bootstrap: ./src/__.php
-                  configuration: ./phpunit.xml
-                  php_version: '7.3'

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/vielhuber/stringhelper.svg?branch=master)](https://travis-ci.com/vielhuber/stringhelper)
+![build status](https://github.com/vielhuber/stringhelper/actions/workflows/ci.yml/badge.svg)
 
 # ⛏️ stringhelper ⛏️
 
