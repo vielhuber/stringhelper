@@ -13,8 +13,8 @@ jobs:
             - name: Install composer and dependencies
               uses: php-actions/composer@v6
               with:
-                  working_dir: ./src
-                  composer_version: 1
+                  working_dir: ./
+                  version: 1
                   php_version: 7.3
 
             - name: PHPUnit Tests
