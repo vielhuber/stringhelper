@@ -2,7 +2,7 @@
 use vielhuber\stringhelper\__;
 
 // github actions error
-if (@$_SERVER['CI'] === true || @$_SERVER['CI'] === 'true' || @$_SERVER['CI'] == '1') {
+if (@$_SERVER['CI'] == '1') {
     include_once './src/functions.php';
 }
 
