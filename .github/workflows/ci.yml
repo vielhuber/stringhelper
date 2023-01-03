@@ -19,8 +19,9 @@ jobs:
               uses: php-actions/composer@v6
               with:
                   php_version: '8.1'
-                  php_extensions: gd
                   version: 2.x
 
             - name: PHPUnit Tests
               uses: php-actions/phpunit@v3
+              with:
+                  php_extensions: gd
