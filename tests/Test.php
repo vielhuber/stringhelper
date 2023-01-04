@@ -3541,21 +3541,29 @@ bar fuu; yoo//'
         );
         @unlink('tests/assets/file.txt');
 
-        $this->assertSame(
-            __line_endings_weak_equals(
-                __diff(
-                    'foo
+        $diff = __diff(
+            'foo
 bar
 baz',
-                    'foo
+            'foo
 barz
 baz'
-                ),
+        );
+        $this->assertSame(
+            __line_endings_weak_equals(
+                $diff,
                 '2c2
 < bar
 ---
 > barz'
-            ),
+            ) ||
+                strpos(
+                    $diff,
+                    ' foo
+-bar
++barz
+ baz'
+                ) !== false,
             true
         );
 

@@ -4971,7 +4971,7 @@ class __
         $filename2 = sys_get_temp_dir() . '/' . md5(uniqid());
         file_put_contents($filename1, $str1);
         file_put_contents($filename2, $str2);
-        $result = shell_exec('diff --normal ' . $filename1 . ' ' . $filename2);
+        $result = shell_exec('diff ' . $filename1 . ' ' . $filename2);
         var_dump([$filename1, $filename2, $result]);
         if ($result === null) {
             $result = '';
