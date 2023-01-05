@@ -4972,7 +4972,6 @@ class __
         file_put_contents($filename1, $str1);
         file_put_contents($filename2, $str2);
         $result = shell_exec('diff ' . $filename1 . ' ' . $filename2);
-        var_dump([$filename1, $filename2, $result]);
         if ($result === null) {
             $result = '';
         }
