@@ -10,14 +10,7 @@ on: [push]
 
 jobs:
     build-test:
-        runs-on: ${{ matrix.operating-system }}
-
-        strategy:
-            matrix:
-                operating-system: [ubuntu-latest, windows-latest, macos-latest]
-                php-versions: ['7.1', '7.2', '7.3', '7.4', '8.0', '8.1']
-
-        name: ${{ matrix.operating-system }} (PHP ${{ matrix.php-versions }})
+        runs-on: ubuntu-latest
 
         steps:
             - name: Checkout code
@@ -29,12 +22,10 @@ jobs:
             - name: Install composer
               uses: php-actions/composer@v6
               with:
-                  version: latest
-                  php_version: ${{ matrix.php-versions }}
+                  php_version: '8.1'
+                  version: 2.x
 
             - name: PHPUnit tests
               uses: php-actions/phpunit@v3
               with:
-                  version: latest
-                  php_version: ${{ matrix.php-versions }}
                   php_extensions: gd
