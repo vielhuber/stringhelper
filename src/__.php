@@ -4958,8 +4958,8 @@ class __
         $command .=
             " '$ a\\" .
             (self::os() === 'mac'
-                ? "'$'
-'' "
+                ? "
+"
                 : '') .
             self::sed_escape($str) .
             "'";
