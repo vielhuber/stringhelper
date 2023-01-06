@@ -4955,15 +4955,17 @@ class __
             return;
         }
         $command = 'sed -i' . (self::os() === 'mac' ? " ''" : '') . '';
-        $command .=
-            " '$ a\\" .
-            (self::os() === 'mac'
-                ? "
-"
-                : '') .
-            self::sed_escape($str) .
-            "'";
-        $command .= ' "' . $filename . '"';
+        if (self::os() === 'mac') {
+            $command .=
+                " 'a\\
+" .
+                self::sed_escape($str) .
+                "'";
+            $command .= ' "' . $filename . '"';
+        } else {
+            $command .= " '$ a\\" . self::sed_escape($str) . "'";
+            $command .= ' "' . $filename . '"';
+        }
         shell_exec($command);
     }
 
