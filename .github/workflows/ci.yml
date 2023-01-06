@@ -44,3 +44,4 @@ jobs:
 
             - name: PHPUnit
               run: ./vendor/bin/phpunit --filter test__helpers
+              shell: bash
