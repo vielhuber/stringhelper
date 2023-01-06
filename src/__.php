@@ -4955,7 +4955,7 @@ class __
             return;
         }
         $command = 'sed -i' . (self::os() === 'mac' ? " ''" : '') . '';
-        $command .= " '$ a\\" . (self::os() === 'mac' ? "'$'\\n'' " : '') . self::sed_escape($str) . "'";
+        $command .= " '$ a\\" . (self::os() === 'mac' ? "'$'\\\\n'' " : '') . self::sed_escape($str) . "'";
         $command .= ' "' . $filename . '"';
         shell_exec($command);
     }
