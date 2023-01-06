@@ -3530,7 +3530,6 @@ foo'
         file_put_contents('tests/assets/file.txt', 'foo');
         __sed_prepend('baz gnarr; /\yoo&', 'tests/assets/file.txt');
         __sed_append('bar fuu; yoo//', 'tests/assets/file.txt');
-        print_r(file_get_contents('tests/assets/file.txt'));
         $this->assertSame(
             __line_endings_weak_equals(
                 trim(file_get_contents('tests/assets/file.txt')),

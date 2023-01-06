@@ -4964,14 +4964,27 @@ class __
             $command .= ' "' . $filename . '"';
             echo PHP_EOL;
             echo PHP_EOL;
+            echo '###############################';
+            echo PHP_EOL;
+            echo PHP_EOL;
             echo $command;
+            echo PHP_EOL;
+            echo PHP_EOL;
+            shell_exec($command);
+            echo '###############################';
+            echo PHP_EOL;
+            echo PHP_EOL;
+            echo file_get_contents($filename);
+            echo PHP_EOL;
+            echo PHP_EOL;
+            echo '###############################';
             echo PHP_EOL;
             echo PHP_EOL;
         } else {
             $command .= " '$ a\\" . self::sed_escape($str) . "'";
             $command .= ' "' . $filename . '"';
+            shell_exec($command);
         }
-        shell_exec($command);
     }
 
     public static function sed_escape($str)
