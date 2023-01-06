@@ -4962,6 +4962,11 @@ class __
                 self::sed_escape($str) .
                 "'";
             $command .= ' "' . $filename . '"';
+            echo PHP_EOL;
+            echo PHP_EOL;
+            echo $command;
+            echo PHP_EOL;
+            echo PHP_EOL;
         } else {
             $command .= " '$ a\\" . self::sed_escape($str) . "'";
             $command .= ' "' . $filename . '"';
