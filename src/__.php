@@ -4956,7 +4956,7 @@ class __
         }
         $command = '';
         if (self::os() === 'mac') {
-            $command .= 'echo "' . $str . '" >> "' . $filename . '"';
+            $command .= 'printf "\n' . $str . '" >> "' . $filename . '"';
             echo PHP_EOL;
             echo PHP_EOL;
             echo '###############################';
