@@ -4954,14 +4954,9 @@ class __
         if (!file_exists($filename)) {
             return;
         }
-        $command = 'sed -i' . (self::os() === 'mac' ? " ''" : '') . '';
+        $command = '';
         if (self::os() === 'mac') {
-            $command .=
-                " 'a\\
-" .
-                self::sed_escape($str) .
-                "'";
-            $command .= ' "' . $filename . '"';
+            $command .= 'echo "' . $str . '" >> "' . $filename . '"';
             echo PHP_EOL;
             echo PHP_EOL;
             echo '###############################';
@@ -4981,6 +4976,7 @@ class __
             echo PHP_EOL;
             echo PHP_EOL;
         } else {
+            $command = 'sed -i' . (self::os() === 'mac' ? " ''" : '') . '';
             $command .= " '$ a\\" . self::sed_escape($str) . "'";
             $command .= ' "' . $filename . '"';
             shell_exec($command);

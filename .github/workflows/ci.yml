@@ -23,6 +23,15 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v3
 
+            - name: Libraries
+              run: |
+                  if [ "$RUNNER_OS" == "Linux" ]; then
+                       sudo apt-get install coreutils
+                  elif [ "$RUNNER_OS" == "macOS" ]; then
+                       brew install coreutils
+                  fi
+              shell: bash
+
             - name: PHP
               uses: shivammathur/setup-php@v2
               with:
