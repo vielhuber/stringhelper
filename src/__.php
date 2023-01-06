@@ -4956,25 +4956,8 @@ class __
         }
         $command = '';
         if (self::os() === 'mac') {
+            // sed does not work properly here in all environments
             $command .= 'printf "\n' . $str . '" >> "' . $filename . '"';
-            echo PHP_EOL;
-            echo PHP_EOL;
-            echo '###############################';
-            echo PHP_EOL;
-            echo PHP_EOL;
-            echo $command;
-            echo PHP_EOL;
-            echo PHP_EOL;
-            shell_exec($command);
-            echo '###############################';
-            echo PHP_EOL;
-            echo PHP_EOL;
-            echo file_get_contents($filename);
-            echo PHP_EOL;
-            echo PHP_EOL;
-            echo '###############################';
-            echo PHP_EOL;
-            echo PHP_EOL;
         } else {
             $command = 'sed -i' . (self::os() === 'mac' ? " ''" : '') . '';
             $command .= " '$ a\\" . self::sed_escape($str) . "'";

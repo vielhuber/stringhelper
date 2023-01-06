@@ -14,8 +14,8 @@ jobs:
 
         strategy:
             matrix:
-                operating-system: ['macos-latest']
-                php-versions: ['7.4']
+                operating-system: ['ubuntu-latest', 'macos-latest']
+                php-versions: ['7.4', '8.0', '8.1']
 
         name: ${{ matrix.operating-system }} (PHP ${{ matrix.php-versions }})
 
