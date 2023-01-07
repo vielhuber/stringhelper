@@ -43,4 +43,4 @@ jobs:
               run: composer install --no-interaction
 
             - name: PHPUnit
-              run: ./vendor/bin/phpunit --filter test__helpers
+              run: ./vendor/bin/phpunit
