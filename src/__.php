@@ -4962,8 +4962,8 @@ class __
             $command = 'sed -i' . (self::os() === 'mac' ? " ''" : '') . '';
             $command .= " '$ a\\" . self::sed_escape($str) . "'";
             $command .= ' "' . $filename . '"';
-            shell_exec($command);
         }
+        shell_exec($command);
     }
 
     public static function sed_escape($str)
