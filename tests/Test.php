@@ -1,11 +1,6 @@
 <?php
 use vielhuber\stringhelper\__;
 
-// github actions error
-if (@$_SERVER['CI'] == 'true') {
-    include_once './src/functions.php';
-}
-
 class Test extends \PHPUnit\Framework\TestCase
 {
     public static function setUpBeforeClass(): void
