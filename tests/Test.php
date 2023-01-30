@@ -2906,6 +2906,16 @@ data-attr="foo">
         $this->assertSame(__validate_uuid(false), false);
     }
 
+    function test__input()
+    {
+        $this->assertSame(__input(), null);
+        $_POST['foo'] = 'bar';
+        $this->assertSame(__input(), ['foo' => 'bar']);
+        $this->assertSame(__input('foo'), 'bar');
+        $this->assertSame(__input('bar'), null);
+        $this->assertSame(__input('bar', 'baz'), 'baz');
+    }
+
     function test__helpers()
     {
         $this->assertSame(__x_all('foo', 'bar', null), false);

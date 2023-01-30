@@ -1273,6 +1273,11 @@ __json_response([
     200 // status code
 ]);
 
+// get input on backend (from x-www-form-urlencoded, application/json, ...)
+__input();
+__input('specific-field');
+__input('unknown-field', 'fallback');
+
 // extract all urls of (potentially nested) remote sitemap
 __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml') // ['https://vielhuber.de','https://vielhuber.de/impressum/', ...]
 __extract_urls_from_sitemap('https://foo:bar@vielhuber.de/sitemap_index.xml') // supports basic auth

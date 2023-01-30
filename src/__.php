@@ -3868,6 +3868,44 @@ class __
         die();
     }
 
+    public static function input($key = null, $fallback = null)
+    {
+        $p1 = $_POST;
+        $p2 = json_decode(file_get_contents('php://input'), true);
+        parse_str(file_get_contents('php://input'), $p3);
+        if (isset($p3) && !empty($p3)) {
+            foreach ($p3 as $p3__key => $p3__value) {
+                unset($p3[$p3__key]);
+                $p3[str_replace('amp;', '', $p3__key)] = $p3__value;
+            }
+        }
+        if ($key !== null && $key != '') {
+            if (isset($p1) && !empty($p1) && array_key_exists($key, $p1)) {
+                return $p1[$key];
+            }
+            if (isset($p2) && !empty($p2) && array_key_exists($key, $p2)) {
+                return $p2[$key];
+            }
+            if (isset($p3) && !empty($p3) && array_key_exists($key, $p3)) {
+                return $p3[$key];
+            }
+        } else {
+            if (isset($p1) && !empty($p1)) {
+                return $p1;
+            }
+            if (isset($p2) && !empty($p2)) {
+                return $p2;
+            }
+            if (isset($p3) && !empty($p3)) {
+                return $p3;
+            }
+        }
+        if ($fallback !== null) {
+            return $fallback;
+        }
+        return null;
+    }
+
     public static function extract_urls_from_sitemap($url, $basic_auth = null, $include_last_modified = false)
     {
         // auto detect basic auth

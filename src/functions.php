@@ -1142,6 +1142,13 @@ if (!function_exists('__json_response')) {
     }
 }
 
+if (!function_exists('__input')) {
+    function __input(...$args)
+    {
+        return \vielhuber\stringhelper\__::input(...$args);
+    }
+}
+
 if (!function_exists('__extract_urls_from_sitemap')) {
     function __extract_urls_from_sitemap(...$args)
     {
@@ -1590,7 +1597,7 @@ if (!class_exists('__empty_helper')) {
         {
             return 0;
         }
-        public function jsonSerialize() : mixed
+        public function jsonSerialize(): mixed
         {
             return null;
         }
