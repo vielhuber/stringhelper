@@ -853,7 +853,7 @@ class __
     public static function email_tokenize_arr2str($arr)
     {
         $str = [];
-        if (__nx($arr) || !is_array($arr) || empty($arr)) {
+        if (self::nx($arr) || !is_array($arr) || empty($arr)) {
             return '';
         }
         if (array_key_exists('email', $arr)) {
@@ -862,14 +862,14 @@ class __
         foreach ($arr as $arr__value) {
             $str_this = [];
             if (
-                __nx($arr__value) ||
+                self::nx($arr__value) ||
                 !is_array($arr__value) ||
                 empty($arr__value) ||
                 !array_key_exists('email', $arr__value)
             ) {
                 continue;
             }
-            if (array_key_exists('name', $arr__value) && __x($arr__value['name'])) {
+            if (array_key_exists('name', $arr__value) && self::x($arr__value['name'])) {
                 $str_this[] = trim($arr__value['name']);
                 $str_this[] = '<' . trim($arr__value['email']) . '>';
             } else {
@@ -2262,7 +2262,7 @@ class __
                 $args_a = $args($a);
                 $args_b = $args($b);
                 foreach ($args_a as $args__key => $args__value) {
-                    if (__v($args_a[$args__key][0]) != __v($args_b[$args__key][0])) {
+                    if (self::v($args_a[$args__key][0]) != self::v($args_b[$args__key][0])) {
                         return $position[
                             self::array_multisort_get_order(
                                 $args_a[$args__key][0],
@@ -2468,7 +2468,7 @@ class __
             if (is_string($arr) && $arr === $random_str) {
                 $arr = [];
             }
-            $arr = __remove_empty($arr, null, function ($arr__value) use ($random_str) {
+            $arr = self::remove_empty($arr, null, function ($arr__value) use ($random_str) {
                 return $arr__value === $random_str;
             });
         }
@@ -3266,7 +3266,7 @@ class __
 
     public static function filter_url_args($url, $filter = [])
     {
-        if (__nx($url) || __nx($filter)) {
+        if (self::nx($url) || self::nx($filter)) {
             return $url;
         }
         if (!empty($filter) && strpos($url, '?') !== false) {
@@ -3672,7 +3672,7 @@ class __
 
     public static function remove_leading_zeros($str)
     {
-        if (__nx($str)) {
+        if (self::nx($str)) {
             return $str;
         }
         if (!is_string($str)) {
@@ -4223,7 +4223,7 @@ class __
         if (is_null($mime)) {
             $extension = mb_strtolower(explode('.', $filename)[count(explode('.', $filename)) - 1]);
             $mime_types = self::extension_to_mime_types($extension);
-            if (__x($mime_types)) {
+            if (self::x($mime_types)) {
                 $mime = $mime_types[0];
             } else {
                 $mime = 'application/octet-stream';
@@ -4285,14 +4285,14 @@ class __
             ) {
                 if ($mime_type === 'text/html') {
                     if (isset($receipts__value['dom']) && $receipts__value['dom'] != '') {
-                        $domdocument = __str_to_dom($output);
+                        $domdocument = self::str_to_dom($output);
                         $domxpath = new \DOMXPath($domdocument);
                         $receipts__value['dom']($domdocument, $domxpath);
-                        $output = __dom_to_str($domdocument);
+                        $output = self::dom_to_str($domdocument);
                     }
                     foreach (['css' => 'style', 'js' => 'script'] as $embed__key => $embed__value) {
                         if (isset($receipts__value[$embed__key]) && $receipts__value[$embed__key] != '') {
-                            $domdocument = __str_to_dom($output);
+                            $domdocument = self::str_to_dom($output);
                             $domxpath = new \DOMXPath($domdocument);
                             $target = $domxpath->query('/html/head');
                             if ($target->length === 0) {
@@ -4304,7 +4304,7 @@ class __
                             $child = $domdocument->createElement($embed__value, '');
                             $child->nodeValue = $receipts__value[$embed__key];
                             $target[0]->appendChild($child);
-                            $output = __dom_to_str($domdocument);
+                            $output = self::dom_to_str($domdocument);
                         }
                     }
                 }
@@ -4630,7 +4630,7 @@ class __
 
     public static function validate_uuid($str, $strict_check = true)
     {
-        if (__nx($str)) {
+        if (self::nx($str)) {
             return false;
         }
         if ($strict_check === true) {
@@ -5231,7 +5231,7 @@ class __
     {
         if (
             !is_string($filename) ||
-            __nx($filename) ||
+            self::nx($filename) ||
             !file_exists($filename) ||
             !in_array(self::file_extension($filename), ['jpg', 'jpeg'])
         ) {
@@ -5243,7 +5243,7 @@ class __
         $size = getimagesize($filename, $info);
         if (isset($info['APP13'])) {
             $iptc = iptcparse($info['APP13']);
-            if (__x($iptc)) {
+            if (self::x($iptc)) {
                 if ($field !== null && !array_key_exists($field, $iptc)) {
                     return null;
                 }
@@ -5273,7 +5273,7 @@ class __
 
         if (
             !is_string($filename) ||
-            __nx($filename) ||
+            self::nx($filename) ||
             !file_exists($filename) ||
             !in_array(self::file_extension($filename), ['jpg', 'jpeg'])
         ) {
