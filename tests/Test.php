@@ -567,7 +567,8 @@ EOD;
                             '<a>VanillaJS</a> has been on <a>par with</a> the veteran <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
                             'VanillaJS has been on <a>par with</a><a>the veteran jQuery</a> in almost all areas <a>since ES6</a> and is now far superior.',
                             'Since <a>ES6</a> , <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.',
-                            '<a>Since ES6,</a> VanillaJS has been on a <a>par with</a> <a>the veteran jQuery</a> in almost all areas and is now far superior.'
+                            '<a>Since ES6,</a> VanillaJS has been on a <a>par with</a> <a>the veteran jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -578,7 +579,8 @@ EOD;
                             '<a p="1">VanillaJS</a> has been on <a p="1">par with</a> the veteran <a p="3">jQuery</a> in almost all areas since <a p="2">ES6</a> and is now far superior.',
                             'VanillaJS has been on <a p="1">par with</a> <a p="3">the veteran jQuery</a> in almost all areas <a p="2">since ES6</a> and is now far superior.',
                             'Since <a p="2">ES6</a> , <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.',
-                            '<a p="2">Since ES6,</a> VanillaJS has been on a <a p="1">par with</a> <a p="3">the veteran jQuery</a> in almost all areas and is now far superior.'
+                            '<a p="2">Since ES6,</a> VanillaJS has been on a <a p="1">par with</a> <a p="3">the veteran jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -591,12 +593,37 @@ EOD;
                         'en'
                     ],
                     ['<b>Hund</b><span>Haus</span>', '<b>Dog</b><span>House</span>', 'de', 'en'],
-                    ['Haus. Welt.', 'House. World.', 'de', 'en'],
-                    ['<i>Haus.</i><b>Hund.</b>', '<i>House.</i><b>Dog.</b>', 'de', 'en'],
-                    ['<b>Haus.</b><span>Hund.</span>', '<b>House.</b><span>Dog.</span>', 'de', 'en'],
-                    ['<b>Haus.</b><i>Hund.</i>', '<b>House.</b><i>Dog.</i>', 'de', 'en'],
-                    ['<b>Haus.</b><b>Hund.</b>', '<b>House.</b><b>Dog.</b>', 'de', 'en'],
-                    ['<i>Haus.</i><i>Hund.</i>', '<i>House.</i><i>Dog.</i>', 'de', 'en'],
+                    ['Haus. Welt.', ['House. World.', 'A house. World.'], 'de', 'en'],
+                    [
+                        '<i>Haus.</i><b>Hund.</b>',
+                        ['<i>House.</i><b>Dog.</b>', '<i>A house.</i><b>Dog.</b>'],
+                        'de',
+                        'en'
+                    ],
+                    [
+                        '<b>Haus.</b><span>Hund.</span>',
+                        ['<b>House.</b><span>Dog.</span>', '<b>A house.</b><span>Dog.</span>'],
+                        'de',
+                        'en'
+                    ],
+                    [
+                        '<b>Haus.</b><i>Hund.</i>',
+                        ['<b>House.</b><i>Dog.</i>', '<b>A house.</b><i>Dog.</i>'],
+                        'de',
+                        'en'
+                    ],
+                    [
+                        '<b>Haus.</b><b>Hund.</b>',
+                        ['<b>House.</b><b>Dog.</b>', '<b>A house.</b><b>Dog.</b>'],
+                        'de',
+                        'en'
+                    ],
+                    [
+                        '<i>Haus.</i><i>Hund.</i>',
+                        ['<i>House.</i><i>Dog.</i>', '<i>A house.</i><i>Dog.</i>'],
+                        'de',
+                        'en'
+                    ],
                     [
                         '<b p="1">Haus</b><span p="2">Hund</span>',
                         '<b p="1">House</b><span p="2">Dog</span>',
