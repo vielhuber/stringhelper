@@ -518,11 +518,20 @@ __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '*
 
 // chatgpt
 __chatgpt(
-    'Wer wurde 2018 Fußball-Weltmeister?',
-    0.2, // temperature
-    'gpt-3.5-turbo', // model
-    '**API Key**'
+    prompt: 'Wer wurde 2018 Fußball-Weltmeister?',
+    temperature: 0.2, // controls the randomness of the text generated
+    model: 'gpt-3.5-turbo',
+    api_key: '**API Key**'
 )
+// ['session_id' => 42, 'response' => '...'] */
+__chatgpt(
+    prompt: 'Was habe ich vorher gefragt?',
+    session_id: 42,
+    temperature: 0.2,
+    model: 'gpt-3.5-turbo',
+    api_key: '**API Key**'
+)
+// ['session_id' => 42, 'response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"']
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med

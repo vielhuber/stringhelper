@@ -1985,16 +1985,36 @@ class __
         return $response->result[0]->translations[0]->text;
     }
 
-    public static function chatgpt($prompt, $temperature = 0.2, $model = 'gpt-3.5-turbo', $api_key = null)
-    {
+    public static function chatgpt(
+        $prompt,
+        $temperature = 0.2,
+        $model = 'gpt-3.5-turbo',
+        $api_key = null,
+        $session_id = null
+    ) {
+        if ($session_id = null) {
+            $session_id = md5(uniqid(mt_rand(), true));
+        }
+        $filename = sys_get_temp_dir() . '/' . $session_id . '.txt';
+        if (!file_exists($filename)) {
+            file_put_contents($filename, serialize([]));
+        }
+        $history = unserialize(file_get_contents($filename));
+        $history[] = $prompt;
+        file_put_contents($filename, serialize($history));
+
         if (self::nx($prompt) || self::nx($api_key)) {
-            return null;
+            return ['session_id' => $session_id, 'response' => null];
+        }
+        $messages = [];
+        foreach ($history as $history__value) {
+            $messages[] = ['role' => 'user', 'content' => $history__value];
         }
         $response = self::curl(
             'https://api.openai.com/v1/chat/completions',
             [
                 'model' => $model,
-                'messages' => [['role' => 'user', 'content' => $prompt]],
+                'messages' => $messages,
                 'temperature' => $temperature
             ],
             'POST',
@@ -2010,9 +2030,12 @@ class __
             self::nx($response->result->choices[0]->message) ||
             self::nx($response->result->choices[0]->message->content)
         ) {
-            return null;
+            return ['session_id' => $session_id, 'response' => null];
         }
-        return $response->result->choices[0]->message->content;
+        return [
+            'session_id' => $session_id,
+            'response' => $response->result->choices[0]->message->content
+        ];
     }
 
     public static function translate_deepl($str, $from_lng, $to_lng, $api_key, $proxy = null)

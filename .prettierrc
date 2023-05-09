@@ -4,6 +4,6 @@
     "printWidth": 120,
     "trailingComma": "none",
     "trailingCommaPHP": false,
-    "phpVersion": "7.2",
+    "phpVersion": "8.1",
     "arrowParens": "avoid"
 }

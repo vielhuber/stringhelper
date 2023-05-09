@@ -471,41 +471,41 @@ class Test extends \PHPUnit\Framework\TestCase
         }
 
         $in = <<<'EOD'
-<!DOCTYPE html>
-<html>
-<head>
-    <script>
-    var baz;
-    </script>
-    <title>test</title>
-    <script>
-    console.log("<h1>hello</h1>");
-    var foo = '<a href="#"></a>';
-    var bar = "<a href=\"#\"></a>";
-    </script>
-</head>
-<body>
-</body>
-</html>
-EOD;
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script>
+            var baz;
+            </script>
+            <title>test</title>
+            <script>
+            console.log("<h1>hello</h1>");
+            var foo = '<a href="#"></a>';
+            var bar = "<a href=\"#\"></a>";
+            </script>
+        </head>
+        <body>
+        </body>
+        </html>
+        EOD;
         $out = <<<'EOD'
-<!DOCTYPE html>
-<html>
-<head>
-    <script>
-    var baz;
-    </script>
-    <title>test</title>
-    <script>
-    console.log("<h1>hello<\/h1>");
-    var foo = '<a href="#"><\/a>';
-    var bar = "<a href=\"#\"><\/a>";
-    </script>
-</head>
-<body>
-</body>
-</html>
-EOD;
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script>
+            var baz;
+            </script>
+            <title>test</title>
+            <script>
+            console.log("<h1>hello<\/h1>");
+            var foo = '<a href="#"><\/a>';
+            var bar = "<a href=\"#\"><\/a>";
+            </script>
+        </head>
+        <body>
+        </body>
+        </html>
+        EOD;
         $this->assertSame(__minify_html(__dom_to_str(__str_to_dom($in))), __minify_html($out));
 
         $domdocument = __str_to_dom('Test');
@@ -770,8 +770,28 @@ House'
 
     function test__chatgpt()
     {
-        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.2, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY']);
-        $this->assertSame($response, 'Die französische Nationalmannschaft wurde 2018 Fußball-Weltmeister.');
+        $response = __chatgpt(
+            prompt: 'Wer wurde 2018 Fußball-Weltmeister?',
+            temperature: 0.2,
+            model: 'gpt-3.5-turbo',
+            api_key: @$_SERVER['OPENAI_API_KEY']
+        );
+        //__d($response);
+        fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        $this->assertSame(
+            stripos($response['response'], 'Frankreich') !== false ||
+                stripos($response['response'], 'französisch') !== false,
+            true
+        );
+        $response = __chatgpt(
+            prompt: 'Was habe ich vorher gefragt?',
+            session_id: $response['session_id'],
+            temperature: 0.2,
+            model: 'gpt-3.5-turbo',
+            api_key: @$_SERVER['OPENAI_API_KEY']
+        );
+        fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        $this->assertSame(stripos($response['response'], '"Wer wurde 2018 Fußball-Weltmeister?"') !== false, true);
     }
 
     function test__translate_deepl()
