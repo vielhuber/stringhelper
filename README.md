@@ -516,6 +516,14 @@ __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '
 __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // Being or not being; that is the question here.
 __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // To be or not to be; that is the question here.
 
+// chatgpt
+__chatgpt(
+    'Wer wurde 2018 Fußball-Weltmeister?',
+    0.2, // temperature
+    'gpt-3.5-turbo', // model
+    '**API Key**'
+)
+
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med
 

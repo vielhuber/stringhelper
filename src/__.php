@@ -1985,6 +1985,36 @@ class __
         return $response->result[0]->translations[0]->text;
     }
 
+    public static function chatgpt($prompt, $temperature = 0.2, $model = 'gpt-3.5-turbo', $api_key = null)
+    {
+        if (self::nx($prompt) || self::nx($api_key)) {
+            return null;
+        }
+        $response = self::curl(
+            'https://api.openai.com/v1/chat/completions',
+            [
+                'model' => $model,
+                'messages' => [['role' => 'user', 'content' => $prompt]],
+                'temperature' => $temperature
+            ],
+            'POST',
+            [
+                'Authorization' => 'Bearer ' . $api_key
+            ]
+        );
+        if (
+            self::nx($response) ||
+            self::nx($response->result) ||
+            self::nx($response->result->choices) ||
+            self::nx($response->result->choices[0]) ||
+            self::nx($response->result->choices[0]->message) ||
+            self::nx($response->result->choices[0]->message->content)
+        ) {
+            return null;
+        }
+        return $response->result->choices[0]->message->content;
+    }
+
     public static function translate_deepl($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
         if (self::nx($str)) {

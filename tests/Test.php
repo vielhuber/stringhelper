@@ -768,6 +768,17 @@ House'
         }
     }
 
+    function test__chatgpt()
+    {
+        $response = __chatgpt(
+            'Wer wurde 2018 Fußball-Weltmeister?',
+            0.2,
+            'gpt-3.5-turbo',
+            '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'
+        );
+        $this->assertSame($response, 'Die französische Nationalmannschaft wurde 2018 Fußball-Weltmeister.');
+    }
+
     function test__translate_deepl()
     {
         foreach (['free', @$_SERVER['DEEPL_TRANSLATION_API_KEY']] as $api_keys__value) {

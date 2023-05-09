@@ -505,6 +505,13 @@ if (!function_exists('__translate_deepl')) {
     }
 }
 
+if (!function_exists('__chatgpt')) {
+    function __chatgpt(...$args)
+    {
+        return \vielhuber\stringhelper\__::chatgpt(...$args);
+    }
+}
+
 if (!function_exists('__first_char_is_uppercase')) {
     function __first_char_is_uppercase(...$args)
     {
