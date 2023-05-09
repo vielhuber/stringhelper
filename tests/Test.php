@@ -770,12 +770,7 @@ House'
 
     function test__chatgpt()
     {
-        $response = __chatgpt(
-            'Wer wurde 2018 Fußball-Weltmeister?',
-            0.2,
-            'gpt-3.5-turbo',
-            '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'
-        );
+        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.2, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY']);
         $this->assertSame($response, 'Die französische Nationalmannschaft wurde 2018 Fußball-Weltmeister.');
     }
 
