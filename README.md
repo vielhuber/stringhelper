@@ -519,15 +519,15 @@ __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '*
 // chatgpt
 __chatgpt(
     prompt: 'Wer wurde 2018 Fußball-Weltmeister?',
-    temperature: 0.2, // controls the randomness of the text generated
+    temperature: 0.7, // controls the randomness of the text generated
     model: 'gpt-3.5-turbo',
     api_key: '**API Key**'
 )
-// ['session_id' => 42, 'response' => '...'] */
+// ['session_id' => 42, 'response' => 'Frankreich.'] */
 __chatgpt(
     prompt: 'Was habe ich vorher gefragt?',
     session_id: 42,
-    temperature: 0.2,
+    temperature: 0.7,
     model: 'gpt-3.5-turbo',
     api_key: '**API Key**'
 )

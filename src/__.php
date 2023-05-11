@@ -1987,7 +1987,7 @@ class __
 
     public static function chatgpt(
         $prompt,
-        $temperature = 0.2,
+        $temperature = 0.7,
         $model = 'gpt-3.5-turbo',
         $api_key = null,
         $session_id = null

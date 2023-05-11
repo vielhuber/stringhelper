@@ -728,7 +728,8 @@ House'
                     'Since <a>ES6</a>, <a>VanillaJS</a> is almost equal to the veteran <a>jQuery</a> in almost all areas and is now far superior.',
                     '<a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
                     '<a>VanillaJS</a> is since <a>ES6</a> virtually equal to the veteran <a>jQuery</a> in all areas and is now far superior.',
-                    'Since <a>ES6</a><a>, VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.'
+                    'Since <a>ES6</a><a>, VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.',
+                    'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with <a>the veteran jQuery</a> in virtually all areas and is now far superior.'
                 ]
             );
 
@@ -744,7 +745,8 @@ House'
                     'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> is almost equal to the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.',
                     '<a p="1">VanillaJS</a> has been equal to the original rock <a p="3">jQuery</a> since <a p="2">ES6</a> in virtually all areas.',
                     '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually equal to the veteran <a p="3">jQuery</a> in all areas and is now far superior.',
-                    'Since <a p="2">ES6</a><a p="1">, VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in virtually all areas and is now far superior.'
+                    'Since <a p="2">ES6</a><a p="1">, VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in virtually all areas and is now far superior.',
+                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with <a p="3">the veteran jQuery</a> in virtually all areas and is now far superior.'
                 ]
             );
         }
@@ -770,27 +772,21 @@ House'
 
     function test__chatgpt()
     {
-        $response = __chatgpt(
-            prompt: 'Wer wurde 2018 Fußball-Weltmeister?',
-            temperature: 0.2,
-            model: 'gpt-3.5-turbo',
-            api_key: @$_SERVER['OPENAI_API_KEY']
-        );
-        //__d($response);
-        fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.2, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY']);
+        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(
             stripos($response['response'], 'Frankreich') !== false ||
                 stripos($response['response'], 'französisch') !== false,
             true
         );
         $response = __chatgpt(
-            prompt: 'Was habe ich vorher gefragt?',
-            session_id: $response['session_id'],
-            temperature: 0.2,
-            model: 'gpt-3.5-turbo',
-            api_key: @$_SERVER['OPENAI_API_KEY']
+            'Was habe ich vorher gefragt?',
+            0.2,
+            'gpt-3.5-turbo',
+            @$_SERVER['OPENAI_API_KEY'],
+            $response['session_id']
         );
-        fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(stripos($response['response'], '"Wer wurde 2018 Fußball-Weltmeister?"') !== false, true);
     }
 
@@ -1130,7 +1126,7 @@ baz'
         }
     }
 
-    function test_timestamp_excel_unix()
+    function test__timestamp_excel_unix()
     {
         $this->assertSame(__timestamp_excel_to_str(36526), '2000-01-01 00:00:00');
         $this->assertSame(__timestamp_excel_to_str(36526), '2000-01-01 00:00:00');
@@ -1140,7 +1136,7 @@ baz'
         $this->assertSame(round(__timestamp_str_to_excel('2000-01-01 08:15:30'), 8), round(36526.3440972222, 8));
     }
 
-    function test_has_basic_auth()
+    function test__has_basic_auth()
     {
         $this->assertSame(__has_basic_auth('https://httpbin.org/basic-auth/foo/bar'), true);
         $this->assertSame(__has_basic_auth('https://vielhuber.de'), false);
@@ -1152,7 +1148,7 @@ baz'
         $this->assertSame(__has_basic_auth(''), false);
     }
 
-    function test_check_basic_auth()
+    function test__check_basic_auth()
     {
         $this->assertSame(__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo', 'bar'), true);
         $this->assertSame(__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo', 'baz'), false);
@@ -1165,7 +1161,7 @@ baz'
         $this->assertSame(__check_basic_auth(''), true);
     }
 
-    function test_array_map_keys()
+    function test__array_map_keys()
     {
         $this->assertSame(__array_map_keys(null, null), null);
         $this->assertSame(__array_map_keys(function () {}, false), false);
@@ -1222,7 +1218,7 @@ baz'
         );
     }
 
-    function test_progress()
+    function test__progress()
     {
         foreach (
             [
@@ -1250,7 +1246,7 @@ baz'
         }
     }
 
-    function test_mb_sprintf()
+    function test__mb_sprintf()
     {
         $this->assertSame(sprintf('%7.7s', 'foo'), '    foo');
         $this->assertSame(__mb_sprintf('%7.7s', 'foo'), '    foo');
@@ -1258,7 +1254,7 @@ baz'
         $this->assertSame(__mb_sprintf('%7.7s', 'mäh'), '    mäh');
     }
 
-    function test_encode_decode_string()
+    function test__encode_decode_string()
     {
         $data = ['foo' => 'bar', 'bar' => 'baz'];
         $this->assertEquals(__encode_data($data), 'YToyOntzOjM6ImZvbyI7czozOiJiYXIiO3M6MzoiYmFyIjtzOjM6ImJheiI7fQ==');
