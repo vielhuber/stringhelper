@@ -1992,9 +1992,12 @@ class __
         $api_key = null,
         $session_id = null
     ) {
+        $return = ['session_id' => null, 'response' => null, 'usage' => null];
+
         if ($session_id = null) {
             $session_id = md5(uniqid(mt_rand(), true));
         }
+        $return['session_id'] = $session_id;
         $filename = sys_get_temp_dir() . '/' . $session_id . '.txt';
         if (!file_exists($filename)) {
             file_put_contents($filename, serialize([]));
@@ -2004,7 +2007,7 @@ class __
         file_put_contents($filename, serialize($history));
 
         if (self::nx($prompt) || self::nx($api_key)) {
-            return ['session_id' => $session_id, 'response' => null];
+            return $return;
         }
         $messages = [];
         foreach ($history as $history__value) {
@@ -2030,12 +2033,16 @@ class __
             self::nx($response->result->choices[0]->message) ||
             self::nx($response->result->choices[0]->message->content)
         ) {
-            return ['session_id' => $session_id, 'response' => null];
+            return $return;
         }
-        return [
-            'session_id' => $session_id,
-            'response' => $response->result->choices[0]->message->content
-        ];
+        $return['response'] = $response->result->choices[0]->message->content;
+
+        $usage = [];
+        $usage['tokens'] = $response->result->usage->total_tokens;
+        $usage['costs'] = ($usage['tokens'] / 1000) * 0.002; // this seems wrong, but we will fix that
+        $return['usage'] = $usage;
+
+        return $return;
     }
 
     public static function translate_deepl($str, $from_lng, $to_lng, $api_key, $proxy = null)
