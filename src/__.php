@@ -1994,7 +1994,7 @@ class __
     ) {
         $return = ['session_id' => null, 'response' => null, 'usage' => null];
 
-        if ($session_id = null) {
+        if ($session_id === null) {
             $session_id = md5(uniqid(mt_rand(), true));
         }
         $return['session_id'] = $session_id;
@@ -2003,21 +2003,16 @@ class __
             file_put_contents($filename, serialize([]));
         }
         $history = unserialize(file_get_contents($filename));
-        $history[] = $prompt;
-        file_put_contents($filename, serialize($history));
 
         if (self::nx($prompt) || self::nx($api_key)) {
             return $return;
         }
-        $messages = [];
-        foreach ($history as $history__value) {
-            $messages[] = ['role' => 'user', 'content' => $history__value];
-        }
+        $history[] = ['role' => 'user', 'content' => $prompt];
         $response = self::curl(
             'https://api.openai.com/v1/chat/completions',
             [
                 'model' => $model,
-                'messages' => $messages,
+                'messages' => $history,
                 'temperature' => $temperature
             ],
             'POST',
@@ -2036,6 +2031,11 @@ class __
             return $return;
         }
         $return['response'] = $response->result->choices[0]->message->content;
+        $history[] = [
+            'role' => $response->result->choices[0]->message->role,
+            'content' => $response->result->choices[0]->message->content
+        ];
+        file_put_contents($filename, serialize($history));
 
         $usage = [];
         $usage['tokens'] = $response->result->usage->total_tokens;
