@@ -772,7 +772,12 @@ House'
 
     function test__chatgpt()
     {
-        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.2, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY']);
+        $response = __chatgpt(
+            'Wer wurde 2018 Fußball-Weltmeister?',
+            0.7,
+            'gpt-3.5-turbo',
+            @$_SERVER['OPENAI_API_KEY']
+        );
         //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(
             stripos($response['response'], 'Frankreich') !== false ||
@@ -781,7 +786,7 @@ House'
         );
         $response = __chatgpt(
             'Was habe ich vorher gefragt?',
-            0.2,
+            0.7,
             'gpt-3.5-turbo',
             @$_SERVER['OPENAI_API_KEY'],
             $response['session_id']
@@ -794,7 +799,7 @@ House'
         );
         $response = __chatgpt(
             'Welchen Satz hast Du exakt zuvor geschrieben?',
-            0.2,
+            0.7,
             'gpt-3.5-turbo',
             @$_SERVER['OPENAI_API_KEY'],
             $response['session_id']
@@ -805,6 +810,23 @@ House'
                 stripos($response['response'], 'französisch') !== false,
             true
         );
+        // the whole history is portable
+        $response = __chatgpt(
+            'Ich heiße David mit Vornamen. Bitte merk Dir das!',
+            0.7,
+            'gpt-3.5-turbo',
+            @$_SERVER['OPENAI_API_KEY'],
+            $response['session_id']
+        );
+        $response = __chatgpt(
+            'Wie heiße ich mit Vornamen?',
+            0.7,
+            'gpt-3.5-turbo-0301',
+            @$_SERVER['OPENAI_API_KEY'],
+            $response['session_id']
+        );
+        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        $this->assertSame( stripos($response['response'], 'David') !== false, true );
     }
 
     function test__translate_deepl()

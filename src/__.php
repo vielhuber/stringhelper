@@ -2020,6 +2020,7 @@ class __
                 'Authorization' => 'Bearer ' . $api_key
             ]
         );
+        
         if (
             self::nx($response) ||
             self::nx($response->result) ||
