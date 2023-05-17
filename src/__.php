@@ -2014,6 +2014,22 @@ class __
             }
         }
         $history_session[] = ['role' => 'user', 'content' => $prompt];
+
+        // truncate if too long
+        $max_tokens = 4097;
+        while (1 === 1) {
+            $chars = 0;
+            foreach ($history_session as $history_session__value) {
+                $chars += mb_strlen($history_session__value['content']);
+            }
+            if ($chars > $max_tokens * 1.5) {
+                unset($history_session[0]);
+                $history_session = array_values($history_session);
+            } else {
+                break;
+            }
+        }
+
         $response = self::curl(
             'https://api.openai.com/v1/chat/completions',
             [
@@ -2026,6 +2042,8 @@ class __
                 'Authorization' => 'Bearer ' . $api_key
             ]
         );
+
+        __d($response);
 
         if (
             self::nx($response) ||
