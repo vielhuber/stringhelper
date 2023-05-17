@@ -772,12 +772,7 @@ House'
 
     function test__chatgpt()
     {
-        $response = __chatgpt(
-            'Wer wurde 2018 Fußball-Weltmeister?',
-            0.7,
-            'gpt-3.5-turbo',
-            @$_SERVER['OPENAI_API_KEY']
-        );
+        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.7, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY']);
         //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(
             stripos($response['response'], 'Frankreich') !== false ||
@@ -826,7 +821,18 @@ House'
             $response['session_id']
         );
         //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
-        $this->assertSame( stripos($response['response'], 'David') !== false, true );
+        $this->assertSame(stripos($response['response'], 'David') !== false, true);
+
+        $response = __chatgpt('Was habe ich vorher gefragt?', 0.7, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY'], null, [
+            ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'],
+            ['role' => 'assistant', 'content' => 'Frankreich.']
+        ]);
+        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        $this->assertSame(
+            stripos($response['response'], 'Wer wurde 2018 Fußball-Weltmeister?') !== false ||
+                stripos($response['response'], 'Fußball-Weltmeister') !== false,
+            true
+        );
     }
 
     function test__translate_deepl()

@@ -532,6 +532,17 @@ __chatgpt(
     api_key: '**API Key**'
 )
 // ['session_id' => 42, 'response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"']
+__chatgpt(
+    prompt: 'Was habe ich vorher gefragt?',
+    history: [
+        ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'],
+        ['role' => 'assistant', 'content' => 'Frankreich.']
+    ],
+    temperature: 0.7,
+    model: 'gpt-3.5-turbo',
+    api_key: '**API Key**'
+)
+// ['session_id' => 42, 'response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"']
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med

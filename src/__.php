@@ -1990,7 +1990,8 @@ class __
         $temperature = 0.7,
         $model = 'gpt-3.5-turbo',
         $api_key = null,
-        $session_id = null
+        $session_id = null,
+        $history = []
     ) {
         $return = ['session_id' => null, 'response' => null, 'usage' => null];
 
@@ -2002,17 +2003,22 @@ class __
         if (!file_exists($filename)) {
             file_put_contents($filename, serialize([]));
         }
-        $history = unserialize(file_get_contents($filename));
+        $history_session = unserialize(file_get_contents($filename));
 
         if (self::nx($prompt) || self::nx($api_key)) {
             return $return;
         }
-        $history[] = ['role' => 'user', 'content' => $prompt];
+        if (!empty($history)) {
+            foreach ($history as $history__value) {
+                $history_session[] = $history__value;
+            }
+        }
+        $history_session[] = ['role' => 'user', 'content' => $prompt];
         $response = self::curl(
             'https://api.openai.com/v1/chat/completions',
             [
                 'model' => $model,
-                'messages' => $history,
+                'messages' => $history_session,
                 'temperature' => $temperature
             ],
             'POST',
@@ -2020,7 +2026,7 @@ class __
                 'Authorization' => 'Bearer ' . $api_key
             ]
         );
-        
+
         if (
             self::nx($response) ||
             self::nx($response->result) ||
@@ -2032,11 +2038,11 @@ class __
             return $return;
         }
         $return['response'] = $response->result->choices[0]->message->content;
-        $history[] = [
+        $history_session[] = [
             'role' => $response->result->choices[0]->message->role,
             'content' => $response->result->choices[0]->message->content
         ];
-        file_put_contents($filename, serialize($history));
+        file_put_contents($filename, serialize($history_session));
 
         $usage = [];
         $usage['tokens'] = $response->result->usage->total_tokens;
