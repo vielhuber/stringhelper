@@ -833,6 +833,26 @@ House'
                 stripos($response['response'], 'Fußball-Weltmeister') !== false,
             true
         );
+
+        // truncation
+        $messages = [];
+        for ($i = 0; $i < 100000; $i++) {
+            $messages[] = ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'];
+            $messages[] = ['role' => 'assistant', 'content' => 'Frankreich.'];
+        }
+        $response = __chatgpt(
+            'Was habe ich vorher gefragt?',
+            0.7,
+            'gpt-3.5-turbo',
+            @$_SERVER['OPENAI_API_KEY'],
+            null,
+            $messages
+        );
+        $this->assertSame(
+            stripos($response['response'], 'Weltmeister') !== false ||
+                stripos($response['response'], 'Weltmeister') !== false,
+            true
+        );
     }
 
     function test__translate_deepl()

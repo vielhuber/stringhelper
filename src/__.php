@@ -2015,35 +2015,53 @@ class __
         }
         $history_session[] = ['role' => 'user', 'content' => $prompt];
 
-        // truncate if too long
-        $max_tokens = 4097;
+        $initial_truncation = true;
         while (1 === 1) {
-            $chars = 0;
-            foreach ($history_session as $history_session__value) {
-                $chars += mb_strlen($history_session__value['content']);
-            }
-            if ($chars > $max_tokens * 1.5) {
-                unset($history_session[0]);
-                $history_session = array_values($history_session);
+            $response = self::curl(
+                'https://api.openai.com/v1/chat/completions',
+                [
+                    'model' => $model,
+                    'messages' => $history_session,
+                    'temperature' => $temperature
+                ],
+                'POST',
+                [
+                    'Authorization' => 'Bearer ' . $api_key
+                ]
+            );
+            //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+            if (
+                $response->status == 400 &&
+                (strpos($response->result->error->message, 'too long') !== false ||
+                    strpos($response->result->error->message, 'reduce the length of the messages.') !== false)
+            ) {
+                if ($initial_truncation === true) {
+                    $max_tokens = 4097;
+                    $max_length = $max_tokens * 1.5;
+                    $key_until_delete = null;
+                    $chars_all = 0;
+                    foreach ($history_session as $history_session__value) {
+                        $chars_all += mb_strlen($history_session__value['content']);
+                    }
+                    $chars = 0;
+                    foreach ($history_session as $history_session__key => $history_session__value) {
+                        if ($chars_all - $chars > $max_length) {
+                            $key_until_delete = $history_session__key;
+                        }
+                        $chars += mb_strlen($history_session__value['content']);
+                    }
+                    $history_session = array_slice($history_session, $key_until_delete + 1);
+                    $initial_truncation = false;
+                    //fwrite(STDERR, print_r(serialize('1') . PHP_EOL, true));
+                } else {
+                    unset($history_session[0]);
+                    $history_session = array_values($history_session);
+                    //fwrite(STDERR, print_r(serialize('2') . PHP_EOL, true));
+                }
             } else {
                 break;
             }
         }
-
-        $response = self::curl(
-            'https://api.openai.com/v1/chat/completions',
-            [
-                'model' => $model,
-                'messages' => $history_session,
-                'temperature' => $temperature
-            ],
-            'POST',
-            [
-                'Authorization' => 'Bearer ' . $api_key
-            ]
-        );
-
-        __d($response);
 
         if (
             self::nx($response) ||
