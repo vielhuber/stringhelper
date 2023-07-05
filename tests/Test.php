@@ -3,6 +3,8 @@ use vielhuber\stringhelper\__;
 
 class Test extends \PHPUnit\Framework\TestCase
 {
+    private $httpbin = 'https://httpbingo.org'; // 'https://httpbin.org' is down
+
     public static function setUpBeforeClass(): void
     {
         if (file_exists(__DIR__ . '/../.env')) {
@@ -1074,46 +1076,54 @@ baz'
 
     function test__curl()
     {
-        $response = __curl('https://httpbin.org/anything');
+        $response = __curl($this->httpbin . '/anything');
         $this->assertSame($response->result->method, 'GET');
         $this->assertSame($response->status, 200);
         $this->assertSame(!empty($response->headers), true);
-        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST');
+        $response = __curl($this->httpbin . '/anything', ['foo' => 'bar'], 'POST');
         $this->assertSame($response->result->method, 'POST');
         $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
-        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'PUT');
+        $response = __curl($this->httpbin . '/anything', ['foo' => 'bar'], 'PUT');
         $this->assertSame($response->result->method, 'PUT');
         $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));
-        $response = __curl('https://httpbin.org/anything', null, 'DELETE');
+        $response = __curl($this->httpbin . '/anything', null, 'DELETE');
         $this->assertSame($response->result->method, 'DELETE');
         $this->assertSame($response->result->data, '');
-        $response = __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST', [
+        $response = __curl($this->httpbin . '/anything', ['foo' => 'bar'], 'POST', [
             'Bar' => 'baz'
         ]);
-        $this->assertSame($response->result->headers->Bar, 'baz');
+        $this->assertSame($response->result->headers->Bar, ['baz']);
         $response = __curl('https://vielhuber.de');
         $this->assertTrue(strpos($response->result, '<html') !== false);
 
-        $response = __curl('https://httpbin.org/basic-auth/foo/bar');
+        $response = __curl($this->httpbin . '/basic-auth/foo/bar');
         $this->assertSame($response->status, 401);
-        $response = __curl('https://httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, [
+        $response = __curl($this->httpbin . '/basic-auth/foo/bar', null, null, null, false, true, 60, [
             'foo' => 'bar'
         ]);
         $this->assertSame($response->status, 200);
-        $response = __curl('https://foo:bar@httpbin.org/basic-auth/foo/bar', null, null, null, false, true, 60, null);
+        $response = __curl(
+            'https://foo:bar@' . str_replace('https://', '', $this->httpbin) . '/basic-auth/foo/bar',
+            null,
+            null,
+            null,
+            false,
+            true,
+            60,
+            null
+        );
         $this->assertSame($response->status, 200);
 
-        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, null);
-        $this->assertSame(empty((array) $response->result->cookies), true);
-        $response = __curl('https://httpbin.org/cookies', null, null, null, false, false, 60, null, [
+        $response = __curl($this->httpbin . '/cookies', null, null, null, false, false, 60, null, null);
+        $this->assertSame(empty((array) $response->result), true);
+        $response = __curl($this->httpbin . '/cookies', null, null, null, false, false, 60, null, [
             'foo' => 'bar',
             'bar' => 'baz'
         ]);
-        $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
+        $this->assertEquals($response->result, (object) ['foo' => 'bar', 'bar' => 'baz']);
 
-        // changed host due to https://github.com/postmanlabs/httpbin/issues/617
         $response = __curl(
-            'https://httpbingo.org/absolute-redirect/1',
+            $this->httpbin . '/absolute-redirect/1',
             null,
             null,
             null,
@@ -1126,7 +1136,7 @@ baz'
         );
         $this->assertSame($response->status, 200);
         $response = __curl(
-            'https://httpbingo.org/absolute-redirect/1',
+            $this->httpbin . '/absolute-redirect/1',
             null,
             null,
             null,
@@ -1139,7 +1149,7 @@ baz'
         );
         $this->assertSame($response->status, 302);
         $response = __curl(
-            'https://httpbingo.org/absolute-redirect/1',
+            $this->httpbin . '/absolute-redirect/1',
             null,
             null,
             null,
@@ -1150,11 +1160,11 @@ baz'
             null,
             true
         );
-        $this->assertSame($response->url, 'https://httpbingo.org/get');
+        $this->assertSame($response->url, $this->httpbin . '/get');
 
         if (isset($_SERVER['PROXY']) && $_SERVER['PROXY'] != '') {
             $response = __curl(
-                'https://httpbingo.org/ip',
+                $this->httpbin . '/ip',
                 null,
                 'GET',
                 null,
@@ -1203,7 +1213,7 @@ baz'
 
     function test__has_basic_auth()
     {
-        $this->assertSame(__has_basic_auth('https://httpbin.org/basic-auth/foo/bar'), true);
+        $this->assertSame(__has_basic_auth($this->httpbin . '/basic-auth/foo/bar'), true);
         $this->assertSame(__has_basic_auth('https://vielhuber.de'), false);
         $this->assertSame(__has_basic_auth('http://dewuiztgchdnhbvwsvdhzu.com'), false);
         $this->assertSame(__has_basic_auth(null), false);
@@ -1215,8 +1225,8 @@ baz'
 
     function test__check_basic_auth()
     {
-        $this->assertSame(__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo', 'bar'), true);
-        $this->assertSame(__check_basic_auth('https://httpbin.org/basic-auth/foo/bar', 'foo', 'baz'), false);
+        $this->assertSame(__check_basic_auth($this->httpbin . '/basic-auth/foo/bar', 'foo', 'bar'), true);
+        $this->assertSame(__check_basic_auth($this->httpbin . '/basic-auth/foo/bar', 'foo', 'baz'), false);
         $this->assertSame(__check_basic_auth('https://vielhuber.de', 'foo', 'baz'), true);
         $this->assertSame(__check_basic_auth('https://vielhuber.de', 'foo', ''), true);
         $this->assertSame(__check_basic_auth(null), true);
@@ -1505,8 +1515,8 @@ baz'
             as $tests__value
         ) {
             $this->assertSame(
-                trim(__reverse_proxy('https://httpbin.org/html', $tests__value[0], false)),
-                trim(str_replace($tests__value[1], $tests__value[2], __curl('https://httpbin.org/html')->result))
+                trim(__reverse_proxy($this->httpbin . '/html', $tests__value[0], false)),
+                trim(str_replace($tests__value[1], $tests__value[2], __curl($this->httpbin . '/html')->result))
             );
         }
     }
@@ -3456,11 +3466,11 @@ data-attr="foo">
             ]
         );
 
-        $response = __fetch('https://httpbin.org/anything');
+        $response = __fetch($this->httpbin . '/anything');
         $this->assertSame($response->method, 'GET');
-        $response = __fetch('https://httpbin.org/anything', 'curl');
+        $response = __fetch($this->httpbin . '/anything', 'curl');
         $this->assertSame($response->method, 'GET');
-        $response = __fetch('https://httpbin.org/anything', 'php');
+        $response = __fetch($this->httpbin . '/anything', 'php');
         $this->assertSame($response->method, 'GET');
 
         $this->assertEquals(__success(), ((object) ['success' => true, 'message' => '']));
