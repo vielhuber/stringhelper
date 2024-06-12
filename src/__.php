@@ -4463,6 +4463,7 @@ class __
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // don't verify certificate
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1); // this sometimes is needed
 
         if ($follow_redirects === true) {
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
