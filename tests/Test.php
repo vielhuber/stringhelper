@@ -3,7 +3,7 @@ use vielhuber\stringhelper\__;
 
 class Test extends \PHPUnit\Framework\TestCase
 {
-    private $httpbin = 'https://httpbingo.org'; // 'https://httpbin.org' is down
+    private $httpbin = 'https://httpbin.org';
 
     public static function setUpBeforeClass(): void
     {
@@ -1116,7 +1116,7 @@ baz'
         $response = __curl($this->httpbin . '/anything', ['foo' => 'bar'], 'POST', [
             'Bar' => 'baz'
         ]);
-        $this->assertSame($response->result->headers->Bar, ['baz']);
+        $this->assertSame($response->result->headers->Bar, 'baz');
         $response = __curl('https://vielhuber.de');
         $this->assertTrue(strpos($response->result, '<html') !== false);
 
@@ -1139,12 +1139,12 @@ baz'
         $this->assertSame($response->status, 200);
 
         $response = __curl($this->httpbin . '/cookies', null, null, null, false, false, 60, null, null);
-        $this->assertSame(empty((array) $response->result), true);
+        $this->assertSame(empty((array) $response->result->cookies), true);
         $response = __curl($this->httpbin . '/cookies', null, null, null, false, false, 60, null, [
             'foo' => 'bar',
             'bar' => 'baz'
         ]);
-        $this->assertEquals($response->result, (object) ['foo' => 'bar', 'bar' => 'baz']);
+        $this->assertEquals($response->result->cookies, (object) ['foo' => 'bar', 'bar' => 'baz']);
 
         $response = __curl(
             $this->httpbin . '/absolute-redirect/1',
@@ -1184,7 +1184,13 @@ baz'
             null,
             true
         );
-        $this->assertSame($response->url, $this->httpbin . '/get');
+        $this->assertSame(
+            in_array($response->url, [
+                $this->httpbin . '/get',
+                str_replace('https://', 'http://', $this->httpbin) . '/get'
+            ]),
+            true
+        );
 
         if (isset($_SERVER['PROXY']) && $_SERVER['PROXY'] != '') {
             $response = __curl(
