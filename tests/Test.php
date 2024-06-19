@@ -872,7 +872,7 @@ House'
             null,
             $messages
         );
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(
             stripos($response['response'], 'Weltmeister') !== false ||
                 stripos($response['response'], 'Weltmeister') !== false,
