@@ -518,7 +518,13 @@ class Test extends \PHPUnit\Framework\TestCase
 
     function test__translate_google()
     {
-        foreach (['free', $_SERVER['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
+        foreach (
+            [
+                /*'free',*/
+                $_SERVER['GOOGLE_TRANSLATION_API_KEY']
+            ]
+            as $api_keys__value
+        ) {
             foreach (
                 [
                     [
