@@ -867,7 +867,7 @@ House'
         $response = __chatgpt(
             'Was habe ich vorher gefragt?',
             0.7,
-            'gpt-4',
+            'gpt-3.5-turbo',
             @$_SERVER['OPENAI_API_KEY'],
             null,
             $messages
