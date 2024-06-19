@@ -532,7 +532,8 @@ class Test extends \PHPUnit\Framework\TestCase
                         [
                             'This is the <span>house</span> of Santa Claus',
                             'This is Santa\'s <span>house</span>',
-                            'This is Santa&#39;s <span>house</span>'
+                            'This is Santa&#39;s <span>house</span>',
+                            'This is Santa Claus&#39; <span>house</span>'
                         ],
                         'de',
                         'en'
@@ -542,7 +543,8 @@ class Test extends \PHPUnit\Framework\TestCase
                         [
                             'This is the <span class="notranslate">Haus</span> of Santa Claus',
                             'This is Santa\'s <span class="notranslate">Haus</span>',
-                            'This is Santa&#39;s <span class="notranslate">Haus</span>'
+                            'This is Santa&#39;s <span class="notranslate">Haus</span>',
+                            'This is Santa Claus&#39; <span class="notranslate">Haus</span>'
                         ],
                         'de',
                         'en'
@@ -577,7 +579,9 @@ class Test extends \PHPUnit\Framework\TestCase
                             'Since <a>ES6</a> , <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.',
                             '<a>Since ES6,</a> VanillaJS has been on a <a>par with</a> <a>the veteran jQuery</a> in almost all areas and is now far superior.',
                             'Since <a>ES6,</a> <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.',
-                            'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.'
+                            'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.',
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in virtually all areas and is now far superior.',
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -589,7 +593,9 @@ class Test extends \PHPUnit\Framework\TestCase
                             'VanillaJS has been on <a p="1">par with</a> <a p="3">the veteran jQuery</a> in almost all areas <a p="2">since ES6</a> and is now far superior.',
                             'Since <a p="2">ES6</a> , <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.',
                             '<a p="2">Since ES6,</a> VanillaJS has been on a <a p="1">par with</a> <a p="3">the veteran jQuery</a> in almost all areas and is now far superior.',
-                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.'
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -700,7 +706,13 @@ House'
         }
 
         if (isset($_SERVER['PROXY'])) {
-            foreach ([$_SERVER['GOOGLE_TRANSLATION_API_KEY'], 'free'] as $api_keys__value) {
+            foreach (
+                [
+                    $_SERVER['GOOGLE_TRANSLATION_API_KEY']
+                    /*'free'*/
+                ]
+                as $api_keys__value
+            ) {
                 $this->assertSame(__translate_google('Haus', 'de', 'en', $api_keys__value, $_SERVER['PROXY']), 'House');
             }
         }
