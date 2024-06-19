@@ -2031,8 +2031,9 @@ class __
             );
             //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
             if (
-                $response->status == 400 &&
-                (strpos($response->result->error->message, 'too long') !== false ||
+                ($response->status == 400 || $response->status == 429) &&
+                (strpos($response->result->error->message, 'too large') !== false ||
+                    strpos($response->result->error->message, 'too long') !== false ||
                     strpos($response->result->error->message, 'reduce the length of the messages.') !== false)
             ) {
                 if ($initial_truncation === true) {

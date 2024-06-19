@@ -576,7 +576,8 @@ class Test extends \PHPUnit\Framework\TestCase
                             'VanillaJS has been on <a>par with</a><a>the veteran jQuery</a> in almost all areas <a>since ES6</a> and is now far superior.',
                             'Since <a>ES6</a> , <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.',
                             '<a>Since ES6,</a> VanillaJS has been on a <a>par with</a> <a>the veteran jQuery</a> in almost all areas and is now far superior.',
-                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.'
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -737,7 +738,8 @@ House'
                     '<a>VanillaJS</a> has been on an equal footing with the original rock <a>jQuery</a> in almost all areas since <a>ES6</a> and is now far superior.',
                     '<a>VanillaJS</a> is since <a>ES6</a> virtually equal to the veteran <a>jQuery</a> in all areas and is now far superior.',
                     'Since <a>ES6</a><a>, VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.',
-                    'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with <a>the veteran jQuery</a> in virtually all areas and is now far superior.'
+                    'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with <a>the veteran jQuery</a> in virtually all areas and is now far superior.',
+                    'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.'
                 ]
             );
 
@@ -754,7 +756,8 @@ House'
                     '<a p="1">VanillaJS</a> has been equal to the original rock <a p="3">jQuery</a> since <a p="2">ES6</a> in virtually all areas.',
                     '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually equal to the veteran <a p="3">jQuery</a> in all areas and is now far superior.',
                     'Since <a p="2">ES6</a><a p="1">, VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in virtually all areas and is now far superior.',
-                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with <a p="3">the veteran jQuery</a> in virtually all areas and is now far superior.'
+                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with <a p="3">the veteran jQuery</a> in virtually all areas and is now far superior.',
+                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in virtually all areas and is now far superior.'
                 ]
             );
         }
@@ -780,7 +783,7 @@ House'
 
     function test__chatgpt()
     {
-        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.7, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY']);
+        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY']);
         //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(
             stripos($response['response'], 'Frankreich') !== false ||
@@ -790,7 +793,7 @@ House'
         $response = __chatgpt(
             'Was habe ich vorher gefragt?',
             0.7,
-            'gpt-3.5-turbo',
+            'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
             $response['session_id']
         );
@@ -803,7 +806,7 @@ House'
         $response = __chatgpt(
             'Welchen Satz hast Du exakt zuvor geschrieben?',
             0.7,
-            'gpt-3.5-turbo',
+            'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
             $response['session_id']
         );
@@ -817,21 +820,22 @@ House'
         $response = __chatgpt(
             'Ich heiße David mit Vornamen. Bitte merk Dir das!',
             0.7,
-            'gpt-3.5-turbo',
+            'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
             $response['session_id']
         );
+        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $response = __chatgpt(
             'Wie heiße ich mit Vornamen?',
             0.7,
-            'gpt-3.5-turbo-0301',
+            'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
             $response['session_id']
         );
         //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(stripos($response['response'], 'David') !== false, true);
 
-        $response = __chatgpt('Was habe ich vorher gefragt?', 0.7, 'gpt-3.5-turbo', @$_SERVER['OPENAI_API_KEY'], null, [
+        $response = __chatgpt('Was habe ich vorher gefragt?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY'], null, [
             ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'],
             ['role' => 'assistant', 'content' => 'Frankreich.']
         ]);
@@ -851,11 +855,12 @@ House'
         $response = __chatgpt(
             'Was habe ich vorher gefragt?',
             0.7,
-            'gpt-3.5-turbo',
+            'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
             null,
             $messages
         );
+        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
         $this->assertSame(
             stripos($response['response'], 'Weltmeister') !== false ||
                 stripos($response['response'], 'Weltmeister') !== false,
