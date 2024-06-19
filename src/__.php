@@ -2029,7 +2029,7 @@ class __
                     'Authorization' => 'Bearer ' . $api_key
                 ]
             );
-            //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+            fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
             if (
                 ($response->status == 400 || $response->status == 429) &&
                 (strpos($response->result->error->message, 'too large') !== false ||
