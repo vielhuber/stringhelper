@@ -520,18 +520,18 @@ __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '*
 __chatgpt(
     prompt: 'Wer wurde 2018 Fußball-Weltmeister?',
     temperature: 0.7, // controls the randomness of the text generated
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4o',
     api_key: '**API Key**'
 )
-// ['session_id' => 42, 'response' => 'Frankreich.'] */
+// ['response' => 'Frankreich.', 'session_id' => 42] */
 __chatgpt(
     prompt: 'Was habe ich vorher gefragt?',
     session_id: 42,
     temperature: 0.7,
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4o',
     api_key: '**API Key**'
 )
-// ['session_id' => 42, 'response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"']
+// ['response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"', 'session_id' => 42]
 __chatgpt(
     prompt: 'Was habe ich vorher gefragt?',
     history: [
@@ -539,10 +539,18 @@ __chatgpt(
         ['role' => 'assistant', 'content' => 'Frankreich.']
     ],
     temperature: 0.7,
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4o',
     api_key: '**API Key**'
 )
-// ['session_id' => 42, 'response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"']
+// ['response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"', 'session_id' => 42]
+__chatgpt(
+    prompt: 'Wie lautet das erste Wort in der PDF?',
+    file: 'lorem.pdf',
+    temperature: 0.7,
+    model: 'gpt-4o',
+    api_key: '**API Key**'
+)
+// ['response' => 'Das erste Wort lautet "Lorem".']
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med

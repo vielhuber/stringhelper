@@ -878,6 +878,17 @@ House'
                 stripos($response['response'], 'Weltmeister') !== false,
             true
         );
+
+        $response = __chatgpt(
+            'Wie lautet das erste Wort in der PDF?',
+            0.7,
+            'gpt-4o',
+            @$_SERVER['OPENAI_API_KEY'],
+            null,
+            [],
+            'tests/assets/lorem.pdf'
+        );
+        $this->assertSame(strpos($response['response'], 'Lorem') !== false, true);
     }
 
     function test__translate_deepl()
