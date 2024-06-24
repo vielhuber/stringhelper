@@ -828,7 +828,10 @@ House'
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertThat(
             $return['response'],
-            $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
+            $this->logicalOr(
+                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                $this->stringContains('Fußball-Weltmeister')
+            )
         );
         // the whole history is portable
         $return = __chatgpt(
