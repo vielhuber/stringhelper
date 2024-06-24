@@ -797,11 +797,11 @@ House'
     {
         $return = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY']);
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertSame(
-            stripos($return['response'], 'Frankreich') !== false ||
-                stripos($return['response'], 'französisch') !== false,
-            true
+        $this->assertThat(
+            $return['response'],
+            $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
         );
+
         $return = __chatgpt(
             'Was habe ich vorher gefragt?',
             0.7,
@@ -810,11 +810,14 @@ House'
             $return['session_id']
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertSame(
-            stripos($return['response'], 'Wer wurde 2018 Fußball-Weltmeister?') !== false ||
-                stripos($return['response'], 'Fußball-Weltmeister') !== false,
-            true
+        $this->assertThat(
+            $return['response'],
+            $this->logicalOr(
+                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                $this->stringContains('Fußball-Weltmeister')
+            )
         );
+
         $return = __chatgpt(
             'Welchen Satz hast Du exakt zuvor geschrieben?',
             0.7,
@@ -823,10 +826,9 @@ House'
             $return['session_id']
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertSame(
-            stripos($return['response'], 'Frankreich') !== false ||
-                stripos($return['response'], 'französisch') !== false,
-            true
+        $this->assertThat(
+            $return['response'],
+            $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
         );
         // the whole history is portable
         $return = __chatgpt(
@@ -845,17 +847,19 @@ House'
             $return['session_id']
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertSame(stripos($return['response'], 'David') !== false, true);
+        $this->assertStringContainsString('David', $return['response']);
 
         $return = __chatgpt('Was habe ich vorher gefragt?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY'], null, [
             ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'],
             ['role' => 'assistant', 'content' => 'Frankreich.']
         ]);
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertSame(
-            stripos($return['response'], 'Wer wurde 2018 Fußball-Weltmeister?') !== false ||
-                stripos($return['response'], 'Fußball-Weltmeister') !== false,
-            true
+        $this->assertThat(
+            $return['response'],
+            $this->logicalOr(
+                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                $this->stringContains('Fußball-Weltmeister')
+            )
         );
 
         // truncation
@@ -873,10 +877,12 @@ House'
             $messages
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertSame(
-            stripos($return['response'], 'Weltmeister') !== false ||
-                stripos($return['response'], 'Weltmeister') !== false,
-            true
+        $this->assertThat(
+            $return['response'],
+            $this->logicalOr(
+                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                $this->stringContains('Fußball-Weltmeister')
+            )
         );
 
         $return = __chatgpt(

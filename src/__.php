@@ -1995,8 +1995,13 @@ class __
         $file = null
     ) {
         if (self::nx($file)) {
-            $return = ['response' => null, 'session_id' => null, 'usage' => null];
-            if (self::nx($prompt) || self::nx($api_key)) {
+            $return = ['response' => null, 'session_id' => null, 'usage' => null, 'success' => false];
+            if (self::nx($prompt)) {
+                $return['response'] = 'prompt missing.';
+                return $return;
+            }
+            if (self::nx($api_key)) {
+                $return['response'] = 'api_key missing.';
                 return $return;
             }
             if ($session_id === null) {
@@ -2030,35 +2035,39 @@ class __
                         'Authorization' => 'Bearer ' . $api_key
                     ]
                 );
-                //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
-                if (
-                    ($response->status == 400 || $response->status == 429) &&
-                    (strpos($response->result->error->message, 'too large') !== false ||
+                //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+                if ($response->status == 400 || $response->status == 429) {
+                    if (
+                        strpos($response->result->error->message, 'too large') !== false ||
                         strpos($response->result->error->message, 'too long') !== false ||
-                        strpos($response->result->error->message, 'reduce the length of the messages.') !== false)
-                ) {
-                    if ($initial_truncation === true) {
-                        $max_tokens = 4097;
-                        $max_length = $max_tokens * 1.5;
-                        $key_until_delete = null;
-                        $chars_all = 0;
-                        foreach ($history_session as $history_session__value) {
-                            $chars_all += mb_strlen($history_session__value['content']);
-                        }
-                        $chars = 0;
-                        foreach ($history_session as $history_session__key => $history_session__value) {
-                            if ($chars_all - $chars > $max_length) {
-                                $key_until_delete = $history_session__key;
+                        strpos($response->result->error->message, 'reduce the length of the messages.') !== false
+                    ) {
+                        if ($initial_truncation === true) {
+                            $max_tokens = 4097;
+                            $max_length = $max_tokens * 1.5;
+                            $key_until_delete = null;
+                            $chars_all = 0;
+                            foreach ($history_session as $history_session__value) {
+                                $chars_all += mb_strlen($history_session__value['content']);
                             }
-                            $chars += mb_strlen($history_session__value['content']);
+                            $chars = 0;
+                            foreach ($history_session as $history_session__key => $history_session__value) {
+                                if ($chars_all - $chars > $max_length) {
+                                    $key_until_delete = $history_session__key;
+                                }
+                                $chars += mb_strlen($history_session__value['content']);
+                            }
+                            $history_session = array_slice($history_session, $key_until_delete + 1);
+                            $initial_truncation = false;
+                            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+                        } else {
+                            unset($history_session[0]);
+                            $history_session = array_values($history_session);
+                            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
                         }
-                        $history_session = array_slice($history_session, $key_until_delete + 1);
-                        $initial_truncation = false;
-                        //fwrite(STDERR, print_r(serialize('1') . PHP_EOL, true));
                     } else {
-                        unset($history_session[0]);
-                        $history_session = array_values($history_session);
-                        //fwrite(STDERR, print_r(serialize('2') . PHP_EOL, true));
+                        $return['response'] = $response->result->error->type;
+                        return $return;
                     }
                 } else {
                     break;
@@ -2076,6 +2085,7 @@ class __
                 return $return;
             }
             $return['response'] = $response->result->choices[0]->message->content;
+            $return['success'] = true;
 
             // parse json
             if (strpos($return['response'], '```json') === 0) {
@@ -2093,8 +2103,13 @@ class __
             $usage['costs'] = ($usage['tokens'] / 1000) * 0.002; // this seems wrong, but we will fix that
             $return['usage'] = $usage;
         } else {
-            $return = ['response' => null];
-            if (self::nx($prompt) || self::nx($api_key)) {
+            $return = ['response' => null, 'success' => false];
+            if (self::nx($prompt)) {
+                $return['response'] = 'prompt missing.';
+                return $return;
+            }
+            if (self::nx($api_key)) {
+                $return['response'] = 'api_key missing.';
                 return $return;
             }
             // file uploads don't work together with sessions
@@ -2115,6 +2130,7 @@ class __
                 false,
                 false // send as json
             );
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
             $file_id = $response->result->id;
 
             $response = self::curl(
@@ -2133,12 +2149,14 @@ class __
                     'OpenAI-Beta' => 'assistants=v2'
                 ]
             );
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
             $assistant_id = $response->result->id;
 
             $response = self::curl('https://api.openai.com/v1/threads', [], 'POST', [
                 'Authorization' => 'Bearer ' . $api_key,
                 'OpenAI-Beta' => 'assistants=v2'
             ]);
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
             $thread_id = $response->result->id;
 
             $response = self::curl(
@@ -2154,6 +2172,7 @@ class __
                     'OpenAI-Beta' => 'assistants=v2'
                 ]
             );
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
             $message_id = $response->result->id;
 
             $response = self::curl(
@@ -2167,6 +2186,7 @@ class __
                     'OpenAI-Beta' => 'assistants=v2'
                 ]
             );
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
             $run_id = $response->result->id;
 
             while (1 === 1) {
@@ -2179,10 +2199,15 @@ class __
                         'OpenAI-Beta' => 'assistants=v2'
                     ]
                 );
+                //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
                 $status = $response->result->status;
 
-                if ($status === 'completed' || $status === 'failed') {
+                if ($status === 'completed') {
                     break;
+                }
+                if ($status === 'failed') {
+                    $return['response'] = $response->result->last_error->code;
+                    return $return;
                 }
                 sleep(1);
             }
@@ -2191,6 +2216,7 @@ class __
                 'Authorization' => 'Bearer ' . $api_key,
                 'OpenAI-Beta' => 'assistants=v2'
             ]);
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
 
             if (
                 self::nx($response) ||
@@ -2205,6 +2231,7 @@ class __
                 return $return;
             }
             $return['response'] = $response->result->data[0]->content[0]->text->value;
+            $return['success'] = true;
 
             // parse json
             if (strpos($return['response'], '```json') === 0) {
