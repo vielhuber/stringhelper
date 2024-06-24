@@ -795,66 +795,66 @@ House'
 
     function test__chatgpt()
     {
-        $response = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY']);
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        $return = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY']);
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame(
-            stripos($response['response'], 'Frankreich') !== false ||
-                stripos($response['response'], 'französisch') !== false,
+            stripos($return['response'], 'Frankreich') !== false ||
+                stripos($return['response'], 'französisch') !== false,
             true
         );
-        $response = __chatgpt(
+        $return = __chatgpt(
             'Was habe ich vorher gefragt?',
             0.7,
             'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
-            $response['session_id']
+            $return['session_id']
         );
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame(
-            stripos($response['response'], 'Wer wurde 2018 Fußball-Weltmeister?') !== false ||
-                stripos($response['response'], 'Fußball-Weltmeister') !== false,
+            stripos($return['response'], 'Wer wurde 2018 Fußball-Weltmeister?') !== false ||
+                stripos($return['response'], 'Fußball-Weltmeister') !== false,
             true
         );
-        $response = __chatgpt(
+        $return = __chatgpt(
             'Welchen Satz hast Du exakt zuvor geschrieben?',
             0.7,
             'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
-            $response['session_id']
+            $return['session_id']
         );
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame(
-            stripos($response['response'], 'Frankreich') !== false ||
-                stripos($response['response'], 'französisch') !== false,
+            stripos($return['response'], 'Frankreich') !== false ||
+                stripos($return['response'], 'französisch') !== false,
             true
         );
         // the whole history is portable
-        $response = __chatgpt(
+        $return = __chatgpt(
             'Ich heiße David mit Vornamen. Bitte merk Dir das!',
             0.7,
             'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
-            $response['session_id']
+            $return['session_id']
         );
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
-        $response = __chatgpt(
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        $return = __chatgpt(
             'Wie heiße ich mit Vornamen?',
             0.7,
             'gpt-4',
             @$_SERVER['OPENAI_API_KEY'],
-            $response['session_id']
+            $return['session_id']
         );
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
-        $this->assertSame(stripos($response['response'], 'David') !== false, true);
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        $this->assertSame(stripos($return['response'], 'David') !== false, true);
 
-        $response = __chatgpt('Was habe ich vorher gefragt?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY'], null, [
+        $return = __chatgpt('Was habe ich vorher gefragt?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY'], null, [
             ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'],
             ['role' => 'assistant', 'content' => 'Frankreich.']
         ]);
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame(
-            stripos($response['response'], 'Wer wurde 2018 Fußball-Weltmeister?') !== false ||
-                stripos($response['response'], 'Fußball-Weltmeister') !== false,
+            stripos($return['response'], 'Wer wurde 2018 Fußball-Weltmeister?') !== false ||
+                stripos($return['response'], 'Fußball-Weltmeister') !== false,
             true
         );
 
@@ -864,7 +864,7 @@ House'
             $messages[] = ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'];
             $messages[] = ['role' => 'assistant', 'content' => 'Frankreich.'];
         }
-        $response = __chatgpt(
+        $return = __chatgpt(
             'Was habe ich vorher gefragt?',
             0.7,
             'gpt-3.5-turbo',
@@ -872,23 +872,25 @@ House'
             null,
             $messages
         );
-        //fwrite(STDERR, print_r(serialize($response) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame(
-            stripos($response['response'], 'Weltmeister') !== false ||
-                stripos($response['response'], 'Weltmeister') !== false,
+            stripos($return['response'], 'Weltmeister') !== false ||
+                stripos($return['response'], 'Weltmeister') !== false,
             true
         );
 
-        $response = __chatgpt(
-            'Wie lautet das erste Wort in der PDF?',
-            0.7,
+        $return = __chatgpt(
+            'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format.',
+            1.0,
             'gpt-4o',
             @$_SERVER['OPENAI_API_KEY'],
             null,
             [],
             'tests/assets/lorem.pdf'
         );
-        $this->assertSame(strpos($response['response'], 'Lorem') !== false, true);
+        $this->assertSame($return['response']->customer_nr, 'F123465789');
+        $this->assertSame($return['response']->date, '31. Oktober 2018');
+        $this->assertSame($return['response']->author, 'David Vielhuber');
     }
 
     function test__translate_deepl()

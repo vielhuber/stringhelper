@@ -1987,7 +1987,7 @@ class __
 
     public static function chatgpt(
         $prompt,
-        $temperature = 0.7,
+        $temperature = 1.0,
         $model = 'gpt-4o',
         $api_key = null,
         $session_id = null,
@@ -2076,6 +2076,12 @@ class __
                 return $return;
             }
             $return['response'] = $response->result->choices[0]->message->content;
+
+            // parse json
+            if (strpos($return['response'], '```json') === 0) {
+                $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+            }
+
             $history_session[] = [
                 'role' => $response->result->choices[0]->message->role,
                 'content' => $response->result->choices[0]->message->content
@@ -2100,7 +2106,7 @@ class __
                 'https://api.openai.com/v1/files',
                 [
                     'file' => new \CURLFile(realpath($file)),
-                    'purpose' => 'user_data'
+                    'purpose' => 'assistants'
                 ],
                 'POST',
                 [
@@ -2175,7 +2181,7 @@ class __
                 );
                 $status = $response->result->status;
 
-                if ($status === 'completed') {
+                if ($status === 'completed' || $status === 'failed') {
                     break;
                 }
                 sleep(1);
@@ -2199,6 +2205,11 @@ class __
                 return $return;
             }
             $return['response'] = $response->result->data[0]->content[0]->text->value;
+
+            // parse json
+            if (strpos($return['response'], '```json') === 0) {
+                $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+            }
 
             // rollback
             $response = self::curl(
