@@ -894,6 +894,7 @@ House'
             [],
             'tests/assets/lorem.pdf'
         );
+        fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame($return['response']->customer_nr, 'F123465789');
         $this->assertSame($return['response']->date, '31. Oktober 2018');
         $this->assertSame($return['response']->author, 'David Vielhuber');
