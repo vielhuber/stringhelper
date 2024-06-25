@@ -795,20 +795,16 @@ House'
 
     function test__chatgpt()
     {
-        $return = __chatgpt('Wer wurde 2018 Fußball-Weltmeister?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY']);
+        $chatgpt = __chatgpt('gpt-4o', 0.7, @$_SERVER['OPENAI_API_KEY']);
+
+        $return = $chatgpt->ask('Wer wurde 2018 Fußball-Weltmeister?');
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertThat(
             $return['response'],
             $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
         );
 
-        $return = __chatgpt(
-            'Was habe ich vorher gefragt?',
-            0.7,
-            'gpt-4',
-            @$_SERVER['OPENAI_API_KEY'],
-            $return['session_id']
-        );
+        $return = $chatgpt->ask('Was habe ich vorher gefragt?');
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertThat(
             $return['response'],
@@ -818,13 +814,7 @@ House'
             )
         );
 
-        $return = __chatgpt(
-            'Welchen Satz hast Du exakt zuvor geschrieben?',
-            0.7,
-            'gpt-4',
-            @$_SERVER['OPENAI_API_KEY'],
-            $return['session_id']
-        );
+        $return = $chatgpt->ask('Welchen Satz hast Du exakt zuvor geschrieben?');
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertThat(
             $return['response'],
@@ -833,74 +823,31 @@ House'
                 $this->stringContains('Fußball-Weltmeister')
             )
         );
-        // the whole history is portable
-        $return = __chatgpt(
-            'Ich heiße David mit Vornamen. Bitte merk Dir das!',
-            0.7,
-            'gpt-4',
-            @$_SERVER['OPENAI_API_KEY'],
-            $return['session_id']
-        );
+
+        $return = $chatgpt->ask('Ich heiße David mit Vornamen. Bitte merk Dir das!');
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $return = __chatgpt(
-            'Wie heiße ich mit Vornamen?',
-            0.7,
-            'gpt-4',
-            @$_SERVER['OPENAI_API_KEY'],
-            $return['session_id']
-        );
+        $chatgpt = __chatgpt(null, null, @$_SERVER['OPENAI_API_KEY'], $chatgpt->session_id);
+        $return = $chatgpt->ask('Wie heiße ich mit Vornamen?');
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertStringContainsString('David', $return['response']);
 
-        $return = __chatgpt('Was habe ich vorher gefragt?', 0.7, 'gpt-4', @$_SERVER['OPENAI_API_KEY'], null, [
-            ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'],
-            ['role' => 'assistant', 'content' => 'Frankreich.']
-        ]);
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr(
-                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Fußball-Weltmeister')
-            )
-        );
-
-        // truncation
-        $messages = [];
-        for ($i = 0; $i < 100000; $i++) {
-            $messages[] = ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'];
-            $messages[] = ['role' => 'assistant', 'content' => 'Frankreich.'];
-        }
-        $return = __chatgpt(
-            'Was habe ich vorher gefragt?',
-            0.7,
-            'gpt-3.5-turbo',
-            @$_SERVER['OPENAI_API_KEY'],
-            null,
-            $messages
-        );
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr(
-                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Fußball-Weltmeister')
-            )
-        );
-
-        $return = __chatgpt(
+        $return = $chatgpt->ask(
             'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format.',
-            1.0,
-            'gpt-4o',
-            @$_SERVER['OPENAI_API_KEY'],
-            null,
-            [],
             'tests/assets/lorem.pdf'
         );
-        fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame($return['response']->customer_nr, 'F123465789');
         $this->assertSame($return['response']->date, '31. Oktober 2018');
         $this->assertSame($return['response']->author, 'David Vielhuber');
+
+        // this is currently not working
+        // see: https://community.openai.com/t/image-explanation-within-assistants-doestnt-work-in-the-playground/838453
+        //$return = $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
+        //$this->assertStringContainsString('Tulpe', $return['response']);
+        //$return = $chatgpt->ask('Was war auf dem vorherigen Bild zu sehen?');
+        //$this->assertStringContainsString('Tulpe', $return['response']);
+
+        $chatgpt->cleanup();
     }
 
     function test__translate_deepl()

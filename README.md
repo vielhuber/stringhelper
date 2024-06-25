@@ -517,40 +517,23 @@ __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en'
 __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // To be or not to be; that is the question here.
 
 // chatgpt
-__chatgpt(
-    prompt: 'Wer wurde 2018 Fußball-Weltmeister?',
+$chatgpt = __chatgpt(
+    model: 'gpt-4o',
     temperature: 0.7, // controls the randomness of the text generated
-    model: 'gpt-4o',
     api_key: '**API Key**'
-)
-// ['response' => 'Frankreich.', 'session_id' => 42, 'success' => true] */
-__chatgpt(
-    prompt: 'Was habe ich vorher gefragt?',
-    session_id: 42,
-    temperature: 0.7,
-    model: 'gpt-4o',
-    api_key: '**API Key**'
-)
-// ['response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"', 'session_id' => 42, 'success' => true]
-__chatgpt(
-    prompt: 'Was habe ich vorher gefragt?',
-    history: [
-        ['role' => 'user', 'content' => 'Wer wurde 2018 Fußball-Weltmeister?'],
-        ['role' => 'assistant', 'content' => 'Frankreich.']
-    ],
-    temperature: 0.7,
-    model: 'gpt-4o',
-    api_key: '**API Key**'
-)
-// ['response' => 'Du hast gefragt: "Wer wurde 2018 Fußball-Weltmeister?"', 'session_id' => 42, 'success' => true]
-__chatgpt(
-    prompt: 'Wie lautet das erste Wort in der PDF?',
-    file: 'lorem.pdf',
-    temperature: 0.7,
-    model: 'gpt-4o',
-    api_key: '**API Key**'
-)
+);
+$chatgpt->ask('Wer wurde 2018 Fußball-Weltmeister?');
+// ['response' => 'Frankreich.', 'success' => true]
+$chatgpt->ask('Was ist auf dem Bild zu sehen?', 'lorem.jpg');
+// ['response' => 'Auf dem Bild ist eine Katze zu sehen.', 'success' => true]
+$chatgpt->ask('Wie lautet das erste Wort in der PDF?', 'lorem.pdf');
 // ['response' => 'Das erste Wort lautet "Lorem".', 'success' => true]
+$chatgpt = __chatgpt(
+    session_id: $chatgpt->session_id // submit session to continue a conversation afterwards ($chatgpt->session_id)
+);
+$chatgpt->ask('Was habe ich vorher gefragt?');
+// ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true]
+$chatgpt->cleanup(); // remotely deletes all submitted data
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med

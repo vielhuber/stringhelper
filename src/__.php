@@ -1985,286 +1985,16 @@ class __
         return $response->result[0]->translations[0]->text;
     }
 
-    public static function chatgpt(
-        $prompt,
-        $temperature = 1.0,
-        $model = 'gpt-4o',
-        $api_key = null,
-        $session_id = null,
-        $history = [],
-        $file = null
-    ) {
-        if (self::nx($file)) {
-            $return = ['response' => null, 'session_id' => null, 'usage' => null, 'success' => false];
-            if (self::nx($prompt)) {
-                $return['response'] = 'prompt missing.';
-                return $return;
-            }
-            if (self::nx($api_key)) {
-                $return['response'] = 'api_key missing.';
-                return $return;
-            }
-            if ($session_id === null) {
-                $session_id = md5(uniqid(mt_rand(), true));
-            }
-            $return['session_id'] = $session_id;
-            $filename = sys_get_temp_dir() . '/' . $session_id . '.txt';
-            if (!file_exists($filename)) {
-                file_put_contents($filename, serialize([]));
-            }
-            $history_session = unserialize(file_get_contents($filename));
-
-            if (!empty($history)) {
-                foreach ($history as $history__value) {
-                    $history_session[] = $history__value;
-                }
-            }
-            $history_session[] = ['role' => 'user', 'content' => $prompt];
-
-            $initial_truncation = true;
-            while (1 === 1) {
-                $response = self::curl(
-                    'https://api.openai.com/v1/chat/completions',
-                    [
-                        'model' => $model,
-                        'messages' => $history_session,
-                        'temperature' => $temperature
-                    ],
-                    'POST',
-                    [
-                        'Authorization' => 'Bearer ' . $api_key
-                    ]
-                );
-                //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-                if ($response->status == 400 || $response->status == 429) {
-                    if (
-                        strpos($response->result->error->message, 'too large') !== false ||
-                        strpos($response->result->error->message, 'too long') !== false ||
-                        strpos($response->result->error->message, 'reduce the length of the messages.') !== false
-                    ) {
-                        if ($initial_truncation === true) {
-                            $max_tokens = 4097;
-                            $max_length = $max_tokens * 1.5;
-                            $key_until_delete = null;
-                            $chars_all = 0;
-                            foreach ($history_session as $history_session__value) {
-                                $chars_all += mb_strlen($history_session__value['content']);
-                            }
-                            $chars = 0;
-                            foreach ($history_session as $history_session__key => $history_session__value) {
-                                if ($chars_all - $chars > $max_length) {
-                                    $key_until_delete = $history_session__key;
-                                }
-                                $chars += mb_strlen($history_session__value['content']);
-                            }
-                            $history_session = array_slice($history_session, $key_until_delete + 1);
-                            $initial_truncation = false;
-                            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-                        } else {
-                            unset($history_session[0]);
-                            $history_session = array_values($history_session);
-                            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-                        }
-                    } else {
-                        $return['response'] = $response->result->error->type;
-                        return $return;
-                    }
-                } else {
-                    break;
-                }
-            }
-
-            if (
-                self::nx($response) ||
-                self::nx($response->result) ||
-                self::nx($response->result->choices) ||
-                self::nx($response->result->choices[0]) ||
-                self::nx($response->result->choices[0]->message) ||
-                self::nx($response->result->choices[0]->message->content)
-            ) {
-                return $return;
-            }
-            $return['response'] = $response->result->choices[0]->message->content;
-            $return['success'] = true;
-
-            // parse json
-            if (strpos($return['response'], '```json') === 0) {
-                $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
-            }
-
-            $history_session[] = [
-                'role' => $response->result->choices[0]->message->role,
-                'content' => $response->result->choices[0]->message->content
-            ];
-            file_put_contents($filename, serialize($history_session));
-
-            $usage = [];
-            $usage['tokens'] = $response->result->usage->total_tokens;
-            $usage['costs'] = ($usage['tokens'] / 1000) * 0.002; // this seems wrong, but we will fix that
-            $return['usage'] = $usage;
-        } else {
-            $return = ['response' => null, 'success' => false];
-            if (self::nx($prompt)) {
-                $return['response'] = 'prompt missing.';
-                return $return;
-            }
-            if (self::nx($api_key)) {
-                $return['response'] = 'api_key missing.';
-                return $return;
-            }
-            // file uploads don't work together with sessions
-            if (self::x($session_id) || self::x($history) || !file_exists($file)) {
-                return $return;
-            }
-
-            $response = self::curl(
-                'https://api.openai.com/v1/files',
-                [
-                    'file' => new \CURLFile(realpath($file)),
-                    'purpose' => 'assistants'
-                ],
-                'POST',
-                [
-                    'Authorization' => 'Bearer ' . $api_key
-                ],
-                false,
-                false // send as json
-            );
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-            $file_id = $response->result->id;
-
-            $response = self::curl(
-                'https://api.openai.com/v1/assistants',
-                [
-                    'instructions' =>
-                        'Du bist ein professioneller Datei-Assistent. Wenn eine Frage gestellt ist, antwortest Du immer präzise.',
-                    'name' => 'Assistent',
-                    'model' => $model,
-                    'tools' => [['type' => 'file_search']],
-                    'temperature' => $temperature
-                ],
-                'POST',
-                [
-                    'Authorization' => 'Bearer ' . $api_key,
-                    'OpenAI-Beta' => 'assistants=v2'
-                ]
-            );
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-            $assistant_id = $response->result->id;
-
-            $response = self::curl('https://api.openai.com/v1/threads', [], 'POST', [
-                'Authorization' => 'Bearer ' . $api_key,
-                'OpenAI-Beta' => 'assistants=v2'
-            ]);
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-            $thread_id = $response->result->id;
-
-            $response = self::curl(
-                'https://api.openai.com/v1/threads/' . $thread_id . '/messages',
-                [
-                    'role' => 'user',
-                    'content' => $prompt,
-                    'attachments' => [['file_id' => $file_id, 'tools' => [['type' => 'file_search']]]]
-                ],
-                'POST',
-                [
-                    'Authorization' => 'Bearer ' . $api_key,
-                    'OpenAI-Beta' => 'assistants=v2'
-                ]
-            );
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-            $message_id = $response->result->id;
-
-            $response = self::curl(
-                'https://api.openai.com/v1/threads/' . $thread_id . '/runs',
-                [
-                    'assistant_id' => $assistant_id
-                ],
-                'POST',
-                [
-                    'Authorization' => 'Bearer ' . $api_key,
-                    'OpenAI-Beta' => 'assistants=v2'
-                ]
-            );
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-            $run_id = $response->result->id;
-
-            while (1 === 1) {
-                $response = self::curl(
-                    'https://api.openai.com/v1/threads/' . $thread_id . '/runs/' . $run_id,
-                    null,
-                    'GET',
-                    [
-                        'Authorization' => 'Bearer ' . $api_key,
-                        'OpenAI-Beta' => 'assistants=v2'
-                    ]
-                );
-                //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-                $status = $response->result->status;
-
-                if ($status === 'completed') {
-                    break;
-                }
-                if ($status === 'failed') {
-                    $return['response'] = $response->result->last_error->code;
-                    return $return;
-                }
-                sleep(1);
-            }
-
-            $response = self::curl('https://api.openai.com/v1/threads/' . $thread_id . '/messages', null, 'GET', [
-                'Authorization' => 'Bearer ' . $api_key,
-                'OpenAI-Beta' => 'assistants=v2'
-            ]);
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-
-            if (
-                self::nx($response) ||
-                self::nx($response->result) ||
-                self::nx($response->result->data) ||
-                self::nx($response->result->data[0]) ||
-                self::nx($response->result->data[0]->content) ||
-                self::nx($response->result->data[0]->content[0]) ||
-                self::nx($response->result->data[0]->content[0]->text) ||
-                self::nx($response->result->data[0]->content[0]->text->value)
-            ) {
-                return $return;
-            }
-            $return['response'] = $response->result->data[0]->content[0]->text->value;
-            $return['success'] = true;
-
-            // parse json
-            if (strpos($return['response'], '```json') === 0) {
-                $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
-            }
-
-            // rollback
-            $response = self::curl(
-                'https://api.openai.com/v1/threads/' . $thread_id . '/messages/' . $message_id,
-                null,
-                'DELETE',
-                [
-                    'Authorization' => 'Bearer ' . $api_key,
-                    'OpenAI-Beta' => 'assistants=v2'
-                ]
-            );
-
-            $response = self::curl('https://api.openai.com/v1/threads/' . $thread_id, null, 'DELETE', [
-                'Authorization' => 'Bearer ' . $api_key,
-                'OpenAI-Beta' => 'assistants=v2'
-            ]);
-
-            $response = self::curl('https://api.openai.com/v1/assistants/' . $assistant_id, null, 'DELETE', [
-                'Authorization' => 'Bearer ' . $api_key,
-                'OpenAI-Beta' => 'assistants=v2'
-            ]);
-
-            $response = self::curl('https://api.openai.com/v1/files/' . $file_id, null, 'DELETE', [
-                'Authorization' => 'Bearer ' . $api_key
-            ]);
+    public static function chatgpt($model = null, $temperature = null, $api_key = null, $session_id = null)
+    {
+        if ($model === null) {
+            $model = 'gpt-4o';
         }
-
-        return $return;
+        if ($temperature === null) {
+            $temperature = 1.0;
+        }
+        $chatgpt = new chatgpt($model, $temperature, $api_key, $session_id);
+        return $chatgpt;
     }
 
     public static function translate_deepl($str, $from_lng, $to_lng, $api_key, $proxy = null)
@@ -5946,5 +5676,237 @@ class __
     public static function neq($a, $b)
     {
         return !self::eq(@$a, @$b);
+    }
+}
+
+class chatgpt
+{
+    public $model = null;
+    public $temperature = null;
+    public $api_key = null;
+
+    public $session_id = null;
+    public $assistant_id = null;
+    public $thread_id = null;
+
+    public function __construct($model, $temperature, $api_key, $session_id)
+    {
+        $this->model = $model;
+        $this->temperature = $temperature;
+        $this->api_key = $api_key;
+
+        if (__nx($session_id)) {
+            $response = __curl(
+                'https://api.openai.com/v1/assistants',
+                [
+                    'instructions' =>
+                        'Du bist ein professioneller Assistent. Wenn eine Frage gestellt ist, antwortest Du immer präzise.',
+                    'name' => 'Assistent',
+                    'model' => $model,
+                    'tools' => [['type' => 'file_search']],
+                    'temperature' => $temperature
+                ],
+                'POST',
+                [
+                    'Authorization' => 'Bearer ' . $this->api_key,
+                    'OpenAI-Beta' => 'assistants=v2'
+                ]
+            );
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->assistant_id = $response->result->id;
+
+            $response = __curl('https://api.openai.com/v1/threads', [], 'POST', [
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'OpenAI-Beta' => 'assistants=v2'
+            ]);
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->thread_id = $response->result->id;
+
+            $this->session_id = $this->assistant_id . '###' . $this->thread_id;
+        } else {
+            $this->assistant_id = explode('###', $session_id)[0];
+            $this->thread_id = explode('###', $session_id)[1];
+            $this->session_id = $session_id;
+        }
+    }
+
+    public function ask($prompt = null, $file = null)
+    {
+        $return = ['response' => null, 'success' => false];
+
+        if (
+            __nx($this->model) ||
+            __nx($this->temperature) ||
+            __nx($this->api_key) ||
+            __nx($this->session_id) ||
+            __nx($this->assistant_id) ||
+            __nx($this->thread_id)
+        ) {
+            __d([
+                $this->model,
+                $this->temperature,
+                $this->api_key,
+                $this->session_id,
+                $this->assistant_id,
+                $this->thread_id
+            ]);
+            $return['response'] = 'data missing.';
+            return $return;
+        }
+
+        if (__nx($prompt)) {
+            $return['response'] = 'prompt missing.';
+            return $return;
+        }
+
+        $args = [
+            'role' => 'user',
+            'content' => $prompt
+        ];
+
+        if (__x($file)) {
+            $response = __curl(
+                'https://api.openai.com/v1/files',
+                [
+                    'file' => new \CURLFile(realpath($file)),
+                    'purpose' =>
+                        stripos($file, '.jpg') !== false ||
+                        stripos($file, '.jpeg') !== false ||
+                        stripos($file, '.png') !== false
+                            ? 'vision'
+                            : 'assistants'
+                ],
+                'POST',
+                [
+                    'Authorization' => 'Bearer ' . $this->api_key
+                ],
+                false,
+                false // send as json
+            );
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+            $file_id = $response->result->id;
+
+            if (
+                stripos($file, '.jpg') !== false ||
+                stripos($file, '.jpeg') !== false ||
+                stripos($file, '.png') !== false
+            ) {
+                $args['content'] = [
+                    ['type' => 'text', 'text' => $prompt],
+                    [
+                        'type' => 'image_file',
+                        'image_file' => [
+                            'file_id' => $file_id
+                        ]
+                    ]
+                ];
+            } else {
+                $args['attachments'] = [['file_id' => $file_id, 'tools' => [['type' => 'file_search']]]];
+            }
+        }
+
+        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id . '/messages', $args, 'POST', [
+            'Authorization' => 'Bearer ' . $this->api_key,
+            'OpenAI-Beta' => 'assistants=v2'
+        ]);
+        //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+        $message_id = $response->result->id;
+
+        $response = __curl(
+            'https://api.openai.com/v1/threads/' . $this->thread_id . '/runs',
+            [
+                'assistant_id' => $this->assistant_id
+            ],
+            'POST',
+            [
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'OpenAI-Beta' => 'assistants=v2'
+            ]
+        );
+        //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+        $run_id = $response->result->id;
+
+        while (1 === 1) {
+            $response = __curl(
+                'https://api.openai.com/v1/threads/' . $this->thread_id . '/runs/' . $run_id,
+                null,
+                'GET',
+                [
+                    'Authorization' => 'Bearer ' . $this->api_key,
+                    'OpenAI-Beta' => 'assistants=v2'
+                ]
+            );
+            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+            $status = $response->result->status;
+
+            if ($status === 'completed') {
+                break;
+            }
+            if ($status === 'failed') {
+                $return['response'] = $response->result->last_error->code;
+                return $return;
+            }
+            sleep(1);
+        }
+
+        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id . '/messages', null, 'GET', [
+            'Authorization' => 'Bearer ' . $this->api_key,
+            'OpenAI-Beta' => 'assistants=v2'
+        ]);
+        //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+
+        if (
+            __nx($response) ||
+            __nx($response->result) ||
+            __nx($response->result->data) ||
+            __nx($response->result->data[0]) ||
+            __nx($response->result->data[0]->content) ||
+            __nx($response->result->data[0]->content[0]) ||
+            __nx($response->result->data[0]->content[0]->text) ||
+            __nx($response->result->data[0]->content[0]->text->value)
+        ) {
+            return $return;
+        }
+        $return['response'] = $response->result->data[0]->content[0]->text->value;
+        $return['success'] = true;
+
+        // parse json
+        if (strpos($return['response'], '```json') === 0) {
+            $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+        }
+
+        return $return;
+    }
+
+    public function cleanup()
+    {
+        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id . '/messages', null, 'GET', [
+            'Authorization' => 'Bearer ' . $this->api_key,
+            'OpenAI-Beta' => 'assistants=v2'
+        ]);
+        foreach ($response->result->data as $data__value) {
+            if (__x($data__value->attachments)) {
+                foreach ($data__value->attachments as $attachments__value) {
+                    $response = __curl(
+                        'https://api.openai.com/v1/files/' . $attachments__value->file_id,
+                        null,
+                        'DELETE',
+                        [
+                            'Authorization' => 'Bearer ' . $this->api_key
+                        ]
+                    );
+                }
+            }
+        }
+
+        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id, null, 'DELETE', [
+            'Authorization' => 'Bearer ' . $this->api_key,
+            'OpenAI-Beta' => 'assistants=v2'
+        ]);
+
+        $response = __curl('https://api.openai.com/v1/assistants/' . $this->assistant_id, null, 'DELETE', [
+            'Authorization' => 'Bearer ' . $this->api_key,
+            'OpenAI-Beta' => 'assistants=v2'
+        ]);
     }
 }
