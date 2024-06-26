@@ -840,12 +840,10 @@ House'
         $this->assertSame($return['response']->date, '31. Oktober 2018');
         $this->assertSame($return['response']->author, 'David Vielhuber');
 
-        // this is currently not working
-        // see: https://community.openai.com/t/image-explanation-within-assistants-doestnt-work-in-the-playground/838453
-        //$return = $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
-        //$this->assertStringContainsString('Tulpe', $return['response']);
-        //$return = $chatgpt->ask('Was war auf dem vorherigen Bild zu sehen?');
-        //$this->assertStringContainsString('Tulpe', $return['response']);
+        $return = $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
+        $this->assertStringContainsString('Tulpe', $return['response']);
+        $return = $chatgpt->ask('Was war auf dem vorherigen Bild zu sehen?');
+        $this->assertStringContainsString('Tulpe', $return['response']);
 
         $chatgpt->cleanup();
     }

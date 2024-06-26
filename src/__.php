@@ -5885,6 +5885,20 @@ class chatgpt
             'OpenAI-Beta' => 'assistants=v2'
         ]);
         foreach ($response->result->data as $data__value) {
+            if (__x($data__value->content)) {
+                foreach ($data__value->content as $content__value) {
+                    if ($content__value->type === 'image_file' && __x($content__value->image_file->file_id)) {
+                        $response = __curl(
+                            'https://api.openai.com/v1/files/' . $content__value->image_file->file_id,
+                            null,
+                            'DELETE',
+                            [
+                                'Authorization' => 'Bearer ' . $this->api_key
+                            ]
+                        );
+                    }
+                }
+            }
             if (__x($data__value->attachments)) {
                 foreach ($data__value->attachments as $attachments__value) {
                     $response = __curl(
