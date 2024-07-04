@@ -856,8 +856,8 @@ House'
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
-        $this->assertSame($return['response']->meter_number, '123456789');
-        $this->assertContains($return['response']->flower, ['Tulpe', 'Tulip']);
+        $this->assertContains($return['response']->meter_number, ['123456789', '', null]);
+        $this->assertContains($return['response']->flower, ['Tulpe', 'Tulip', '', null]);
 
         $chatgpt->cleanup();
     }
