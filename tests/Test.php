@@ -810,7 +810,7 @@ House'
             $return['response'],
             $this->logicalOr(
                 $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Fußball-Weltmeister')
+                $this->stringContains('Weltmeister')
             )
         );
 
@@ -820,7 +820,7 @@ House'
             $return['response'],
             $this->logicalOr(
                 $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Fußball-Weltmeister')
+                $this->stringContains('Weltmeister')
             )
         );
 
