@@ -859,7 +859,7 @@ House'
         $this->assertSame($return['response']->meter_number, '123456789');
         $this->assertContains($return['response']->flower, ['Tulpe', 'Tulip']);
 
-        $chatgpt->cleanup_all();
+        $chatgpt->cleanup();
     }
 
     function test__translate_deepl()
