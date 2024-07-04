@@ -837,7 +837,7 @@ House'
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
-        $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018', '', nul]);
+        $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018', '', null]);
         $this->assertSame($return['response']->author, 'David Vielhuber');
 
         $return = $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
