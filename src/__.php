@@ -5923,4 +5923,29 @@ class chatgpt
             'OpenAI-Beta' => 'assistants=v2'
         ]);
     }
+
+    public function cleanup_all()
+    {
+        $response = __curl('https://api.openai.com/v1/assistants', [], 'GET', [
+            'Authorization' => 'Bearer ' . $this->api_key,
+            'OpenAI-Beta' => 'assistants=v2'
+        ]);
+        foreach ($response->result->data as $res__value) {
+            $response = __curl('https://api.openai.com/v1/assistants/' . $res__value->id, null, 'DELETE', [
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'OpenAI-Beta' => 'assistants=v2'
+            ]);
+        }
+
+        $response = __curl('https://api.openai.com/v1/files', [], 'GET', [
+            'Authorization' => 'Bearer ' . $this->api_key,
+            'OpenAI-Beta' => 'assistants=v2'
+        ]);
+        foreach ($response->result->data as $res__value) {
+            $response = __curl('https://api.openai.com/v1/files/' . $res__value->id, null, 'DELETE', [
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'OpenAI-Beta' => 'assistants=v2'
+            ]);
+        }
+    }
 }
