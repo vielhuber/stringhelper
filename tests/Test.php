@@ -832,13 +832,13 @@ House'
         $this->assertStringContainsString('David', $return['response']);
 
         $return = $chatgpt->ask(
-            'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du einen Wert nicht findest, gib einen leeren String zurück.',
+            'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
             'tests/assets/lorem.pdf'
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
         $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018', '', null]);
-        $this->assertSame($return['response']->author, 'David Vielhuber');
+        $this->assertSame($return['response']->author, 'David Vielhuber', '');
 
         $return = $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
         $this->assertStringContainsString('Tulpe', $return['response']);
@@ -846,7 +846,7 @@ House'
         $this->assertStringContainsString('Tulpe', $return['response']);
 
         $return = $chatgpt->ask(
-            'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format. Wenn Du einen Wert nicht findest, gib einen leeren String zurück.',
+            'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
             [
                 'tests/assets/lorem.pdf',
                 'tests/assets/lorem2.pdf',
