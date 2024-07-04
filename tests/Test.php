@@ -835,7 +835,7 @@ House'
             'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du einen Wert nicht findest, gib einen leeren String zurück.',
             'tests/assets/lorem.pdf'
         );
-        fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertContains($return['response']->customer_nr, ['F123465789', '']);
         $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018']);
         $this->assertSame($return['response']->author, 'David Vielhuber');
@@ -854,7 +854,7 @@ House'
                 'tests/assets/not_existing.jpg'
             ]
         );
-        fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertContains($return['response']->customer_nr, ['F123465789', '']);
         $this->assertSame($return['response']->meter_number, '123456789');
         $this->assertContains($return['response']->flower, ['Tulpe', 'Tulip']);
