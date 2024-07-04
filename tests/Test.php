@@ -851,10 +851,10 @@ House'
                 'tests/assets/lorem.pdf',
                 'tests/assets/lorem2.pdf',
                 'tests/assets/iptc_write.jpg',
-                'test/assets/not_existing.jpg'
+                'tests/assets/not_existing.jpg'
             ]
         );
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertContains($return['response']->customer_nr, ['F123465789', '']);
         $this->assertSame($return['response']->meter_number, '123456789');
         $this->assertContains($return['response']->flower, ['Tulpe', 'Tulip']);
