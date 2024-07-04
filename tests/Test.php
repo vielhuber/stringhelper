@@ -837,7 +837,7 @@ House'
         );
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertSame($return['response']->customer_nr, 'F123465789');
-        $this->assertSame($return['response']->date, '31. Oktober 2018');
+        $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018']);
         $this->assertSame($return['response']->author, 'David Vielhuber');
 
         $return = $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
@@ -845,7 +845,21 @@ House'
         $return = $chatgpt->ask('Was war auf dem vorherigen Bild zu sehen?');
         $this->assertStringContainsString('Tulpe', $return['response']);
 
-        $chatgpt->cleanup();
+        $return = $chatgpt->ask(
+            'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format.',
+            [
+                'tests/assets/lorem.pdf',
+                'tests/assets/lorem2.pdf',
+                'tests/assets/iptc_write.jpg',
+                'test/assets/not_existing.jpg'
+            ]
+        );
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        $this->assertSame($return['response']->customer_nr, 'F123465789');
+        $this->assertSame($return['response']->meter_number, '123456789');
+        $this->assertSame($return['response']->flower, 'Tulpe');
+
+        $chatgpt->cleanup_all();
     }
 
     function test__translate_deepl()

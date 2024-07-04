@@ -5730,7 +5730,7 @@ class chatgpt
         }
     }
 
-    public function ask($prompt = null, $file = null)
+    public function ask($prompt = null, $files = null)
     {
         $return = ['response' => null, 'success' => false];
 
@@ -5764,44 +5764,60 @@ class chatgpt
             'content' => $prompt
         ];
 
-        if (__x($file)) {
-            $response = __curl(
-                'https://api.openai.com/v1/files',
-                [
-                    'file' => new \CURLFile(realpath($file)),
-                    'purpose' =>
-                        stripos($file, '.jpg') !== false ||
-                        stripos($file, '.jpeg') !== false ||
-                        stripos($file, '.png') !== false
-                            ? 'vision'
-                            : 'assistants'
-                ],
-                'POST',
-                [
-                    'Authorization' => 'Bearer ' . $this->api_key
-                ],
-                false,
-                false // send as json
-            );
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-            $file_id = $response->result->id;
+        if (__x($files)) {
+            if (!is_array($files)) {
+                $files = [$files];
+            }
 
-            if (
-                stripos($file, '.jpg') !== false ||
-                stripos($file, '.jpeg') !== false ||
-                stripos($file, '.png') !== false
-            ) {
-                $args['content'] = [
-                    ['type' => 'text', 'text' => $prompt],
+            $file_ids = [];
+
+            foreach ($files as $files__value) {
+                if (!file_exists($files__value)) {
+                    continue;
+                }
+                $response = __curl(
+                    'https://api.openai.com/v1/files',
                     [
+                        'file' => new \CURLFile(realpath($files__value)),
+                        'purpose' =>
+                            stripos($files__value, '.jpg') !== false ||
+                            stripos($files__value, '.jpeg') !== false ||
+                            stripos($files__value, '.png') !== false
+                                ? 'vision'
+                                : 'assistants'
+                    ],
+                    'POST',
+                    [
+                        'Authorization' => 'Bearer ' . $this->api_key
+                    ],
+                    false,
+                    false // send as json
+                );
+                //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+                $file_ids[] = ['id' => $response->result->id, 'path' => $files__value];
+            }
+
+            $args['content'] = [['type' => 'text', 'text' => $prompt]];
+            $args['attachments'] = [];
+
+            foreach ($file_ids as $file_ids__value) {
+                if (
+                    stripos($file_ids__value['path'], '.jpg') !== false ||
+                    stripos($file_ids__value['path'], '.jpeg') !== false ||
+                    stripos($file_ids__value['path'], '.png') !== false
+                ) {
+                    $args['content'][] = [
                         'type' => 'image_file',
                         'image_file' => [
-                            'file_id' => $file_id
+                            'file_id' => $file_ids__value['id']
                         ]
-                    ]
-                ];
-            } else {
-                $args['attachments'] = [['file_id' => $file_id, 'tools' => [['type' => 'file_search']]]];
+                    ];
+                } else {
+                    $args['attachments'][] = [
+                        'file_id' => $file_ids__value['id'],
+                        'tools' => [['type' => 'file_search']]
+                    ];
+                }
             }
         }
 

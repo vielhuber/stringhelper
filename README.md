@@ -528,12 +528,15 @@ $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'lorem.jpg');
 // ['response' => 'Auf dem Bild ist eine Katze zu sehen.', 'success' => true]
 $chatgpt->ask('Wie lautet das erste Wort in der PDF?', 'lorem.pdf');
 // ['response' => 'Das erste Wort lautet "Lorem".', 'success' => true]
+$chatgpt->ask('Fasse die folgenden Dokumente zusammen.', ['1.pdf','2.jpg']);
+// ['response' => '...', 'success' => true]
 $chatgpt = __chatgpt(
     session_id: $chatgpt->session_id // submit session to continue a conversation afterwards ($chatgpt->session_id)
 );
 $chatgpt->ask('Was habe ich vorher gefragt?');
 // ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true]
-$chatgpt->cleanup(); // remotely deletes all submitted data
+$chatgpt->cleanup(); // remotely deletes the data of the current session
+$chatgpt->cleanup_all(); // remotely deletes all data
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med
