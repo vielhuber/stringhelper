@@ -5742,14 +5742,6 @@ class chatgpt
             __nx($this->assistant_id) ||
             __nx($this->thread_id)
         ) {
-            __d([
-                $this->model,
-                $this->temperature,
-                $this->api_key,
-                $this->session_id,
-                $this->assistant_id,
-                $this->thread_id
-            ]);
             $return['response'] = 'data missing.';
             return $return;
         }
