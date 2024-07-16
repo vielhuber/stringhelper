@@ -402,6 +402,31 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__br2nl([]), []);
     }
 
+    function test__files_in_folder()
+    {
+        $this->assertSame(count(__files_in_folder()) >= 6, true);
+        $this->assertSame(count(__files_in_folder('.')) >= 6, true);
+        $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) >= 5, true);
+        $this->assertSame(in_array('.gitignore', __files_in_folder('.', false)), true);
+        $this->assertSame(in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])), false);
+        $this->assertSame(count(__files_in_folder('tests')) === 2, true);
+        $this->assertSame(count(__files_in_folder('tests', false, ['Test.php'])) === 1, true);
+        $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
+        $this->assertSame(count(__files_in_folder('tests', true, ['assets'])) === 2, true);
+        $this->assertSame(count(__files_in_folder('tests/', true)) > 2, true);
+        $this->assertSame(count(__files_in_folder('foo')) === 0, true);
+
+        $this->assertStringContainsString('/tests/assets/', __files_in_folder('tests/assets', false, null, true)[0]);
+
+        mkdir('tests/foo');
+        $this->assertSame(count(__files_in_folder('tests/foo')) === 0, true);
+        touch('tests/foo/index.txt');
+        $this->assertSame(count(__files_in_folder('tests/foo')) === 1, true);
+        $this->assertSame(is_dir('tests/foo'), true);
+        __rrmdir('tests/foo');
+        $this->assertSame(!is_dir('tests/foo'), true);
+    }
+
     function test__str_to_dom()
     {
         foreach (
@@ -3494,26 +3519,6 @@ data-attr="foo">
 
         $this->assertSame(__url(), 'https://github.com/vielhuber/stringhelper');
         $this->assertSame(__baseurl(), 'https://github.com');
-
-        $this->assertSame(count(__files_in_folder()) >= 6, true);
-        $this->assertSame(count(__files_in_folder('.')) >= 6, true);
-        $this->assertSame(count(__files_in_folder('.', false, ['.gitignore'])) >= 5, true);
-        $this->assertSame(in_array('.gitignore', __files_in_folder('.', false)), true);
-        $this->assertSame(in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])), false);
-        $this->assertSame(count(__files_in_folder('tests')) === 2, true);
-        $this->assertSame(count(__files_in_folder('tests', false, ['Test.php'])) === 1, true);
-        $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
-        $this->assertSame(count(__files_in_folder('tests', true, ['assets'])) === 2, true);
-        $this->assertSame(count(__files_in_folder('tests/', true)) > 2, true);
-        $this->assertSame(count(__files_in_folder('foo')) === 0, true);
-
-        mkdir('tests/foo');
-        $this->assertSame(count(__files_in_folder('tests/foo')) === 0, true);
-        touch('tests/foo/index.txt');
-        $this->assertSame(count(__files_in_folder('tests/foo')) === 1, true);
-        $this->assertSame(is_dir('tests/foo'), true);
-        __rrmdir('tests/foo');
-        $this->assertSame(!is_dir('tests/foo'), true);
 
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);

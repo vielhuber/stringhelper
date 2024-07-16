@@ -1140,6 +1140,7 @@ __files_in_folder('.') // current folder
 __files_in_folder('foo') // subfolder
 __files_in_folder('foo', true) // do it recursively
 __files_in_folder('foo', true, ['.git', '.gitkeep']) // do it recursively and exclude some folders/files
+__files_in_folder('foo', true, ['.git', '.gitkeep'], true) // get absolute instead of relative paths
 
 // recursively remove folder and it's contents
 __rrmdir('foo')

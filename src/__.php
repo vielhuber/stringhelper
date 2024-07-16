@@ -5450,16 +5450,20 @@ class __
         return $string;
     }
 
-    public static function files_in_folder($folder = '.', $recursive = false, $exclude = [])
+    public static function files_in_folder($folder = '.', $recursive = false, $exclude = [], $abspath = false)
     {
         $folder = rtrim($folder, '/');
         $files = [];
         if (file_exists($folder) && is_dir($folder)) {
             if ($handle = opendir($folder)) {
                 while (false !== ($fileOrFolder = readdir($handle))) {
-                    if ($fileOrFolder != '.' && $fileOrFolder != '..' && !in_array($fileOrFolder, $exclude)) {
+                    if (
+                        $fileOrFolder != '.' &&
+                        $fileOrFolder != '..' &&
+                        (!is_array($exclude) || !in_array($fileOrFolder, $exclude))
+                    ) {
                         if (!is_dir($folder . '/' . $fileOrFolder)) {
-                            $files[] = $fileOrFolder;
+                            $files[] = $abspath === true ? realpath($folder . '/' . $fileOrFolder) : $fileOrFolder;
                         } elseif ($recursive === true) {
                             $files = array_merge(
                                 $files,
