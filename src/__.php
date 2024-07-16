@@ -5767,6 +5767,11 @@ class chatgpt
                 if (!file_exists($files__value)) {
                     continue;
                 }
+                // uppercase pdf filenames don't get recognized properly
+                if (strpos($files__value, '.PDF') !== false) {
+                    rename($files__value, str_replace('.PDF', '.pdf', $files__value));
+                    $files__value = str_replace('.PDF', '.pdf', $files__value);
+                }
                 $response = __curl(
                     'https://api.openai.com/v1/files',
                     [
