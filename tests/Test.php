@@ -416,7 +416,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(count(__files_in_folder('tests/', true)) > 2, true);
         $this->assertSame(count(__files_in_folder('foo')) === 0, true);
 
-        $this->assertStringContainsString('/tests/assets/', __files_in_folder('tests/assets', false, null, true)[0]);
+        $this->assertStringContainsString('/tests/assets/', __files_in_folder('tests/assets', true, null, true)[0]);
 
         mkdir('tests/foo');
         $this->assertSame(count(__files_in_folder('tests/foo')) === 0, true);

@@ -5467,7 +5467,7 @@ class __
                         } elseif ($recursive === true) {
                             $files = array_merge(
                                 $files,
-                                self::files_in_folder($folder . '/' . $fileOrFolder, $recursive)
+                                self::files_in_folder($folder . '/' . $fileOrFolder, $recursive, $exclude, $abspath)
                             );
                         }
                     }
