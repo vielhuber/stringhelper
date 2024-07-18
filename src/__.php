@@ -5863,8 +5863,19 @@ class chatgpt
             //file_put_contents('log.log', '4:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
 
             $status = null;
-            if (__x($response) && __x($response->result) && __x($response->result->status)) {
-                $status = $response->result->status;
+            if (__x($response) && __x($response->result)) {
+                if (__x($response->result->status)) {
+                    $status = $response->result->status;
+                }
+                if (
+                    __x($response->result->object) &&
+                    $response->result->object == 'list' &&
+                    __x($response->result->data) &&
+                    __x($response->result->data[0]) &&
+                    __x($response->result->data[0]->status)
+                ) {
+                    $status = $response->result->data[0]->status;
+                }
             }
 
             if ($status === 'completed') {
