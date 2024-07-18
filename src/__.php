@@ -5776,10 +5776,17 @@ class chatgpt
                     rename($files__value, str_replace('.PDF', '.pdf', $files__value));
                     $files__value = str_replace('.PDF', '.pdf', $files__value);
                 }
+                // convert to proper path
+                $files__value = realpath($files__value);
+                // sometimes filenames with spaces fail on windows
+                $files__value_new =
+                    sys_get_temp_dir() . '/' . __last(explode('\\', __last(explode('/', $files__value))));
+                copy($files__value, $files__value_new);
+                $files__value = $files__value_new;
                 $response = __curl(
                     'https://api.openai.com/v1/files',
                     [
-                        'file' => new \CURLFile(realpath($files__value)),
+                        'file' => new \CURLFile($files__value),
                         'purpose' =>
                             stripos($files__value, '.jpg') !== false ||
                             stripos($files__value, '.jpeg') !== false ||
@@ -5794,7 +5801,7 @@ class chatgpt
                     false,
                     false // send as json
                 );
-                //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+                //file_put_contents('log.log', '1:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
                 $file_ids[] = ['id' => $response->result->id, 'path' => $files__value];
             }
 
@@ -5826,7 +5833,7 @@ class chatgpt
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+        //file_put_contents('log.log', '2:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
         $message_id = $response->result->id;
 
         $response = __curl(
@@ -5840,7 +5847,7 @@ class chatgpt
                 'OpenAI-Beta' => 'assistants=v2'
             ]
         );
-        //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+        //file_put_contents('log.log', '3:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
         $run_id = $response->result->id;
 
         while (1 === 1) {
@@ -5853,8 +5860,12 @@ class chatgpt
                     'OpenAI-Beta' => 'assistants=v2'
                 ]
             );
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
-            $status = $response->result->status;
+            //file_put_contents('log.log', '4:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+
+            $status = null;
+            if (__x($response) && __x($response->result) && __x($response->result->status)) {
+                $status = $response->result->status;
+            }
 
             if ($status === 'completed') {
                 break;
@@ -5870,7 +5881,7 @@ class chatgpt
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+        //file_put_contents('log.log', '5:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
 
         if (
             __nx($response) ||
