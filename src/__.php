@@ -5780,7 +5780,7 @@ class chatgpt
                 $files__value = realpath($files__value);
                 // sometimes filenames with spaces fail on windows
                 $files__value_new =
-                    sys_get_temp_dir() . '/' . __last(explode('\\', __last(explode('/', $files__value))));
+                    sys_get_temp_dir() . '/' . md5(uniqid()) . '.' . __last(explode('.', $files__value));
                 copy($files__value, $files__value_new);
                 $files__value = $files__value_new;
                 $response = __curl(
