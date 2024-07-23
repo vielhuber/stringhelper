@@ -5923,12 +5923,30 @@ class chatgpt
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        foreach ($response->result->data as $data__value) {
-            if (__x($data__value->content)) {
-                foreach ($data__value->content as $content__value) {
-                    if ($content__value->type === 'image_file' && __x($content__value->image_file->file_id)) {
+        if(
+            __x($response) &&
+            __x($response->result) &&
+            __x($response->result->data)
+        ) {
+            foreach ($response->result->data as $data__value) {
+                if (__x($data__value->content)) {
+                    foreach ($data__value->content as $content__value) {
+                        if ($content__value->type === 'image_file' && __x($content__value->image_file->file_id)) {
+                            $response = __curl(
+                                'https://api.openai.com/v1/files/' . $content__value->image_file->file_id,
+                                null,
+                                'DELETE',
+                                [
+                                    'Authorization' => 'Bearer ' . $this->api_key
+                                ]
+                            );
+                        }
+                    }
+                }
+                if (__x($data__value->attachments)) {
+                    foreach ($data__value->attachments as $attachments__value) {
                         $response = __curl(
-                            'https://api.openai.com/v1/files/' . $content__value->image_file->file_id,
+                            'https://api.openai.com/v1/files/' . $attachments__value->file_id,
                             null,
                             'DELETE',
                             [
@@ -5936,18 +5954,6 @@ class chatgpt
                             ]
                         );
                     }
-                }
-            }
-            if (__x($data__value->attachments)) {
-                foreach ($data__value->attachments as $attachments__value) {
-                    $response = __curl(
-                        'https://api.openai.com/v1/files/' . $attachments__value->file_id,
-                        null,
-                        'DELETE',
-                        [
-                            'Authorization' => 'Bearer ' . $this->api_key
-                        ]
-                    );
                 }
             }
         }
@@ -5969,11 +5975,17 @@ class chatgpt
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        foreach ($response->result->data as $res__value) {
-            $response = __curl('https://api.openai.com/v1/assistants/' . $res__value->id, null, 'DELETE', [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'OpenAI-Beta' => 'assistants=v2'
-            ]);
+        if(
+            __x($response) &&
+            __x($response->result) &&
+            __x($response->result->data)
+        ) {
+            foreach ($response->result->data as $res__value) {
+                $response = __curl('https://api.openai.com/v1/assistants/' . $res__value->id, null, 'DELETE', [
+                    'Authorization' => 'Bearer ' . $this->api_key,
+                    'OpenAI-Beta' => 'assistants=v2'
+                ]);
+            }
         }
 
         $response = __curl('https://api.openai.com/v1/files', [], 'GET', [
