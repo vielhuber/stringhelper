@@ -1145,6 +1145,13 @@ __files_in_folder('foo', true, ['.git', '.gitkeep'], true) // get absolute inste
 // recursively remove folder and it's contents
 __rrmdir('foo')
 
+// zip/unzip
+__zip('output.zip', 'folder')
+__zip('output.zip', 'file1.jpg')
+__zip('output.zip', ['file1.jpg', 'subfolder/file2.jpg'])
+__zip('output.zip', ['file1.jpg', 'subfolder/file2.jpg'], true) // strips paths
+__unzip('output.zip', '.')
+
 // check if link is external or internal
 __is_external('https://github.com/vielhuber/stringhelper') // false
 __is_external('https://github.com/vielhuber/stringhelper/') // false

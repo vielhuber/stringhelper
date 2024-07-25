@@ -5478,6 +5478,61 @@ class __
         return $files;
     }
 
+    public static function zip($output, $files_or_folders, $strip_paths = false)
+    {
+        if (self::nx($output) || self::nx($files_or_folders)) {
+            return false;
+        }
+        if (!is_array($files_or_folders)) {
+            $files_or_folders = [$files_or_folders];
+        }
+        $zip = new \ZipArchive();
+        $zip->open($output, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        $files = [];
+        foreach ($files_or_folders as $files_or_folders__value) {
+            if (is_dir($files_or_folders__value)) {
+                $files = array_merge($files, self::files_in_folder($files_or_folders__value, true, [], true));
+            } else {
+                $files[] = $files_or_folders__value;
+            }
+        }
+
+        foreach ($files as $files__value) {
+            if (!file_exists($files__value)) {
+                continue;
+            }
+            $localname = str_replace(getcwd(), '', $files__value);
+            if ($strip_paths === true) {
+                $localname = substr($files__value, strrpos($files__value, '/') + 1);
+            }
+            $zip->addFile($files__value, $localname);
+        }
+        $zip->close();
+        return true;
+    }
+
+    public static function unzip($input, $folder)
+    {
+        if (self::nx($input) || self::nx($folder)) {
+            return false;
+        }
+        if (!file_exists($input)) {
+            return false;
+        }
+        if (!is_dir($folder)) {
+            mkdir($folder);
+        }
+        $zip = new \ZipArchive();
+        $res = $zip->open($input);
+        if ($res === true) {
+            $zip->extractTo($folder);
+            $zip->close();
+            return true;
+        }
+        return false;
+    }
+
     public static function rrmdir($dir)
     {
         if (is_dir($dir)) {
@@ -5923,11 +5978,7 @@ class chatgpt
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        if(
-            __x($response) &&
-            __x($response->result) &&
-            __x($response->result->data)
-        ) {
+        if (__x($response) && __x($response->result) && __x($response->result->data)) {
             foreach ($response->result->data as $data__value) {
                 if (__x($data__value->content)) {
                     foreach ($data__value->content as $content__value) {
@@ -5975,11 +6026,7 @@ class chatgpt
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        if(
-            __x($response) &&
-            __x($response->result) &&
-            __x($response->result->data)
-        ) {
+        if (__x($response) && __x($response->result) && __x($response->result->data)) {
             foreach ($response->result->data as $res__value) {
                 $response = __curl('https://api.openai.com/v1/assistants/' . $res__value->id, null, 'DELETE', [
                     'Authorization' => 'Bearer ' . $this->api_key,

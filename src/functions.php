@@ -1548,6 +1548,20 @@ if (!function_exists('__files_in_folder')) {
     }
 }
 
+if (!function_exists('__zip')) {
+    function __zip(...$args)
+    {
+        return \vielhuber\stringhelper\__::zip(...$args);
+    }
+}
+
+if (!function_exists('__unzip')) {
+    function __unzip(...$args)
+    {
+        return \vielhuber\stringhelper\__::unzip(...$args);
+    }
+}
+
 if (!function_exists('__rrmdir')) {
     function __rrmdir(...$args)
     {

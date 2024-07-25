@@ -818,6 +818,68 @@ House'
         }
     }
 
+    function test__zip_unzip()
+    {
+        foreach (
+            [
+                [
+                    'tests/assets/zip/output.zip',
+                    'tests/assets/zip/test1.txt',
+                    true,
+                    ['tests/assets/zip/unzip/test1.txt']
+                ],
+                [
+                    'tests/assets/zip/output.zip',
+                    'tests/assets/zip/test1.txt',
+                    false,
+                    ['tests/assets/zip/unzip/tests/assets/zip/test1.txt']
+                ],
+                [
+                    'tests/assets/zip/output.zip',
+                    ['tests/assets/zip/test1.txt', 'tests/assets/zip/test2.txt'],
+                    true,
+                    ['tests/assets/zip/unzip/test1.txt', 'tests/assets/zip/unzip/test2.txt']
+                ],
+                [
+                    'tests/assets/zip/output.zip',
+                    ['tests/assets/zip/test1.txt', 'tests/assets/zip/test3'],
+                    true,
+                    [
+                        'tests/assets/zip/unzip/test1.txt',
+                        'tests/assets/zip/unzip/test3.txt',
+                        'tests/assets/zip/unzip/test4.txt',
+                        'tests/assets/zip/unzip/test5.txt'
+                    ]
+                ],
+                [
+                    'tests/assets/zip/output.zip',
+                    ['tests/assets/zip/test1.txt', 'tests/assets/zip/test3'],
+                    false,
+                    [
+                        'tests/assets/zip/unzip/tests/assets/zip/test1.txt',
+                        'tests/assets/zip/unzip/tests/assets/zip/test3/test3.txt',
+                        'tests/assets/zip/unzip/tests/assets/zip/test3/test4/test4.txt',
+                        'tests/assets/zip/unzip/tests/assets/zip/test3/test4/test5/test5.txt'
+                    ]
+                ]
+            ]
+            as $zip__value
+        ) {
+            __zip($zip__value[0], $zip__value[1], $zip__value[2]);
+            @mkdir('tests/assets/zip/unzip');
+            __unzip('tests/assets/zip/output.zip', 'tests/assets/zip/unzip');
+            $files_in_folder_1 = __files_in_folder('tests/assets/zip/unzip', true, [], true);
+            $files_in_folder_2 = array_map(function ($a) {
+                return realpath($a);
+            }, $zip__value[3]);
+            sort($files_in_folder_1);
+            sort($files_in_folder_2);
+            @unlink('tests/assets/zip/output.zip');
+            __rrmdir('tests/assets/zip/unzip');
+            $this->assertSame($files_in_folder_1, $files_in_folder_2);
+        }
+    }
+
     function test__chatgpt()
     {
         $chatgpt = __chatgpt('gpt-4o', 0.7, @$_SERVER['OPENAI_API_KEY']);
