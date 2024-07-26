@@ -18,6 +18,9 @@ class __
         if (is_array($input) && count($input) === 1 && array_values($input)[0] === '') {
             return false;
         }
+        if (is_array($input) && count($input) === 1 && array_values($input)[0] instanceof \__empty_helper) {
+            return false;
+        }
         if ($input instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0) {
             return false;
         }
