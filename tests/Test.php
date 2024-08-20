@@ -880,73 +880,95 @@ House'
         }
     }
 
-    function test__chatgpt()
+    function test__ai()
     {
-        $chatgpt = __chatgpt('gpt-4o', 0.7, @$_SERVER['OPENAI_API_KEY']);
-
-        $return = $chatgpt->ask('Wer wurde 2018 Fußball-Weltmeister?');
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
-        );
-
-        $return = $chatgpt->ask('Was habe ich vorher gefragt?');
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr(
-                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Weltmeister')
-            )
-        );
-
-        $return = $chatgpt->ask('Welchen Satz hast Du exakt zuvor geschrieben?');
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr(
-                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Weltmeister')
-            )
-        );
-
-        $return = $chatgpt->ask('Ich heiße David mit Vornamen. Bitte merk Dir das!');
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $chatgpt = __chatgpt(null, null, @$_SERVER['OPENAI_API_KEY'], $chatgpt->session_id);
-        $return = $chatgpt->ask('Wie heiße ich mit Vornamen?');
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertStringContainsString('David', $return['response']);
-
-        $return = $chatgpt->ask(
-            'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
-            'tests/assets/lorem.pdf'
-        );
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
-        $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018', '', null]);
-        $this->assertContains($return['response']->author, ['David Vielhuber', '', null]);
-
-        $return = $chatgpt->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
-        $this->assertStringContainsString('Tulpe', $return['response']);
-        $return = $chatgpt->ask('Was war auf dem vorherigen Bild zu sehen?');
-        $this->assertStringContainsString('Tulpe', $return['response']);
-
-        $return = $chatgpt->ask(
-            'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
+        foreach (
             [
-                'tests/assets/lorem.pdf',
-                'tests/assets/lorem2.pdf',
-                'tests/assets/iptc_write.jpg',
-                'tests/assets/not_existing.jpg'
+                ['chatgpt', 'gpt-4o-mini', @$_SERVER['OPENAI_API_KEY']],
+                ['claude', 'claude-3-5-sonnet-20240620', @$_SERVER['CLAUDE_API_KEY']],
+                ['gemini', 'gemini-1.5-flash', @$_SERVER['GOOGLE_GEMINI_API_KEY']]
             ]
-        );
-        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-        $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
-        $this->assertContains($return['response']->meter_number, ['123456789', '', null]);
-        $this->assertContains($return['response']->flower, ['Tulpe', 'Tulpen', 'Tulip', '', null]);
+            as $ai__value
+        ) {
+            fwrite(STDERR, print_r('Testing ' . $ai__value[0] . '...' . PHP_EOL, true));
 
-        $chatgpt->cleanup();
+            $ai = __ai($ai__value[0], $ai__value[1], 0.7, $ai__value[2]);
+
+            $return = $ai->ask('Wer wurde 2018 Fußball-Weltmeister? Antworte bitte kurz.');
+            //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+            $this->assertThat(
+                $return['response'],
+                $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
+            );
+
+            $return = $ai->ask('Was habe ich vorher gefragt?');
+            //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+            $this->assertThat(
+                $return['response'],
+                $this->logicalOr(
+                    $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                    $this->stringContains('Frankreich'),
+                    $this->stringContains('französisch'),
+                    $this->stringContains('Weltmeister')
+                )
+            );
+
+            $return = $ai->ask('Welchen Satz hast Du exakt zuvor geschrieben?');
+            //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+            $this->assertThat(
+                $return['response'],
+                $this->logicalOr(
+                    $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                    $this->stringContains('Frankreich'),
+                    $this->stringContains('französisch'),
+                    $this->stringContains('Weltmeister')
+                )
+            );
+
+            $return = $ai->ask('Ich heiße David mit Vornamen. Bitte merk Dir das!');
+            //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+            $ai = __ai($ai__value[0], null, null, $ai__value[2], $ai->session_id);
+            $return = $ai->ask('Wie heiße ich mit Vornamen?');
+            //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+            $this->assertStringContainsString('David', $return['response']);
+
+            /* claude does not support file uploads via api yet */
+            if ($ai__value[0] !== 'claude') {
+                $return = $ai->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
+                $this->assertStringContainsString('Tulpe', $return['response']);
+
+                /* gemini fails to do this (even in web interface) */
+                if ($ai__value[0] !== 'gemini') {
+                    $return = $ai->ask('Was war auf dem vorherigen Bild zu sehen?');
+                    $this->assertStringContainsString('Tulpe', $return['response']);
+                }
+
+                $return = $ai->ask(
+                    'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
+                    'tests/assets/lorem.pdf'
+                );
+                //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+                $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
+                $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018', '', null]);
+                $this->assertContains($return['response']->author, ['David Vielhuber', '', null]);
+
+                $return = $ai->ask(
+                    'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
+                    [
+                        'tests/assets/lorem.pdf',
+                        'tests/assets/lorem2.pdf',
+                        'tests/assets/iptc_write.jpg',
+                        'tests/assets/not_existing.jpg'
+                    ]
+                );
+                //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+                $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
+                $this->assertContains($return['response']->meter_number, ['123456789', '', null]);
+                $this->assertContains($return['response']->flower, ['Tulpe', 'Tulpen', 'Tulip', '', null]);
+            }
+
+            $ai->cleanup();
+        }
     }
 
     function test__translate_deepl()
