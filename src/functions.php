@@ -512,6 +512,13 @@ if (!function_exists('__chatgpt')) {
     }
 }
 
+if (!function_exists('__ai')) {
+    function __ai(...$args)
+    {
+        return \vielhuber\stringhelper\__::ai(...$args);
+    }
+}
+
 if (!function_exists('__first_char_is_uppercase')) {
     function __first_char_is_uppercase(...$args)
     {
