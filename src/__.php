@@ -1990,14 +1990,21 @@ class __
 
     public static function chatgpt($model = null, $temperature = null, $api_key = null, $session_id = null)
     {
-        if ($model === null) {
-            $model = 'gpt-4o';
+        return new ai_chatgpt($model, $temperature, $api_key, $session_id);
+    }
+
+    public static function ai($service, $model = null, $temperature = null, $api_key = null, $session_id = null)
+    {
+        if ($service === 'chatgpt') {
+            return new ai_chatgpt($model, $temperature, $api_key, $session_id);
         }
-        if ($temperature === null) {
-            $temperature = 1.0;
+        if ($service === 'claude') {
+            return new ai_claude($model, $temperature, $api_key, $session_id);
         }
-        $chatgpt = new chatgpt($model, $temperature, $api_key, $session_id);
-        return $chatgpt;
+        if ($service === 'gemini') {
+            return new ai_gemini($model, $temperature, $api_key, $session_id);
+        }
+        return null;
     }
 
     public static function translate_deepl($str, $from_lng, $to_lng, $api_key, $proxy = null)
@@ -5741,7 +5748,15 @@ class __
     }
 }
 
-class chatgpt
+interface ai
+{
+    public function __construct($model, $temperature, $api_key, $session_id);
+    public function ask($prompt = null, $files = null);
+    public function cleanup();
+    public function cleanup_all();
+}
+
+class ai_chatgpt implements ai
 {
     public $model = null;
     public $temperature = null;
@@ -5753,6 +5768,13 @@ class chatgpt
 
     public function __construct($model, $temperature, $api_key, $session_id)
     {
+        if ($model === null) {
+            $model = 'gpt-4o';
+        }
+        if ($temperature === null) {
+            $temperature = 1.0;
+        }
+
         $this->model = $model;
         $this->temperature = $temperature;
         $this->api_key = $api_key;
@@ -5962,6 +5984,7 @@ class chatgpt
             __nx($response->result->data[0]->content[0]->text) ||
             __nx($response->result->data[0]->content[0]->text->value)
         ) {
+            //file_put_contents('log.log', '1:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
             return $return;
         }
         $return['response'] = $response->result->data[0]->content[0]->text->value;
@@ -6048,5 +6071,236 @@ class chatgpt
                 'OpenAI-Beta' => 'assistants=v2'
             ]);
         }
+    }
+}
+
+class ai_claude implements ai
+{
+    public $model = null;
+    public $temperature = null;
+    public $api_key = null;
+
+    public $session_id = null;
+    public static $sessions = [];
+
+    public function __construct($model, $temperature, $api_key, $session_id)
+    {
+        if ($model === null) {
+            $model = 'claude-3-5-sonnet-20240620';
+        }
+        if ($temperature === null) {
+            $temperature = 1.0;
+        }
+
+        $this->model = $model;
+        $this->temperature = $temperature;
+        $this->api_key = $api_key;
+        if (__nx($session_id)) {
+            $this->session_id = md5(uniqid());
+        } else {
+            $this->session_id = $session_id;
+        }
+        if (!array_key_exists($session_id, self::$sessions)) {
+            self::$sessions[$session_id] = [];
+        }
+    }
+
+    public function ask($prompt = null, $files = null)
+    {
+        $return = ['response' => null, 'success' => false];
+
+        if (__nx($this->model) || __nx($this->temperature) || __nx($this->api_key) || __nx($this->session_id)) {
+            $return['response'] = 'data missing.';
+            return $return;
+        }
+
+        if (__nx($prompt)) {
+            $return['response'] = 'prompt missing.';
+            return $return;
+        }
+
+        self::$sessions[$this->session_id][] = [
+            'role' => 'user',
+            'content' => $prompt
+        ];
+
+        if (__x($files)) {
+            $return['response'] = 'claude api does not support file uploads.';
+            return $return;
+        }
+
+        $response = __curl(
+            'https://api.anthropic.com/v1/messages',
+            [
+                'model' => $this->model,
+                'max_tokens' => 1024,
+                'messages' => self::$sessions[$this->session_id],
+                'temperature' => $this->temperature
+            ],
+            'POST',
+            [
+                'x-api-key' => $this->api_key,
+                'anthropic-version' => '2023-06-01'
+            ]
+        );
+
+        if (
+            __nx($response) ||
+            __nx($response->result) ||
+            __nx($response->result->content) ||
+            __nx($response->result->content[0]) ||
+            __nx($response->result->content[0]->text)
+        ) {
+            //file_put_contents('log.log', '2:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+            return $return;
+        }
+        $return['response'] = $response->result->content[0]->text;
+        $return['success'] = true;
+
+        self::$sessions[$this->session_id][] = [
+            'role' => 'assistant',
+            'content' => $return['response']
+        ];
+
+        // parse json
+        if (strpos($return['response'], '```json') === 0) {
+            $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+        }
+
+        return $return;
+    }
+
+    public function cleanup()
+    {
+        self::$sessions = [];
+    }
+
+    public function cleanup_all()
+    {
+        $this->cleanup();
+    }
+}
+
+class ai_gemini implements ai
+{
+    public $model = null;
+    public $temperature = null;
+    public $api_key = null;
+
+    public $session_id = null;
+    public static $sessions = [];
+
+    public function __construct($model, $temperature, $api_key, $session_id)
+    {
+        if ($model === null) {
+            $model = 'gemini-1.5-flash';
+        }
+        if ($temperature === null) {
+            $temperature = 1.0;
+        }
+
+        $this->model = $model;
+        $this->temperature = $temperature;
+        $this->api_key = $api_key;
+        if (__nx($session_id)) {
+            $this->session_id = md5(uniqid());
+        } else {
+            $this->session_id = $session_id;
+        }
+        if (!array_key_exists($session_id, self::$sessions)) {
+            self::$sessions[$session_id] = [];
+        }
+    }
+
+    public function ask($prompt = null, $files = null)
+    {
+        $return = ['response' => null, 'success' => false];
+
+        if (__nx($this->model) || __nx($this->temperature) || __nx($this->api_key) || __nx($this->session_id)) {
+            $return['response'] = 'data missing.';
+            return $return;
+        }
+
+        if (__nx($prompt)) {
+            $return['response'] = 'prompt missing.';
+            return $return;
+        }
+
+        self::$sessions[$this->session_id][] = [
+            'role' => 'user',
+            'parts' => [['text' => $prompt]]
+        ];
+
+        if (__x($files)) {
+            if (!is_array($files)) {
+                $files = [$files];
+            }
+            foreach ($files as $files__value) {
+                if (!file_exists($files__value)) {
+                    continue;
+                }
+                self::$sessions[$this->session_id][count(self::$sessions[$this->session_id]) - 1]['parts'][] = [
+                    'inline_data' => [
+                        'mime_type' => mime_content_type($files__value),
+                        'data' => base64_encode(file_get_contents($files__value))
+                    ]
+                ];
+            }
+        }
+
+        $response = __curl(
+            'https://generativelanguage.googleapis.com/v1beta/models/' .
+                $this->model .
+                ':generateContent?key=' .
+                $this->api_key,
+            [
+                'contents' => self::$sessions[$this->session_id],
+                'generationConfig' => [
+                    'temperature' => $this->temperature
+                ]
+            ],
+            'POST',
+            null
+        );
+
+        //file_put_contents('log.log', '5:: ' . serialize(self::$sessions[$this->session_id]) . PHP_EOL, FILE_APPEND);
+
+        if (
+            __nx($response) ||
+            __nx($response->result) ||
+            __nx($response->result->candidates) ||
+            __nx($response->result->candidates[0]) ||
+            __nx($response->result->candidates[0]->content) ||
+            __nx($response->result->candidates[0]->content->parts) ||
+            __nx($response->result->candidates[0]->content->parts[0]) ||
+            __nx($response->result->candidates[0]->content->parts[0]->text)
+        ) {
+            //file_put_contents('log.log', '3:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+            return $return;
+        }
+        $return['response'] = $response->result->candidates[0]->content->parts[0]->text;
+        $return['success'] = true;
+
+        self::$sessions[$this->session_id][] = [
+            'role' => 'model',
+            'parts' => [['text' => $return['response']]]
+        ];
+
+        // parse json
+        if (strpos($return['response'], '```json') === 0) {
+            $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+        }
+
+        return $return;
+    }
+
+    public function cleanup()
+    {
+        self::$sessions = [];
+    }
+
+    public function cleanup_all()
+    {
+        $this->cleanup();
     }
 }
