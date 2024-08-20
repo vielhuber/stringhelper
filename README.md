@@ -516,27 +516,28 @@ __translate_google('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '
 __translate_microsoft('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // Being or not being; that is the question here.
 __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '**API Key**') // To be or not to be; that is the question here.
 
-// chatgpt
-$chatgpt = __chatgpt(
-    model: 'gpt-4o',
+// ai
+$ai = __ai(
+    service: 'chatgpt', // chatgpt|claude|gemini
+    model: 'gpt-4o', // gpt-4o|claude-3-5-sonnet-20240620|gemini-1.5-flash|...
     temperature: 0.7, // controls the randomness of the text generated
     api_key: '**API Key**'
 );
-$chatgpt->ask('Wer wurde 2018 Fußball-Weltmeister?');
+$ai->ask('Wer wurde 2018 Fußball-Weltmeister?');
 // ['response' => 'Frankreich.', 'success' => true]
-$chatgpt->ask('Was ist auf dem Bild zu sehen?', 'lorem.jpg');
+$ai->ask('Was ist auf dem Bild zu sehen?', 'lorem.jpg');
 // ['response' => 'Auf dem Bild ist eine Katze zu sehen.', 'success' => true]
-$chatgpt->ask('Wie lautet das erste Wort in der PDF?', 'lorem.pdf');
+$ai->ask('Wie lautet das erste Wort in der PDF?', 'lorem.pdf');
 // ['response' => 'Das erste Wort lautet "Lorem".', 'success' => true]
-$chatgpt->ask('Fasse die folgenden Dokumente zusammen.', ['1.pdf','2.jpg']);
+$ai->ask('Fasse die folgenden Dokumente zusammen.', ['1.pdf','2.jpg']);
 // ['response' => '...', 'success' => true]
-$chatgpt = __chatgpt(
-    session_id: $chatgpt->session_id // submit session to continue a conversation afterwards ($chatgpt->session_id)
+$ai = __chatgpt(
+    session_id: $ai->session_id // submit session to continue a conversation afterwards ($ai->session_id)
 );
-$chatgpt->ask('Was habe ich vorher gefragt?');
+$ai->ask('Was habe ich vorher gefragt?');
 // ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true]
-$chatgpt->cleanup(); // remotely deletes the data of the current session
-$chatgpt->cleanup_all(); // remotely deletes all data
+$ai->cleanup(); // (remotely) deletes the data of the current session
+$ai->cleanup_all(); // (remotely) deletes all data
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med
