@@ -962,13 +962,13 @@ House'
         if ($service !== 'claude') {
             fwrite(STDERR, print_r('#5' . PHP_EOL, true));
             $return = $ai->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
-            $this->assertStringContainsString('Tulpe', $return['response']);
+            $this->assertContains($return['response'], ['Tulpe', 'Tulpen', 'Tulip', 'Tulipan']);
 
             /* gemini fails to do this (even in web interface) */
             if ($service !== 'gemini') {
                 fwrite(STDERR, print_r('#5' . PHP_EOL, true));
                 $return = $ai->ask('Was war auf dem vorherigen Bild zu sehen?');
-                $this->assertStringContainsString('Tulpe', $return['response']);
+                $this->assertContains($return['response'], ['Tulpe', 'Tulpen', 'Tulip', 'Tulipan']);
             }
 
             fwrite(STDERR, print_r('#6' . PHP_EOL, true));
@@ -994,7 +994,7 @@ House'
             //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
             $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
             $this->assertContains($return['response']->meter_number, ['123456789', '', null]);
-            $this->assertContains($return['response']->flower, ['Tulpe', 'Tulpen', 'Tulip', '', null]);
+            $this->assertContains($return['response']->flower, ['Tulpe', 'Tulpen', 'Tulip', 'Tulipan', '', null]);
         }
 
         $ai->cleanup();
