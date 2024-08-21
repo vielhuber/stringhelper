@@ -962,13 +962,29 @@ House'
         if ($service !== 'claude') {
             fwrite(STDERR, print_r('#5' . PHP_EOL, true));
             $return = $ai->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
-            $this->assertContains($return['response'], ['Tulpe', 'Tulpen', 'Tulip', 'Tulipan']);
+            $this->assertThat(
+                $return['response'],
+                $this->logicalOr(
+                    $this->stringContains('Tulpe'),
+                    $this->stringContains('Tulpen'),
+                    $this->stringContains('Tulip'),
+                    $this->stringContains('Tulipan')
+                )
+            );
 
             /* gemini fails to do this (even in web interface) */
             if ($service !== 'gemini') {
                 fwrite(STDERR, print_r('#5' . PHP_EOL, true));
                 $return = $ai->ask('Was war auf dem vorherigen Bild zu sehen?');
-                $this->assertContains($return['response'], ['Tulpe', 'Tulpen', 'Tulip', 'Tulipan']);
+                $this->assertThat(
+                    $return['response'],
+                    $this->logicalOr(
+                        $this->stringContains('Tulpe'),
+                        $this->stringContains('Tulpen'),
+                        $this->stringContains('Tulip'),
+                        $this->stringContains('Tulipan')
+                    )
+                );
             }
 
             fwrite(STDERR, print_r('#6' . PHP_EOL, true));
