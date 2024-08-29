@@ -883,13 +883,13 @@ House'
     /*
     function test__ai_all()
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $this->ai_test('chatgpt', 'gpt-4o-mini', @$_SERVER['OPENAI_API_KEY']);
         }
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $this->ai_test('claude', 'claude-3-5-sonnet-20240620', @$_SERVER['CLAUDE_API_KEY']);
         }
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $this->ai_test('gemini', 'gemini-1.5-flash', @$_SERVER['GOOGLE_GEMINI_API_KEY']);
         }
     }
@@ -968,6 +968,7 @@ House'
                     $this->stringContains('Tulpe'),
                     $this->stringContains('Tulpen'),
                     $this->stringContains('Tulip'),
+                    $this->stringContains('Tulipe'),
                     $this->stringContains('Tulipan')
                 )
             );
@@ -975,13 +976,14 @@ House'
             /* gemini fails to do this (even in web interface) */
             if ($service !== 'gemini') {
                 fwrite(STDERR, print_r('#5' . PHP_EOL, true));
-                $return = $ai->ask('Was war auf dem vorherigen Bild zu sehen?');
+                $return = $ai->ask('Was ist auf dem zuletzt hochgeladenen Bild zu sehen?');
                 $this->assertThat(
                     $return['response'],
                     $this->logicalOr(
                         $this->stringContains('Tulpe'),
                         $this->stringContains('Tulpen'),
                         $this->stringContains('Tulip'),
+                        $this->stringContains('Tulipe'),
                         $this->stringContains('Tulipan')
                     )
                 );
@@ -1010,7 +1012,15 @@ House'
             //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
             $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
             $this->assertContains($return['response']->meter_number, ['123456789', '', null]);
-            $this->assertContains($return['response']->flower, ['Tulpe', 'Tulpen', 'Tulip', 'Tulipan', '', null]);
+            $this->assertContains($return['response']->flower, [
+                'Tulpe',
+                'Tulpen',
+                'Tulip',
+                'Tulipe',
+                'Tulipan',
+                '',
+                null
+            ]);
         }
 
         $ai->cleanup();
