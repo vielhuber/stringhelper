@@ -4,51 +4,7 @@
 
 ## motivation
 
-tired of writing
-
-```php
-if (isset($_POST['foo']) && $_POST['foo'] === '1') {
-}
-```
-
-or
-
-```php
-if (!empty($a) || (isset($a) && $a === 0)) {
-}
-```
-
-or
-
-```php
-if (!empty($a)) {
-    foreach ($a as $value) {
-    }
-}
-```
-
-or
-
-```php
-if (
-    Person::find(1) !== null &&
-    Person::find(1)->getAddress() !== null &&
-    Person::find(1)
-        ->getAddress()
-        ->getCountry() !== null &&
-    Person::find(1)
-        ->getAddress()
-        ->getCountry()
-        ->getName() !== null
-) {
-    echo Person::find(1)
-        ->getAddress()
-        ->getCountry()
-        ->getName();
-}
-```
-
-?
+this package is a collection of various helpers for string manipulation, validation, and utility functions designed to simplify the life of php developers. it streamlines tasks like checking variable existence, comparing values, and handling dates, urls, and emails. this tool enhances efficiency by offering concise, reusable methods for everyday coding challenges.
 
 ## installation
 
