@@ -5465,24 +5465,23 @@ class __
         $folder = rtrim($folder, '/');
         $files = [];
         if (file_exists($folder) && is_dir($folder)) {
-            if ($handle = opendir($folder)) {
-                while (false !== ($fileOrFolder = readdir($handle))) {
-                    if (
-                        $fileOrFolder != '.' &&
-                        $fileOrFolder != '..' &&
-                        (!is_array($exclude) || !in_array($fileOrFolder, $exclude))
-                    ) {
-                        if (!is_dir($folder . '/' . $fileOrFolder)) {
-                            $files[] = $abspath === true ? realpath($folder . '/' . $fileOrFolder) : $fileOrFolder;
-                        } elseif ($recursive === true) {
-                            $files = array_merge(
-                                $files,
-                                self::files_in_folder($folder . '/' . $fileOrFolder, $recursive, $exclude, $abspath)
-                            );
-                        }
+            $scandir = scandir($folder);
+            natcasesort($scandir);
+            foreach($scandir as $fileOrFolder) {
+                if (
+                    $fileOrFolder != '.' &&
+                    $fileOrFolder != '..' &&
+                    (!is_array($exclude) || !in_array($fileOrFolder, $exclude))
+                ) {
+                    if (!is_dir($folder . '/' . $fileOrFolder)) {
+                        $files[] = $abspath === true ? realpath($folder . '/' . $fileOrFolder) : $fileOrFolder;
+                    } elseif ($recursive === true) {
+                        $files = array_merge(
+                            $files,
+                            self::files_in_folder($folder . '/' . $fileOrFolder, $recursive, $exclude, $abspath)
+                        );
                     }
                 }
-                closedir($handle);
             }
         }
         return $files;
