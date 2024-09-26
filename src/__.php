@@ -5217,6 +5217,16 @@ class __
         return $str;
     }
 
+    public static function utf8_encode($str)
+    {
+        return \UConverter::transcode($str, 'UTF8', 'ISO-8859-1');
+    }
+
+    public static function utf8_decode($str)
+    {
+        return \UConverter::transcode($str, 'ISO-8859-1', 'UTF-8', ['to_subst' => '?']);
+    }
+
     public static function iptc_codes()
     {
         return [
@@ -5467,7 +5477,7 @@ class __
         if (file_exists($folder) && is_dir($folder)) {
             $scandir = scandir($folder);
             natcasesort($scandir);
-            foreach($scandir as $fileOrFolder) {
+            foreach ($scandir as $fileOrFolder) {
                 if (
                     $fileOrFolder != '.' &&
                     $fileOrFolder != '..' &&

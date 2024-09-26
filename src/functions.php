@@ -1485,6 +1485,20 @@ if (!function_exists('__to_utf8')) {
     }
 }
 
+if (!function_exists('__utf8_encode')) {
+    function __utf8_encode(...$args)
+    {
+        return \vielhuber\stringhelper\__::utf8_encode(...$args);
+    }
+}
+
+if (!function_exists('__utf8_decode')) {
+    function __utf8_decode(...$args)
+    {
+        return \vielhuber\stringhelper\__::utf8_decode(...$args);
+    }
+}
+
 if (!function_exists('__iptc_codes')) {
     function __iptc_codes(...$args)
     {

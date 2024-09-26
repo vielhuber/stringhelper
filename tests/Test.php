@@ -410,7 +410,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(in_array('.gitignore', __files_in_folder('.', false)), true);
         $this->assertSame(in_array('.gitignore', __files_in_folder('.', false, ['.gitignore'])), false);
         $this->assertSame(count(__files_in_folder('tests')) === 2, true);
-        $this->assertSame(__files_in_folder('tests') === ['Helper.php','Test.php'], true);
+        $this->assertSame(__files_in_folder('tests') === ['Helper.php', 'Test.php'], true);
         $this->assertSame(count(__files_in_folder('tests', false, ['Test.php'])) === 1, true);
         $this->assertSame(count(__files_in_folder('tests', true)) > 2, true);
         $this->assertSame(count(__files_in_folder('tests', true, ['assets'])) === 2, true);
@@ -2687,8 +2687,15 @@ data-attr="foo">
         $this->assertSame(__is_utf8(false), false);
         $this->assertSame(__is_utf8([]), false);
         $this->assertSame(__is_utf8('This is a test älüß!'), true);
-        $this->assertSame(__is_utf8(utf8_decode('This is a test älüß!')), false);
-        $this->assertSame(__is_utf8(__to_utf8(utf8_decode('This is a test älüß!'))), true);
+        $this->assertSame(__is_utf8(__utf8_decode('This is a test älüß!')), false);
+        $this->assertSame(__is_utf8(__to_utf8(__utf8_decode('This is a test älüß!'))), true);
+
+        // https://www.php.net/manual/de/function.utf8-decode.php
+        $this->assertSame(bin2hex(__utf8_decode("\x5A\x6F\xC3\xAB")), '5a6feb');
+        $this->assertSame(__utf8_decode("\xC3"), '?');
+        $this->assertSame(__utf8_decode("\xE2\x82\xAC"), '?');
+        // https://www.php.net/manual/de/function.utf8-encode.php
+        $this->assertSame(bin2hex(__utf8_encode("\x5A\x6F\xEB")), '5a6fc3ab');
     }
 
     function test__filter_url_args()

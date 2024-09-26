@@ -1064,6 +1064,10 @@ __file_extension('foo.jpg') // jpg
 __is_utf8('foo') // true; checks if a string is utf8 encoded
 __to_utf8('foo') // tries to convert any string to utf8
 
+// drop-in replacements for deprecated utf8_encode/utf8_decode
+__utf8_encode('foo')
+__utf8_decode('foo')
+
 // read/write iptc tags (with full utf8 support)
 __iptc_codes() // returns important codes in human readable format: ['2#116' => 'Copyright', ...]
 __iptc_code('Copyright') // 2#116
