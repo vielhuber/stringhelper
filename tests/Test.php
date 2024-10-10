@@ -3112,6 +3112,18 @@ data-attr="foo">
         $this->assertSame(__dec_char('A'), '');
     }
 
+    function test__validate_iban()
+    {
+        $this->assertSame(__validate_iban('DE07123412341234123412'), true);
+        $this->assertSame(__validate_iban('DE07123412341234123442'), false);
+        $this->assertSame(__validate_iban('IL170108000000012612345'), true);
+        $this->assertSame(__validate_iban('SK8975000000000012345671'), true);
+        $this->assertSame(__validate_iban(null), false);
+        $this->assertSame(__validate_iban(true), false);
+        $this->assertSame(__validate_iban(false), false);
+        $this->assertSame(__validate_iban(''), false);
+    }
+
     function test__validate_email()
     {
         $this->assertSame(__validate_email('david@vielhuber.de'), true);

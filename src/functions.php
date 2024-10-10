@@ -344,6 +344,13 @@ if (!function_exists('__distance_haversine')) {
     }
 }
 
+if (!function_exists('__validate_iban')) {
+    function __validate_iban(...$args)
+    {
+        return \vielhuber\stringhelper\__::validate_iban(...$args);
+    }
+}
+
 if (!function_exists('__validate_date')) {
     function __validate_date(...$args)
     {

@@ -362,6 +362,10 @@ __password_strength('3iurehkHEDJK§$R$A') // 3
 // calculate distance in meters between two lat/lng points with the haversine formula
 __distance_haversine([48.576809, 13.403207], [48.127719, 11.575344]) // 143999
 
+// validate iban
+__validate_iban('DE07123412341234123412') // true
+__validate_iban('DE07123412341234123442') // false
+
 // checks if string is a valid url (also works with umlauts and without external lib like idna)
 __validate_url('https://vielhuber.de') // true
 
