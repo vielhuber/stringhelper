@@ -726,7 +726,7 @@ __br2nl('foo<br/>bar') // foo
 __truncate_string('Lorem ipsum dolor sit amet, consectetuer.', 20); // Lorem ipsum dolor ...
 __truncate_string('Lorem ipsum dolor sit amet, consectetuer.', 20, '…'); // Lorem ipsum dolor …
 
-// trim whitespace (including &nbsp; and line breaks)
+// trim whitespace (including &nbsp;, tabs and line breaks)
 __trim_whitespace('      string including nasty whitespace chars  ') // 'string including nasty whitespace chars'
 
 // trim every item in array
@@ -734,7 +734,7 @@ __atrim(['foo
 ','bar','
 baz']) // ['foo','bar','baz']
 
-// trim every line in multiline array
+// trim every line in multiline string
 __trim_every_line('foo
  bar
 baz ') // foo

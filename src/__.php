@@ -513,7 +513,7 @@ class __
 
     public static function trim_whitespace($str)
     {
-        if (self::nx($str) || !is_string($str)) {
+        if ($str === null || $str === true || $str === false || !is_string($str)) {
             return $str;
         }
         // the u modifier is important here for multibyte support

@@ -1816,6 +1816,8 @@ string
 line
 string'
         );
+        $this->assertSame(__trim_whitespace("\t"), '');
+        $this->assertSame(__trim_whitespace(' '), '');
     }
 
     function test__extract_title_from_url()
