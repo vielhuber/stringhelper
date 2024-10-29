@@ -33,8 +33,8 @@ class __
         if ($input instanceof \__empty_helper) {
             return false;
         }
-        if (self::is_serialized($input)) {
-            return self::x(unserialize($input));
+        if (self::is_serialized($input, true)) {
+            return self::x(@unserialize($input));
         }
         if (json_encode($input) === '"\ufeff"') {
             return false;
@@ -2643,18 +2643,80 @@ class __
         return utf8_encode(sprintf($format, ...$args));
     }
 
-    public static function is_serialized($data)
+    public static function is_serialized($data, $weak = false)
     {
-        if (!is_string($data) || $data == '') {
+        if ($weak === false) {
+            if (!is_string($data) || $data == '') {
+                return false;
+            }
+            set_error_handler(function ($errno, $errstr) {});
+            $unserialized = unserialize($data);
+            restore_error_handler();
+            if ($data !== 'b:0;' && $unserialized === false) {
+                return false;
+            }
+            return true;
+        } else {
+            /* the following function borrowed from https://developer.wordpress.org/reference/functions/is_serialized/
+             /* falsely detects strings like a:1:{s:3:\"foo\";s:3:\"bar\";} and also does not check e.g. arrays */
+            $strict = true;
+            // If it isn't a string, it isn't serialized.
+            if (!is_string($data)) {
+                return false;
+            }
+            $data = trim($data);
+            if ('N;' === $data) {
+                return true;
+            }
+            if (strlen($data) < 4) {
+                return false;
+            }
+            if (':' !== $data[1]) {
+                return false;
+            }
+            if ($strict) {
+                $lastc = substr($data, -1);
+                if (';' !== $lastc && '}' !== $lastc) {
+                    return false;
+                }
+            } else {
+                $semicolon = strpos($data, ';');
+                $brace = strpos($data, '}');
+                // Either ; or } must exist.
+                if (false === $semicolon && false === $brace) {
+                    return false;
+                }
+                // But neither must be in the first X characters.
+                if (false !== $semicolon && $semicolon < 3) {
+                    return false;
+                }
+                if (false !== $brace && $brace < 4) {
+                    return false;
+                }
+            }
+            $token = $data[0];
+            switch ($token) {
+                case 's':
+                    if ($strict) {
+                        if ('"' !== substr($data, -2, 1)) {
+                            return false;
+                        }
+                    } elseif (!str_contains($data, '"')) {
+                        return false;
+                    }
+                // Or else fall through.
+                case 'a':
+                case 'O':
+                case 'E':
+                    return (bool) preg_match("/^{$token}:[0-9]+:/s", $data);
+                case 'b':
+                case 'i':
+                case 'd':
+                    $end = $strict ? '$' : '';
+                    return (bool) preg_match("/^{$token}:[0-9.E+-]+;$end/", $data);
+            }
             return false;
         }
-        set_error_handler(function ($errno, $errstr) {});
-        $unserialized = unserialize($data);
-        restore_error_handler();
-        if ($data !== 'b:0;' && $unserialized === false) {
-            return false;
-        }
-        return true;
 
         /* this approach uses @ and leads to an ugly margin at the top when debug mode is on in wordpress */
         /*
@@ -2666,67 +2728,6 @@ class __
             return false;
         }
         return true;
-        */
-
-        /* the following function borrowed from https://developer.wordpress.org/reference/functions/is_serialized/
-         /* falsely detects strings like a:1:{s:3:\"foo\";s:3:\"bar\";} and also does not check e.g. arrays */
-        /*
-        $strict = true;
-        // If it isn't a string, it isn't serialized.
-        if (!is_string($data)) {
-            return false;
-        }
-        $data = trim($data);
-        if ('N;' === $data) {
-            return true;
-        }
-        if (strlen($data) < 4) {
-            return false;
-        }
-        if (':' !== $data[1]) {
-            return false;
-        }
-        if ($strict) {
-            $lastc = substr($data, -1);
-            if (';' !== $lastc && '}' !== $lastc) {
-                return false;
-            }
-        } else {
-            $semicolon = strpos($data, ';');
-            $brace = strpos($data, '}');
-            // Either ; or } must exist.
-            if (false === $semicolon && false === $brace) {
-                return false;
-            }
-            // But neither must be in the first X characters.
-            if (false !== $semicolon && $semicolon < 3) {
-                return false;
-            }
-            if (false !== $brace && $brace < 4) {
-                return false;
-            }
-        }
-        $token = $data[0];
-        switch ($token) {
-            case 's':
-                if ($strict) {
-                    if ('"' !== substr($data, -2, 1)) {
-                        return false;
-                    }
-                } elseif (false === strpos($data, '"')) {
-                    return false;
-                }
-            // Or else fall through.
-            case 'a':
-            case 'O':
-                return (bool) preg_match("/^{$token}:[0-9]+:/s", $data);
-            case 'b':
-            case 'i':
-            case 'd':
-                $end = $strict ? '$' : '';
-                return (bool) preg_match("/^{$token}:[0-9.E+-]+;$end/", $data);
-        }
-        return false;
         */
     }
 

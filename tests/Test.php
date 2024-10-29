@@ -37,6 +37,9 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__x('a:0:{}'));
         $this->assertTrue(__x('b:1;'));
         $this->assertFalse(__x('b:0;'));
+        $this->assertSame(__x('a:1:{i:0;s:0:"";}'), false);
+        $this->assertSame(__x('a:1:{s:3:"foo";s:3:"bar";}'), true);
+        $this->assertSame(__x('a:1:{s:3:\"foo\";s:3:\"bar\";}'), false);
         $this->assertFalse(__x(new stdClass()));
         $this->assertFalse(__x(@$_GET['undefined']));
         $this->assertTrue(
