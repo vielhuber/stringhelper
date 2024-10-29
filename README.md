@@ -508,7 +508,7 @@ __remove_accents('Äťśçĥ') // Ätsch
 __remove_accents('Äťśçĥ', true) // Aetsch
 
 // remove non printable chars from string
-___remove_non_printable_chars('foobar') // foobar
+__remove_non_printable_chars('foobar') // foobar
 
 // string to slug (sanitize string)
 __slug('This string will be sanitized!') // this-string-will-be-sanitized
