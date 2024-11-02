@@ -127,6 +127,10 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__rnx($defined_variable));
         $this->assertFalse(__rx($undefined_variable['foo']['bar']['baz']));
         $this->assertTrue(__rnx($undefined_variable['foo']['bar']['baz']));
+
+        $this->assertFalse(array_key_exists('foo', get_defined_vars()));
+        __rx($foo);
+        $this->assertTrue(array_key_exists('foo', get_defined_vars()));
     }
 
     function test__true()

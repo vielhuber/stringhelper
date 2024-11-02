@@ -167,11 +167,20 @@ __fx(function () use (&$var) {
 });
 ```
 
-Another approach is to pass the (potentially undefined) variables by reference to the `rx()`/`nrx()`-helpers:
+Another approach is to pass (potentially undefined) variables by reference to the `rx`/`nrx`-helpers:
 
 ```php
-__rx($var)
-__rx($var['foo']['bar']['baz'])
+__rx($var) // false
+__rx($var['foo']['bar']['baz']) // false
+__nrx($var) // true
+```
+
+Be aware that undefined variables are defined as null by php after the check:
+
+```php
+array_key_exists('foo', get_defined_vars()); // false
+__rx($foo);
+array_key_exists('foo', get_defined_vars()); // true
 ```
 
 ### classes
