@@ -20,16 +20,24 @@ composer require vielhuber/stringhelper
 // check existence
 if (__x($var)) {
 }
+if (__x(@$var)) {
+}
 
 // check non-existence
 if (__nx($var)) {
 }
+if (__nx(@$var)) {
+}
 
-// check existence (bulletproof)
+// check existence (without stfu-operator)
+if (__rx($var)) {
+}
 if (__fx(fn() => $var)) {
 }
 
-// check non-existence (bulletproof)
+// check non-existence (without stfu-operator)
+if (__rnx($var)) {
+}
 if (__fnx(fn() => $var)) {
 }
 ```
@@ -157,6 +165,13 @@ Be aware that arrow functions are only available from php 7.4; Prior versions sh
 __fx(function () use (&$var) {
     return $var['foo']['bar']['baz'];
 });
+```
+
+Another approach is to pass the (potentially undefined) variables by reference to the `rx()`/`nrx()`-helpers:
+
+```php
+__rx($var)
+__rx($var['foo']['bar']['baz'])
 ```
 
 ### classes

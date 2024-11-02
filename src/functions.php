@@ -29,6 +29,20 @@ if (!function_exists('__fnx')) {
     }
 }
 
+if (!function_exists('__rx')) {
+    function __rx(&...$args)
+    {
+        return \vielhuber\stringhelper\__::rx(...$args);
+    }
+}
+
+if (!function_exists('__rnx')) {
+    function __rnx(&...$args)
+    {
+        return \vielhuber\stringhelper\__::rnx(...$args);
+    }
+}
+
 if (!function_exists('__v')) {
     function __v(...$args)
     {

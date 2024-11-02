@@ -47,6 +47,50 @@ class __
         return !self::x(@$input);
     }
 
+    public static function rx(&$input)
+    {
+        if (
+            $input === null ||
+            $input === false ||
+            $input === '' ||
+            (is_string($input) && trim($input) === '') ||
+            (is_array($input) && empty($input)) ||
+            (is_object($input) && empty((array) $input))
+        ) {
+            return false;
+        }
+        if (is_array($input) && count($input) === 1 && array_values($input)[0] === '') {
+            return false;
+        }
+        if (is_array($input) && count($input) === 1 && array_values($input)[0] instanceof \__empty_helper) {
+            return false;
+        }
+        if ($input instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0) {
+            return false;
+        }
+        if ($input instanceof \Illuminate\Database\Eloquent\Collection && $input->count() === 0) {
+            return false;
+        }
+        if ($input instanceof \Illuminate\Support\Collection && $input->count() === 0) {
+            return false;
+        }
+        if ($input instanceof \__empty_helper) {
+            return false;
+        }
+        if (self::is_serialized($input, true)) {
+            return self::x(@unserialize($input));
+        }
+        if (json_encode($input) === '"\ufeff"') {
+            return false;
+        } // file_get_content of empty file
+        return true;
+    }
+
+    public static function rnx(&$input)
+    {
+        return !self::rx($input);
+    }
+
     public static function fx($input)
     {
         if ($input instanceof \Closure) {

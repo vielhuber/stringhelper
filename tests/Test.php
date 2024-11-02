@@ -116,6 +116,19 @@ class Test extends \PHPUnit\Framework\TestCase
         );
     }
 
+    function test__rx()
+    {
+        $this->assertFalse(__rx($undefined_variable));
+        $this->assertTrue(__rnx($undefined_variable));
+        $this->assertFalse(__rx($undefined_variable['foo']['bar']['baz']));
+        $this->assertTrue(__rnx($undefined_variable['foo']['bar']['baz']));
+        $defined_variable = 'foo';
+        $this->assertTrue(__rx($defined_variable));
+        $this->assertFalse(__rnx($defined_variable));
+        $this->assertFalse(__rx($undefined_variable['foo']['bar']['baz']));
+        $this->assertTrue(__rnx($undefined_variable['foo']['bar']['baz']));
+    }
+
     function test__true()
     {
         $this->assertFalse(__true(null));
