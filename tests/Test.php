@@ -39,7 +39,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__x('b:0;'));
         $this->assertSame(__x('a:1:{i:0;s:0:"";}'), false);
         $this->assertSame(__x('a:1:{s:3:"foo";s:3:"bar";}'), true);
-        $this->assertSame(__x('a:1:{s:3:\"foo\";s:3:\"bar\";}'), false);
+        $this->assertSame(__x('a:1:{s:3:\"foo\";s:3:\"bar\";}'), true);
         $this->assertFalse(__x(new stdClass()));
         $this->assertFalse(__x(@$_GET['undefined']));
         $this->assertTrue(
@@ -2418,6 +2418,12 @@ data-attr="foo">
         $this->assertSame(__is_serialized((object) []), false);
         $this->assertSame(__is_serialized('idkfa'), false);
         $this->assertSame(__is_serialized('b:0;'), true);
+
+        $this->assertSame(__is_serialized('a:1:{s:3:\"foo\";s:3:\"bar\";}', true), true);
+        $this->assertSame(__is_serialized('a:1:{42}', true), true);
+        $this->assertSame(__is_serialized('s:9:\"foo \" bar\";', true), true);
+        $this->assertSame(__is_serialized('s:10:\"foo \\\" bar\";', true), true);
+        $this->assertSame(__is_serialized('s:12:"foo \\\" bar";', true), true);
     }
 
     function test__strcmp()

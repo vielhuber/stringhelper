@@ -34,7 +34,7 @@ class __
             return false;
         }
         if (self::is_serialized($input, true)) {
-            return self::x(@unserialize($input));
+            return self::x(@unserialize($input)) || self::x(@unserialize(@stripslashes($input)));
         }
         if (json_encode($input) === '"\ufeff"') {
             return false;
