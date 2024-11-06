@@ -47,6 +47,12 @@ class Test extends \PHPUnit\Framework\TestCase
                 return false;
             })
         );
+
+        file_put_contents('tests/assets/empty_file.txt', 'foo');
+        $this->assertTrue(__x(file_get_contents('tests/assets/empty_file.txt')));
+        file_put_contents('tests/assets/empty_file.txt', chr(239) . chr(187) . chr(191));
+        $this->assertFalse(__x(file_get_contents('tests/assets/empty_file.txt')));
+        @unlink('tests/assets/empty_file.txt');
     }
 
     function test__nx()
