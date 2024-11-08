@@ -2568,6 +2568,47 @@ class __
         return $arr;
     }
 
+    public static function array_set(&$array, $key, $value)
+    {
+        if (is_null($key)) {
+            return $array = $value;
+        }
+        $keys = explode('.', $key);
+        while (count($keys) > 1) {
+            $key = array_shift($keys);
+            if (!isset($array[$key]) || !is_array($array[$key])) {
+                $array[$key] = [];
+            }
+            $array = &$array[$key];
+        }
+        $array[array_shift($keys)] = $value;
+        return $array;
+    }
+
+    public static function array_get($array, $key, $default = null)
+    {
+        if (!is_array($array)) {
+            return $default;
+        }
+        if (is_null($key)) {
+            return $array;
+        }
+        if (array_key_exists($key, $array)) {
+            return $array[$key];
+        }
+        if (strpos($key, '.') === false) {
+            return $array[$key] ?? $default;
+        }
+        foreach (explode('.', $key) as $segment) {
+            if (is_array($array) && array_key_exists($segment, $array)) {
+                $array = $array[$segment];
+            } else {
+                return $default;
+            }
+        }
+        return $array;
+    }
+
     public static function array_walk_recursive_all(&$array, $callback, $array__key = null, $key_chain = [])
     {
         call_user_func_array($callback, [&$array, $array__key, $key_chain]);

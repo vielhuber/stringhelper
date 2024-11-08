@@ -942,6 +942,10 @@ __inside_out_values([
 __arrays_to_objects(['foo' => ['bar','baz'], 'bar' => [(object)['id' => 7, 'name' => 'foo'], (object)['id' => 42, 'name' => 'bar']]])
 // { 'foo': { 0: 'bar', 1: 'baz' }, 'bar' => { 7: { 'id': 7, 'name': 'foo' }, 7: { 'id': 42, 'name': 'bar' } } }
 
+// read/write data to arrays in dot notation
+__array_get(['foo'=>['bar'=>['baz'=>42]]], 'foo.bar.baz'); // 42
+__array_set(['foo'=>['bar'=>['baz'=>42]]], 'foo.bar.baz', 7); // ['foo'=>['bar'=>['baz'=>7]]]
+
 // highlight strings
 __highlight('that is a search string', 'is') // that <strong class="highlight">is</strong> a search string
 __highlight('abc def geh ijk lmn opq rst abc def geh ijk lmn opq rst', 'ijk', true, 5) // '... geh <strong class="highlight">ijk</strong> lmn ... geh <strong class="highlight">ijk</strong> lmn ...'

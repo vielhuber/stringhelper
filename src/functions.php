@@ -617,6 +617,20 @@ if (!function_exists('__mb_strnatcasecmp')) {
     }
 }
 
+if (!function_exists('__array_get')) {
+    function __array_get(...$args)
+    {
+        return \vielhuber\stringhelper\__::array_get(...$args);
+    }
+}
+
+if (!function_exists('__array_set')) {
+    function __array_set(&$array, $key, $value)
+    {
+        return \vielhuber\stringhelper\__::array_set($array, $key, $value);
+    }
+}
+
 if (!function_exists('__array_multisort')) {
     function __array_multisort(...$args)
     {

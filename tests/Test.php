@@ -1439,6 +1439,34 @@ baz'
         $this->assertSame(__check_basic_auth(''), true);
     }
 
+    function test__array_get()
+    {
+        $arr = ['foo' => ['bar' => ['baz' => 42]]];
+        $this->assertSame(__array_get($arr, 'foo.bar.baz'), 42);
+        $this->assertSame(__array_get($arr, 'foo.bar.gnarr'), null);
+        $this->assertSame(__array_get($arr, '0.1.2'), null);
+        $this->assertSame(__array_get($arr, 0), null);
+        $this->assertSame(__array_get($arr, true), null);
+        $this->assertSame(__array_get($arr, false), null);
+        $this->assertSame(__array_get($arr, null), $arr);
+        $arr = [1, 2, 3];
+        $this->assertSame(__array_get($arr, '0'), 1);
+        $this->assertSame(__array_get($arr, '1'), 2);
+        $this->assertSame(__array_get($arr, '2'), 3);
+    }
+
+    function test__array_set()
+    {
+        $arr = ['foo' => ['bar' => ['baz' => 42]]];
+        $this->assertSame($arr['foo']['bar']['baz'], 42);
+        __array_set($arr, 'foo.bar.baz', 7);
+        $this->assertSame($arr['foo']['bar']['baz'], 7);
+        __array_set($arr, '0', 'foo');
+        $this->assertSame($arr[0], 'foo');
+        __array_set($arr, '1.2.3', 'bar');
+        $this->assertSame($arr[1][2][3], 'bar');
+    }
+
     function test__array_map_keys()
     {
         $this->assertSame(__array_map_keys(null, null), null);
