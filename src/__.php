@@ -5995,7 +5995,7 @@ class ai_chatgpt implements ai
         }
 
         // trim prompt
-        $prompt = __trim_whitespace($prompt);
+        $prompt = __trim_whitespace(__trim_every_line($prompt));
 
         $args = [
             'role' => 'user',
@@ -6316,7 +6316,7 @@ class ai_claude implements ai
         }
 
         // trim prompt
-        $prompt = __trim_whitespace($prompt);
+        $prompt = __trim_whitespace(__trim_every_line($prompt));
 
         if ($add_prompt_to_session === true) {
             self::$sessions[$this->session_id][] = [
@@ -6440,7 +6440,7 @@ class ai_gemini implements ai
         }
 
         // trim prompt
-        $prompt = __trim_whitespace($prompt);
+        $prompt = __trim_whitespace(__trim_every_line($prompt));
 
         if ($add_prompt_to_session === true) {
             self::$sessions[$this->session_id][] = [
