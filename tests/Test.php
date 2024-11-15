@@ -407,6 +407,22 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__trim_every_line("foo\n bar"), "foo\nbar");
         $this->assertSame(__trim_every_line("foo\nbar"), "foo\nbar");
         $this->assertSame(__trim_every_line("foo\n bar\nbaz "), "foo\nbar\nbaz");
+        $this->assertSame(
+            __trim_every_line('
+
+  multiline string
+  multiline string     
+  multiline string
+
+'),
+            '
+
+multiline string
+multiline string
+multiline string
+
+'
+        );
         $this->assertSame(__trim_every_line(''), '');
         $this->assertSame(__trim_every_line(null), null);
         $this->assertSame(__trim_every_line(false), false);
@@ -1844,11 +1860,15 @@ baz'
             __trim_whitespace('
 
   
-multiline string
+   multiline string
+   multiline string
+   multiline string
   
 
 '),
-            'multiline string'
+            'multiline string
+   multiline string
+   multiline string'
         );
         $this->assertSame(
             __trim_whitespace(
