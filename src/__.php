@@ -5923,11 +5923,13 @@ class ai_chatgpt implements ai
                 );
                 if (__nx(@$response->result) || __nx(@$response->result->id)) {
                     $max_tries--;
+                    if ($max_tries === 0) {
+                        __exception(__v(@$response->result->error->message, 'error creating assistant'));
+                    }
                     continue;
                 } else {
                     break;
                 }
-                __exception('error creating assistant');
             }
             //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
             $this->assistant_id = $response->result->id;
@@ -5940,11 +5942,13 @@ class ai_chatgpt implements ai
                 ]);
                 if (__nx(@$response->result) || __nx(@$response->result->id)) {
                     $max_tries--;
+                    if ($max_tries === 0) {
+                        __exception(__v(@$response->result->error->message, 'error creating thread'));
+                    }
                     continue;
                 } else {
                     break;
                 }
-                __exception('error creating thread');
             }
             //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
             $this->thread_id = $response->result->id;
@@ -5989,6 +5993,9 @@ class ai_chatgpt implements ai
             $return['response'] = 'prompt missing.';
             return $return;
         }
+
+        // trim prompt
+        $prompt = __trim_whitespace($prompt);
 
         $args = [
             'role' => 'user',
@@ -6308,6 +6315,9 @@ class ai_claude implements ai
             return $return;
         }
 
+        // trim prompt
+        $prompt = __trim_whitespace($prompt);
+
         if ($add_prompt_to_session === true) {
             self::$sessions[$this->session_id][] = [
                 'role' => 'user',
@@ -6428,6 +6438,9 @@ class ai_gemini implements ai
             $return['response'] = 'prompt missing.';
             return $return;
         }
+
+        // trim prompt
+        $prompt = __trim_whitespace($prompt);
 
         if ($add_prompt_to_session === true) {
             self::$sessions[$this->session_id][] = [

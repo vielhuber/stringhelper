@@ -1841,6 +1841,16 @@ baz'
             'string including nasty whitespace chars'
         );
         $this->assertSame(
+            __trim_whitespace('
+
+  
+multiline string
+  
+
+'),
+            'multiline string'
+        );
+        $this->assertSame(
             __trim_whitespace(
                 '
 
