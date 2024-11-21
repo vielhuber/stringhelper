@@ -784,6 +784,14 @@ class __
         } elseif (strtotime($date) !== false) {
             return true;
         }
+        // also allow special case "Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)"
+        elseif (
+            is_string($date) &&
+            mb_strpos($date, '(') !== false &&
+            self::validate_date(trim(explode('(', $date)[0])) === true
+        ) {
+            return true;
+        }
         return false;
     }
 
@@ -3648,6 +3656,17 @@ class __
         if (self::nx($format)) {
             $format = 'Y-m-d';
         }
+
+        // also allow special case "Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)"
+        if (
+            is_string($date) &&
+            mb_strpos($date, '(') !== false &&
+            strtotime($date) === null &&
+            strtotime(trim(explode('(', $date)[0])) !== null
+        ) {
+            $date = trim(explode('(', $date)[0]);
+        }
+
         return date($format, strtotime($date . (self::x($mod) ? ' ' . $mod : '')));
     }
 
@@ -3891,6 +3910,23 @@ class __
             }
         }
         return $arr;
+    }
+
+    public static function loop_status(&$array)
+    {
+        // warning: prev/next moves the internal pointer one forward, so just call it once
+        $is_first = prev($array) === false && key($array) === null; // also check false values
+        if ($is_first) {
+            reset($array);
+            //next($array); (is called below in is_last)
+        } else {
+            next($array);
+            //next($array); (is called below in is_last)
+        }
+        // warning: this moves the internal pointer one forward, so just call it once
+        $is_last = next($array) === false && key($array) === null; // also check false values
+
+        return (object) ['is_first' => $is_first, 'is_last' => $is_last];
     }
 
     public static function fkey($array__key, $array)

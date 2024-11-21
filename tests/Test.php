@@ -3138,6 +3138,76 @@ data-attr="foo">
         $this->assertSame(__shuffle_assoc([]), []);
     }
 
+    function test__loop_status()
+    {
+        foreach (
+            [
+                ['foo', 'bar', 'bar', 0, false, null, 'baz'],
+                [],
+                [''],
+                [true],
+                [false],
+                [1, 2, 3],
+                ['foo' => 1, 'bar' => 2, 'baz' => 3]
+            ]
+            as $array
+        ) {
+            // multiple iterations (to test internal pointer);
+            $max = 100;
+            for ($i = 0; $i < $max; $i++) {
+                $array_key = 0;
+                foreach ($array as $array__value) {
+                    $loop_status = __loop_status($array);
+                    $this->assertSame($loop_status->is_first, $array_key === 0);
+                    $this->assertSame($loop_status->is_last, $array_key === count($array) - 1);
+                    $array_key++;
+                }
+            }
+        }
+    }
+
+    function test__validate_date()
+    {
+        $this->assertSame(__validate_date('2000-01-01'), true);
+        $this->assertSame(__validate_date('01.01.2000'), true);
+        $this->assertSame(__validate_date('01.01.90'), true);
+        $this->assertSame(__validate_date('29.02.2001'), false);
+        $this->assertSame(__validate_date('5956-09-24'), false);
+        $this->assertSame(__validate_date('51956-09-24'), false);
+        $this->assertSame(__validate_date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)'), true);
+        $this->assertSame(__validate_date(new DateTime('2000-01-01')), true);
+        $this->assertSame(__validate_date(946713600), true);
+        $this->assertSame(__validate_date(null), false);
+        $this->assertSame(__validate_date(''), false);
+        $this->assertSame(__validate_date(true), false);
+        $this->assertSame(__validate_date(false), false);
+    }
+
+    function test__validate_date_format()
+    {
+        $this->assertSame(__validate_date_format('d.m.Y'), true);
+        $this->assertSame(__validate_date_format('Y-m-d'), true);
+        $this->assertSame(__validate_date_format('Y/m/d'), true);
+        $this->assertSame(__validate_date_format('01.m.Y'), true);
+        $this->assertSame(__validate_date_format('01.01.2000'), false);
+        $this->assertSame(__validate_date_format('foo'), false);
+        $this->assertSame(__validate_date_format(null), false);
+        $this->assertSame(__validate_date_format(true), false);
+        $this->assertSame(__validate_date_format(false), false);
+        $this->assertSame(__validate_date_format(''), false);
+    }
+
+    function test__validate_date_mod()
+    {
+        $this->assertSame(__validate_date_mod('+6 months'), true);
+        $this->assertSame(__validate_date_mod('+ 6 months'), true);
+        $this->assertSame(__validate_date_mod('+1 week 2 days 4 hours 2 seconds'), true);
+        $this->assertSame(__validate_date_mod(''), false);
+        $this->assertSame(__validate_date_mod(null), false);
+        $this->assertSame(__validate_date_mod(false), false);
+        $this->assertSame(__validate_date_mod(true), false);
+    }
+
     function test__date()
     {
         $this->assertSame(__date('2000-01-01'), '2000-01-01');
@@ -3148,6 +3218,7 @@ data-attr="foo">
         $this->assertSame(__date('2000-01-01', 'd.m.Y', '+6 months'), '01.07.2000');
         $this->assertSame(__date('01.01.2000'), '2000-01-01');
         $this->assertSame(__date('01.01.20'), '2020-01-01');
+        $this->assertSame(__date('01.01.08'), '2008-01-01');
         $this->assertSame(__date('now'), date('Y-m-d', strtotime('now')));
         $this->assertSame(__date('2019-12-02 12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
         $this->assertSame(__date('2019-12-02T12:01:02', 'd.m.Y H:i:s'), '02.12.2019 12:01:02');
@@ -3180,6 +3251,7 @@ data-attr="foo">
         $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
         $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
+        $this->assertSame(__date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)', 'd.m.Y H:i:s'), '11.08.2020 17:34:23');
     }
 
     function test__char()
@@ -3352,37 +3424,6 @@ data-attr="foo">
         $this->assertSame(__false_all(false), true);
 
         $this->assertSame(__validate_url('https://vielhuber.de'), true);
-
-        $this->assertSame(__validate_date('2000-01-01'), true);
-        $this->assertSame(__validate_date('01.01.2000'), true);
-        $this->assertSame(__validate_date('29.02.2001'), false);
-        $this->assertSame(__validate_date('5956-09-24'), false);
-        $this->assertSame(__validate_date('51956-09-24'), false);
-        $this->assertSame(__validate_date(new DateTime('2000-01-01')), true);
-        $this->assertSame(__validate_date(946713600), true);
-        $this->assertSame(__validate_date(null), false);
-        $this->assertSame(__validate_date(''), false);
-        $this->assertSame(__validate_date(true), false);
-        $this->assertSame(__validate_date(false), false);
-
-        $this->assertSame(__validate_date_format('d.m.Y'), true);
-        $this->assertSame(__validate_date_format('Y-m-d'), true);
-        $this->assertSame(__validate_date_format('Y/m/d'), true);
-        $this->assertSame(__validate_date_format('01.m.Y'), true);
-        $this->assertSame(__validate_date_format('01.01.2000'), false);
-        $this->assertSame(__validate_date_format('foo'), false);
-        $this->assertSame(__validate_date_format(null), false);
-        $this->assertSame(__validate_date_format(true), false);
-        $this->assertSame(__validate_date_format(false), false);
-        $this->assertSame(__validate_date_format(''), false);
-
-        $this->assertSame(__validate_date_mod('+6 months'), true);
-        $this->assertSame(__validate_date_mod('+ 6 months'), true);
-        $this->assertSame(__validate_date_mod('+1 week 2 days 4 hours 2 seconds'), true);
-        $this->assertSame(__validate_date_mod(''), false);
-        $this->assertSame(__validate_date_mod(null), false);
-        $this->assertSame(__validate_date_mod(false), false);
-        $this->assertSame(__validate_date_mod(true), false);
 
         $this->assertSame(__phone_normalize(null), '');
         $this->assertSame(__phone_normalize(''), '');

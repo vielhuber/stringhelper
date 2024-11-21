@@ -1086,6 +1086,13 @@ if (!function_exists('__arrays_to_objects')) {
     }
 }
 
+if (!function_exists('__loop_status')) {
+    function __loop_status(&...$args)
+    {
+        return \vielhuber\stringhelper\__::loop_status(...$args);
+    }
+}
+
 if (!function_exists('__fkey')) {
     function __fkey(...$args)
     {

@@ -824,6 +824,16 @@ foreach($array as $array__key=>$array__value)
     if( __fkey($array__key, $array) ) { }
     if( __lkey($array__key, $array) ) { }
 }
+$array = ['foo','bar'];
+foreach($array as $array__value)
+{
+    // (warning: don't call get_loop_status() twice inside an interation,
+    // since it modifies the internal pointer of the array)
+    $loop_status = __loop_status($array);
+
+    if($loop_status->is_first) {}
+    if($loop_status->is_last) {}
+}
 
 // get last item of array
 __last(['foo', 'bar', 'baz']) // 'baz'
