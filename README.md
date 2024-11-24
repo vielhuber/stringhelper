@@ -421,6 +421,7 @@ __date('2000-01-01', '+6 months') // 2000-07-01; allows date modifications
 __date('2000-01-01', 'd.m.Y', '+6 months') // 01.07.2000
 __date('01.01.2000') // 2000-01-01; also accepts other formats
 __date('01.01.20') // 2020-01-01; correctly interprets some german variants
+__date('01.01.39') // 2039-01-01; exceeds 32-bit ranges
 __date('now') // 2019-05-28; also accepts strings
 __date('2019-12-02 12:00:00', 'd.m.Y H:i:s') // 02.12.2019 12:00:00
 __date('2019-12-02T12:00:00', 'd.m.Y H:i:s') // 02.12.2019 12:00:00
@@ -1346,6 +1347,28 @@ __timestamp_str_to_excel('01.01.2000 08:15:30') // 36526.3440972222
 // str_replace
 __str_replace_first('foo','bar','foofoo') // 'barfoo'
 __str_replace_last('foo','bar','foofoo') // 'foobar'
+
+// search/replace with regex
+__str_search_replace(
+    '
+    foo_1_bar_2_baz_3_gnarr_4_gnaz
+    foo_5_bar_6_baz_7_gnarr_8_gnaz
+    foo_9_bar_10_baz_11_gnarr_12_gnaz
+    ',
+    '/foo_(.+)_bar_(?:.+)_baz_(.+)_gnarr_(.+)_gnaz/'
+    ,
+    function($matches) {
+        $matches[0]++;
+        $matches[1]++;
+        $matches[2]++;
+        return $matches;
+    }
+)
+/*
+foo_2_bar_2_baz_4_gnarr_5_gnaz
+foo_6_bar_6_baz_8_gnarr_9_gnaz
+foo_10_bar_10_baz_12_gnarr_13_gnaz
+*/
 
 // fun with line endings
 __line_endings_convert($str, 'linux') // converts string to linux line endings (LF)

@@ -2,1661 +2,1694 @@
 /* FUNCTIONS */
 
 if (!function_exists('__x')) {
-    function __x(...$args)
+    function __x($input)
     {
-        return \vielhuber\stringhelper\__::x(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'x'], func_get_args());
     }
 }
 
 if (!function_exists('__nx')) {
-    function __nx(...$args)
+    function __nx($input)
     {
-        return \vielhuber\stringhelper\__::nx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'nx'], func_get_args());
     }
 }
 
 if (!function_exists('__fx')) {
-    function __fx(...$args)
+    function __fx($input)
     {
-        return \vielhuber\stringhelper\__::fx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'fx'], func_get_args());
     }
 }
 
 if (!function_exists('__fnx')) {
-    function __fnx(...$args)
+    function __fnx($input)
     {
-        return \vielhuber\stringhelper\__::fnx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'fnx'], func_get_args());
     }
 }
 
 if (!function_exists('__rx')) {
-    function __rx(&...$args)
+    function __rx(&$input)
     {
-        return \vielhuber\stringhelper\__::rx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'rx'], [&$input]);
     }
 }
 
 if (!function_exists('__rnx')) {
-    function __rnx(&...$args)
+    function __rnx(&$input)
     {
-        return \vielhuber\stringhelper\__::rnx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'rnx'], [&$input]);
     }
 }
 
 if (!function_exists('__v')) {
     function __v(...$args)
     {
-        return \vielhuber\stringhelper\__::v(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'v'], func_get_args());
     }
 }
 
 if (!function_exists('__e')) {
     function __e(...$args)
     {
-        return \vielhuber\stringhelper\__::e(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'e'], func_get_args());
     }
 }
 
 if (!function_exists('__i')) {
-    function __i(...$args)
+    function __i($var)
     {
-        return \vielhuber\stringhelper\__::i(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'i'], func_get_args());
     }
 }
 
 if (!function_exists('__empty')) {
-    function __empty(...$args)
+    function __empty()
     {
-        return \vielhuber\stringhelper\__::empty(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'empty'], func_get_args());
     }
 }
 
 if (!function_exists('__x_all')) {
     function __x_all(...$args)
     {
-        return \vielhuber\stringhelper\__::x_all(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'x_all'], func_get_args());
     }
 }
 
 if (!function_exists('__nx_all')) {
     function __nx_all(...$args)
     {
-        return \vielhuber\stringhelper\__::nx_all(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'nx_all'], func_get_args());
     }
 }
 
 if (!function_exists('__x_one')) {
     function __x_one(...$args)
     {
-        return \vielhuber\stringhelper\__::x_one(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'x_one'], func_get_args());
     }
 }
 
 if (!function_exists('__true_one')) {
     function __true_one(...$args)
     {
-        return \vielhuber\stringhelper\__::true_one(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'true_one'], func_get_args());
     }
 }
 
 if (!function_exists('__false_one')) {
     function __false_one(...$args)
     {
-        return \vielhuber\stringhelper\__::false_one(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'false_one'], func_get_args());
     }
 }
 
 if (!function_exists('__true_all')) {
     function __true_all(...$args)
     {
-        return \vielhuber\stringhelper\__::true_all(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'true_all'], func_get_args());
     }
 }
 
 if (!function_exists('__false_all')) {
     function __false_all(...$args)
     {
-        return \vielhuber\stringhelper\__::false_all(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'false_all'], func_get_args());
     }
 }
 
 if (!function_exists('__nx_one')) {
     function __nx_one(...$args)
     {
-        return \vielhuber\stringhelper\__::nx_one(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'nx_one'], func_get_args());
     }
 }
 
 if (!function_exists('__true')) {
-    function __true(...$args)
+    function __true($val)
     {
-        return \vielhuber\stringhelper\__::true(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'true'], func_get_args());
     }
 }
 
 if (!function_exists('__false')) {
-    function __false(...$args)
+    function __false($val)
     {
-        return \vielhuber\stringhelper\__::false(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'false'], func_get_args());
     }
 }
 
 if (!function_exists('__cookie_exists')) {
-    function __cookie_exists(...$args)
+    function __cookie_exists($cookie_name)
     {
-        return \vielhuber\stringhelper\__::cookie_exists(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'cookie_exists'], func_get_args());
     }
 }
 
 if (!function_exists('__cookie_get')) {
-    function __cookie_get(...$args)
+    function __cookie_get($cookie_name)
     {
-        return \vielhuber\stringhelper\__::cookie_get(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'cookie_get'], func_get_args());
     }
 }
 
 if (!function_exists('__cookie_set')) {
-    function __cookie_set(...$args)
+    function __cookie_set($cookie_name, $cookie_value, $days = 30, $options = [])
     {
-        return \vielhuber\stringhelper\__::cookie_set(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'cookie_set'], func_get_args());
     }
 }
 
 if (!function_exists('__cookie_delete')) {
-    function __cookie_delete(...$args)
+    function __cookie_delete($cookie_name)
     {
-        return \vielhuber\stringhelper\__::cookie_delete(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'cookie_delete'], func_get_args());
     }
 }
 
 if (!function_exists('__strip')) {
-    function __strip(...$args)
+    function __strip($string, $length = 50, $dots = '...')
     {
-        return \vielhuber\stringhelper\__::strip(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_numeric')) {
-    function __strip_numeric(...$args)
+    function __strip_numeric($string)
     {
-        return \vielhuber\stringhelper\__::strip_numeric(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_numeric'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_nonnumeric')) {
-    function __strip_nonnumeric(...$args)
+    function __strip_nonnumeric($string)
     {
-        return \vielhuber\stringhelper\__::strip_nonnumeric(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_nonnumeric'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_digit')) {
-    function __strip_digit(...$args)
+    function __strip_digit($string)
     {
-        return \vielhuber\stringhelper\__::strip_digit(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_digit'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_nondigit')) {
-    function __strip_nondigit(...$args)
+    function __strip_nondigit($string)
     {
-        return \vielhuber\stringhelper\__::strip_nondigit(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_nondigit'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_nonchars')) {
-    function __strip_nonchars(...$args)
+    function __strip_nonchars($string)
     {
-        return \vielhuber\stringhelper\__::strip_nonchars(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_nonchars'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_whitespace')) {
-    function __strip_whitespace(...$args)
+    function __strip_whitespace($string)
     {
-        return \vielhuber\stringhelper\__::strip_whitespace(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_whitespace'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_whitespace_collapsed')) {
-    function __strip_whitespace_collapsed(...$args)
+    function __strip_whitespace_collapsed($string)
     {
-        return \vielhuber\stringhelper\__::strip_whitespace_collapsed(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_whitespace_collapsed'], func_get_args());
     }
 }
 
 if (!function_exists('__strip_tags')) {
-    function __strip_tags(...$args)
+    function __strip_tags($string, $tags, $with_content = false)
     {
-        return \vielhuber\stringhelper\__::strip_tags(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strip_tags'], func_get_args());
     }
 }
 
 if (!function_exists('__split_newline')) {
-    function __split_newline(...$args)
+    function __split_newline($string)
     {
-        return \vielhuber\stringhelper\__::split_newline(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'split_newline'], func_get_args());
     }
 }
 
 if (!function_exists('__split_whitespace')) {
-    function __split_whitespace(...$args)
+    function __split_whitespace($string, $len)
     {
-        return \vielhuber\stringhelper\__::split_whitespace(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'split_whitespace'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_emptylines')) {
-    function __remove_emptylines(...$args)
+    function __remove_emptylines($string)
     {
-        return \vielhuber\stringhelper\__::remove_emptylines(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_emptylines'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_newlines')) {
-    function __remove_newlines(...$args)
+    function __remove_newlines($string, $replace = '')
     {
-        return \vielhuber\stringhelper\__::remove_newlines(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_newlines'], func_get_args());
     }
 }
 
 if (!function_exists('__br2nl')) {
-    function __br2nl(...$args)
+    function __br2nl($string)
     {
-        return \vielhuber\stringhelper\__::br2nl(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'br2nl'], func_get_args());
     }
 }
 
 if (!function_exists('__truncate_string')) {
-    function __truncate_string(...$args)
+    function __truncate_string($str, $len = 50, $chars = '...')
     {
-        return \vielhuber\stringhelper\__::truncate_string(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'truncate_string'], func_get_args());
     }
 }
 
 if (!function_exists('__trim_whitespace')) {
-    function __trim_whitespace(...$args)
+    function __trim_whitespace($str)
     {
-        return \vielhuber\stringhelper\__::trim_whitespace(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'trim_whitespace'], func_get_args());
     }
 }
 
 if (!function_exists('__trim_every_line')) {
-    function __trim_every_line(...$args)
+    function __trim_every_line($str)
     {
-        return \vielhuber\stringhelper\__::trim_every_line(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'trim_every_line'], func_get_args());
     }
 }
 
 if (!function_exists('__trim')) {
-    function __trim(...$args)
+    function __trim($str, $arr, $replace = '', $mode = null)
     {
-        return \vielhuber\stringhelper\__::trim(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'trim'], func_get_args());
     }
 }
 
 if (!function_exists('__ltrim')) {
-    function __ltrim(...$args)
+    function __ltrim($str, $arr)
     {
-        return \vielhuber\stringhelper\__::ltrim(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'ltrim'], func_get_args());
     }
 }
 
 if (!function_exists('__rtrim')) {
-    function __rtrim(...$args)
+    function __rtrim($str, $arr)
     {
-        return \vielhuber\stringhelper\__::rtrim(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'rtrim'], func_get_args());
     }
 }
 
 if (!function_exists('__strrev')) {
-    function __strrev(...$args)
+    function __strrev($str)
     {
-        return \vielhuber\stringhelper\__::strrev(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strrev'], func_get_args());
     }
 }
 
 if (!function_exists('__atrim')) {
-    function __atrim(...$args)
+    function __atrim($arr)
     {
-        return \vielhuber\stringhelper\__::atrim(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'atrim'], func_get_args());
     }
 }
 
 if (!function_exists('__o')) {
-    function __o(...$args)
+    function __o(...$data)
     {
-        return \vielhuber\stringhelper\__::o(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'o'], func_get_args());
     }
 }
 
 if (!function_exists('__d')) {
-    function __d(...$args)
+    function __d(...$data)
     {
-        return \vielhuber\stringhelper\__::d(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'd'], func_get_args());
     }
 }
 
 if (!function_exists('__anonymize_ip')) {
-    function __anonymize_ip(...$args)
+    function __anonymize_ip($value = null)
     {
-        return \vielhuber\stringhelper\__::anonymize_ip(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'anonymize_ip'], func_get_args());
     }
 }
 
 if (!function_exists('__password_strength')) {
-    function __password_strength(...$args)
+    function __password_strength($pwd)
     {
-        return \vielhuber\stringhelper\__::password_strength(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'password_strength'], func_get_args());
     }
 }
 
 if (!function_exists('__distance_haversine')) {
-    function __distance_haversine(...$args)
+    function __distance_haversine($p1, $p2)
     {
-        return \vielhuber\stringhelper\__::distance_haversine(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'distance_haversine'], func_get_args());
     }
 }
 
 if (!function_exists('__validate_iban')) {
-    function __validate_iban(...$args)
+    function __validate_iban($iban)
     {
-        return \vielhuber\stringhelper\__::validate_iban(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'validate_iban'], func_get_args());
     }
 }
 
 if (!function_exists('__validate_date')) {
-    function __validate_date(...$args)
+    function __validate_date($date)
     {
-        return \vielhuber\stringhelper\__::validate_date(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'validate_date'], func_get_args());
     }
 }
 
 if (!function_exists('__validate_url')) {
-    function __validate_url(...$args)
+    function __validate_url($value)
     {
-        return \vielhuber\stringhelper\__::validate_url(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'validate_url'], func_get_args());
     }
 }
 
 if (!function_exists('__validate_email')) {
-    function __validate_email(...$args)
+    function __validate_email($value)
     {
-        return \vielhuber\stringhelper\__::validate_email(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'validate_email'], func_get_args());
     }
 }
 
 if (!function_exists('__email_tokenize_str2arr')) {
-    function __email_tokenize_str2arr(...$args)
+    function __email_tokenize_str2arr($str)
     {
-        return \vielhuber\stringhelper\__::email_tokenize_str2arr(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'email_tokenize_str2arr'], func_get_args());
     }
 }
 
 if (!function_exists('__email_tokenize_arr2str')) {
-    function __email_tokenize_arr2str(...$args)
+    function __email_tokenize_arr2str($arr)
     {
-        return \vielhuber\stringhelper\__::email_tokenize_arr2str(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'email_tokenize_arr2str'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_tokenize')) {
-    function __phone_tokenize(...$args)
+    function __phone_tokenize($value)
     {
-        return \vielhuber\stringhelper\__::phone_tokenize(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_tokenize'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_normalize')) {
-    function __phone_normalize(...$args)
+    function __phone_normalize($value)
     {
-        return \vielhuber\stringhelper\__::phone_normalize(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_normalize'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_country_codes')) {
-    function __phone_country_codes(...$args)
+    function __phone_country_codes()
     {
-        return \vielhuber\stringhelper\__::phone_country_codes(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_country_codes'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_area_codes')) {
-    function __phone_area_codes(...$args)
+    function __phone_area_codes()
     {
-        return \vielhuber\stringhelper\__::phone_area_codes(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_area_codes'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_area_codes_landline')) {
-    function __phone_area_codes_landline(...$args)
+    function __phone_area_codes_landline()
     {
-        return \vielhuber\stringhelper\__::phone_area_codes_landline(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_area_codes_landline'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_area_codes_mobile')) {
-    function __phone_area_codes_mobile(...$args)
+    function __phone_area_codes_mobile()
     {
-        return \vielhuber\stringhelper\__::phone_area_codes_mobile(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_area_codes_mobile'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_is_landline')) {
-    function __phone_is_landline(...$args)
+    function __phone_is_landline($value)
     {
-        return \vielhuber\stringhelper\__::phone_is_landline(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_is_landline'], func_get_args());
     }
 }
 
 if (!function_exists('__phone_is_mobile')) {
-    function __phone_is_mobile(...$args)
+    function __phone_is_mobile($value)
     {
-        return \vielhuber\stringhelper\__::phone_is_mobile(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_is_mobile'], func_get_args());
     }
 }
 
 if (!function_exists('__url_normalize')) {
-    function __url_normalize(...$args)
+    function __url_normalize($str)
     {
-        return \vielhuber\stringhelper\__::url_normalize(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'url_normalize'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_emoji')) {
-    function __remove_emoji(...$args)
+    function __remove_emoji($string)
     {
-        return \vielhuber\stringhelper\__::remove_emoji(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_emoji'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_accents')) {
-    function __remove_accents(...$args)
+    function __remove_accents($string, $replace_umlauts = false)
     {
-        return \vielhuber\stringhelper\__::remove_accents(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_accents'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_non_printable_chars')) {
-    function __remove_non_printable_chars(...$args)
+    function __remove_non_printable_chars($str)
     {
-        return \vielhuber\stringhelper\__::remove_non_printable_chars(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_non_printable_chars'], func_get_args());
     }
 }
 
 if (!function_exists('__minify_html')) {
-    function __minify_html(...$args)
+    function __minify_html($html)
     {
-        return \vielhuber\stringhelper\__::minify_html(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'minify_html'], func_get_args());
     }
 }
 
 if (!function_exists('__str_to_dom')) {
-    function __str_to_dom(...$args)
+    function __str_to_dom($html)
     {
-        return \vielhuber\stringhelper\__::str_to_dom(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'str_to_dom'], func_get_args());
     }
 }
 
 if (!function_exists('__dom_to_str')) {
-    function __dom_to_str(...$args)
+    function __dom_to_str($dom)
     {
-        return \vielhuber\stringhelper\__::dom_to_str(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'dom_to_str'], func_get_args());
     }
 }
 
 if (!function_exists('__translate_google')) {
-    function __translate_google(...$args)
+    function __translate_google($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
-        return \vielhuber\stringhelper\__::translate_google(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'translate_google'], func_get_args());
     }
 }
 
 if (!function_exists('__translate_microsoft')) {
-    function __translate_microsoft(...$args)
+    function __translate_microsoft($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
-        return \vielhuber\stringhelper\__::translate_microsoft(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'translate_microsoft'], func_get_args());
     }
 }
 
 if (!function_exists('__translate_deepl')) {
-    function __translate_deepl(...$args)
+    function __translate_deepl($str, $from_lng, $to_lng, $api_key, $proxy = null)
     {
-        return \vielhuber\stringhelper\__::translate_deepl(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'translate_deepl'], func_get_args());
     }
 }
 
 if (!function_exists('__chatgpt')) {
-    function __chatgpt(...$args)
+    function __chatgpt($model = null, $temperature = null, $api_key = null, $session_id = null)
     {
-        return \vielhuber\stringhelper\__::chatgpt(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'chatgpt'], func_get_args());
     }
 }
 
 if (!function_exists('__ai')) {
-    function __ai(...$args)
+    function __ai($service, $model = null, $temperature = null, $api_key = null, $session_id = null)
     {
-        return \vielhuber\stringhelper\__::ai(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'ai'], func_get_args());
     }
 }
 
 if (!function_exists('__first_char_is_uppercase')) {
-    function __first_char_is_uppercase(...$args)
+    function __first_char_is_uppercase($str)
     {
-        return \vielhuber\stringhelper\__::first_char_is_uppercase(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'first_char_is_uppercase'], func_get_args());
     }
 }
 
 if (!function_exists('__set_first_char_uppercase')) {
-    function __set_first_char_uppercase(...$args)
+    function __set_first_char_uppercase($str)
     {
-        return \vielhuber\stringhelper\__::set_first_char_uppercase(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'set_first_char_uppercase'], func_get_args());
     }
 }
 
 if (!function_exists('__slug')) {
-    function __slug(...$args)
+    function __slug($string)
     {
-        return \vielhuber\stringhelper\__::slug(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'slug'], func_get_args());
     }
 }
 
 if (!function_exists('__random_string')) {
-    function __random_string(...$args)
+    function __random_string($length = 8, $chars = null)
     {
-        return \vielhuber\stringhelper\__::random_string(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'random_string'], func_get_args());
     }
 }
 
 if (!function_exists('__arr_without')) {
-    function __arr_without(...$args)
+    function __arr_without($array, $cols)
     {
-        return \vielhuber\stringhelper\__::arr_without(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'arr_without'], func_get_args());
     }
 }
 
 if (!function_exists('__shuffle')) {
-    function __shuffle(...$args)
+    function __shuffle($array)
     {
-        return \vielhuber\stringhelper\__::shuffle(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'shuffle'], func_get_args());
     }
 }
 
 if (!function_exists('__shuffle_assoc')) {
-    function __shuffle_assoc(...$args)
+    function __shuffle_assoc($array)
     {
-        return \vielhuber\stringhelper\__::shuffle_assoc(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'shuffle_assoc'], func_get_args());
     }
 }
 
 if (!function_exists('__mb_strcmp')) {
-    function __mb_strcmp(...$args)
+    function __mb_strcmp($a, $b)
     {
-        return \vielhuber\stringhelper\__::mb_strcmp(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'mb_strcmp'], func_get_args());
     }
 }
 
 if (!function_exists('__mb_strcasecmp')) {
-    function __mb_strcasecmp(...$args)
+    function __mb_strcasecmp($a, $b)
     {
-        return \vielhuber\stringhelper\__::mb_strcasecmp(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'mb_strcasecmp'], func_get_args());
     }
 }
 
 if (!function_exists('__mb_strnatcmp')) {
-    function __mb_strnatcmp(...$args)
+    function __mb_strnatcmp($a, $b)
     {
-        return \vielhuber\stringhelper\__::mb_strnatcmp(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'mb_strnatcmp'], func_get_args());
     }
 }
 
 if (!function_exists('__mb_strnatcasecmp')) {
-    function __mb_strnatcasecmp(...$args)
+    function __mb_strnatcasecmp($a, $b)
     {
-        return \vielhuber\stringhelper\__::mb_strnatcasecmp(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'mb_strnatcasecmp'], func_get_args());
     }
 }
 
 if (!function_exists('__array_get')) {
-    function __array_get(...$args)
+    function __array_get($array, $key, $default = null)
     {
-        return \vielhuber\stringhelper\__::array_get(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_get'], func_get_args());
     }
 }
 
 if (!function_exists('__array_set')) {
     function __array_set(&$array, $key, $value)
     {
-        return \vielhuber\stringhelper\__::array_set($array, $key, $value);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_set'], [&$array, $key, $value]);
     }
 }
 
 if (!function_exists('__array_multisort')) {
-    function __array_multisort(...$args)
+    function __array_multisort($args)
     {
-        return \vielhuber\stringhelper\__::array_multisort(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_multisort'], func_get_args());
     }
 }
 
 if (!function_exists('__array_multisort_get_order')) {
-    function __array_multisort_get_order(...$args)
+    function __array_multisort_get_order($a, $b, $dir = 'asc')
     {
-        return \vielhuber\stringhelper\__::array_multisort_get_order(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_multisort_get_order'], func_get_args());
     }
 }
 
 if (!function_exists('__array_group_by')) {
-    function __array_group_by(...$args)
+    function __array_group_by($array, $key)
     {
-        return \vielhuber\stringhelper\__::array_group_by(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_group_by'], func_get_args());
     }
 }
 
 if (!function_exists('__array_group_by_aggregate')) {
-    function __array_group_by_aggregate(...$args)
+    function __array_group_by_aggregate($array, $keys, $aggregate_functions)
     {
-        return \vielhuber\stringhelper\__::array_group_by_aggregate(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_group_by_aggregate'], func_get_args());
     }
 }
 
 if (!function_exists('__array_unique')) {
-    function __array_unique(...$args)
+    function __array_unique($array)
     {
-        return \vielhuber\stringhelper\__::array_unique(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_unique'], func_get_args());
     }
 }
 
 if (!function_exists('__array_map_deep')) {
-    function __array_map_deep(...$args)
+    function __array_map_deep($array, $callback, $array__key = null, $key_chain = [])
     {
-        return \vielhuber\stringhelper\__::array_map_deep(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_map_deep'], func_get_args());
     }
 }
 
 if (!function_exists('__array_map_deep_all')) {
-    function __array_map_deep_all(...$args)
+    function __array_map_deep_all($array, $callback, $array__key = null, $key_chain = [])
     {
-        return \vielhuber\stringhelper\__::array_map_deep_all(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_map_deep_all'], func_get_args());
     }
 }
 
 if (!function_exists('__array_walk_recursive_all')) {
     function __array_walk_recursive_all(&$array, $callback, $array__key = null, $key_chain = [])
     {
-        \vielhuber\stringhelper\__::array_walk_recursive_all($array, $callback, $array__key, $key_chain);
+        return call_user_func_array(
+            ['\vielhuber\stringhelper\__', 'array_walk_recursive_all'],
+            [&$array, $callback, $array__key, $key_chain]
+        );
     }
 }
 
 if (!function_exists('__array_filter_recursive_all')) {
-    function __array_filter_recursive_all(...$args)
+    function __array_filter_recursive_all($arr, $callback)
     {
-        return \vielhuber\stringhelper\__::array_filter_recursive_all(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_filter_recursive_all'], func_get_args());
     }
 }
 
 if (!function_exists('__array_map_keys')) {
-    function __array_map_keys(...$args)
+    function __array_map_keys($callback, $arr)
     {
-        return \vielhuber\stringhelper\__::array_map_keys(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_map_keys'], func_get_args());
     }
 }
 
 if (!function_exists('__encode_data')) {
-    function __encode_data(...$args)
+    function __encode_data(...$data)
     {
-        return \vielhuber\stringhelper\__::encode_data(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'encode_data'], func_get_args());
     }
 }
 
 if (!function_exists('__decode_data')) {
-    function __decode_data(...$args)
+    function __decode_data($str)
     {
-        return \vielhuber\stringhelper\__::decode_data(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'decode_data'], func_get_args());
     }
 }
 
 if (!function_exists('__ask')) {
-    function __ask(...$args)
+    function __ask($question, $whitelist = [])
     {
-        return \vielhuber\stringhelper\__::ask(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'ask'], func_get_args());
     }
 }
 
 if (!function_exists('__progress')) {
-    function __progress(...$args)
+    function __progress($done, $total, $info = '', $width = 50, $char = '=')
     {
-        return \vielhuber\stringhelper\__::progress(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'progress'], func_get_args());
     }
 }
 
 if (!function_exists('__mb_sprintf')) {
-    function __mb_sprintf(...$args)
+    function __mb_sprintf($format, ...$args)
     {
-        return \vielhuber\stringhelper\__::mb_sprintf(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'mb_sprintf'], func_get_args());
     }
 }
 
 if (!function_exists('__is_serialized')) {
-    function __is_serialized(...$args)
+    function __is_serialized($data, $weak = false)
     {
-        return \vielhuber\stringhelper\__::is_serialized(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'is_serialized'], func_get_args());
     }
 }
 
 if (!function_exists('__is_integer')) {
-    function __is_integer(...$args)
+    function __is_integer($input)
     {
-        return \vielhuber\stringhelper\__::is_integer(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'is_integer'], func_get_args());
     }
 }
 
 if (!function_exists('__float_to_ratio')) {
-    function __float_to_ratio(...$args)
+    function __float_to_ratio($n)
     {
-        return \vielhuber\stringhelper\__::float_to_ratio(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'float_to_ratio'], func_get_args());
     }
 }
 
 if (!function_exists('__extract')) {
-    function __extract(...$args)
+    function __extract($string, $begin, $end)
     {
-        return \vielhuber\stringhelper\__::extract(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'extract'], func_get_args());
     }
 }
 
 if (!function_exists('__strposx')) {
-    function __strposx(...$args)
+    function __strposx($haystack, $needle)
     {
-        return \vielhuber\stringhelper\__::strposx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strposx'], func_get_args());
     }
 }
 
 if (!function_exists('__strposnth')) {
-    function __strposnth(...$args)
+    function __strposnth($haystack, $needle, $index)
     {
-        return \vielhuber\stringhelper\__::strposnth(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strposnth'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_empty')) {
-    function __remove_empty(...$args)
+    function __remove_empty($a, $additional = null, $callback = null)
     {
-        return \vielhuber\stringhelper\__::remove_empty(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_empty'], func_get_args());
     }
 }
 
 if (!function_exists('__remove')) {
-    function __remove(...$args)
+    function __remove($arr, $key)
     {
-        return \vielhuber\stringhelper\__::remove(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_by_key')) {
-    function __remove_by_key(...$args)
+    function __remove_by_key($arr, $key)
     {
-        return \vielhuber\stringhelper\__::remove_by_key(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_by_key'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_by_value')) {
-    function __remove_by_value(...$args)
+    function __remove_by_value($arr, $value)
     {
-        return \vielhuber\stringhelper\__::remove_by_value(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_by_value'], func_get_args());
     }
 }
 
 if (!function_exists('__arr_depth')) {
-    function __arr_depth(...$args)
+    function __arr_depth($a)
     {
-        return \vielhuber\stringhelper\__::arr_depth(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'arr_depth'], func_get_args());
     }
 }
 
 if (!function_exists('__arr_append')) {
-    function __arr_append(...$args)
+    function __arr_append($array, $value, $condition = true)
     {
-        return \vielhuber\stringhelper\__::arr_append(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'arr_append'], func_get_args());
     }
 }
 
 if (!function_exists('__arr_prepend')) {
-    function __arr_prepend(...$args)
+    function __arr_prepend($array, $value, $condition = true)
     {
-        return \vielhuber\stringhelper\__::arr_prepend(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'arr_prepend'], func_get_args());
     }
 }
 
 if (!function_exists('__foreach_nested')) {
     function __foreach_nested(...$args)
     {
-        return \vielhuber\stringhelper\__::foreach_nested(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'foreach_nested'], func_get_args());
     }
 }
 
 if (!function_exists('__can_be_looped')) {
-    function __can_be_looped(...$args)
+    function __can_be_looped($a)
     {
-        return \vielhuber\stringhelper\__::can_be_looped(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'can_be_looped'], func_get_args());
     }
 }
 
 if (!function_exists('__array')) {
-    function __array(...$args)
+    function __array($a = null)
     {
-        return \vielhuber\stringhelper\__::array(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array'], func_get_args());
     }
 }
 
 if (!function_exists('__object')) {
-    function __object(...$args)
+    function __object($a = null)
     {
-        return \vielhuber\stringhelper\__::object(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'object'], func_get_args());
     }
 }
 
 if (!function_exists('__object_to_array')) {
-    function __object_to_array(...$args)
+    function __object_to_array($obj)
     {
-        return \vielhuber\stringhelper\__::object_to_array(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'object_to_array'], func_get_args());
     }
 }
 
 if (!function_exists('__array_to_object')) {
-    function __array_to_object(...$args)
+    function __array_to_object($arr)
     {
-        return \vielhuber\stringhelper\__::array_to_object(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_to_object'], func_get_args());
     }
 }
 
 if (!function_exists('__highlight')) {
-    function __highlight(...$args)
+    function __highlight($string, $query, $strip = false, $strip_length = 500)
     {
-        return \vielhuber\stringhelper\__::highlight(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'highlight'], func_get_args());
     }
 }
 
 if (!function_exists('__referer')) {
-    function __referer(...$args)
+    function __referer()
     {
-        return \vielhuber\stringhelper\__::referer(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'referer'], func_get_args());
     }
 }
 
 if (!function_exists('__clean_up_get')) {
-    function __clean_up_get(...$args)
+    function __clean_up_get()
     {
-        return \vielhuber\stringhelper\__::clean_up_get(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'clean_up_get'], func_get_args());
     }
 }
 
 if (!function_exists('__clean_up_post')) {
-    function __clean_up_post(...$args)
+    function __clean_up_post()
     {
-        return \vielhuber\stringhelper\__::clean_up_post(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'clean_up_post'], func_get_args());
     }
 }
 
 if (!function_exists('__clean_up')) {
-    function __clean_up(...$args)
+    function __clean_up()
     {
-        return \vielhuber\stringhelper\__::clean_up(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'clean_up'], func_get_args());
     }
 }
 
 if (!function_exists('__read_env')) {
-    function __read_env(...$args)
+    function __read_env($filename)
     {
-        return \vielhuber\stringhelper\__::read_env(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'read_env'], func_get_args());
     }
 }
 
 if (!function_exists('__is_repetitive_action')) {
-    function __is_repetitive_action(...$args)
+    function __is_repetitive_action($name = '', $minutes = 60, $whitelist = [])
     {
-        return \vielhuber\stringhelper\__::is_repetitive_action(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'is_repetitive_action'], func_get_args());
     }
 }
 
 if (!function_exists('__has_spamwords')) {
-    function __has_spamwords(...$args)
+    function __has_spamwords($message, $custom_blacklist = [], $custom_whitelist = [])
     {
-        return \vielhuber\stringhelper\__::has_spamwords(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'has_spamwords'], func_get_args());
     }
 }
 
 if (!function_exists('__ip_is_on_spamlist')) {
-    function __ip_is_on_spamlist(...$args)
+    function __ip_is_on_spamlist($ip)
     {
-        return \vielhuber\stringhelper\__::ip_is_on_spamlist(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'ip_is_on_spamlist'], func_get_args());
     }
 }
 
 if (!function_exists('__get')) {
-    function __get(...$args)
+    function __get($var)
     {
-        return \vielhuber\stringhelper\__::get(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'get'], func_get_args());
     }
 }
 
 if (!function_exists('__post')) {
-    function __post(...$args)
+    function __post($var)
     {
-        return \vielhuber\stringhelper\__::post(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'post'], func_get_args());
     }
 }
 
 if (!function_exists('__filter_url_args')) {
-    function __filter_url_args(...$args)
+    function __filter_url_args($url, $filter = [])
     {
-        return \vielhuber\stringhelper\__::filter_url_args(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'filter_url_args'], func_get_args());
     }
 }
 
 if (!function_exists('__expl')) {
-    function __expl(...$args)
+    function __expl($separator = ' ', $array = [], $pos = 0)
     {
-        return \vielhuber\stringhelper\__::expl(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'expl'], func_get_args());
     }
 }
 
 if (!function_exists('__prg')) {
-    function __prg(...$args)
+    function __prg($url = null)
     {
-        return \vielhuber\stringhelper\__::prg(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'prg'], func_get_args());
     }
 }
 
 if (!function_exists('__system_message')) {
-    function __system_message(...$args)
+    function __system_message($content, $type = 'success')
     {
-        return \vielhuber\stringhelper\__::system_message(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'system_message'], func_get_args());
     }
 }
 
 if (!function_exists('__system_messages')) {
-    function __system_messages(...$args)
+    function __system_messages()
     {
-        return \vielhuber\stringhelper\__::system_messages(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'system_messages'], func_get_args());
     }
 }
 
 if (!function_exists('__redirect_to')) {
-    function __redirect_to(...$args)
+    function __redirect_to($url = null, $code_or_seconds = null, $mode = 'php')
     {
-        return \vielhuber\stringhelper\__::redirect_to(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'redirect_to'], func_get_args());
     }
 }
 
 if (!function_exists('__date')) {
-    function __date(...$args)
+    function __date($date = null, $format = null, $mod = null)
     {
-        return \vielhuber\stringhelper\__::date(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'date'], func_get_args());
     }
 }
 
 if (!function_exists('__validate_date_format')) {
-    function __validate_date_format(...$args)
+    function __validate_date_format($str)
     {
-        return \vielhuber\stringhelper\__::validate_date_format(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'validate_date_format'], func_get_args());
     }
 }
 
 if (!function_exists('__validate_date_mod')) {
-    function __validate_date_mod(...$args)
+    function __validate_date_mod($mod)
     {
-        return \vielhuber\stringhelper\__::validate_date_mod(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'validate_date_mod'], func_get_args());
     }
 }
 
 if (!function_exists('__datetime')) {
-    function __datetime(...$args)
+    function __datetime($datetime)
     {
-        return \vielhuber\stringhelper\__::datetime(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'datetime'], func_get_args());
     }
 }
 
 if (!function_exists('__date_reset_time')) {
-    function __date_reset_time(...$args)
+    function __date_reset_time($date)
     {
-        return \vielhuber\stringhelper\__::date_reset_time(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'date_reset_time'], func_get_args());
     }
 }
 
 if (!function_exists('__age_from_date')) {
-    function __age_from_date(...$args)
+    function __age_from_date($date_birth, $date_relative = null)
     {
-        return \vielhuber\stringhelper\__::age_from_date(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'age_from_date'], func_get_args());
     }
 }
 
 if (!function_exists('__age_from_date_weeks')) {
-    function __age_from_date_weeks(...$args)
+    function __age_from_date_weeks($date_birth, $date_relative = null)
     {
-        return \vielhuber\stringhelper\__::age_from_date_weeks(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'age_from_date_weeks'], func_get_args());
     }
 }
 
 if (!function_exists('__age_from_date_days')) {
-    function __age_from_date_days(...$args)
+    function __age_from_date_days($date_birth, $date_relative = null)
     {
-        return \vielhuber\stringhelper\__::age_from_date_days(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'age_from_date_days'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_zero_decimals')) {
-    function __remove_zero_decimals(...$args)
+    function __remove_zero_decimals($num)
     {
-        return \vielhuber\stringhelper\__::remove_zero_decimals(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_zero_decimals'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_leading_zeros')) {
-    function __remove_leading_zeros(...$args)
+    function __remove_leading_zeros($str)
     {
-        return \vielhuber\stringhelper\__::remove_leading_zeros(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_leading_zeros'], func_get_args());
     }
 }
 
 if (!function_exists('__flatten_keys')) {
-    function __flatten_keys(...$args)
+    function __flatten_keys($array)
     {
-        return \vielhuber\stringhelper\__::flatten_keys(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'flatten_keys'], func_get_args());
     }
 }
 
 if (!function_exists('__flatten_values')) {
-    function __flatten_values(...$args)
+    function __flatten_values($array)
     {
-        return \vielhuber\stringhelper\__::flatten_values(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'flatten_values'], func_get_args());
     }
 }
 
 if (!function_exists('__inside_out_values')) {
-    function __inside_out_values(...$args)
+    function __inside_out_values($array)
     {
-        return \vielhuber\stringhelper\__::inside_out_values(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'inside_out_values'], func_get_args());
     }
 }
 
 if (!function_exists('__arrays_to_objects')) {
-    function __arrays_to_objects(...$args)
+    function __arrays_to_objects($arr)
     {
-        return \vielhuber\stringhelper\__::arrays_to_objects(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'arrays_to_objects'], func_get_args());
     }
 }
 
 if (!function_exists('__loop_status')) {
-    function __loop_status(&...$args)
+    function __loop_status(&$array)
     {
-        return \vielhuber\stringhelper\__::loop_status(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'loop_status'], [&$array]);
     }
 }
 
 if (!function_exists('__fkey')) {
-    function __fkey(...$args)
+    function __fkey($array__key, $array)
     {
-        return \vielhuber\stringhelper\__::fkey(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'fkey'], func_get_args());
     }
 }
 
 if (!function_exists('__lkey')) {
-    function __lkey(...$args)
+    function __lkey($array__key, $array)
     {
-        return \vielhuber\stringhelper\__::lkey(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'lkey'], func_get_args());
     }
 }
 
 if (!function_exists('__last')) {
-    function __last(...$args)
+    function __last($array)
     {
-        return \vielhuber\stringhelper\__::last(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'last'], func_get_args());
     }
 }
 
 if (!function_exists('__first')) {
-    function __first(...$args)
+    function __first($array)
     {
-        return \vielhuber\stringhelper\__::first(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'first'], func_get_args());
     }
 }
 
 if (!function_exists('__first_key')) {
-    function __first_key(...$args)
+    function __first_key($array)
     {
-        return \vielhuber\stringhelper\__::first_key(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'first_key'], func_get_args());
     }
 }
 
 if (!function_exists('__rand')) {
-    function __rand(...$args)
+    function __rand($array)
     {
-        return \vielhuber\stringhelper\__::rand(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'rand'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_first')) {
-    function __remove_first(...$args)
+    function __remove_first($array)
     {
-        return \vielhuber\stringhelper\__::remove_first(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_first'], func_get_args());
     }
 }
 
 if (!function_exists('__remove_last')) {
-    function __remove_last(...$args)
+    function __remove_last($array)
     {
-        return \vielhuber\stringhelper\__::remove_last(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'remove_last'], func_get_args());
     }
 }
 
 if (!function_exists('__string_is_json')) {
-    function __string_is_json(...$args)
+    function __string_is_json($str)
     {
-        return \vielhuber\stringhelper\__::string_is_json(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'string_is_json'], func_get_args());
     }
 }
 
 if (!function_exists('__string_is_html')) {
-    function __string_is_html(...$args)
+    function __string_is_html($str)
     {
-        return \vielhuber\stringhelper\__::string_is_html(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'string_is_html'], func_get_args());
     }
 }
 
 if (!function_exists('__fetch')) {
-    function __fetch(...$args)
+    function __fetch($url, $method = null)
     {
-        return \vielhuber\stringhelper\__::fetch(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'fetch'], func_get_args());
     }
 }
 
 if (!function_exists('__curl')) {
-    function __curl(...$args)
-    {
-        return \vielhuber\stringhelper\__::curl(...$args);
+    function __curl(
+        $url = '',
+        $data = null,
+        $method = null,
+        $headers = null,
+        $enable_cookies = false,
+        $send_as_json = true,
+        $timeout = 60,
+        $basic_auth = null,
+        $cookies = null,
+        $follow_redirects = true,
+        $proxy = null
+    ) {
+        return \vielhuber\stringhelper\__::curl(
+            $url,
+            $data,
+            $method,
+            $headers,
+            $enable_cookies,
+            $send_as_json,
+            $timeout,
+            $basic_auth,
+            $cookies,
+            $follow_redirects,
+            $proxy
+        );
     }
 }
 
 if (!function_exists('__has_basic_auth')) {
-    function __has_basic_auth(...$args)
+    function __has_basic_auth($url)
     {
-        return \vielhuber\stringhelper\__::has_basic_auth(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'has_basic_auth'], func_get_args());
     }
 }
 
 if (!function_exists('__check_basic_auth')) {
-    function __check_basic_auth(...$args)
+    function __check_basic_auth($url, $username = '', $password = '')
     {
-        return \vielhuber\stringhelper\__::check_basic_auth(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'check_basic_auth'], func_get_args());
     }
 }
 
 if (!function_exists('__json_response')) {
-    function __json_response(...$args)
+    function __json_response($data, $code = 200)
     {
-        return \vielhuber\stringhelper\__::json_response(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'json_response'], func_get_args());
     }
 }
 
 if (!function_exists('__input')) {
-    function __input(...$args)
+    function __input($key = null, $fallback = null)
     {
-        return \vielhuber\stringhelper\__::input(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'input'], func_get_args());
     }
 }
 
 if (!function_exists('__extract_urls_from_sitemap')) {
-    function __extract_urls_from_sitemap(...$args)
+    function __extract_urls_from_sitemap($url, $basic_auth = null, $include_last_modified = false)
     {
-        return \vielhuber\stringhelper\__::extract_urls_from_sitemap(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'extract_urls_from_sitemap'], func_get_args());
     }
 }
 
 if (!function_exists('__extract_title_from_url')) {
-    function __extract_title_from_url(...$args)
+    function __extract_title_from_url($url)
     {
-        return \vielhuber\stringhelper\__::extract_title_from_url(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'extract_title_from_url'], func_get_args());
     }
 }
 
 if (!function_exists('__extract_meta_desc_from_url')) {
-    function __extract_meta_desc_from_url(...$args)
+    function __extract_meta_desc_from_url($url)
     {
-        return \vielhuber\stringhelper\__::extract_meta_desc_from_url(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'extract_meta_desc_from_url'], func_get_args());
     }
 }
 
 if (!function_exists('__get_mime_type')) {
-    function __get_mime_type(...$args)
+    function __get_mime_type($filename)
     {
-        return \vielhuber\stringhelper\__::get_mime_type(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'get_mime_type'], func_get_args());
     }
 }
 
 if (!function_exists('__mime_type_to_extension')) {
-    function __mime_type_to_extension(...$args)
+    function __mime_type_to_extension($mime_type)
     {
-        return \vielhuber\stringhelper\__::mime_type_to_extension(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'mime_type_to_extension'], func_get_args());
     }
 }
 
 if (!function_exists('__extension_to_mime_types')) {
-    function __extension_to_mime_types(...$args)
+    function __extension_to_mime_types($extension)
     {
-        return \vielhuber\stringhelper\__::extension_to_mime_types(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'extension_to_mime_types'], func_get_args());
     }
 }
 
 if (!function_exists('__reverse_proxy')) {
-    function __reverse_proxy(...$args)
+    function __reverse_proxy($url, $receipts, $output_and_die = true)
     {
-        return \vielhuber\stringhelper\__::reverse_proxy(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'reverse_proxy'], func_get_args());
     }
 }
 
 if (!function_exists('__exception')) {
-    function __exception(...$args)
+    function __exception($message = '')
     {
-        return \vielhuber\stringhelper\__::exception(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'exception'], func_get_args());
     }
 }
 
 if (!function_exists('__exception_message')) {
-    function __exception_message(...$args)
+    function __exception_message($t)
     {
-        return \vielhuber\stringhelper\__::exception_message(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'exception_message'], func_get_args());
     }
 }
 
 if (!function_exists('__success')) {
-    function __success(...$args)
+    function __success($message = '')
     {
-        return \vielhuber\stringhelper\__::success(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'success'], func_get_args());
     }
 }
 
 if (!function_exists('__error')) {
-    function __error(...$args)
+    function __error($message = '')
     {
-        return \vielhuber\stringhelper\__::error(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'error'], func_get_args());
     }
 }
 
 if (!function_exists('__hook_fire')) {
-    function __hook_fire(...$args)
+    function __hook_fire($hook_name, $arg = null)
     {
-        return \vielhuber\stringhelper\__::hook_fire(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'hook_fire'], func_get_args());
     }
 }
 
 if (!function_exists('__hook_add')) {
-    function __hook_add(...$args)
+    function __hook_add($hook_name, $fun, $priority = 0)
     {
-        return \vielhuber\stringhelper\__::hook_add(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'hook_add'], func_get_args());
     }
 }
 
 if (!function_exists('__os')) {
-    function __os(...$args)
+    function __os()
     {
-        return \vielhuber\stringhelper\__::os(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'os'], func_get_args());
     }
 }
 
 if (!function_exists('__uuid')) {
-    function __uuid(...$args)
+    function __uuid()
     {
-        return \vielhuber\stringhelper\__::uuid(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'uuid'], func_get_args());
     }
 }
 
 if (!function_exists('__validate_uuid')) {
-    function __validate_uuid(...$args)
+    function __validate_uuid($str, $strict_check = true)
     {
-        return \vielhuber\stringhelper\__::validate_uuid(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'validate_uuid'], func_get_args());
     }
 }
 
 if (!function_exists('__url')) {
-    function __url(...$args)
+    function __url()
     {
-        return \vielhuber\stringhelper\__::url(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'url'], func_get_args());
     }
 }
 
 if (!function_exists('__urlWithoutArgs')) {
-    function __urlWithoutArgs(...$args)
+    function __urlWithoutArgs()
     {
-        return \vielhuber\stringhelper\__::urlWithoutArgs(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'urlWithoutArgs'], func_get_args());
     }
 }
 
 if (!function_exists('__baseurl')) {
-    function __baseurl(...$args)
+    function __baseurl()
     {
-        return \vielhuber\stringhelper\__::baseurl(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'baseurl'], func_get_args());
     }
 }
 
 if (!function_exists('__timestamp_excel_to_str')) {
-    function __timestamp_excel_to_str(...$args)
+    function __timestamp_excel_to_str($timestamp)
     {
-        return \vielhuber\stringhelper\__::timestamp_excel_to_str(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'timestamp_excel_to_str'], func_get_args());
     }
 }
 
 if (!function_exists('__timestamp_str_to_excel')) {
-    function __timestamp_str_to_excel(...$args)
+    function __timestamp_str_to_excel($str)
     {
-        return \vielhuber\stringhelper\__::timestamp_str_to_excel(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'timestamp_str_to_excel'], func_get_args());
     }
 }
 
 if (!function_exists('__video_info')) {
-    function __video_info(...$args)
+    function __video_info($str)
     {
-        return \vielhuber\stringhelper\__::video_info(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'video_info'], func_get_args());
     }
 }
 
 if (!function_exists('__char_to_int')) {
-    function __char_to_int(...$args)
+    function __char_to_int($letters)
     {
-        return \vielhuber\stringhelper\__::char_to_int(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'char_to_int'], func_get_args());
     }
 }
 
 if (!function_exists('__int_to_char')) {
-    function __int_to_char(...$args)
+    function __int_to_char($num)
     {
-        return \vielhuber\stringhelper\__::int_to_char(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'int_to_char'], func_get_args());
     }
 }
 
 if (!function_exists('__inc_char')) {
-    function __inc_char(...$args)
+    function __inc_char($char, $shift = 1)
     {
-        return \vielhuber\stringhelper\__::inc_char(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'inc_char'], func_get_args());
     }
 }
 
 if (!function_exists('__dec_char')) {
-    function __dec_char(...$args)
+    function __dec_char($char, $shift = 1)
     {
-        return \vielhuber\stringhelper\__::dec_char(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'dec_char'], func_get_args());
+    }
+}
+
+if (!function_exists('__str_search_replace')) {
+    function __str_search_replace($str, $regex, $callback)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'str_search_replace'], func_get_args());
     }
 }
 
 if (!function_exists('__str_replace_first')) {
-    function __str_replace_first(...$args)
+    function __str_replace_first($search, $replace, $str)
     {
-        return \vielhuber\stringhelper\__::str_replace_first(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'str_replace_first'], func_get_args());
     }
 }
 
 if (!function_exists('__str_replace_last')) {
-    function __str_replace_last(...$args)
+    function __str_replace_last($search, $replace, $str)
     {
-        return \vielhuber\stringhelper\__::str_replace_last(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'str_replace_last'], func_get_args());
     }
 }
 
 if (!function_exists('__csv2array')) {
-    function __csv2array(...$args)
+    function __csv2array($filename, $delimiter = ';', $enclosure = '"')
     {
-        return \vielhuber\stringhelper\__::csv2array(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'csv2array'], func_get_args());
     }
 }
 
 if (!function_exists('__array2csv')) {
-    function __array2csv(...$args)
+    function __array2csv($array, $filename, $delimiter = ';', $enclosure = '"')
     {
-        return \vielhuber\stringhelper\__::array2csv(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array2csv'], func_get_args());
     }
 }
 
 if (!function_exists('__xml2array')) {
-    function __xml2array(...$args)
+    function __xml2array($filename)
     {
-        return \vielhuber\stringhelper\__::xml2array(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'xml2array'], func_get_args());
     }
 }
 
 if (!function_exists('__array2xml')) {
-    function __array2xml(...$args)
+    function __array2xml($arr, $filename = null, $prolog_attrs = null, $strip_empty_tags = false)
     {
-        return \vielhuber\stringhelper\__::array2xml(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array2xml'], func_get_args());
     }
 }
 
 if (!function_exists('__sed_replace')) {
-    function __sed_replace(...$args)
+    function __sed_replace($replacements, $filename)
     {
-        return \vielhuber\stringhelper\__::sed_replace(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'sed_replace'], func_get_args());
     }
 }
 
 if (!function_exists('__sed_prepend')) {
-    function __sed_prepend(...$args)
+    function __sed_prepend($str, $filename)
     {
-        return \vielhuber\stringhelper\__::sed_prepend(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'sed_prepend'], func_get_args());
     }
 }
 
 if (!function_exists('__sed_append')) {
-    function __sed_append(...$args)
+    function __sed_append($str, $filename)
     {
-        return \vielhuber\stringhelper\__::sed_append(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'sed_append'], func_get_args());
     }
 }
 
 if (!function_exists('__sed_escape')) {
-    function __sed_escape(...$args)
+    function __sed_escape($str)
     {
-        return \vielhuber\stringhelper\__::sed_escape(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'sed_escape'], func_get_args());
     }
 }
 
 if (!function_exists('__diff')) {
-    function __diff(...$args)
+    function __diff($str1, $str2)
     {
-        return \vielhuber\stringhelper\__::diff(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'diff'], func_get_args());
     }
 }
 
 if (!function_exists('__line_endings_convert')) {
-    function __line_endings_convert(...$args)
+    function __line_endings_convert($str, $os)
     {
-        return \vielhuber\stringhelper\__::line_endings_convert(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'line_endings_convert'], func_get_args());
     }
 }
 
 if (!function_exists('__line_endings_weak_equals')) {
-    function __line_endings_weak_equals(...$args)
+    function __line_endings_weak_equals($str1, $str2)
     {
-        return \vielhuber\stringhelper\__::line_endings_weak_equals(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'line_endings_weak_equals'], func_get_args());
     }
 }
 
 if (!function_exists('__log_begin')) {
-    function __log_begin(...$args)
+    function __log_begin($message = null)
     {
-        return \vielhuber\stringhelper\__::log_begin(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'log_begin'], func_get_args());
     }
 }
 
 if (!function_exists('__log_end')) {
-    function __log_end(...$args)
+    function __log_end($message = null, $echo = true)
     {
-        return \vielhuber\stringhelper\__::log_end(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'log_end'], func_get_args());
     }
 }
 
 if (!function_exists('__image_compress')) {
-    function __image_compress(...$args)
+    function __image_compress($source, $quality = 90, $destination = null)
     {
-        return \vielhuber\stringhelper\__::image_compress(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'image_compress'], func_get_args());
     }
 }
 
 if (!function_exists('__image_orientate')) {
-    function __image_orientate(...$args)
+    function __image_orientate($source, $quality = 90, $destination = null)
     {
-        return \vielhuber\stringhelper\__::image_orientate(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'image_orientate'], func_get_args());
     }
 }
 
 if (!function_exists('__file_extension')) {
-    function __file_extension(...$args)
+    function __file_extension($filename)
     {
-        return \vielhuber\stringhelper\__::file_extension(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'file_extension'], func_get_args());
     }
 }
 
 if (!function_exists('__is_utf8')) {
-    function __is_utf8(...$args)
+    function __is_utf8($str)
     {
-        return \vielhuber\stringhelper\__::is_utf8(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'is_utf8'], func_get_args());
     }
 }
 
 if (!function_exists('__to_utf8')) {
-    function __to_utf8(...$args)
+    function __to_utf8($str)
     {
-        return \vielhuber\stringhelper\__::to_utf8(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'to_utf8'], func_get_args());
     }
 }
 
 if (!function_exists('__utf8_encode')) {
-    function __utf8_encode(...$args)
+    function __utf8_encode($str)
     {
-        return \vielhuber\stringhelper\__::utf8_encode(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'utf8_encode'], func_get_args());
     }
 }
 
 if (!function_exists('__utf8_decode')) {
-    function __utf8_decode(...$args)
+    function __utf8_decode($str)
     {
-        return \vielhuber\stringhelper\__::utf8_decode(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'utf8_decode'], func_get_args());
     }
 }
 
 if (!function_exists('__iptc_codes')) {
-    function __iptc_codes(...$args)
+    function __iptc_codes()
     {
-        return \vielhuber\stringhelper\__::iptc_codes(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'iptc_codes'], func_get_args());
     }
 }
 
 if (!function_exists('__iptc_code')) {
-    function __iptc_code(...$args)
+    function __iptc_code($code)
     {
-        return \vielhuber\stringhelper\__::iptc_code(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'iptc_code'], func_get_args());
     }
 }
 
 if (!function_exists('__iptc_keyword')) {
-    function __iptc_keyword(...$args)
+    function __iptc_keyword($code)
     {
-        return \vielhuber\stringhelper\__::iptc_keyword(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'iptc_keyword'], func_get_args());
     }
 }
 
 if (!function_exists('__iptc_read')) {
-    function __iptc_read(...$args)
+    function __iptc_read($filename, $field = null)
     {
-        return \vielhuber\stringhelper\__::iptc_read(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'iptc_read'], func_get_args());
     }
 }
 
 if (!function_exists('__iptc_write')) {
-    function __iptc_write(...$args)
+    function __iptc_write($filename, $field, $value = null)
     {
-        return \vielhuber\stringhelper\__::iptc_write(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'iptc_write'], func_get_args());
     }
 }
 
 if (!function_exists('__encrypt')) {
-    function __encrypt(...$args)
+    function __encrypt($string, $salt = null)
     {
-        return \vielhuber\stringhelper\__::encrypt(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'encrypt'], func_get_args());
     }
 }
 
 if (!function_exists('__decrypt')) {
-    function __decrypt(...$args)
+    function __decrypt($string)
     {
-        return \vielhuber\stringhelper\__::decrypt(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'decrypt'], func_get_args());
     }
 }
 
 if (!function_exists('__encrypt_poor')) {
-    function __encrypt_poor(...$args)
+    function __encrypt_poor($string)
     {
-        return \vielhuber\stringhelper\__::encrypt_poor(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'encrypt_poor'], func_get_args());
     }
 }
 
 if (!function_exists('__decrypt_poor')) {
-    function __decrypt_poor(...$args)
+    function __decrypt_poor($token, $once = false)
     {
-        return \vielhuber\stringhelper\__::decrypt_poor(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'decrypt_poor'], func_get_args());
     }
 }
 
 if (!function_exists('__files_in_folder')) {
-    function __files_in_folder(...$args)
+    function __files_in_folder($folder = '.', $recursive = false, $exclude = [], $abspath = false)
     {
-        return \vielhuber\stringhelper\__::files_in_folder(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'files_in_folder'], func_get_args());
     }
 }
 
 if (!function_exists('__zip')) {
-    function __zip(...$args)
+    function __zip($output, $files_or_folders, $strip_paths = false)
     {
-        return \vielhuber\stringhelper\__::zip(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'zip'], func_get_args());
     }
 }
 
 if (!function_exists('__unzip')) {
-    function __unzip(...$args)
+    function __unzip($input, $folder)
     {
-        return \vielhuber\stringhelper\__::unzip(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'unzip'], func_get_args());
     }
 }
 
 if (!function_exists('__rrmdir')) {
-    function __rrmdir(...$args)
+    function __rrmdir($dir)
     {
-        return \vielhuber\stringhelper\__::rrmdir(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'rrmdir'], func_get_args());
     }
 }
 
 if (!function_exists('__is_base64_encoded')) {
-    function __is_base64_encoded(...$args)
+    function __is_base64_encoded($str)
     {
-        return \vielhuber\stringhelper\__::is_base64_encoded(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'is_base64_encoded'], func_get_args());
     }
 }
 
 if (!function_exists('__is_eloquent_builder')) {
-    function __is_eloquent_builder(...$args)
+    function __is_eloquent_builder($data)
     {
-        return \vielhuber\stringhelper\__::is_eloquent_builder(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'is_eloquent_builder'], func_get_args());
     }
 }
 
 if (!function_exists('__is_external')) {
-    function __is_external(...$args)
+    function __is_external($link)
     {
-        return \vielhuber\stringhelper\__::is_external(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'is_external'], func_get_args());
     }
 }
 
 if (!function_exists('__pushId')) {
-    function __pushId(...$args)
+    function __pushId()
     {
-        return \vielhuber\stringhelper\__::pushId(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'pushId'], func_get_args());
     }
 }
 
@@ -1708,92 +1741,92 @@ if (!class_exists('ExtendedException')) {
 /* LEGACY CODE */
 
 if (!function_exists('__redirect')) {
-    function __redirect(...$args)
+    function __redirect($url = null)
     {
-        return \vielhuber\stringhelper\__::redirect(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'redirect'], func_get_args());
     }
 }
 
 if (!function_exists('__f')) {
     function __f(...$args)
     {
-        return \vielhuber\stringhelper\__::f(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'f'], func_get_args());
     }
 }
 
 if (!function_exists('__swap')) {
-    function __swap(...$args)
+    function __swap(&$x, &$y)
     {
-        return \vielhuber\stringhelper\__::swap(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'swap'], [&$x, &$y]);
     }
 }
 
 if (!function_exists('__mx')) {
-    function __mx(...$args)
+    function __mx()
     {
-        return \vielhuber\stringhelper\__::mx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'mx'], func_get_args());
     }
 }
 
 if (!function_exists('__ox')) {
-    function __ox(...$args)
+    function __ox()
     {
-        return \vielhuber\stringhelper\__::ox(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'ox'], func_get_args());
     }
 }
 
 if (!function_exists('__aox')) {
-    function __aox(...$args)
+    function __aox($var)
     {
-        return \vielhuber\stringhelper\__::aox(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'aox'], func_get_args());
     }
 }
 
 if (!function_exists('__amx')) {
-    function __amx(...$args)
+    function __amx($var)
     {
-        return \vielhuber\stringhelper\__::amx(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'amx'], func_get_args());
     }
 }
 
 if (!function_exists('__xe')) {
-    function __xe(...$args)
+    function __xe($var, $return, $fallback = null)
     {
-        return \vielhuber\stringhelper\__::xe(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'xe'], func_get_args());
     }
 }
 
 if (!function_exists('__eq')) {
-    function __eq(...$args)
+    function __eq($a, $b)
     {
-        return \vielhuber\stringhelper\__::eq(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'eq'], func_get_args());
     }
 }
 
 if (!function_exists('__neq')) {
-    function __neq(...$args)
+    function __neq($a, $b)
     {
-        return \vielhuber\stringhelper\__::neq(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'neq'], func_get_args());
     }
 }
 
 if (!function_exists('clean_up_get')) {
-    function clean_up_get(...$args)
+    function clean_up_get()
     {
-        return \vielhuber\stringhelper\__::clean_up_get(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'clean_up_get'], func_get_args());
     }
 }
 
 if (!function_exists('clean_up_post')) {
-    function clean_up_post(...$args)
+    function clean_up_post()
     {
-        return \vielhuber\stringhelper\__::clean_up_post(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'clean_up_post'], func_get_args());
     }
 }
 
 if (!function_exists('clean_up')) {
-    function clean_up(...$args)
+    function clean_up()
     {
-        return \vielhuber\stringhelper\__::clean_up(...$args);
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'clean_up'], func_get_args());
     }
 }

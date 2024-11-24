@@ -601,7 +601,8 @@ multiline string
                             'This is the <span>house</span> of Santa Claus',
                             'This is Santa\'s <span>house</span>',
                             'This is Santa&#39;s <span>house</span>',
-                            'This is Santa Claus&#39; <span>house</span>'
+                            'This is Santa Claus&#39; <span>house</span>',
+                            'This is Santa Claus&#39;s <span>house</span>'
                         ],
                         'de',
                         'en'
@@ -612,7 +613,8 @@ multiline string
                             'This is the <span class="notranslate">Haus</span> of Santa Claus',
                             'This is Santa\'s <span class="notranslate">Haus</span>',
                             'This is Santa&#39;s <span class="notranslate">Haus</span>',
-                            'This is Santa Claus&#39; <span class="notranslate">Haus</span>'
+                            'This is Santa Claus&#39; <span class="notranslate">Haus</span>',
+                            'This is Santa Claus&#39;s <span class="notranslate">Haus</span>'
                         ],
                         'de',
                         'en'
@@ -649,7 +651,9 @@ multiline string
                             'Since <a>ES6,</a> <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in almost all areas and is now far superior.',
                             'Since <a>ES6</a>, <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.',
                             'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in virtually all areas and is now far superior.',
-                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.'
+                            'Since <a>ES6</a> <a>, VanillaJS</a> has been on par with the original <a>jQuery</a> in virtually all areas and is now far superior.',
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a>ES6</a> <a>, VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -663,7 +667,9 @@ multiline string
                             '<a p="2">Since ES6,</a> VanillaJS has been on a <a p="1">par with</a> <a p="3">the veteran jQuery</a> in almost all areas and is now far superior.',
                             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in almost all areas and is now far superior.',
                             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in almost all areas and is now far superior.',
-                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.'
+                            'Since <a p="2">ES6</a> <a p="1">, VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.',
+                            'Since <a p="2">ES6</a> <a p="1">, VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -749,7 +755,7 @@ multiline string
             $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
 
-        $this->assertSame(
+        $this->assertContains(
             __translate_google(
                 'Hund
 Haus',
@@ -757,8 +763,12 @@ Haus',
                 'en',
                 $_SERVER['GOOGLE_TRANSLATION_API_KEY']
             ),
-            'Dog
-House'
+            [
+                'Dog
+House',
+                'Dog
+house'
+            ]
         );
 
         try {
@@ -1266,7 +1276,7 @@ baz'
                 [[date(strtotime('now - 20 years - 30 days')), null], 20, 1047, 7335],
                 [[date(strtotime('now - 20 years - 30 days')), ''], 20, 1047, 7335],
                 [[date(strtotime('now - 20 years - 30 days')), 'foo'], null, null, null],
-                [date(strtotime('5232-01-01')), null, null, null],
+                [[date('Y-m-d', strtotime('5232-01-01')), date('Y-m-d', strtotime('5232-01-01'))], 0, 0, 0],
                 [[date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2007'))], 0, 0, 0],
                 [[date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('26.12.2008'))], 0, 52, 365],
                 [[date('Y-m-d', strtotime('27.12.2007')), date('Y-m-d', strtotime('27.12.2008'))], 1, 52, 366],
@@ -1285,6 +1295,66 @@ baz'
             $this->assertSame(__age_from_date_weeks($date_birth, $date_relative), $data__value[2]);
             $this->assertSame(__age_from_date_days($date_birth, $date_relative), $data__value[3]);
         }
+    }
+
+    function test__str_search_replace()
+    {
+        $this->assertSame(
+            __str_search_replace(
+                '
+foo_1_bar_2_baz_3_gnarr_4_gnaz
+foo_5_bar_6_baz_7_gnarr_8_gnaz
+foo_9_bar_10_baz_11_gnarr_12_gnaz
+',
+                '/foo_(.+)_bar_(?:.+)_baz_(.+)_gnarr_(.+)_gnaz/',
+                function ($matches) {
+                    $matches[0]++;
+                    $matches[1]++;
+                    $matches[2]++;
+                    return $matches;
+                }
+            ),
+            '
+foo_2_bar_2_baz_4_gnarr_5_gnaz
+foo_6_bar_6_baz_8_gnarr_9_gnaz
+foo_10_bar_10_baz_12_gnarr_13_gnaz
+'
+        );
+
+        $this->assertSame(
+            __str_search_replace('A_A_A', '/(_)[A-Z](_)/', function ($matches) {
+                $matches[0] = 'B';
+                $matches[1] = 'C';
+                return $matches;
+            }),
+            'ABACA'
+        );
+
+        $this->assertSame(
+            __str_search_replace(null, '//', function ($matches) {
+                return $matches;
+            }),
+            null
+        );
+        $this->assertSame(
+            __str_search_replace(false, '//', function ($matches) {
+                return $matches;
+            }),
+            false
+        );
+        $this->assertSame(
+            __str_search_replace(true, '//', function ($matches) {
+                return $matches;
+            }),
+            true
+        );
+
+        $this->assertSame(
+            __str_search_replace('foobarfoobar', '/foo(.+)foo(.+)/', function ($matches) {
+                return ['baz1', 'baz2'];
+            }),
+            'foobaz1foobaz2'
+        );
     }
 
     function test__curl()
@@ -1906,14 +1976,8 @@ string'
 
     function test__extract_title_from_url()
     {
-        $this->assertSame(
-            __extract_title_from_url('https://vielhuber.de'),
-            'Vielhuber David > Full-Stack Developer aus München'
-        );
-        $this->assertSame(
-            __extract_title_from_url('https://vielhuber.de/'),
-            'Vielhuber David > Full-Stack Developer aus München'
-        );
+        $this->assertSame(__extract_title_from_url('https://vielhuber.de'), 'Vielhuber David > Full-Stack Developer');
+        $this->assertSame(__extract_title_from_url('https://vielhuber.de/'), 'Vielhuber David > Full-Stack Developer');
         $this->assertSame(__extract_title_from_url(null), '');
         $this->assertSame(__extract_title_from_url(true), '');
         $this->assertSame(__extract_title_from_url(false), '');
@@ -2329,7 +2393,7 @@ data-attr="foo">
             'thumbnail' => $base64
         ]);
 
-        $base64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents('tests/assets/thumbnail_vimeo.jpg'));
+        $base64 = 'data:image/avif;base64,' . base64_encode(file_get_contents('tests/assets/thumbnail_vimeo.avif'));
         $this->assertSame(__video_info('https://vimeo.com/527316428'), [
             'id' => '527316428',
             'provider' => 'vimeo',
@@ -3172,7 +3236,7 @@ data-attr="foo">
         $this->assertSame(__validate_date('01.01.2000'), true);
         $this->assertSame(__validate_date('01.01.90'), true);
         $this->assertSame(__validate_date('29.02.2001'), false);
-        $this->assertSame(__validate_date('5956-09-24'), false);
+        $this->assertSame(__validate_date('5956-09-24'), true);
         $this->assertSame(__validate_date('51956-09-24'), false);
         $this->assertSame(__validate_date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)'), true);
         $this->assertSame(__validate_date(new DateTime('2000-01-01')), true);
@@ -3181,6 +3245,9 @@ data-attr="foo">
         $this->assertSame(__validate_date(''), false);
         $this->assertSame(__validate_date(true), false);
         $this->assertSame(__validate_date(false), false);
+        $this->assertSame(__validate_date('2037-01-10'), true);
+        $this->assertSame(__validate_date('2039-01-10'), true);
+        $this->assertSame(__validate_date('2040-01-10T16:41:07+01:00'), true);
     }
 
     function test__validate_date_format()
@@ -3252,6 +3319,10 @@ data-attr="foo">
         $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
         $this->assertSame(__date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)', 'd.m.Y H:i:s'), '11.08.2020 17:34:23');
+        $this->assertSame(__date('2037-01-10', 'd.m.Y H:i:s'), '10.01.2037 00:00:00');
+        $this->assertSame(__date('2039-01-10', 'd.m.Y H:i:s'), '10.01.2039 00:00:00');
+        $this->assertSame(__date('01.01.39', 'd.m.Y H:i:s'), '01.01.2039 00:00:00');
+        $this->assertSame(__date('2040-01-10T16:41:07+01:00', 'd.m.Y H:i:s'), '10.01.2040 16:41:07');
     }
 
     function test__char()

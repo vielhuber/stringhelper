@@ -767,17 +767,11 @@ class __
             if (substr_count($date, '-') == 2) {
                 $date = explode('-', $date);
                 if (checkdate((int) $date[1], (int) $date[2], (int) $date[0])) {
-                    if ($date[0] >= 2037) {
-                        return false;
-                    } // prevent 32-bit problem
                     return true;
                 }
             } elseif (substr_count($date, '.') == 2) {
                 $date = explode('.', $date);
                 if (checkdate((int) $date[1], (int) $date[0], (int) $date[2])) {
-                    if ($date[2] >= 2037) {
-                        return false;
-                    } // prevent 32-bit problem
                     return true;
                 }
             }
@@ -791,6 +785,14 @@ class __
             self::validate_date(trim(explode('(', $date)[0])) === true
         ) {
             return true;
+        } else {
+            // circumvent 32-bit errors (dates higher than 2038)
+            try {
+                new \DateTime($date);
+                return true;
+            } catch (\Exception $e) {
+                return false;
+            }
         }
         return false;
     }
@@ -3661,8 +3663,8 @@ class __
         if (
             is_string($date) &&
             mb_strpos($date, '(') !== false &&
-            strtotime($date) === null &&
-            strtotime(trim(explode('(', $date)[0])) !== null
+            (strtotime($date) === null || strtotime($date) === false) &&
+            (strtotime(trim(explode('(', $date)[0])) !== null && strtotime(trim(explode('(', $date)[0])) !== false)
         ) {
             $date = trim(explode('(', $date)[0]);
         }
@@ -4943,20 +4945,23 @@ class __
     public static function video_info_thumbnail($id, $provider)
     {
         $content = '';
+        $mime_type = null;
         if ($provider === 'youtube') {
             $content = @file_get_contents('https://img.youtube.com/vi/' . $id . '/0.jpg');
+            $mime_type = 'image/jpeg';
         }
         if ($provider === 'vimeo') {
             $content = @file_get_contents('http://vimeo.com/api/v2/video/' . $id . '.json');
             if ($content != '') {
                 $content = json_decode($content);
                 $content = @file_get_contents($content[0]->thumbnail_large);
+                $mime_type = 'image/avif';
             }
         }
         if ($content == '') {
             return null;
         }
-        return 'data:image/jpeg;base64,' . base64_encode($content);
+        return 'data:' . $mime_type . ';base64,' . base64_encode($content);
     }
 
     public static function char_to_int($letters)
@@ -4988,6 +4993,57 @@ class __
     public static function dec_char($char, $shift = 1)
     {
         return self::int_to_char(self::char_to_int($char) - $shift);
+    }
+
+    public static function str_search_replace($str, $regex, $callback)
+    {
+        if (!is_string($str)) {
+            return $str;
+        }
+
+        preg_match_all($regex, $str, $matches, PREG_OFFSET_CAPTURE);
+
+        $shift = 0;
+
+        if (!empty($matches) && !empty($matches[0]) && count($matches) > 1) {
+            // loop line occurences
+            foreach ($matches[0] as $matches__key => $matches__value) {
+                $regex_groups = [];
+
+                // loop regex groups
+                for ($i = 1; $i <= count($matches) - 1; $i++) {
+                    // occurence of regex group in line
+                    $regex_groups[] = $matches[$i][$matches__key];
+                }
+
+                $regex_groups_only_str_old = [];
+                foreach ($regex_groups as $regex_groups__value) {
+                    $regex_groups_only_str_old[] = $regex_groups__value[0];
+                }
+                $regex_groups_only_str_new = $callback($regex_groups_only_str_old);
+                foreach ($regex_groups as $regex_groups__key => $regex_groups__value) {
+                    $regex_groups_str[$regex_groups__key] = [
+                        'old' => $regex_groups__value[0],
+                        'new' => $regex_groups_only_str_new[$regex_groups__key],
+                        'pos' => $regex_groups__value[1]
+                    ];
+                }
+
+                // replace inside complete string
+                foreach ($regex_groups_str as $regex_groups_str__value) {
+                    $str_prefix = mb_substr($str, 0, $regex_groups_str__value['pos'] + $shift);
+                    $str_suffix = mb_substr(
+                        $str,
+                        $regex_groups_str__value['pos'] + mb_strlen($regex_groups_str__value['old']) + $shift
+                    );
+                    $shift_prepare =
+                        mb_strlen($str_prefix . $regex_groups_str__value['new'] . $str_suffix) - mb_strlen($str);
+                    $str = $str_prefix . $regex_groups_str__value['new'] . $str_suffix;
+                    $shift += $shift_prepare;
+                }
+            }
+        }
+        return $str;
     }
 
     public static function str_replace_first($search, $replace, $str)
