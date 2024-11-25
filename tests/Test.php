@@ -3139,7 +3139,7 @@ data-attr="foo">
         $this->assertSame(__iptc_write('tests/assets/iptc_not_supported.png', 'Copyright', 'foo'), false);
         $this->assertSame(__iptc_read('tests/assets/iptc_not_supported.png'), []);
 
-        if (@$_SERVER['CI'] == 'true') {
+        if (@$_SERVER['CI'] != 'true') {
             shell_exec('exiftool -overwrite_original -all= ' . __DIR__ . '/assets/iptc_problem.jpg');
         }
         $this->assertSame(
@@ -3320,7 +3320,11 @@ data-attr="foo">
         $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
         $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
-        $this->assertSame(__date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)', 'd.m.Y H:i:s'), '11.08.2020 17:34:23');
+        // results may vary depending on php timezone
+        $this->assertContains(__date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)', 'd.m.Y H:i:s'), [
+            '11.08.2020 15:34:23',
+            '11.08.2020 17:34:23'
+        ]);
         $this->assertSame(__date('2037-01-10', 'd.m.Y H:i:s'), '10.01.2037 00:00:00');
         $this->assertSame(__date('2039-01-10', 'd.m.Y H:i:s'), '10.01.2039 00:00:00');
         $this->assertSame(__date('01.01.39', 'd.m.Y H:i:s'), '01.01.2039 00:00:00');
