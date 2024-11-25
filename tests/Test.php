@@ -3323,12 +3323,17 @@ data-attr="foo">
         // results may vary depending on php timezone
         $this->assertContains(__date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)', 'd.m.Y H:i:s'), [
             '11.08.2020 15:34:23',
+            '11.08.2020 16:34:23',
             '11.08.2020 17:34:23'
         ]);
         $this->assertSame(__date('2037-01-10', 'd.m.Y H:i:s'), '10.01.2037 00:00:00');
         $this->assertSame(__date('2039-01-10', 'd.m.Y H:i:s'), '10.01.2039 00:00:00');
         $this->assertSame(__date('01.01.39', 'd.m.Y H:i:s'), '01.01.2039 00:00:00');
-        $this->assertSame(__date('2040-01-10T16:41:07+01:00', 'd.m.Y H:i:s'), '10.01.2040 16:41:07');
+        $this->assertContains(__date('2040-01-10T16:41:07+01:00', 'd.m.Y H:i:s'), [
+            '10.01.2040 15:41:07',
+            '10.01.2040 16:41:07',
+            '10.01.2040 17:41:07'
+        ]);
     }
 
     function test__char()
