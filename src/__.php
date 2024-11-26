@@ -5071,14 +5071,15 @@ class __
         if (self::nx($filename) || !file_exists($filename)) {
             return false;
         }
-        $array = array_map(function ($d) use ($delimiter, $enclosure) {
-            return array_map(function ($d2) {
-                if (!mb_detect_encoding($d2, 'UTF-8', true)) {
-                    $d2 = utf8_encode($d2);
-                }
-                return $d2;
-            }, str_getcsv($d, $delimiter, $enclosure));
-        }, file($filename));
+
+        $array = [];
+        if (($handle = fopen($filename, 'r')) !== false) {
+            while (($row = fgetcsv($handle, 0, $delimiter, $enclosure)) !== false) {
+                $array[] = $row;
+            }
+            fclose($handle);
+        }
+
         return $array;
     }
 
