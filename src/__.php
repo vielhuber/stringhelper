@@ -5075,6 +5075,10 @@ class __
         $array = [];
         if (($handle = fopen($filename, 'r')) !== false) {
             while (($row = fgetcsv($handle, 0, $delimiter, $enclosure)) !== false) {
+                // fix umlauts
+                foreach ($row as $row__key => $row__value) {
+                    $row[$row__key] = self::to_utf8($row__value);
+                }
                 $array[] = $row;
             }
             fclose($handle);
@@ -5419,6 +5423,18 @@ class __
         $current_encoding = mb_detect_encoding($str, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252']);
         if ($current_encoding !== 'UTF-8') {
             $str = iconv($current_encoding, 'UTF-8', $str);
+        }
+        // fix also wrongly encoded values
+        $wrong_encoding = false;
+        $inputs = ['Ã¤', 'Ã„', 'Ã¶', 'Ã–', 'Ã¼', 'Ãœ', 'ÃŸ'];
+        foreach ($inputs as $inputs__value) {
+            if (mb_strpos($str, $inputs__value)) {
+                $wrong_encoding = true;
+                break;
+            }
+        }
+        if ($wrong_encoding === true) {
+            $str = iconv('UTF-8', 'WINDOWS-1252//TRANSLIT', $str);
         }
         return $str;
     }

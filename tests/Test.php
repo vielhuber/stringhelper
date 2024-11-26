@@ -2845,6 +2845,10 @@ data-attr="foo">
         $this->assertSame(__is_utf8('This is a test älüß!'), true);
         $this->assertSame(__is_utf8(__utf8_decode('This is a test älüß!')), false);
         $this->assertSame(__is_utf8(__to_utf8(__utf8_decode('This is a test älüß!'))), true);
+        $this->assertSame(
+            __to_utf8('Bitte bestÃ¤tigen Sie Ihre Versandinformationen fÃ¼r Ihr Paket.'),
+            'Bitte bestätigen Sie Ihre Versandinformationen für Ihr Paket.'
+        );
 
         // https://www.php.net/manual/de/function.utf8-decode.php
         $this->assertSame(bin2hex(__utf8_decode("\x5A\x6F\xC3\xAB")), '5a6feb');
@@ -3554,7 +3558,7 @@ gnarr"'
             '"Von: (Name)","Von: (Adresse)","Von: (Typ)","Betreff","Text"
 "foo@tld.com","foo@tld.com","SMTP","RE: Termin heute","Hallo,
 
-Dies ist ein Test"'
+Dies ist ein Test fÃ¼r falsche Umlaute."'
         );
         $this->assertSame(__csv2array('tests/assets/file.csv', ',', '"'), [
             ['Von: (Name)', 'Von: (Adresse)', 'Von: (Typ)', 'Betreff', 'Text'],
@@ -3565,7 +3569,7 @@ Dies ist ein Test"'
                 'RE: Termin heute',
                 'Hallo,
 
-Dies ist ein Test'
+Dies ist ein Test für falsche Umlaute.'
             ]
         ]);
 
