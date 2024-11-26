@@ -1972,6 +1972,7 @@ string'
         );
         $this->assertSame(__trim_whitespace("\t"), '');
         $this->assertSame(__trim_whitespace(' '), '');
+        $this->assertSame(__trim_whitespace(__utf8_decode(' FOO Ä BAR ')), 'FOO Ä BAR');
     }
 
     function test__extract_title_from_url()

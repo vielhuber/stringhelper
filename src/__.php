@@ -557,13 +557,20 @@ class __
 
     public static function trim_whitespace($str)
     {
-        if ($str === null || $str === true || $str === false || !is_string($str)) {
+        if ($str === null || $str === true || $str === false || !is_string($str) || $str === '') {
             return $str;
         }
         // the u modifier is important here for multibyte support
         // the s modifier makes \s match &nbsp;
-        $str = preg_replace('/^([\s]*)(.*?)([\s]*)$/us', '$2', $str);
-        return $str;
+        $str_new = preg_replace('/^([\s]*)(.*?)([\s]*)$/us', '$2', $str);
+        // Be aware that when using the "/u" modifier,
+        // if your input text contains any bad UTF-8 code sequences,
+        // then preg_replace will return an empty string,
+        // regardless of whether there were any matches.
+        if ($str_new === null) {
+            return self::trim_whitespace(self::to_utf8($str));
+        }
+        return $str_new;
     }
 
     public static function trim($str, $arr, $replace = '', $mode = null)
