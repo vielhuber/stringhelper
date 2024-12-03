@@ -792,6 +792,14 @@ class __
             self::validate_date(trim(explode('(', $date)[0])) === true
         ) {
             return true;
+        }
+        // also allow special case "frid, 25 Nov 2030 17:14:41 +0100"
+        elseif (
+            is_string($date) &&
+            preg_match('/^[a-zA-Z]+, /', $date) &&
+            self::validate_date(mb_substr($date, mb_strpos($date, ', ') + 2)) === true
+        ) {
+            return true;
         } else {
             // circumvent 32-bit errors (dates higher than 2038)
             try {
@@ -3674,6 +3682,17 @@ class __
             (strtotime(trim(explode('(', $date)[0])) !== null && strtotime(trim(explode('(', $date)[0])) !== false)
         ) {
             $date = trim(explode('(', $date)[0]);
+        }
+
+        // also allow special case "frid, 25 Nov 2030 17:14:41 +0100"
+        elseif (
+            is_string($date) &&
+            preg_match('/^[a-zA-Z]+, /', $date) &&
+            (strtotime($date) === null || strtotime($date) === false) &&
+            (strtotime(mb_substr($date, mb_strpos($date, ', ') + 2)) !== null &&
+                strtotime(mb_substr($date, mb_strpos($date, ', ') + 2)) !== false)
+        ) {
+            $date = mb_substr($date, mb_strpos($date, ', ') + 2);
         }
 
         return date($format, strtotime($date . (self::x($mod) ? ' ' . $mod : '')));

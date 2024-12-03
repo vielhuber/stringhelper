@@ -3246,6 +3246,7 @@ data-attr="foo">
         $this->assertSame(__validate_date('5956-09-24'), true);
         $this->assertSame(__validate_date('51956-09-24'), false);
         $this->assertSame(__validate_date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)'), true);
+        $this->assertSame(__validate_date('frid, 25 Nov 2030 17:14:41 +0100'), true);
         $this->assertSame(__validate_date(new DateTime('2000-01-01')), true);
         $this->assertSame(__validate_date(946713600), true);
         $this->assertSame(__validate_date(null), false);
@@ -3330,6 +3331,13 @@ data-attr="foo">
             '11.08.2020 15:34:23',
             '11.08.2020 16:34:23',
             '11.08.2020 17:34:23'
+        ]);
+        $this->assertContains(__date('frid, 25 Nov 2030 17:14:41 +0100', 'd.m.Y H:i:s'), [
+            '25.11.2030 15:14:41',
+            '25.11.2030 16:14:41',
+            '25.11.2030 17:14:41',
+            '25.11.2030 18:14:41',
+            '25.11.2030 19:14:41'
         ]);
         $this->assertSame(__date('2037-01-10', 'd.m.Y H:i:s'), '10.01.2037 00:00:00');
         $this->assertSame(__date('2039-01-10', 'd.m.Y H:i:s'), '10.01.2039 00:00:00');
