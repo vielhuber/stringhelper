@@ -2689,6 +2689,25 @@ class __
         return array_combine(array_map($callback, array_keys($arr)), $arr);
     }
 
+    public static function array_map_keys_values($callback, $arr)
+    {
+        if (self::nx($arr)) {
+            return $arr;
+        }
+        if (!is_array($arr)) {
+            return $arr;
+        }
+        if (!is_callable($callback)) {
+            return $arr;
+        }
+        $arr_new = [];
+        foreach ($arr as $arr__key => $arr__value) {
+            [$arr__key_new, $arr__value_new] = $callback($arr__key, $arr__value);
+            $arr_new[$arr__key_new] = $arr__value_new;
+        }
+        return $arr_new;
+    }
+
     public static function encode_data(...$data)
     {
         if (count($data) === 1) {

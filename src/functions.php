@@ -704,6 +704,13 @@ if (!function_exists('__array_map_keys')) {
     }
 }
 
+if (!function_exists('__array_map_keys_values')) {
+    function __array_map_keys_values($callback, $arr)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'array_map_keys_values'], func_get_args());
+    }
+}
+
 if (!function_exists('__encode_data')) {
     function __encode_data(...$data)
     {

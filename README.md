@@ -640,6 +640,9 @@ __array_filter_recursive_all(
 // array map for keys
 __array_map_keys(function($k) { return $k.'!'; }, ['foo' => 'bar', 'bar' => 'baz']) // ['foo!' => 'bar', 'bar!' => 'baz']
 
+// array map for keys and values
+__array_map_keys_values(function($k,$v) { return [$k.'!', $v.'?']; }, ['foo' => 'bar', 'bar' => 'baz']) // ['foo!' => 'bar?', 'bar!' => 'baz?']
+
 // ask question on cli
 $answer = __ask('What\'s your name?') // free input
 $answer = __ask('Choose your destiny:

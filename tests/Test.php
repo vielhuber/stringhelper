@@ -1610,6 +1610,63 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         );
     }
 
+    function test__array_map_keys_values()
+    {
+        $this->assertSame(__array_map_keys_values(null, null), null);
+        $this->assertSame(__array_map_keys_values(function () {}, false), false);
+        $this->assertSame(
+            __array_map_keys_values(function ($k, $v) {
+                return [$k . '!', $v . '?'];
+            }, true),
+            true
+        );
+        $this->assertSame(
+            __array_map_keys_values(function ($k, $v) {
+                return [$k . '!', $v . '?'];
+            }, 1337),
+            1337
+        );
+        $this->assertSame(
+            __array_map_keys_values(function ($k, $v) {
+                return [$k . '!', $v . '?'];
+            }, 'foo'),
+            'foo'
+        );
+        $this->assertSame(
+            __array_map_keys_values(function ($k, $v) {
+                return [$k . '!', $v . '?'];
+            }, []),
+            []
+        );
+        $this->assertSame(
+            __array_map_keys_values(
+                function ($k, $v) {
+                    return [$k, $v];
+                },
+                ['foo' => 'bar']
+            ),
+            ['foo' => 'bar']
+        );
+        $this->assertSame(
+            __array_map_keys_values(
+                function () {
+                    return ['', ''];
+                },
+                ['foo' => 'bar', 'foo' => 'bar', 'bar' => 'baz']
+            ),
+            ['' => '']
+        );
+        $this->assertSame(
+            __array_map_keys_values(
+                function ($k, $v) {
+                    return [$k . '!', $v . '?'];
+                },
+                ['foo' => 'bar', 'bar' => 'baz']
+            ),
+            ['foo!' => 'bar?', 'bar!' => 'baz?']
+        );
+    }
+
     function test__progress()
     {
         foreach (
