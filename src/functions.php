@@ -1040,6 +1040,13 @@ if (!function_exists('__age_from_date')) {
     }
 }
 
+if (!function_exists('__strftime')) {
+    function __strftime($format, $timestamp = null, $locale = null)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'strftime'], func_get_args());
+    }
+}
+
 if (!function_exists('__age_from_date_weeks')) {
     function __age_from_date_weeks($date_birth, $date_relative = null)
     {

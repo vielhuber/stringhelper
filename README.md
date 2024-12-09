@@ -454,6 +454,10 @@ __age_from_date_weeks('2000-01-01', '2010-01-01') // 521
 __age_from_date_days('2000-01-01') // 7587
 __age_from_date_days('2000-01-01', '2010-01-01') // 3653
 
+// strftime >=php 8.1
+setlocale(LC_TIME, 'de_DE.utf8');
+__strftime('%A, %d. %B %Y', strtotime('2001-01-01')); // Montag, 01. Januar 2001
+
 // remove useless zero digits from decimals
 __remove_zero_decimals(1337) // 1337
 __remove_zero_decimals('1337') // 1337
