@@ -156,6 +156,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__true(' '));
         $this->assertFalse(__true('null'));
         $this->assertFalse(__true('false'));
+        $this->assertFalse(__true('undefined'));
         $this->assertTrue(__true('true'));
         $this->assertTrue(__true('str'));
         $this->assertTrue(__true([0, 1]));
@@ -184,6 +185,7 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertFalse(__false(' '));
         $this->assertFalse(__false('null'));
         $this->assertTrue(__false('false'));
+        $this->assertFalse(__false('undefined'));
         $this->assertFalse(__false('true'));
         $this->assertFalse(__false('str'));
         $this->assertFalse(__false([0, 1]));

@@ -285,6 +285,9 @@ class __
         if ($val === 'false') {
             return false;
         }
+        if ($val === 'undefined') {
+            return false;
+        }
         if (is_object($val) && empty((array) $val)) {
             return false;
         }
@@ -336,6 +339,9 @@ class __
         }
         if ($val === 'false') {
             return true;
+        }
+        if ($val === 'undefined') {
+            return false;
         }
         if (is_object($val) && empty((array) $val)) {
             return false;
