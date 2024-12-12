@@ -1470,8 +1470,22 @@ class __
         if (self::nx($str) || !is_string($str)) {
             return $str;
         }
+
         $str = str_replace('�', '', $str);
-        $str = preg_replace('/[\x00-\x1F\x7F]/u', '', $str);
+
+        $preg = preg_replace('/[\x00-\x1F\x7F]/u', '', $str);
+        // sometimes this returns null (wrong encoding), we try again with other regex
+        if ($preg === null) {
+            $preg = preg_replace('/[\x00-\x1F\x7F]/u', '', self::to_utf8($str));
+            if ($preg === null) {
+                return $str;
+            } else {
+                $str = $preg;
+            }
+        } else {
+            $str = $preg;
+        }
+
         return $str;
     }
 
