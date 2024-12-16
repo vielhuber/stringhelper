@@ -2913,6 +2913,9 @@ data-attr="foo">
             'Bitte bestätigen Sie Ihre Versandinformationen für Ihr Paket.'
         );
 
+        $this->assertSame(__is_utf8(__to_utf8('Tasche fã¼r jetzt.')), true);
+        $this->assertSame(__to_utf8('Tasche fã¼r jetzt.'), 'Tasche für jetzt.');
+
         // https://www.php.net/manual/de/function.utf8-decode.php
         $this->assertSame(bin2hex(__utf8_decode("\x5A\x6F\xC3\xAB")), '5a6feb');
         $this->assertSame(__utf8_decode("\xC3"), '?');

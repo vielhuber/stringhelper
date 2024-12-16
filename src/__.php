@@ -4821,12 +4821,20 @@ class __
         $curl_headers = [];
         if (($method == 'POST' || $method === 'PUT') && self::x($data)) {
             if ($curl_files === true) {
-                $curl_headers[] = 'Content-Type: multipart/form-data';
+                if (self::nx($headers) || !array_key_exists('Content-Type', $headers)) {
+                    $curl_headers[] = 'Content-Type: multipart/form-data';
+                }
             } elseif ($send_as_json === true) {
-                $curl_headers[] = 'Content-Type: application/json';
-                $curl_headers[] = 'Content-Length: ' . strlen($data);
+                if (self::nx($headers) || !array_key_exists('Content-Type', $headers)) {
+                    $curl_headers[] = 'Content-Type: application/json';
+                }
+                if (self::nx($headers) || !array_key_exists('Content-Length', $headers)) {
+                    $curl_headers[] = 'Content-Length: ' . strlen($data);
+                }
             } else {
-                $curl_headers[] = 'Content-Type: application/x-www-form-urlencoded';
+                if (self::nx($headers) || !array_key_exists('Content-Type', $headers)) {
+                    $curl_headers[] = 'Content-Type: application/x-www-form-urlencoded';
+                }
             }
         }
 
@@ -5638,7 +5646,19 @@ class __
         if ($current_encoding !== 'UTF-8') {
             $str = iconv($current_encoding, 'UTF-8', $str);
         }
-        // fix also wrongly encoded values
+        // #1: fix wrongly encoded values
+        $conversion_table = unserialize(
+            'a:5:{i:0;a:3:{s:8:"â€™";s:3:"’";s:8:"â€“";s:3:"–";s:8:"â€”";s:3:"—";}i:1;a:12:{s:7:"â‚¬";s:3:"€";s:7:"â€š";s:3:"‚";s:7:"â€ž";s:3:"„";s:7:"â€¦";s:3:"…";s:7:"â€¡";s:3:"‡";s:7:"â€°";s:3:"‰";s:7:"â€¹";s:3:"‹";s:7:"â€˜";s:3:"‘";s:7:"â€œ";s:3:"“";s:7:"â€¢";s:3:"•";s:7:"â„¢";s:3:"™";s:7:"â€º";s:3:"›";}i:2;a:22:{s:5:"Ã€";s:2:"À";s:5:"Ã‚";s:2:"Â";s:5:"Æ’";s:2:"ƒ";s:5:"Ã„";s:2:"Ä";s:5:"Ã…";s:2:"Å";s:5:"â€";s:3:"”";s:5:"Ã†";s:2:"Æ";s:5:"Ã‡";s:2:"Ç";s:5:"Ë†";s:2:"ˆ";s:5:"Ã‰";s:2:"É";s:5:"Ã‹";s:2:"Ë";s:5:"Å’";s:2:"Œ";s:5:"Ã‘";s:2:"Ñ";s:5:"Ã’";s:2:"Ò";s:5:"Ã“";s:2:"Ó";s:5:"Ã”";s:2:"Ô";s:5:"Ã•";s:2:"Õ";s:5:"Ã–";s:2:"Ö";s:5:"Ã—";s:2:"×";s:5:"Ã™";s:2:"Ù";s:5:"Ã›";s:2:"Û";s:5:"Å“";s:2:"œ";}i:3;a:77:{s:4:"Ãƒ";s:2:"Ã";s:4:"Ãˆ";s:2:"È";s:4:"ÃŠ";s:2:"Ê";s:4:"ÃŒ";s:2:"Ì";s:4:"Å½";s:2:"Ž";s:4:"ÃŽ";s:2:"Î";s:4:"Ëœ";s:2:"˜";s:4:"Ã˜";s:2:"Ø";s:4:"Å¡";s:2:"š";s:4:"Ãš";s:2:"Ú";s:4:"Ãœ";s:2:"Ü";s:4:"Å¾";s:2:"ž";s:4:"Ãž";s:2:"Þ";s:4:"Å¸";s:2:"Ÿ";s:4:"ÃŸ";s:2:"ß";s:4:"Â¡";s:2:"¡";s:4:"Ã¡";s:2:"á";s:4:"Â¢";s:2:"¢";s:4:"Ã¢";s:2:"â";s:4:"Â£";s:2:"£";s:4:"Ã£";s:2:"ã";s:4:"Â¤";s:2:"¤";s:4:"Ã¤";s:2:"ä";s:4:"Â¥";s:2:"¥";s:4:"Ã¥";s:2:"å";s:4:"Â¦";s:2:"¦";s:4:"Ã¦";s:2:"æ";s:4:"Â§";s:2:"§";s:4:"Ã§";s:2:"ç";s:4:"Â¨";s:2:"¨";s:4:"Ã¨";s:2:"è";s:4:"Â©";s:2:"©";s:4:"Ã©";s:2:"é";s:4:"Âª";s:2:"ª";s:4:"Ãª";s:2:"ê";s:4:"Â«";s:2:"«";s:4:"Ã«";s:2:"ë";s:4:"Â¬";s:2:"¬";s:4:"Ã¬";s:2:"ì";s:4:"Â­";s:2:"­";s:4:"Ã­";s:2:"í";s:4:"Â®";s:2:"®";s:4:"Ã®";s:2:"î";s:4:"Â¯";s:2:"¯";s:4:"Ã¯";s:2:"ï";s:4:"Â°";s:2:"°";s:4:"Ã°";s:2:"ð";s:4:"Â±";s:2:"±";s:4:"Ã±";s:2:"ñ";s:4:"Â²";s:2:"²";s:4:"Ã²";s:2:"ò";s:4:"Â³";s:2:"³";s:4:"Ã³";s:2:"ó";s:4:"Â´";s:2:"´";s:4:"Ã´";s:2:"ô";s:4:"Âµ";s:2:"µ";s:4:"Ãµ";s:2:"õ";s:4:"Â¶";s:2:"¶";s:4:"Ã¶";s:2:"ö";s:4:"Â·";s:2:"·";s:4:"Ã·";s:2:"÷";s:4:"Â¸";s:2:"¸";s:4:"Ã¸";s:2:"ø";s:4:"Â¹";s:2:"¹";s:4:"Ã¹";s:2:"ù";s:4:"Âº";s:2:"º";s:4:"Ãº";s:2:"ú";s:4:"Â»";s:2:"»";s:4:"Ã»";s:2:"û";s:4:"Â¼";s:2:"¼";s:4:"Ã¼";s:2:"ü";s:4:"Â½";s:2:"½";s:4:"Ã½";s:2:"ý";s:4:"Â¾";s:2:"¾";s:4:"Ã¾";s:2:"þ";s:4:"Â¿";s:2:"¿";s:4:"Ã¿";s:2:"ÿ";}i:4;a:1:{s:2:"Ã";s:2:"à";}}'
+        );
+        foreach ($conversion_table as $conversion_table__value) {
+            foreach ($conversion_table__value as $conversion_table__value__key => $conversion_table__value__value) {
+                $conversion_table__value[mb_strtolower($conversion_table__value__key)] = mb_strtolower(
+                    $conversion_table__value__value
+                );
+            }
+            $str = str_replace(array_keys($conversion_table__value), $conversion_table__value, $str);
+        }
+        // #2: fix also wrongly encoded values
         $wrong_encoding = false;
         $inputs = ['Ã¤', 'Ã„', 'Ã¶', 'Ã–', 'Ã¼', 'Ãœ', 'ÃŸ'];
         foreach ($inputs as $inputs__value) {
