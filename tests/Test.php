@@ -2916,6 +2916,10 @@ data-attr="foo">
         $this->assertSame(__is_utf8(__to_utf8('Tasche fã¼r jetzt.')), true);
         $this->assertSame(__to_utf8('Tasche fã¼r jetzt.'), 'Tasche für jetzt.');
 
+        $this->assertSame(__to_utf8('Pack f�r Benutzer'), 'Pack f�r Benutzer');
+        $this->assertSame(__to_utf8("\xE1\xE9\xF3\xFA"), 'áéóú');
+        $this->assertSame(__to_utf8("\xE1�\xE1"), 'á�á');
+
         // https://www.php.net/manual/de/function.utf8-decode.php
         $this->assertSame(bin2hex(__utf8_decode("\x5A\x6F\xC3\xAB")), '5a6feb');
         $this->assertSame(__utf8_decode("\xC3"), '?');
