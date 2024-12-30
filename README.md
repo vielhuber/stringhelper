@@ -520,7 +520,7 @@ $ai->ask('Wie lautet das erste Wort in der PDF?', 'lorem.pdf');
   // ['response' => 'Das erste Wort lautet "Lorem".', 'success' => true]
 $ai->ask('Fasse die folgenden Dokumente zusammen.', ['1.pdf','2.jpg']);
   // ['response' => '...', 'success' => true]
-$ai = __chatgpt(
+$ai = __ai(
     session_id: $ai->session_id // submit session to continue a conversation afterwards ($ai->session_id)
 );
 $ai->ask('Was habe ich vorher gefragt?');
