@@ -1473,6 +1473,8 @@ class __
 
         $str = str_replace('�', '', $str);
 
+        $str = preg_replace('/\xc2\xa0/', '', $str);
+
         $preg = preg_replace('/[\x00-\x1F\x7F]/u', '', $str);
         // sometimes this returns null (wrong encoding), we try again with other regex
         if ($preg === null) {

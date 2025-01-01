@@ -1921,6 +1921,7 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame(__remove_non_printable_chars('foobar'), 'foobar');
         $this->assertSame(__remove_non_printable_chars('foo�bar'), 'foobar');
         $this->assertSame(__remove_non_printable_chars('foo���bar'), 'foobar');
+        $this->assertSame(__remove_non_printable_chars('Beleg 24,77 €  EUR äöüßÄÖÜ?`'), 'Beleg 24,77€ EUR äöüßÄÖÜ?`');
         $this->assertSame(__remove_non_printable_chars(__utf8_decode('fooÄbar')), 'fooÄbar');
         $this->assertSame(__remove_non_printable_chars(''), '');
         $this->assertSame(__remove_non_printable_chars([]), []);
