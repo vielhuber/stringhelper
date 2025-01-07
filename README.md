@@ -835,12 +835,14 @@ foreach($array as $array__key=>$array__value)
 $array = ['foo','bar'];
 foreach($array as $array__value)
 {
-    // (warning: don't call get_loop_status() twice inside an interation,
+    // (warning: don't call get_loop_status($array) twice inside an interation,
     // since it modifies the internal pointer of the array)
     $loop_status = __loop_status($array);
 
     if($loop_status->is_first) {}
     if($loop_status->is_last) {}
+    if($loop_status->is_not_first) {}
+    if($loop_status->is_not_last) {}
 }
 
 // get last item of array

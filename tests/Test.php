@@ -3301,7 +3301,51 @@ data-attr="foo">
                     $loop_status = __loop_status($array);
                     $this->assertSame($loop_status->is_first, $array_key === 0);
                     $this->assertSame($loop_status->is_last, $array_key === count($array) - 1);
+                    $this->assertSame($loop_status->is_not_first, $array_key !== 0);
+                    $this->assertSame($loop_status->is_not_last, $array_key !== count($array) - 1);
                     $array_key++;
+                }
+            }
+        }
+
+        // nested iterations
+        $max = 20;
+        $arr1 = [];
+        $arr2 = [];
+        $arr3 = [];
+        for ($i = 0; $i < $max; $i++) {
+            $arr1[] = mt_rand(1, 999);
+            $arr2[] = mt_rand(1, 999);
+            $arr3[] = mt_rand(1, 999);
+        }
+        for ($i = 0; $i < $max; $i++) {
+            $arr1_key = 0;
+            foreach ($arr1 as $arr1__value) {
+                $loop_status = __loop_status($arr1);
+                $this->assertSame($loop_status->is_first, $arr1_key === 0);
+                $this->assertSame($loop_status->is_last, $arr1_key === count($arr1) - 1);
+                $this->assertSame($loop_status->is_not_first, $arr1_key !== 0);
+                $this->assertSame($loop_status->is_not_last, $arr1_key !== count($arr1) - 1);
+                $arr1_key++;
+
+                $arr2_key = 0;
+                foreach ($arr2 as $arr2__value) {
+                    $loop_status = __loop_status($arr2);
+                    $this->assertSame($loop_status->is_first, $arr2_key === 0);
+                    $this->assertSame($loop_status->is_last, $arr2_key === count($arr2) - 1);
+                    $this->assertSame($loop_status->is_not_first, $arr2_key !== 0);
+                    $this->assertSame($loop_status->is_not_last, $arr2_key !== count($arr2) - 1);
+                    $arr2_key++;
+
+                    $arr3_key = 0;
+                    foreach ($arr3 as $arr3__value) {
+                        $loop_status = __loop_status($arr3);
+                        $this->assertSame($loop_status->is_first, $arr3_key === 0);
+                        $this->assertSame($loop_status->is_last, $arr3_key === count($arr3) - 1);
+                        $this->assertSame($loop_status->is_not_first, $arr3_key !== 0);
+                        $this->assertSame($loop_status->is_not_last, $arr3_key !== count($arr3) - 1);
+                        $arr3_key++;
+                    }
                 }
             }
         }

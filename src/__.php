@@ -4144,7 +4144,12 @@ class __
         // warning: this moves the internal pointer one forward, so just call it once
         $is_last = next($array) === false && key($array) === null; // also check false values
 
-        return (object) ['is_first' => $is_first, 'is_last' => $is_last];
+        return (object) [
+            'is_first' => $is_first,
+            'is_last' => $is_last,
+            'is_not_first' => !$is_first,
+            'is_not_last' => !$is_last
+        ];
     }
 
     public static function fkey($array__key, $array)
