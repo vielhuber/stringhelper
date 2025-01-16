@@ -3547,6 +3547,64 @@ class __
         }
     }
 
+    public static function map_locale_windows_to_unix($locale)
+    {
+        if (is_string($locale) && strpos($locale, '.') !== false) {
+            $locale = explode('.', $locale)[0];
+        }
+        $localeMap = [
+            'Afrikaans_South Africa' => 'af_ZA',
+            'Albanian_Albania' => 'sq_AL',
+            'Arabic_Saudi Arabia' => 'ar_SA',
+            'Arabic_Egypt' => 'ar_EG',
+            'Basque_Spain' => 'eu_ES',
+            'Belarusian_Belarus' => 'be_BY',
+            'Bulgarian_Bulgaria' => 'bg_BG',
+            'Catalan_Spain' => 'ca_ES',
+            'Chinese_China' => 'zh_CN',
+            'Chinese_Taiwan' => 'zh_TW',
+            'Croatian_Croatia' => 'hr_HR',
+            'Czech_Czech Republic' => 'cs_CZ',
+            'Danish_Denmark' => 'da_DK',
+            'Dutch_Netherlands' => 'nl_NL',
+            'Dutch_Belgium' => 'nl_BE',
+            'English_United States' => 'en_US',
+            'English_United Kingdom' => 'en_GB',
+            'Estonian_Estonia' => 'et_EE',
+            'Finnish_Finland' => 'fi_FI',
+            'French_France' => 'fr_FR',
+            'French_Belgium' => 'fr_BE',
+            'German_Germany' => 'de_DE',
+            'German_Austria' => 'de_AT',
+            'Greek_Greece' => 'el_GR',
+            'Hebrew_Israel' => 'he_IL',
+            'Hungarian_Hungary' => 'hu_HU',
+            'Icelandic_Iceland' => 'is_IS',
+            'Indonesian_Indonesia' => 'id_ID',
+            'Italian_Italy' => 'it_IT',
+            'Japanese_Japan' => 'ja_JP',
+            'Korean_Korea' => 'ko_KR',
+            'Latvian_Latvia' => 'lv_LV',
+            'Lithuanian_Lithuania' => 'lt_LT',
+            'Norwegian_Norway' => 'nb_NO',
+            'Polish_Poland' => 'pl_PL',
+            'Portuguese_Portugal' => 'pt_PT',
+            'Portuguese_Brazil' => 'pt_BR',
+            'Romanian_Romania' => 'ro_RO',
+            'Russian_Russia' => 'ru_RU',
+            'Serbian_Serbia' => 'sr_RS',
+            'Slovak_Slovakia' => 'sk_SK',
+            'Slovenian_Slovenia' => 'sl_SI',
+            'Spanish_Spain' => 'es_ES',
+            'Swedish_Sweden' => 'sv_SE',
+            'Thai_Thailand' => 'th_TH',
+            'Turkish_Turkey' => 'tr_TR',
+            'Ukrainian_Ukraine' => 'uk_UA',
+            'Vietnamese_Vietnam' => 'vi_VN'
+        ];
+        return $localeMap[$locale] ?? $locale;
+    }
+
     public static function strftime($format, $timestamp = null, $locale = null)
     {
         if (!($timestamp instanceof \DateTimeInterface)) {
@@ -3562,10 +3620,18 @@ class __
             }
             $timestamp->setTimezone(new \DateTimeZone(date_default_timezone_get()));
         }
-        $locale = \Locale::canonicalize($locale ?? (setlocale(LC_TIME, '0') ?? \Locale::getDefault()));
+
+        $locale = $locale ?? (setlocale(LC_TIME, '0') ?? \Locale::getDefault());
+        // windows has different locales than unix systems, which \IntlDateFormatter does not accept
+        // make a conversion here
+        if (self::os() === 'windows') {
+            $locale = self::map_locale_windows_to_unix($locale);
+        }
+        $locale = \Locale::canonicalize($locale);
         if ($locale == 'c') {
             $locale = \Locale::getDefault();
         }
+
         $intl_formats = [
             '%a' => 'ccc',
             '%A' => 'EEEE',
