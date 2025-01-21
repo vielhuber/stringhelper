@@ -799,6 +799,14 @@ class __
         ) {
             return true;
         }
+        // also allow special case "08 Jan 2025 13:48:55 UT"
+        elseif (
+            is_string($date) &&
+            mb_strpos($date, 'UT') !== false &&
+            self::validate_date(trim(explode('UT', $date)[0])) === true
+        ) {
+            return true;
+        }
         // also allow special case "frid, 25 Nov 2030 17:14:41 +0100"
         elseif (
             is_string($date) &&
@@ -3938,6 +3946,16 @@ class __
             (strtotime(trim(explode('(', $date)[0])) !== null && strtotime(trim(explode('(', $date)[0])) !== false)
         ) {
             $date = trim(explode('(', $date)[0]);
+        }
+
+        // also allow special case "08 Jan 2025 13:48:55 UT"
+        elseif (
+            is_string($date) &&
+            mb_strpos($date, 'UT') !== false &&
+            (strtotime($date) === null || strtotime($date) === false) &&
+            (strtotime(trim(explode('UT', $date)[0])) !== null && strtotime(trim(explode('UT', $date)[0])) !== false)
+        ) {
+            $date = trim(explode('UT', $date)[0]);
         }
 
         // also allow special case "frid, 25 Nov 2030 17:14:41 +0100"
