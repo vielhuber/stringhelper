@@ -1095,9 +1095,10 @@ $foo = __hook_fire('filter_name', $foo); // $foo = -2
 __os() // ['windows','mac','linux']
 
 // get current url (without trailing slash)
-__url() // https://github.com/vielhuber/stringhelper?foo=bar (with get parameters)
-__urlWithoutArgs() // https://github.com/vielhuber/stringhelper (without get parameters)
-__baseurl() // https://github.com
+__url()                 // https://tld.com/foo/bar/baz.php?foo=bar (with get parameters)
+__urlWithoutArgs()      // https://tld.com/foo/bar/baz.php (without get parameters)
+__baseurl()             // https://tld.com
+__baseurl(true)         // https://tld.com/foo/bar
 
 // compress image
 __image_compress('input.jpg')

@@ -5170,7 +5170,7 @@ class __
         return rtrim($url, '/');
     }
 
-    public static function baseurl()
+    public static function baseurl($include_subpath = false)
     {
         if (self::nx(@$_SERVER['HTTP_HOST'])) {
             return null;
@@ -5180,7 +5180,11 @@ class __
             (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '') .
             '://' .
             $_SERVER['HTTP_HOST'];
-        return rtrim($url, '/');
+        if ($include_subpath === true) {
+            $url .= dirname($_SERVER['PHP_SELF']);
+        }
+        $url = rtrim($url, '/');
+        return $url;
     }
 
     public static function timestamp_excel_to_str($timestamp)

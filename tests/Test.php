@@ -404,6 +404,22 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__truncate_string('Lorem ipsum dolor sit amet, consectetuer.', 20), 'Lorem ipsum dolor ...');
     }
 
+    function test__url()
+    {
+        $this->assertSame(__url(), 'https://github.com/vielhuber/stringhelper/test.php?foo=bar');
+    }
+
+    function test__urlWithoutArgs()
+    {
+        $this->assertSame(__urlWithoutArgs(), 'https://github.com/vielhuber/stringhelper/test.php');
+    }
+
+    function test__baseurl()
+    {
+        $this->assertSame(__baseurl(), 'https://github.com');
+        $this->assertSame(__baseurl(true), 'https://github.com/vielhuber/stringhelper');
+    }
+
     function test__trim_every_line()
     {
         $this->assertSame(__trim_every_line("foo\n bar"), "foo\nbar");
@@ -4149,9 +4165,6 @@ Dies ist ein Test für falsche Umlaute.'
         $this->assertEquals(__error('bar'), (object) ['success' => false, 'message' => 'bar']);
 
         $this->assertSame(in_array(__os(), ['windows', 'mac', 'linux', 'unknown']), true);
-
-        $this->assertSame(__url(), 'https://github.com/vielhuber/stringhelper');
-        $this->assertSame(__baseurl(), 'https://github.com');
 
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper'), false);
         $this->assertSame(__is_external('https://github.com/vielhuber/stringhelper/'), false);

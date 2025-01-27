@@ -1372,7 +1372,7 @@ if (!function_exists('__urlWithoutArgs')) {
 }
 
 if (!function_exists('__baseurl')) {
-    function __baseurl()
+    function __baseurl($include_subpath = false)
     {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'baseurl'], func_get_args());
     }
