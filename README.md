@@ -1009,6 +1009,7 @@ __flatten_values(['foo' => 'bar', 'bar' => ['baz', 'foo']]) // ['bar','baz','foo
 
 // get nth element of concatenized array
 __expl(' ', 'foo bar baz', 1) // bar
+__expl(' ', 'foo bar baz') // foo
 
 // redirect via php (following post/redirect/get-pattern)
 __prg() // to current url without get arguments

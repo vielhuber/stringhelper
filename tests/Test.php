@@ -3592,6 +3592,14 @@ data-attr="foo">
         $this->assertSame(__false_one(false), true);
     }
 
+    function test__expl()
+    {
+        $this->assertSame(__expl(' ', 'foo bar baz', 1), 'bar');
+        $this->assertSame(__expl(' ', 'foo bar baz'), 'foo');
+        $this->assertSame(__expl(' ', null, 0), null);
+        $this->assertSame(__expl(' ', [], 0), null);
+    }
+
     function test__encrypt_decrypt()
     {
         define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319'); // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
@@ -4115,7 +4123,6 @@ Dies ist ein Test für falsche Umlaute.'
 
         $this->assertSame(__flatten_keys(['foo' => ['bar' => 'baz']]), ['foo', 'bar']);
         $this->assertSame(__flatten_values(['foo' => 'bar', 'bar' => ['baz', 'foo']]), ['bar', 'baz', 'foo']);
-        $this->assertSame(__expl(' ', 'foo bar baz', 1), 'bar');
 
         $this->assertSame(
             __inside_out_values([

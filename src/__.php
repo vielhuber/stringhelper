@@ -3497,9 +3497,12 @@ class __
         return $url;
     }
 
-    public static function expl($separator = ' ', $array = [], $pos = 0)
+    public static function expl($separator = ' ', $str = '', $pos = 0)
     {
-        return current(array_slice(explode($separator, $array), $pos, 1));
+        if (self::nx($str)) {
+            return null;
+        }
+        return current(array_slice(explode($separator, $str), $pos, 1));
     }
 
     public static function prg($url = null)

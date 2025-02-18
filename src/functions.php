@@ -964,7 +964,7 @@ if (!function_exists('__filter_url_args')) {
 }
 
 if (!function_exists('__expl')) {
-    function __expl($separator = ' ', $array = [], $pos = 0)
+    function __expl($separator = ' ', $str = '', $pos = 0)
     {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'expl'], func_get_args());
     }
