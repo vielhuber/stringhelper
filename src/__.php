@@ -6453,10 +6453,15 @@ interface ai
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true);
     public function cleanup();
     public function cleanup_all();
+    public function enableLog($filename);
+    public function disableLog();
+    public function log($msg);
 }
 
 class ai_chatgpt implements ai
 {
+    public $log = null;
+
     public $model = null;
     public $temperature = null;
     public $api_key = null;
@@ -6507,7 +6512,7 @@ class ai_chatgpt implements ai
                     break;
                 }
             }
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->log(str_replace("\n", ' ', serialize($response)));
             $this->assistant_id = $response->result->id;
 
             $max_tries = 3;
@@ -6526,7 +6531,7 @@ class ai_chatgpt implements ai
                     break;
                 }
             }
-            //file_put_contents('log.log', serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->log(str_replace("\n", ' ', serialize($response)));
             $this->thread_id = $response->result->id;
 
             $this->session_id = $this->assistant_id . '###' . $this->thread_id;
@@ -6542,7 +6547,7 @@ class ai_chatgpt implements ai
         $return = ['success' => false];
         $max_tries = 3;
         while ($return['success'] === false && $max_tries > 0) {
-            //file_put_contents('log.log', 'TRIES LEFT: ' . $max_tries . PHP_EOL, FILE_APPEND);
+            $this->log('TRIES LEFT: ' . $max_tries);
             $return = $this->askThis($prompt, $files, $max_tries === 3);
             $max_tries--;
         }
@@ -6622,7 +6627,7 @@ class ai_chatgpt implements ai
                 if (__nx(@$response->result) || __nx(@$response->result->id)) {
                     return $return;
                 }
-                //file_put_contents('log.log', '1:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+                $this->log('1:: ' . str_replace("\n", ' ', serialize($response)));
                 $file_ids[] = ['id' => $response->result->id, 'path' => $files__value];
             }
 
@@ -6654,7 +6659,7 @@ class ai_chatgpt implements ai
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        //file_put_contents('log.log', '2:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+        $this->log('2:: ' . str_replace("\n", ' ', serialize($response)));
         if (__nx(@$response->result) || __nx(@$response->result->id)) {
             return $return;
         }
@@ -6671,7 +6676,7 @@ class ai_chatgpt implements ai
                 'OpenAI-Beta' => 'assistants=v2'
             ]
         );
-        //file_put_contents('log.log', '3:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+        $this->log('3:: ' . str_replace("\n", ' ', serialize($response)));
         if (__nx(@$response->result) || __nx(@$response->result->id)) {
             return $return;
         }
@@ -6687,7 +6692,7 @@ class ai_chatgpt implements ai
                     'OpenAI-Beta' => 'assistants=v2'
                 ]
             );
-            //file_put_contents('log.log', '4:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->log('4:: ' . str_replace("\n", ' ', serialize($response)));
 
             $status = null;
             if (__x($response) && __x(@$response->result)) {
@@ -6722,7 +6727,7 @@ class ai_chatgpt implements ai
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        //file_put_contents('log.log', '5:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+        $this->log('5:: ' . str_replace("\n", ' ', serialize($response)));
 
         if (
             __nx(@$response) ||
@@ -6734,7 +6739,7 @@ class ai_chatgpt implements ai
             __nx(@$response->result->data[0]->content[0]->text) ||
             __nx(@$response->result->data[0]->content[0]->text->value)
         ) {
-            //file_put_contents('log.log', '1:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->log('1:: ' . str_replace("\n", ' ', serialize($response)));
             return $return;
         }
         $return['response'] = $response->result->data[0]->content[0]->text->value;
@@ -6832,10 +6837,33 @@ class ai_chatgpt implements ai
             }
         }
     }
+
+    public function enableLog($filename)
+    {
+        $this->log = $filename;
+    }
+
+    public function disableLog()
+    {
+        $this->log = null;
+    }
+
+    public function log($msg)
+    {
+        if ($this->log !== null) {
+            file_put_contents(
+                $this->log,
+                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
+                FILE_APPEND
+            );
+        }
+    }
 }
 
 class ai_claude implements ai
 {
+    public $log = null;
+
     public $model = null;
     public $temperature = null;
     public $api_key = null;
@@ -6870,7 +6898,7 @@ class ai_claude implements ai
         $return = ['success' => false];
         $max_tries = 3;
         while ($return['success'] === false && $max_tries > 0) {
-            //file_put_contents('log.log', 'TRIES LEFT: ' . $max_tries . PHP_EOL, FILE_APPEND);
+            $this->log('TRIES LEFT: ' . $max_tries);
             $return = $this->askThis($prompt, $files, $max_tries === 3);
             $max_tries--;
         }
@@ -6928,7 +6956,7 @@ class ai_claude implements ai
             __nx(@$response->result->content[0]) ||
             __nx(@$response->result->content[0]->text)
         ) {
-            //file_put_contents('log.log', '2:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->log('2:: ' . str_replace("\n", ' ', serialize($response)));
             return $return;
         }
         $return['response'] = $response->result->content[0]->text;
@@ -6956,10 +6984,33 @@ class ai_claude implements ai
     {
         $this->cleanup();
     }
+
+    public function enableLog($filename)
+    {
+        $this->log = $filename;
+    }
+
+    public function disableLog()
+    {
+        $this->log = null;
+    }
+
+    public function log($msg)
+    {
+        if ($this->log !== null) {
+            file_put_contents(
+                $this->log,
+                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
+                FILE_APPEND
+            );
+        }
+    }
 }
 
 class ai_gemini implements ai
 {
+    public $log = null;
+
     public $model = null;
     public $temperature = null;
     public $api_key = null;
@@ -6994,7 +7045,7 @@ class ai_gemini implements ai
         $return = ['success' => false];
         $max_tries = 3;
         while ($return['success'] === false && $max_tries > 0) {
-            //file_put_contents('log.log', 'TRIES LEFT: ' . $max_tries . PHP_EOL, FILE_APPEND);
+            $this->log('TRIES LEFT: ' . $max_tries);
             $return = $this->askThis($prompt, $files, $max_tries === 3);
             $max_tries--;
         }
@@ -7059,7 +7110,7 @@ class ai_gemini implements ai
             null
         );
 
-        //file_put_contents('log.log', '5:: ' . serialize(self::$sessions[$this->session_id]) . PHP_EOL, FILE_APPEND);
+        $this->log('5:: ' . str_replace("\n", ' ', serialize(self::$sessions[$this->session_id])));
 
         if (
             __nx(@$response) ||
@@ -7071,7 +7122,7 @@ class ai_gemini implements ai
             __nx(@$response->result->candidates[0]->content->parts[0]) ||
             __nx(@$response->result->candidates[0]->content->parts[0]->text)
         ) {
-            //file_put_contents('log.log', '3:: ' . serialize($response) . PHP_EOL, FILE_APPEND);
+            $this->log('3:: ' . str_replace("\n", ' ', serialize($response)));
             return $return;
         }
         $return['response'] = $response->result->candidates[0]->content->parts[0]->text;
@@ -7098,5 +7149,26 @@ class ai_gemini implements ai
     public function cleanup_all()
     {
         $this->cleanup();
+    }
+
+    public function enableLog($filename)
+    {
+        $this->log = $filename;
+    }
+
+    public function disableLog()
+    {
+        $this->log = null;
+    }
+
+    public function log($msg)
+    {
+        if ($this->log !== null) {
+            file_put_contents(
+                $this->log,
+                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
+                FILE_APPEND
+            );
+        }
     }
 }
