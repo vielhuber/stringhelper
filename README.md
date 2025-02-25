@@ -527,6 +527,8 @@ $ai->ask('Was habe ich vorher gefragt?');
   // ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true]
 $ai->cleanup(); // (remotely) deletes the data of the current session
 $ai->cleanup_all(); // (remotely) deletes all data
+$ai->enable_log('output.log');
+$ai->disable_log();
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med

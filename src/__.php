@@ -6453,8 +6453,8 @@ interface ai
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true);
     public function cleanup();
     public function cleanup_all();
-    public function enableLog($filename);
-    public function disableLog();
+    public function enable_log($filename);
+    public function disable_log();
     public function log($msg);
 }
 
@@ -6838,12 +6838,12 @@ class ai_chatgpt implements ai
         }
     }
 
-    public function enableLog($filename)
+    public function enable_log($filename)
     {
         $this->log = $filename;
     }
 
-    public function disableLog()
+    public function disable_log()
     {
         $this->log = null;
     }
@@ -6985,12 +6985,12 @@ class ai_claude implements ai
         $this->cleanup();
     }
 
-    public function enableLog($filename)
+    public function enable_log($filename)
     {
         $this->log = $filename;
     }
 
-    public function disableLog()
+    public function disable_log()
     {
         $this->log = null;
     }
@@ -7151,12 +7151,12 @@ class ai_gemini implements ai
         $this->cleanup();
     }
 
-    public function enableLog($filename)
+    public function enable_log($filename)
     {
         $this->log = $filename;
     }
 
-    public function disableLog()
+    public function disable_log()
     {
         $this->log = null;
     }
