@@ -6746,8 +6746,8 @@ class ai_chatgpt implements ai
         $return['success'] = true;
 
         // parse json
-        if (strpos($return['response'], '```json') === 0) {
-            $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+        if (strpos($return['response'], '```json') === 0 || __string_is_json($return['response'])) {
+            $return['response'] = json_decode(trim(rtrim(ltrim(ltrim($return['response'], '```json'), '```'), '```')));
         }
 
         return $return;
@@ -6968,8 +6968,8 @@ class ai_claude implements ai
         ];
 
         // parse json
-        if (strpos($return['response'], '```json') === 0) {
-            $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+        if (strpos($return['response'], '```json') === 0 || __string_is_json($return['response'])) {
+            $return['response'] = json_decode(trim(rtrim(ltrim(ltrim($return['response'], '```json'), '```'), '```')));
         }
 
         return $return;
@@ -7134,8 +7134,8 @@ class ai_gemini implements ai
         ];
 
         // parse json
-        if (strpos($return['response'], '```json') === 0) {
-            $return['response'] = json_decode(trim(rtrim(ltrim($return['response'], '```json'), '```')));
+        if (strpos($return['response'], '```json') === 0 || __string_is_json($return['response'])) {
+            $return['response'] = json_decode(trim(rtrim(ltrim(ltrim($return['response'], '```json'), '```'), '```')));
         }
 
         return $return;
