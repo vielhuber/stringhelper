@@ -6605,6 +6605,7 @@ class ai_chatgpt implements ai
                 $files__value_new =
                     sys_get_temp_dir() . '/' . md5(uniqid()) . '.' . __last(explode('.', $files__value));
                 copy($files__value, $files__value_new);
+
                 $files__value = $files__value_new;
                 $response = __curl(
                     'https://api.openai.com/v1/files',
@@ -6746,8 +6747,10 @@ class ai_chatgpt implements ai
         $return['success'] = true;
 
         // parse json
-        if (strpos($return['response'], '```json') === 0 || __string_is_json($return['response'])) {
-            $return['response'] = json_decode(trim(rtrim(ltrim(ltrim($return['response'], '```json'), '```'), '```')));
+        if (strpos(trim($return['response']), '```json') === 0 || __string_is_json($return['response'])) {
+            $return['response'] = json_decode(
+                trim(rtrim(ltrim(ltrim(trim($return['response']), '```json'), '```'), '```'))
+            );
         }
 
         return $return;
@@ -6768,7 +6771,7 @@ class ai_chatgpt implements ai
                             __x($content__value->image_file) &&
                             __x($content__value->image_file->file_id)
                         ) {
-                            $response = __curl(
+                            $response2 = __curl(
                                 'https://api.openai.com/v1/files/' . $content__value->image_file->file_id,
                                 null,
                                 'DELETE',
@@ -6782,7 +6785,7 @@ class ai_chatgpt implements ai
                 if (__x($data__value->attachments)) {
                     foreach ($data__value->attachments as $attachments__value) {
                         if (__x($attachments__value->file_id)) {
-                            $response = __curl(
+                            $response2 = __curl(
                                 'https://api.openai.com/v1/files/' . $attachments__value->file_id,
                                 null,
                                 'DELETE',
@@ -6809,31 +6812,43 @@ class ai_chatgpt implements ai
 
     public function cleanup_all()
     {
-        $response = __curl('https://api.openai.com/v1/assistants', [], 'GET', [
-            'Authorization' => 'Bearer ' . $this->api_key,
-            'OpenAI-Beta' => 'assistants=v2'
-        ]);
-        if (__x($response) && __x($response->result) && __x($response->result->data)) {
-            foreach ($response->result->data as $res__value) {
-                if (__x(@$res__value->id)) {
-                    $response = __curl('https://api.openai.com/v1/assistants/' . $res__value->id, null, 'DELETE', [
-                        'Authorization' => 'Bearer ' . $this->api_key,
-                        'OpenAI-Beta' => 'assistants=v2'
-                    ]);
+        while (1 === 1) {
+            $response = __curl('https://api.openai.com/v1/assistants', ['limit' => 100], 'GET', [
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'OpenAI-Beta' => 'assistants=v2'
+            ]);
+            if (__x($response) && __x($response->result) && __x($response->result->data)) {
+                foreach ($response->result->data as $res__value) {
+                    if (__x(@$res__value->id)) {
+                        $response2 = __curl('https://api.openai.com/v1/assistants/' . $res__value->id, null, 'DELETE', [
+                            'Authorization' => 'Bearer ' . $this->api_key,
+                            'OpenAI-Beta' => 'assistants=v2'
+                        ]);
+                    }
                 }
+                $this->log('deleted ' . count($response->result->data) . ' assistants');
+            } else {
+                break;
             }
         }
 
-        $response = __curl('https://api.openai.com/v1/files', [], 'GET', [
-            'Authorization' => 'Bearer ' . $this->api_key,
-            'OpenAI-Beta' => 'assistants=v2'
-        ]);
-        foreach ($response->result->data as $res__value) {
-            if (__x(@$res__value->id)) {
-                $response = __curl('https://api.openai.com/v1/files/' . $res__value->id, null, 'DELETE', [
-                    'Authorization' => 'Bearer ' . $this->api_key,
-                    'OpenAI-Beta' => 'assistants=v2'
-                ]);
+        while (1 === 1) {
+            $response = __curl('https://api.openai.com/v1/files', ['limit' => 10000], 'GET', [
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'OpenAI-Beta' => 'assistants=v2'
+            ]);
+            if (__x($response) && __x($response->result) && __x($response->result->data)) {
+                foreach ($response->result->data as $res__value) {
+                    if (__x(@$res__value->id)) {
+                        $response2 = __curl('https://api.openai.com/v1/files/' . $res__value->id, null, 'DELETE', [
+                            'Authorization' => 'Bearer ' . $this->api_key,
+                            'OpenAI-Beta' => 'assistants=v2'
+                        ]);
+                    }
+                }
+                $this->log('deleted ' . count($response->result->data) . ' files');
+            } else {
+                break;
             }
         }
     }
@@ -6968,8 +6983,10 @@ class ai_claude implements ai
         ];
 
         // parse json
-        if (strpos($return['response'], '```json') === 0 || __string_is_json($return['response'])) {
-            $return['response'] = json_decode(trim(rtrim(ltrim(ltrim($return['response'], '```json'), '```'), '```')));
+        if (strpos(trim($return['response']), '```json') === 0 || __string_is_json($return['response'])) {
+            $return['response'] = json_decode(
+                trim(rtrim(ltrim(ltrim(trim($return['response']), '```json'), '```'), '```'))
+            );
         }
 
         return $return;
@@ -7134,8 +7151,10 @@ class ai_gemini implements ai
         ];
 
         // parse json
-        if (strpos($return['response'], '```json') === 0 || __string_is_json($return['response'])) {
-            $return['response'] = json_decode(trim(rtrim(ltrim(ltrim($return['response'], '```json'), '```'), '```')));
+        if (strpos(trim($return['response']), '```json') === 0 || __string_is_json($return['response'])) {
+            $return['response'] = json_decode(
+                trim(rtrim(ltrim(ltrim(trim($return['response']), '```json'), '```'), '```'))
+            );
         }
 
         return $return;
