@@ -383,6 +383,13 @@ __password_strength('3iu') // 1
 __password_strength('3iurehkHEDJ') // 2
 __password_strength('3iurehkHEDJK§$R$A') // 3
 
+// generate password
+__password_generate(
+  length: 20,
+  chars: ['a-z', 'A-Z', '0-9', '$!?'], // password contains at minimum one character of each value
+  exclude: 'lI' // exclude confusing chars
+)
+
 // calculate distance in meters between two lat/lng points with the haversine formula
 __distance_haversine([48.576809, 13.403207], [48.127719, 11.575344]) // 143999
 

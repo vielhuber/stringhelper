@@ -2207,6 +2207,23 @@ string'
         $this->assertSame(__password_strength([]), 1);
     }
 
+    function test__password_generate()
+    {
+        $this->assertSame(mb_strlen(__password_generate(20, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')), 20);
+        $this->assertSame(mb_strlen(__password_generate(7, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')), 7);
+        $this->assertSame(mb_strlen(__password_generate()), 20);
+        $this->assertSame(__password_generate(3, ['a-z', 'A-Z', '0-9', '$!?'], null), null);
+        $this->assertSame(__password_generate(3, null), null);
+        $this->assertEquals(preg_match('/[a-z]/', __password_generate(20, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')), true);
+        $this->assertEquals(preg_match('/[A-Z]/', __password_generate(20, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')), true);
+        $this->assertEquals(preg_match('/[0-9]/', __password_generate(20, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')), true);
+        $this->assertEquals(
+            preg_match('/\$|\!|\?/', __password_generate(20, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')),
+            true
+        );
+        $this->assertEquals(preg_match('/l|I]/', __password_generate(20, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')), false);
+    }
+
     function test__foreach_nested()
     {
         $a = [1, 2];

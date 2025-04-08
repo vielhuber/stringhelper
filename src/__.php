@@ -869,6 +869,45 @@ class __
         return 3;
     }
 
+    public static function password_generate($length = 20, $chars = ['a-z', 'A-Z', '0-9', '$!?'], $exclude = 'lI')
+    {
+        if (empty($chars) || $length < count($chars)) {
+            return null;
+        }
+        $char_groups = [];
+        if (!empty($chars)) {
+            foreach ($chars as $chars__value) {
+                $expanded = '';
+                if ($chars__value === 'a-z') {
+                    $expanded = range('a', 'z');
+                } elseif ($chars__value === 'A-Z') {
+                    $expanded = range('A', 'Z');
+                } elseif ($chars__value === '0-9') {
+                    $expanded = range('0', '9');
+                } else {
+                    $expanded = str_split($chars__value);
+                }
+                if ($exclude !== null) {
+                    $filtered = array_diff($expanded, str_split($exclude));
+                }
+                if (empty($filtered)) {
+                    return null;
+                }
+                $char_groups[] = array_values($filtered);
+            }
+        }
+        $password_chars = [];
+        foreach ($char_groups as $char_groups__value) {
+            $password_chars[] = $char_groups__value[random_int(0, count($char_groups__value) - 1)];
+        }
+        $all_chars = array_merge(...$char_groups);
+        for ($i = count($password_chars); $i < $length; $i++) {
+            $password_chars[] = $all_chars[random_int(0, count($all_chars) - 1)];
+        }
+        shuffle($password_chars);
+        return implode('', $password_chars);
+    }
+
     public static function distance_haversine($p1, $p2)
     {
         if (

@@ -351,6 +351,13 @@ if (!function_exists('__password_strength')) {
     }
 }
 
+if (!function_exists('__password_generate')) {
+    function __password_generate($length = 20, $chars = ['a-z', 'A-Z', '0-9', '$!?'], $exclude = 'lI')
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'password_generate'], func_get_args());
+    }
+}
+
 if (!function_exists('__distance_haversine')) {
     function __distance_haversine($p1, $p2)
     {
