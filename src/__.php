@@ -568,7 +568,7 @@ class __
         }
         // the u modifier is important here for multibyte support
         // the s modifier makes \s match &nbsp;
-        $str_new = preg_replace('/^([\s]*)(.*?)([\s]*)$/us', '$2', $str);
+        $str_new = preg_replace('/^(\s|&nbsp;|&#160;|&#xA0;)*(.*?)(\s|&nbsp;|&#160;|&#xA0;)*$/us', '$2', $str);
         // Be aware that when using the "/u" modifier,
         // if your input text contains any bad UTF-8 code sequences,
         // then preg_replace will return an empty string,

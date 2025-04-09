@@ -2002,6 +2002,16 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
     function test__trim_whitespace()
     {
         $this->assertSame(
+            __trim_whitespace(
+                '&nbsp; &#xA0;&#xA0;   &#160;&#xA0;&#160;string including nasty whitespace chars    &nbsp; &#xA0;&#xA0;   &#160;&#xA0;&#160;'
+            ),
+            'string including nasty whitespace chars'
+        );
+        $this->assertSame(
+            __trim_whitespace('&nbsp;string including nasty whitespace chars&nbsp;'),
+            'string including nasty whitespace chars'
+        );
+        $this->assertSame(
             __trim_whitespace('      string including nasty whitespace chars  '),
             'string including nasty whitespace chars'
         );
