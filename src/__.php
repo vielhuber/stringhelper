@@ -1085,7 +1085,7 @@ class __
         return $return;
     }
 
-    public static function phone_normalize($value)
+    public static function phone_normalize($value, $separator = ' ')
     {
         $return = [];
         $value = self::phone_tokenize($value);
@@ -1098,7 +1098,7 @@ class __
         if (self::x($value['number'])) {
             $return[] = $value['number'];
         }
-        return implode(' ', $return);
+        return implode((string) $separator, $return);
     }
 
     public static function phone_country_codes()

@@ -415,7 +415,7 @@ if (!function_exists('__phone_tokenize')) {
 }
 
 if (!function_exists('__phone_normalize')) {
-    function __phone_normalize($value)
+    function __phone_normalize($value, $separator = ' ')
     {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'phone_normalize'], func_get_args());
     }

@@ -420,6 +420,24 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__baseurl(true), 'https://github.com/vielhuber/stringhelper');
     }
 
+    function test__phone_normalize()
+    {
+        $this->assertSame(__phone_normalize(null), '');
+        $this->assertSame(__phone_normalize(''), '');
+        $this->assertSame(__phone_normalize('141'), '141');
+        $this->assertSame(__phone_normalize('(0)89-12 456 666'), '+49 89 12456666');
+        $this->assertSame(__phone_normalize('089 12 456 666'), '+49 89 12456666');
+        $this->assertSame(__phone_normalize('08541 12 456---666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('08541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('++498541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('++49(00)8541 12 456/666'), '+49 8541 12456666');
+        $this->assertSame(__phone_normalize('0151 / 58-75-46-91'), '+49 151 58754691');
+        $this->assertSame(__phone_normalize('0151 / 58-75-46-91', ''), '+4915158754691');
+        $this->assertSame(__phone_normalize('0151 / 58-75-46-91', '-'), '+49-151-58754691');
+        $this->assertSame(__phone_normalize('0151 / 58-75-46-91', null), '+4915158754691');
+        $this->assertSame(__phone_normalize('0151 / 58-75-46-91', false), '+4915158754691');
+    }
+
     function test__trim_every_line()
     {
         $this->assertSame(__trim_every_line("foo\n bar"), "foo\nbar");
@@ -3817,16 +3835,6 @@ Dies ist ein Test für falsche Umlaute.'
 
         $this->assertSame(__validate_url('https://vielhuber.de'), true);
 
-        $this->assertSame(__phone_normalize(null), '');
-        $this->assertSame(__phone_normalize(''), '');
-        $this->assertSame(__phone_normalize('141'), '141');
-        $this->assertSame(__phone_normalize('(0)89-12 456 666'), '+49 89 12456666');
-        $this->assertSame(__phone_normalize('089 12 456 666'), '+49 89 12456666');
-        $this->assertSame(__phone_normalize('08541 12 456---666'), '+49 8541 12456666');
-        $this->assertSame(__phone_normalize('08541 12 456/666'), '+49 8541 12456666');
-        $this->assertSame(__phone_normalize('++498541 12 456/666'), '+49 8541 12456666');
-        $this->assertSame(__phone_normalize('++49(00)8541 12 456/666'), '+49 8541 12456666');
-        $this->assertSame(__phone_normalize('0151 / 58-75-46-91'), '+49 151 58754691');
         $this->assertSame(__phone_tokenize('(0)89-12 456 666'), [
             'country_code' => '49',
             'area_code' => '89',

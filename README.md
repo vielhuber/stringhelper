@@ -480,6 +480,7 @@ __remove_leading_zeros('01337') // 1337
 
 // normalizes phone numbers (din, germany)
 __phone_normalize('(0)89-12 456 666') // +49 89 12456666
+__phone_normalize('(0)89-12 456 666', '') // +498912456666 (define separator)
 __phone_tokenize('(0)89-12 456 666') // ['country_code' => '49', 'area_code' => '89', 'number' => '12456666']
 __phone_country_codes() // ['49', ...]
 __phone_area_codes() // ['89', '151', ...]
