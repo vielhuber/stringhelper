@@ -6554,7 +6554,7 @@ class ai_chatgpt implements ai
                     break;
                 }
             }
-            $this->log(str_replace("\n", ' ', serialize($response)));
+            $this->log(str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
             $this->assistant_id = $response->result->id;
 
             $max_tries = 3;
@@ -6573,7 +6573,7 @@ class ai_chatgpt implements ai
                     break;
                 }
             }
-            $this->log(str_replace("\n", ' ', serialize($response)));
+            $this->log(str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
             $this->thread_id = $response->result->id;
 
             $this->session_id = $this->assistant_id . '###' . $this->thread_id;
@@ -6670,7 +6670,7 @@ class ai_chatgpt implements ai
                 if (__nx(@$response->result) || __nx(@$response->result->id)) {
                     return $return;
                 }
-                $this->log('1:: ' . str_replace("\n", ' ', serialize($response)));
+                $this->log('1:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
                 $file_ids[] = ['id' => $response->result->id, 'path' => $files__value];
             }
 
@@ -6702,7 +6702,7 @@ class ai_chatgpt implements ai
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        $this->log('2:: ' . str_replace("\n", ' ', serialize($response)));
+        $this->log('2:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
         if (__nx(@$response->result) || __nx(@$response->result->id)) {
             return $return;
         }
@@ -6719,7 +6719,7 @@ class ai_chatgpt implements ai
                 'OpenAI-Beta' => 'assistants=v2'
             ]
         );
-        $this->log('3:: ' . str_replace("\n", ' ', serialize($response)));
+        $this->log('3:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
         if (__nx(@$response->result) || __nx(@$response->result->id)) {
             return $return;
         }
@@ -6735,7 +6735,7 @@ class ai_chatgpt implements ai
                     'OpenAI-Beta' => 'assistants=v2'
                 ]
             );
-            $this->log('4:: ' . str_replace("\n", ' ', serialize($response)));
+            $this->log('4:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
 
             $status = null;
             if (__x($response) && __x(@$response->result)) {
@@ -6770,7 +6770,7 @@ class ai_chatgpt implements ai
             'Authorization' => 'Bearer ' . $this->api_key,
             'OpenAI-Beta' => 'assistants=v2'
         ]);
-        $this->log('5:: ' . str_replace("\n", ' ', serialize($response)));
+        $this->log('5:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
 
         if (
             __nx(@$response) ||
@@ -6782,7 +6782,7 @@ class ai_chatgpt implements ai
             __nx(@$response->result->data[0]->content[0]->text) ||
             __nx(@$response->result->data[0]->content[0]->text->value)
         ) {
-            $this->log('1:: ' . str_replace("\n", ' ', serialize($response)));
+            $this->log('1:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
             return $return;
         }
         $return['response'] = $response->result->data[0]->content[0]->text->value;
@@ -7013,7 +7013,7 @@ class ai_claude implements ai
             __nx(@$response->result->content[0]) ||
             __nx(@$response->result->content[0]->text)
         ) {
-            $this->log('2:: ' . str_replace("\n", ' ', serialize($response)));
+            $this->log('2:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
             return $return;
         }
         $return['response'] = $response->result->content[0]->text;
@@ -7169,7 +7169,7 @@ class ai_gemini implements ai
             null
         );
 
-        $this->log('5:: ' . str_replace("\n", ' ', serialize(self::$sessions[$this->session_id])));
+        $this->log('5:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize(self::$sessions[$this->session_id])));
 
         if (
             __nx(@$response) ||
@@ -7181,7 +7181,7 @@ class ai_gemini implements ai
             __nx(@$response->result->candidates[0]->content->parts[0]) ||
             __nx(@$response->result->candidates[0]->content->parts[0]->text)
         ) {
-            $this->log('3:: ' . str_replace("\n", ' ', serialize($response)));
+            $this->log('3:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
             return $return;
         }
         $return['response'] = $response->result->candidates[0]->content->parts[0]->text;
