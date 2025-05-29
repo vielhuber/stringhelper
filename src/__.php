@@ -438,38 +438,56 @@ class __
 
     public static function strip_numeric($string)
     {
+        if (self::nx($string)) {
+            return $string;
+        }
         return preg_replace('/[0-9,.]/', '', $string);
     }
 
     public static function strip_nonnumeric($string)
     {
+        if (self::nx($string)) {
+            return $string;
+        }
         return preg_replace('/[^0-9,.]/', '', $string);
     }
 
     public static function strip_digit($string)
     {
+        if (self::nx($string)) {
+            return $string;
+        }
         return preg_replace('/[0-9]/', '', $string);
     }
 
     public static function strip_nondigit($string)
     {
+        if (self::nx($string)) {
+            return $string;
+        }
         return preg_replace('/[^0-9]/', '', $string);
     }
 
     public static function strip_nonchars($string)
     {
+        if (self::nx($string)) {
+            return $string;
+        }
         return preg_replace('/[^A-Za-zäÄöÖüÜß ]/', '', $string);
     }
 
     public static function strip_whitespace($string)
     {
+        if (self::nx($string)) {
+            return $string;
+        }
         return preg_replace('/\s+/', '', $string);
     }
 
     public static function strip_whitespace_collapsed($string)
     {
-        if (!is_string($string)) {
-            return '';
+        if (self::nx($string)) {
+            return $string;
         }
         return implode(' ', self::remove_empty(explode(' ', $string)));
     }
@@ -497,6 +515,9 @@ class __
 
     public static function split_newline($string)
     {
+        if (self::nx($string)) {
+            return $string;
+        }
         return preg_split('/\r\n|\n|\r/', $string);
     }
 

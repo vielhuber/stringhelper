@@ -3922,15 +3922,30 @@ Dies ist ein Test für falsche Umlaute.'
             'Lorem ipsum...'
         );
         $this->assertSame(__strip_numeric('the answer is 42.00'), 'the answer is ');
+        $this->assertSame(__strip_numeric(null), null);
+
         $this->assertSame(__strip_nonnumeric('the answer is 42.00'), '42.00');
+        $this->assertSame(__strip_nonnumeric(null), null);
+
         $this->assertSame(__strip_digit('the answer is 42'), 'the answer is ');
+        $this->assertSame(__strip_digit(null), null);
+
         $this->assertSame(__strip_nondigit('the answer is 42'), '42');
+        $this->assertSame(__strip_nondigit(null), null);
+
         $this->assertSame(__strip_nonchars('the Änswer is 42.-+&!foo'), 'the Änswer is foo');
+        $this->assertSame(__strip_nonchars(null), null);
+
         $this->assertSame(__strip_whitespace('the answer is 42'), 'theansweris42');
         $this->assertSame(__strip_whitespace('the  answeris42'), 'theansweris42');
+        $this->assertSame(__strip_whitespace(null), null);
+
         $this->assertSame(__strip_whitespace_collapsed('the answer is 42'), 'the answer is 42');
         $this->assertSame(__strip_whitespace_collapsed('the     answer             is 42 '), 'the answer is 42');
+        $this->assertSame(__strip_whitespace_collapsed(null), null);
+
         $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), ['foo', 'bar', 'baz']);
+        $this->assertSame(__split_newline(null), null);
 
         $this->assertSame(__split_whitespace('DE07123412341234123412', 4), 'DE07 1234 1234 1234 1234 12');
         $this->assertSame(__split_whitespace(' föö bäär ', 3), 'föö bää r');
