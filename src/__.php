@@ -5011,8 +5011,9 @@ class __
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
         if ($method == 'POST' || $method === 'PUT') {
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-            if ($method === 'POST') {
+            if ($send_as_json === true) {
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+            } elseif ($method === 'POST') {
                 curl_setopt($curl, CURLOPT_POST, 1);
             }
             if (self::x($data)) {
