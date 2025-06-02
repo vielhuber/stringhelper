@@ -4990,7 +4990,8 @@ class __
                     $curl_headers[] = 'Content-Type: application/x-www-form-urlencoded';
                 }
                 if (self::nx($headers) || !array_key_exists('Content-Length', $headers)) {
-                    $curl_headers[] = 'Content-Length: ' . strlen($data);
+                    // this is done automaically by php curl and should NOT be done manually
+                    //$curl_headers[] = 'Content-Length: ' . strlen($data);
                 }
             }
         }
