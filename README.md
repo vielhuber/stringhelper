@@ -516,7 +516,7 @@ __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '*
 // work conveniently with all major ai apis
 $ai = __ai(
     service: 'chatgpt', // chatgpt|claude|gemini
-    model: 'gpt-4o', // gpt-4o|claude-3-5-sonnet-20240620|gemini-1.5-flash|...
+    model: 'gpt-4o', // gpt-4o|claude-sonnet-4-20250514|gemini-2.5-flash-preview-05-20|...
     temperature: 0.7, // controls the randomness of the text generated
     api_key: '**API Key**'
 );

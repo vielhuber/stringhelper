@@ -6511,19 +6511,7 @@ class __
     }
 }
 
-interface ai
-{
-    public function __construct($model, $temperature, $api_key, $session_id);
-    public function ask($prompt = null, $files = null);
-    public function askThis($prompt = null, $files = null, $add_prompt_to_session = true);
-    public function cleanup();
-    public function cleanup_all();
-    public function enable_log($filename);
-    public function disable_log();
-    public function log($msg);
-}
-
-class ai_chatgpt implements ai
+abstract class ai
 {
     public $log = null;
 
@@ -6532,9 +6520,39 @@ class ai_chatgpt implements ai
     public $api_key = null;
 
     public $session_id = null;
+    public static $sessions = [];
+
     public $assistant_id = null;
     public $thread_id = null;
 
+    abstract public function __construct($model, $temperature, $api_key, $session_id);
+    abstract public function ask($prompt = null, $files = null);
+    abstract public function askThis($prompt = null, $files = null, $add_prompt_to_session = true);
+    abstract public function cleanup();
+    abstract public function cleanup_all();
+    abstract public function enable_log($filename);
+    abstract public function disable_log();
+    public function log($msg)
+    {
+        if ($this->log !== null) {
+            $msg = preg_replace_callback(
+                '/s:(\d+):"(.*?)";/s',
+                function ($matches) {
+                    return strlen($matches[2]) > 1000 ? 's:' . $matches[1] . ':"...";' : $matches[0];
+                },
+                $msg
+            );
+            file_put_contents(
+                $this->log,
+                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
+                FILE_APPEND
+            );
+        }
+    }
+}
+
+class ai_chatgpt extends ai
+{
     public function __construct($model, $temperature, $api_key, $session_id)
     {
         if ($model === null) {
@@ -6927,30 +6945,10 @@ class ai_chatgpt implements ai
     {
         $this->log = null;
     }
-
-    public function log($msg)
-    {
-        if ($this->log !== null) {
-            file_put_contents(
-                $this->log,
-                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
-                FILE_APPEND
-            );
-        }
-    }
 }
 
-class ai_claude implements ai
+class ai_claude extends ai
 {
-    public $log = null;
-
-    public $model = null;
-    public $temperature = null;
-    public $api_key = null;
-
-    public $session_id = null;
-    public static $sessions = [];
-
     public function __construct($model, $temperature, $api_key, $session_id)
     {
         if ($model === null) {
@@ -7010,8 +7008,42 @@ class ai_claude implements ai
         }
 
         if (__x($files)) {
-            $return['response'] = 'claude api does not support file uploads.';
-            return $return;
+            if (!is_array($files)) {
+                $files = [$files];
+            }
+            foreach ($files as $files__value) {
+                if (!file_exists($files__value)) {
+                    continue;
+                }
+                if ($add_prompt_to_session === true) {
+                    if (
+                        !is_array(
+                            self::$sessions[$this->session_id][count(self::$sessions[$this->session_id]) - 1]['content']
+                        )
+                    ) {
+                        self::$sessions[$this->session_id][count(self::$sessions[$this->session_id]) - 1]['content'] = [
+                            [
+                                'type' => 'text',
+                                'text' =>
+                                    self::$sessions[$this->session_id][count(self::$sessions[$this->session_id]) - 1][
+                                        'content'
+                                    ]
+                            ]
+                        ];
+                    }
+                    array_unshift(
+                        self::$sessions[$this->session_id][count(self::$sessions[$this->session_id]) - 1]['content'],
+                        [
+                            'type' => substr($files__value, -4) === '.pdf' ? 'document' : 'image',
+                            'source' => [
+                                'type' => 'base64',
+                                'media_type' => mime_content_type($files__value),
+                                'data' => base64_encode(file_get_contents($files__value))
+                            ]
+                        ]
+                    );
+                }
+            }
         }
 
         $response = __curl(
@@ -7029,6 +7061,8 @@ class ai_claude implements ai
             ]
         );
 
+        $this->log('5:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize(self::$sessions[$this->session_id])));
+
         if (
             __nx(@$response) ||
             __nx(@$response->result) ||
@@ -7037,6 +7071,18 @@ class ai_claude implements ai
             __nx(@$response->result->content[0]->text)
         ) {
             $this->log('2:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
+            if (
+                __x(@$response) &&
+                __x(@$response->result) &&
+                __x(@$response->result->type) &&
+                @$response->result->type === 'error' &&
+                __x(@$response->result->type->error) &&
+                __x(@$response->result->type->error->type) &&
+                @$response->result->type->error->type === 'overloaded_error'
+            ) {
+                $this->log('2:: overload detected. pausing...');
+                sleep(5);
+            }
             return $return;
         }
         $return['response'] = $response->result->content[0]->text;
@@ -7076,30 +7122,10 @@ class ai_claude implements ai
     {
         $this->log = null;
     }
-
-    public function log($msg)
-    {
-        if ($this->log !== null) {
-            file_put_contents(
-                $this->log,
-                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
-                FILE_APPEND
-            );
-        }
-    }
 }
 
-class ai_gemini implements ai
+class ai_gemini extends ai
 {
-    public $log = null;
-
-    public $model = null;
-    public $temperature = null;
-    public $api_key = null;
-
-    public $session_id = null;
-    public static $sessions = [];
-
     public function __construct($model, $temperature, $api_key, $session_id)
     {
         if ($model === null) {
@@ -7243,16 +7269,5 @@ class ai_gemini implements ai
     public function disable_log()
     {
         $this->log = null;
-    }
-
-    public function log($msg)
-    {
-        if ($this->log !== null) {
-            file_put_contents(
-                $this->log,
-                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
-                FILE_APPEND
-            );
-        }
     }
 }

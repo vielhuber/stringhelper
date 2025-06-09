@@ -991,12 +991,12 @@ house'
 
     function test__ai_claude()
     {
-        $this->ai_test('claude', 'claude-3-5-sonnet-20240620', @$_SERVER['CLAUDE_API_KEY']);
+        $this->ai_test('claude', 'claude-sonnet-4-20250514', @$_SERVER['CLAUDE_API_KEY']);
     }
 
     function test__ai_gemini()
     {
-        $this->ai_test('gemini', 'gemini-1.5-flash', @$_SERVER['GOOGLE_GEMINI_API_KEY']);
+        $this->ai_test('gemini', 'gemini-2.5-flash-preview-05-20', @$_SERVER['GOOGLE_GEMINI_API_KEY']);
     }
 
     function ai_test($service, $model, $api_key)
@@ -1004,6 +1004,7 @@ house'
         fwrite(STDERR, print_r('Testing ' . $service . '...' . PHP_EOL, true));
 
         $ai = __ai($service, $model, 0.7, $api_key);
+        $ai->enable_log('tests/ai.log');
 
         fwrite(STDERR, print_r('#1' . PHP_EOL, true));
         $return = $ai->ask('Wer wurde 2018 Fußball-Weltmeister? Antworte bitte kurz.');
@@ -1043,74 +1044,62 @@ house'
         $return = $ai->ask('Ich heiße David mit Vornamen. Bitte merk Dir das!');
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $ai = __ai($service, null, null, $api_key, $ai->session_id);
+        $ai->enable_log('tests/ai.log');
         $return = $ai->ask('Wie heiße ich mit Vornamen?');
         //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
         $this->assertStringContainsString('David', $return['response']);
 
         /* claude does not support file uploads via api yet */
-        if ($service !== 'claude') {
-            fwrite(STDERR, print_r('#5' . PHP_EOL, true));
-            $return = $ai->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
-            $this->assertThat(
-                $return['response'],
-                $this->logicalOr(
-                    $this->stringContains('Tulpe'),
-                    $this->stringContains('Tulpen'),
-                    $this->stringContains('Tulip'),
-                    $this->stringContains('Tulipe'),
-                    $this->stringContains('Tulipan')
-                )
-            );
+        fwrite(STDERR, print_r('#5' . PHP_EOL, true));
+        $return = $ai->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
+        $this->assertThat(
+            $return['response'],
+            $this->logicalOr(
+                $this->stringContains('Tulpe'),
+                $this->stringContains('Tulpen'),
+                $this->stringContains('Tulip'),
+                $this->stringContains('Tulipe'),
+                $this->stringContains('Tulipan')
+            )
+        );
 
-            /* gemini fails to do this (even in web interface) */
-            if ($service !== 'gemini') {
-                fwrite(STDERR, print_r('#5' . PHP_EOL, true));
-                $return = $ai->ask('Was ist auf dem zuletzt hochgeladenen Bild zu sehen?');
-                $this->assertThat(
-                    $return['response'],
-                    $this->logicalOr(
-                        $this->stringContains('Tulpe'),
-                        $this->stringContains('Tulpen'),
-                        $this->stringContains('Tulip'),
-                        $this->stringContains('Tulipe'),
-                        $this->stringContains('Tulipan')
-                    )
-                );
-            }
+        fwrite(STDERR, print_r('#5' . PHP_EOL, true));
+        $return = $ai->ask('Welches Bild habe ich im Gesprächsverlauf hochgeladen?');
+        $this->assertThat(
+            $return['response'],
+            $this->logicalOr(
+                $this->stringContains('Tulpe'),
+                $this->stringContains('Tulpen'),
+                $this->stringContains('Tulip'),
+                $this->stringContains('Tulipe'),
+                $this->stringContains('Tulipan')
+            )
+        );
 
-            fwrite(STDERR, print_r('#6' . PHP_EOL, true));
-            $return = $ai->ask(
-                'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
-                'tests/assets/lorem.pdf'
-            );
-            //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-            $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
-            $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018', '', null]);
-            $this->assertContains($return['response']->author, ['David Vielhuber', '', null]);
+        fwrite(STDERR, print_r('#6' . PHP_EOL, true));
+        $return = $ai->ask(
+            'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
+            'tests/assets/lorem.pdf'
+        );
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
+        $this->assertContains($return['response']->date, ['31. Oktober 2018', 'Oktober 2018', '', null]);
+        $this->assertContains($return['response']->author, ['David Vielhuber', '', null]);
 
-            fwrite(STDERR, print_r('#7' . PHP_EOL, true));
-            $return = $ai->ask(
-                'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
-                [
-                    'tests/assets/lorem.pdf',
-                    'tests/assets/lorem2.pdf',
-                    'tests/assets/iptc_write.jpg',
-                    'tests/assets/not_existing.jpg'
-                ]
-            );
-            //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
-            $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
-            $this->assertContains($return['response']->meter_number, ['123456789', '', null]);
-            $this->assertContains($return['response']->flower, [
-                'Tulpe',
-                'Tulpen',
-                'Tulip',
-                'Tulipe',
-                'Tulipan',
-                '',
-                null
-            ]);
-        }
+        fwrite(STDERR, print_r('#7' . PHP_EOL, true));
+        $return = $ai->ask(
+            'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
+            [
+                'tests/assets/lorem.pdf',
+                'tests/assets/lorem2.pdf',
+                'tests/assets/iptc_write.jpg',
+                'tests/assets/not_existing.jpg'
+            ]
+        );
+        //fwrite(STDERR, print_r(serialize($return) . PHP_EOL, true));
+        $this->assertContains($return['response']->customer_nr, ['F123465789', '', null]);
+        $this->assertContains($return['response']->meter_number, ['123456789', '', null]);
+        $this->assertContains($return['response']->flower, ['Tulpe', 'Tulpen', 'Tulip', 'Tulipe', 'Tulipan', '', null]);
 
         $ai->cleanup();
     }

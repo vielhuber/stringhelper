@@ -7,6 +7,7 @@
 /tests/assets/file.csv
 /tests/assets/file*.txt
 /tests/assets/file*.csv
+/tests/ai.log
 /.env
 /.phpunit.result.cache
 /.phpunit.cache
