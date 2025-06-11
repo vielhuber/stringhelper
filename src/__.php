@@ -6163,6 +6163,9 @@ class __
 
     public static function encrypt($string, $salt = null)
     {
+        if (!is_string($string)) {
+            $string = '';
+        }
         if ($salt === null) {
             $salt = hash('sha256', uniqid(mt_rand(), true));
         } // this is an unique salt per entry and directly stored within a password
@@ -6181,6 +6184,9 @@ class __
 
     public static function decrypt($string)
     {
+        if (!is_string($string)) {
+            $string = '';
+        }
         if (count(explode(':', $string)) !== 2) {
             return $string;
         }

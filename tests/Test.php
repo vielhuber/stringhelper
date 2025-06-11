@@ -3651,6 +3651,14 @@ data-attr="foo">
         $this->assertSame(__decrypt_poor($token, true), null);
 
         $this->assertSame(__decrypt('unknown'), 'unknown');
+
+        $this->assertSame(__decrypt(__encrypt('')), '');
+        $this->assertSame(__decrypt(__encrypt(null)), '');
+        $this->assertSame(__decrypt(__encrypt(false)), '');
+        $this->assertSame(__decrypt(__encrypt(true)), '');
+        $this->assertSame(__decrypt(__encrypt(0)), '');
+        $this->assertSame(__decrypt(__encrypt('0')), '0');
+        $this->assertSame(__decrypt(__encrypt([])), '');
     }
 
     function test__array2csv_csv2array()
