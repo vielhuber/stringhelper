@@ -464,6 +464,14 @@ multiline string
         $this->assertSame(__trim_every_line(false), false);
         $this->assertSame(__trim_every_line(true), true);
         $this->assertSame(__trim_every_line([]), []);
+        $this->assertSame(
+            __trim_every_line('
+
+'),
+            '
+
+'
+        );
     }
 
     function test__br2nl()
@@ -3654,6 +3662,18 @@ bar'
         $this->assertSame(__false_one(false), true);
     }
 
+    function test__split_newline()
+    {
+        $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), ['foo', 'bar', 'baz']);
+        $this->assertSame(
+            __split_newline('
+
+'),
+            ['', '', '']
+        );
+        $this->assertSame(__split_newline(null), null);
+    }
+
     function test__expl()
     {
         $this->assertSame(__expl(' ', 'foo bar baz', 1), 'bar');
@@ -3968,9 +3988,6 @@ Dies ist ein Test für falsche Umlaute.'
         $this->assertSame(__strip_whitespace_collapsed('the answer is 42'), 'the answer is 42');
         $this->assertSame(__strip_whitespace_collapsed('the     answer             is 42 '), 'the answer is 42');
         $this->assertSame(__strip_whitespace_collapsed(null), null);
-
-        $this->assertSame(__split_newline('foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'), ['foo', 'bar', 'baz']);
-        $this->assertSame(__split_newline(null), null);
 
         $this->assertSame(__split_whitespace('DE07123412341234123412', 4), 'DE07 1234 1234 1234 1234 12');
         $this->assertSame(__split_whitespace(' föö bäär ', 3), 'föö bää r');

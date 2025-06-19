@@ -515,7 +515,7 @@ class __
 
     public static function split_newline($string)
     {
-        if (self::nx($string)) {
+        if (!is_string($string)) {
             return $string;
         }
         return preg_split('/\r\n|\n|\r/', $string);
@@ -654,7 +654,11 @@ class __
         if (!is_string($str)) {
             return $str;
         }
-        return implode(PHP_EOL, self::atrim(self::split_newline($str)));
+        $arr = self::atrim(self::split_newline($str));
+        if (!is_array($arr)) {
+            return $str;
+        }
+        return implode(PHP_EOL, $arr);
     }
 
     public static function strrev($str)
