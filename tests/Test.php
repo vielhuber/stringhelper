@@ -3436,6 +3436,34 @@ data-attr="foo">
         $this->assertSame(__validate_date_format(''), false);
     }
 
+    function test__remove_emptylines()
+    {
+        $this->assertSame(
+            __remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'),
+            'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'
+        );
+        $this->assertSame(
+            __remove_emptylines('
+foo
+'),
+            'foo'
+        );
+        $this->assertSame(
+            __remove_emptylines('
+foo
+
+bar
+'),
+            'foo
+bar'
+        );
+        $this->assertSame(__remove_emptylines(null), null);
+        $this->assertSame(__remove_emptylines(true), true);
+        $this->assertSame(__remove_emptylines(false), false);
+        $this->assertSame(__remove_emptylines(0), 0);
+        $this->assertSame(__remove_emptylines([]), []);
+    }
+
     function test__validate_date_mod()
     {
         $this->assertSame(__validate_date_mod('+6 months'), true);
@@ -3951,11 +3979,6 @@ Dies ist ein Test für falsche Umlaute.'
         $this->assertSame(__split_whitespace(false, 3), false);
         $this->assertSame(__split_whitespace('', 3), '');
         $this->assertSame(__split_whitespace('foo', 0), 'foo');
-
-        $this->assertSame(
-            __remove_emptylines('foo' . PHP_EOL . '' . PHP_EOL . 'bar' . PHP_EOL . 'baz'),
-            'foo' . PHP_EOL . 'bar' . PHP_EOL . 'baz'
-        );
 
         $this->assertSame(__string_is_json('[]'), true);
         $this->assertSame(__string_is_json('{"foo":"bar"}'), true);

@@ -539,7 +539,12 @@ class __
 
     public static function remove_emptylines($string)
     {
-        return preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", PHP_EOL, $string);
+        if (!is_string($string)) {
+            return $string;
+        }
+        $string = preg_replace('/^\s*$(?:\r\n?|\n)/m', '', $string);
+        $string = trim($string);
+        return $string;
     }
 
     public static function remove_newlines($string, $replace = '')
