@@ -6646,6 +6646,7 @@ class ai_chatgpt extends ai
         $return = ['success' => false];
         $max_tries = 3;
         while ($return['success'] === false && $max_tries > 0) {
+            $this->log(serialize($this));
             $this->log('TRIES LEFT: ' . $max_tries);
             $return = $this->askThis($prompt, $files, $max_tries === 3);
             $max_tries--;
@@ -6992,6 +6993,7 @@ class ai_claude extends ai
         $return = ['success' => false];
         $max_tries = 3;
         while ($return['success'] === false && $max_tries > 0) {
+            $this->log(serialize($this));
             $this->log('TRIES LEFT: ' . $max_tries);
             $return = $this->askThis($prompt, $files, $max_tries === 3);
             $max_tries--;
@@ -7169,6 +7171,7 @@ class ai_gemini extends ai
         $return = ['success' => false];
         $max_tries = 3;
         while ($return['success'] === false && $max_tries > 0) {
+            $this->log(serialize($this));
             $this->log('TRIES LEFT: ' . $max_tries);
             $return = $this->askThis($prompt, $files, $max_tries === 3);
             $max_tries--;
