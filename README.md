@@ -183,6 +183,16 @@ __rx($foo);
 array_key_exists('foo', get_defined_vars()); // true
 ```
 
+If the array is already defined (e.g. at working with superglobals)\
+and you are unsure, if the key is defined, you also can use the `_`-helper:
+
+```php
+___($_GET, 'foo');
+___($_POST, 'bar');
+___($_SERVER, 'HTTP_HOST');
+// ...
+```
+
 ### classes
 
 ```php
@@ -1187,21 +1197,28 @@ __is_external('mailto:david@vielhuber.de') // false
 __is_external('https://vielhuber.de') // true
 __is_external('https://vielhuber.de/test.pdf') // true
 
-$_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
-$_POST = ['foo' => 'bar', 42 => "\0"];
-
-// fetch post/get variables if they exist
-__get('foo') // null (because not set)
-__get('page_id') // '13'
-__post('foo') // bar
-
-// filter get parameters from url
-__filter_url_args('https://ai?foo=bar&bar=baz&baz=foo', ['foo','bar']) // https://ai?baz=foo
+// conveniently access superglobals
+$_GET = ['foo' => 'bar', 'page_id' => '13'];
+___($_GET, 'foo') // 'bar'
+___($_GET, 'page_id') // 13 (integer-like strings are automatically converted)
+___($_GET, 'bar') // null
+$this->assertSame(___($_POST, 'unknown'), null);
+$this->assertSame(___($_SERVER, 'unknown'), null);
+$this->assertSame(___($_FILES, 'unknown'), null);
+$this->assertSame(___($_COOKIE, 'unknown'), null);
+$this->assertSame(___($_REQUEST, 'unknown'), null);
+$this->assertSame(___($_ENV, 'unknown'), null);
+$this->assertSame(___($GLOBALS, 'unknown'), null);
 
 // clean up post/get from malicious content using filter_var_array
+$_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
+$_POST = ['foo' => 'bar', 42 => "\0"];
 __clean_up_get() // $_GET = ['page_id' => '13', 'code' => 'Hello World!']
 __clean_up_post() // $_POST = ['foo' => 'bar', 42 => '']
 __clean_up() // same as __clean_up_get() and __clean_up_post()
+
+// filter get parameters from url
+__filter_url_args('https://ai?foo=bar&bar=baz&baz=foo', ['foo','bar']) // https://ai?baz=foo
 
 // read .env file (poor mans version)
 __read_env('.env') // ['foo' => 'bar', 'bar' => 'baz']

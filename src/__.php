@@ -3543,6 +3543,20 @@ class __
         return $_POST[$var];
     }
 
+    public static function _($arr, $key)
+    {
+        if (!is_array($arr)) {
+            return null;
+        }
+        if (!array_key_exists($key, $arr)) {
+            return null;
+        }
+        if (self::is_integer($arr[$key])) {
+            return (int) $arr[$key];
+        }
+        return $arr[$key];
+    }
+
     public static function filter_url_args($url, $filter = [])
     {
         if (self::nx($url) || self::nx($filter)) {

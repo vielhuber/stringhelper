@@ -963,6 +963,13 @@ if (!function_exists('__post')) {
     }
 }
 
+if (!function_exists('___')) {
+    function ___($arr, $key)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', '_'], func_get_args());
+    }
+}
+
 if (!function_exists('__filter_url_args')) {
     function __filter_url_args($url, $filter = [])
     {

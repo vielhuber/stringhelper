@@ -3409,6 +3409,37 @@ data-attr="foo">
         }
     }
 
+    function test___()
+    {
+        $_GET = ['page_id' => '13', 'foo' => '0', 'bar' => null, 42 => 'baz'];
+        $this->assertSame(___($_GET, 'page_id'), 13);
+        $this->assertSame(___($_GET, 'foo'), 0);
+        $this->assertSame(___($_GET, 'bar'), null);
+        $this->assertSame(___($_GET, 42), 'baz');
+        $this->assertSame(___($_GET, 43), null);
+        $this->assertSame(___($_POST, 'unknown'), null);
+        $this->assertSame(___($_SERVER, 'unknown'), null);
+        $this->assertSame(___($_SERVER, 'HTTPS'), 'on');
+        $this->assertSame(___($_FILES, 'unknown'), null);
+        $this->assertSame(___($_COOKIE, 'unknown'), null);
+        session_start();
+        $this->assertSame(___($_SESSION, 'unknown'), null);
+        session_destroy();
+        $this->assertSame(___($_REQUEST, 'unknown'), null);
+        $this->assertSame(___($_ENV, 'unknown'), null);
+        $this->assertSame(___($GLOBALS, 'unknown'), null);
+    }
+
+    function test__clean_up_get_post()
+    {
+        $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
+        $_POST = ['foo' => 'bar', 42 => "\0"];
+        __clean_up_get();
+        __clean_up_post();
+        $this->assertSame($_GET, ['page_id' => '13', 'code' => 'Hello World!']);
+        $this->assertSame($_POST, ['foo' => 'bar', 42 => '']);
+    }
+
     function test__validate_date()
     {
         $this->assertSame(__validate_date('2000-01-01'), true);
@@ -4268,16 +4299,6 @@ Dies ist ein Test für falsche Umlaute.'
         $this->assertSame(__is_external('mailto:david@vielhuber.de'), false);
         $this->assertSame(__is_external('https://vielhuber.de'), true);
         $this->assertSame(__is_external('https://vielhuber.de/test.pdf'), true);
-
-        $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
-        $_POST = ['foo' => 'bar', 42 => "\0"];
-        $this->assertSame(__get('foo'), null);
-        $this->assertSame(__get('page_id'), '13');
-        $this->assertSame(__post('foo'), 'bar');
-        __clean_up_get();
-        __clean_up_post();
-        $this->assertSame($_GET, ['page_id' => '13', 'code' => 'Hello World!']);
-        $this->assertSame($_POST, ['foo' => 'bar', 42 => '']);
 
         $this->assertSame(__str_replace_first('foo', 'bar', 'foofoo'), 'barfoo');
         $this->assertSame(__str_replace_last('foo', 'bar', 'foofoo'), 'foobar');
