@@ -2974,7 +2974,10 @@ class __
         if (is_numeric($input) && $input != (string) (float) $input) {
             return true;
         }
-        return preg_match('/^\d+$/', $input) === 1;
+        if (is_array($input) || is_object($input)) {
+            return false;
+        }
+        return preg_match('/^\d+$/', (string) $input) === 1;
     }
 
     public static function float_to_ratio($n)
