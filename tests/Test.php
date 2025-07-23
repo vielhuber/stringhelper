@@ -526,6 +526,7 @@ multiline string
                 </picture>
                 </body></html>
                 ',
+                '<p>❤️ emoji support ❤️</p>',
                 '<command data-foo="bar" />',
                 '<embed data-foo="bar" />',
                 '<keygen data-foo="bar" />',

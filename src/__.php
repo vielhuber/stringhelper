@@ -1610,7 +1610,7 @@ class __
 
         /* this is deprecated, use drop in */
         //$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
-        $html = htmlspecialchars_decode(self::utf8_decode(htmlentities($html, ENT_COMPAT, 'utf-8', false)));
+        $html = mb_encode_numericentity($html, [0x80, 0x10ffff, 0, 0x1fffff], 'UTF-8', true);
 
         $has_wrapper = strpos($html, '<html') !== false;
         if ($has_wrapper === false) {
