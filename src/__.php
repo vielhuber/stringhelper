@@ -1608,7 +1608,10 @@ class __
             return $dom;
         }
 
-        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        /* this is deprecated, use drop in */
+        //$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        $html = htmlspecialchars_decode(self::utf8_decode(htmlentities($html, ENT_COMPAT, 'utf-8', false)));
+
         $has_wrapper = strpos($html, '<html') !== false;
         if ($has_wrapper === false) {
             $html = '<!DOCTYPE html><html data-please-remove-wrapper><body>' . $html . '</body></html>';
@@ -2867,9 +2870,9 @@ class __
     public static function mb_sprintf($format, ...$args)
     {
         foreach ($args as $args__key => $args__value) {
-            $args[$args__key] = utf8_decode($args__value);
+            $args[$args__key] = self::utf8_decode($args__value);
         }
-        return utf8_encode(sprintf($format, ...$args));
+        return self::utf8_encode(sprintf($format, ...$args));
     }
 
     public static function is_serialized($data, $weak = false)
