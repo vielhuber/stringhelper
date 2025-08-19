@@ -379,8 +379,8 @@ class __
         }
         $return = $_COOKIE[$cookie_name];
         $return = stripslashes($return);
-        if (self::is_serialized($return)) {
-            $return = unserialize($return);
+        if (self::string_is_json($return)) {
+            $return = json_decode($return);
         }
         return $return;
     }
@@ -403,7 +403,7 @@ class __
             $options['domain'] = '';
         }
         if (is_array($cookie_value)) {
-            $cookie_value = serialize($cookie_value);
+            $cookie_value = json_encode($cookie_value);
         }
         if (PHP_VERSION_ID < 70300) {
             setcookie(
