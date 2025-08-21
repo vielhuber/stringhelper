@@ -193,8 +193,15 @@ ___($_SERVER, 'HTTP_HOST');
 // ...
 ```
 
-Since PHP 7.0 the previous methods are not recommended anymore.
-Simply use `$foo['bar']['baz'] ?? ''` for any (defined or undefined) variable.
+Since php 7.0 the previous methods are not recommended anymore.
+
+Simply use
+
+```php
+$foo['bar']['baz'] ?? '';
+```
+
+for any (defined or undefined) variable.
 
 ### classes
 
