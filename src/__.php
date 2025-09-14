@@ -2203,6 +2203,29 @@ class __
         if ($service === 'gemini') {
             return new ai_gemini($model, $temperature, $api_key, $session_id);
         }
+        if ($service === 'xai') {
+            // compatible with anthropic api
+            return new ai_claude(
+                $model !== null ? $model : 'grok-4',
+                $temperature,
+                $api_key,
+                $session_id,
+                'xai',
+                'https://api.x.ai/v1',
+                'grok-4'
+            );
+        }
+        if ($service === 'deepseek') {
+            // compatible with anthropic api
+            return new ai_claude(
+                $model !== null ? $model : 'deepseek-chat',
+                $temperature,
+                $api_key,
+                $session_id,
+                'deepseek',
+                'https://api.deepseek.com/anthropic'
+            );
+        }
         return null;
     }
 
@@ -6549,6 +6572,9 @@ class __
 
 abstract class ai
 {
+    public $name = null;
+    public $url = null;
+
     public $log = null;
 
     public $model = null;
@@ -6558,19 +6584,50 @@ abstract class ai
     public $session_id = null;
     public static $sessions = [];
 
-    public $assistant_id = null;
-    public $thread_id = null;
+    public $conversation_id = null;
+    public $cleanup_data = [];
 
-    abstract public function __construct($model, $temperature, $api_key, $session_id);
-    abstract public function ask($prompt = null, $files = null);
+    abstract public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null);
+    public function ask($prompt = null, $files = null)
+    {
+        $return = ['success' => false];
+        $max_tries = 3;
+        while ($return['success'] === false && $max_tries > 0) {
+            //$this->log($this, 'ask');
+            $this->log($prompt, 'ask');
+            if ($max_tries < 3) {
+                $this->log('tries left: ' . $max_tries);
+            }
+            $return = $this->askThis($prompt, $files, $max_tries === 3);
+            $max_tries--;
+        }
+        return $return;
+    }
     abstract public function askThis($prompt = null, $files = null, $add_prompt_to_session = true);
+    public function parseJson($msg)
+    {
+        if (strpos(trim($msg), '```json') === 0 || __string_is_json($msg)) {
+            $msg = json_decode(trim(rtrim(ltrim(ltrim(trim($msg), '```json'), '```'), '```')));
+        }
+        return $msg;
+    }
     abstract public function cleanup();
     abstract public function cleanup_all();
-    abstract public function enable_log($filename);
-    abstract public function disable_log();
-    public function log($msg)
+    public function enable_log($filename)
+    {
+        $this->log = $filename;
+    }
+    public function disable_log()
+    {
+        $this->log = null;
+    }
+    public function log($msg, $prefix = null)
     {
         if ($this->log !== null) {
+            if (!is_string($msg)) {
+                $msg = serialize($msg);
+            }
+            $msg = str_replace(["\r\n", "\r", "\n"], ' ', $msg);
             $msg = preg_replace_callback(
                 '/s:(\d+):"(.*?)";/s',
                 function ($matches) {
@@ -6578,24 +6635,43 @@ abstract class ai
                 },
                 $msg
             );
-            file_put_contents(
-                $this->log,
-                date('Y-m-d H:i:s', strtotime('now')) . ' ::: ' . $msg . PHP_EOL,
-                FILE_APPEND
-            );
+            if ($prefix !== null) {
+                $msg = $prefix . ' ::: ' . $msg;
+            }
+            $msg =
+                'ℹ️' .
+                ' ' .
+                $this->name .
+                ' ' .
+                $this->model .
+                ' ' .
+                date('Y-m-d H:i:s', strtotime('now')) .
+                ' ::: ' .
+                $msg .
+                PHP_EOL;
+            file_put_contents($this->log, $msg, FILE_APPEND);
         }
     }
 }
 
 class ai_chatgpt extends ai
 {
-    public function __construct($model, $temperature, $api_key, $session_id)
+    public $name = 'chatgpt';
+    public $url = 'https://api.openai.com/v1';
+
+    public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null)
     {
         if ($model === null) {
-            $model = 'gpt-4o';
+            $model = 'gpt-5';
         }
         if ($temperature === null) {
             $temperature = 1.0;
+        }
+        if ($name !== null) {
+            $this->name = $name;
+        }
+        if ($url !== null) {
+            $this->url = $url;
         }
 
         $this->model = $model;
@@ -6605,87 +6681,33 @@ class ai_chatgpt extends ai
         if (__nx($session_id)) {
             $max_tries = 3;
             while ($max_tries > 0) {
-                $response = __curl(
-                    'https://api.openai.com/v1/assistants',
-                    [
-                        'instructions' =>
-                            'Du bist ein professioneller Assistent. Wenn eine Frage gestellt ist, antwortest Du immer präzise.',
-                        'name' => 'Assistent',
-                        'model' => $model,
-                        'tools' => [['type' => 'file_search']],
-                        'temperature' => $temperature
-                    ],
-                    'POST',
-                    [
-                        'Authorization' => 'Bearer ' . $this->api_key,
-                        'OpenAI-Beta' => 'assistants=v2'
-                    ]
-                );
-                if (__nx(@$response->result) || __nx(@$response->result->id)) {
-                    $max_tries--;
-                    if ($max_tries === 0) {
-                        __exception(__v(@$response->result->error->message, 'error creating assistant'));
-                    }
-                    continue;
-                } else {
-                    break;
-                }
-            }
-            $this->log(str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
-            $this->assistant_id = $response->result->id;
-
-            $max_tries = 3;
-            while ($max_tries > 0) {
-                $response = __curl('https://api.openai.com/v1/threads', [], 'POST', [
-                    'Authorization' => 'Bearer ' . $this->api_key,
-                    'OpenAI-Beta' => 'assistants=v2'
+                $response = __curl($this->url . '/conversations', [], 'POST', [
+                    'Authorization' => 'Bearer ' . $this->api_key
                 ]);
                 if (__nx(@$response->result) || __nx(@$response->result->id)) {
                     $max_tries--;
                     if ($max_tries === 0) {
-                        __exception(__v(@$response->result->error->message, 'error creating thread'));
+                        __exception(__v(@$response->result->error->message, 'error creating conversation'));
                     }
                     continue;
                 } else {
                     break;
                 }
             }
-            $this->log(str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
-            $this->thread_id = $response->result->id;
-
-            $this->session_id = $this->assistant_id . '###' . $this->thread_id;
+            $this->log($response, 'create conversation');
+            $this->conversation_id = $response->result->id;
+            $this->session_id = 'conversation_id=' . $this->conversation_id;
         } else {
-            $this->assistant_id = explode('###', $session_id)[0];
-            $this->thread_id = explode('###', $session_id)[1];
+            $this->conversation_id = explode('=', $session_id)[1];
             $this->session_id = $session_id;
         }
-    }
-
-    public function ask($prompt = null, $files = null)
-    {
-        $return = ['success' => false];
-        $max_tries = 3;
-        while ($return['success'] === false && $max_tries > 0) {
-            $this->log(serialize($this));
-            $this->log('TRIES LEFT: ' . $max_tries);
-            $return = $this->askThis($prompt, $files, $max_tries === 3);
-            $max_tries--;
-        }
-        return $return;
     }
 
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true)
     {
         $return = ['response' => null, 'success' => false];
 
-        if (
-            __nx($this->model) ||
-            __nx($this->temperature) ||
-            __nx($this->api_key) ||
-            __nx($this->session_id) ||
-            __nx($this->assistant_id) ||
-            __nx($this->thread_id)
-        ) {
+        if (__nx($this->model) || __nx($this->api_key) || __nx($this->session_id) || __nx($this->conversation_id)) {
             $return['response'] = 'data missing.';
             return $return;
         }
@@ -6698,7 +6720,8 @@ class ai_chatgpt extends ai
         // trim prompt
         $prompt = __trim_whitespace(__trim_every_line($prompt));
 
-        $args = [
+        $args = [];
+        $args[] = [
             'role' => 'user',
             'content' => $prompt
         ];
@@ -6728,7 +6751,7 @@ class ai_chatgpt extends ai
 
                 $files__value = $files__value_new;
                 $response = __curl(
-                    'https://api.openai.com/v1/files',
+                    $this->url . '/files',
                     [
                         'file' => new \CURLFile($files__value),
                         'purpose' =>
@@ -6748,12 +6771,13 @@ class ai_chatgpt extends ai
                 if (__nx(@$response->result) || __nx(@$response->result->id)) {
                     return $return;
                 }
-                $this->log('1:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
+                $this->log($response, 'create file');
                 $file_ids[] = ['id' => $response->result->id, 'path' => $files__value];
+                $this->cleanup_data[] = ['type' => 'file', 'id' => $response->result->id];
             }
 
-            $args['content'] = [['type' => 'text', 'text' => $prompt]];
-            $args['attachments'] = [];
+            $args[0]['content'] = [];
+            $args[0]['content'][] = ['type' => 'input_text', 'text' => $prompt];
 
             foreach ($file_ids as $file_ids__value) {
                 if (
@@ -6761,208 +6785,95 @@ class ai_chatgpt extends ai
                     stripos($file_ids__value['path'], '.jpeg') !== false ||
                     stripos($file_ids__value['path'], '.png') !== false
                 ) {
-                    $args['content'][] = [
-                        'type' => 'image_file',
-                        'image_file' => [
-                            'file_id' => $file_ids__value['id']
-                        ]
+                    $args[0]['content'][] = [
+                        'type' => 'input_image',
+                        'file_id' => $file_ids__value['id']
                     ];
                 } else {
-                    $args['attachments'][] = [
-                        'file_id' => $file_ids__value['id'],
-                        'tools' => [['type' => 'file_search']]
+                    $args[0]['content'][] = [
+                        'type' => 'input_file',
+                        'file_id' => $file_ids__value['id']
                     ];
                 }
             }
         }
 
-        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id . '/messages', $args, 'POST', [
-            'Authorization' => 'Bearer ' . $this->api_key,
-            'OpenAI-Beta' => 'assistants=v2'
-        ]);
-        $this->log('2:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
-        if (__nx(@$response->result) || __nx(@$response->result->id)) {
-            return $return;
-        }
-        $message_id = $response->result->id;
-
         $response = __curl(
-            'https://api.openai.com/v1/threads/' . $this->thread_id . '/runs',
+            $this->url . '/responses',
             [
-                'assistant_id' => $this->assistant_id
+                'model' => $this->model,
+                'temperature' => $this->temperature,
+                'input' => $args,
+                'conversation' => $this->conversation_id
             ],
             'POST',
             [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'OpenAI-Beta' => 'assistants=v2'
+                'Authorization' => 'Bearer ' . $this->api_key
             ]
         );
-        $this->log('3:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
-        if (__nx(@$response->result) || __nx(@$response->result->id)) {
-            return $return;
-        }
-        $run_id = $response->result->id;
+        $this->log($response, 'response');
 
-        while (1 === 1) {
-            $response = __curl(
-                'https://api.openai.com/v1/threads/' . $this->thread_id . '/runs/' . $run_id,
-                null,
-                'GET',
-                [
-                    'Authorization' => 'Bearer ' . $this->api_key,
-                    'OpenAI-Beta' => 'assistants=v2'
-                ]
-            );
-            $this->log('4:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
-
-            $status = null;
-            if (__x($response) && __x(@$response->result)) {
-                if (__x(@$response->result->status)) {
-                    $status = $response->result->status;
-                }
-                if (
-                    __x(@$response->result->object) &&
-                    $response->result->object == 'list' &&
-                    __x(@$response->result->data) &&
-                    __x(@$response->result->data[0]) &&
-                    __x(@$response->result->data[0]->status)
-                ) {
-                    $status = $response->result->data[0]->status;
+        $output_text = null;
+        if (__x(@$response) && __x(@$response->result) && __x(@$response->result->output)) {
+            $this->cleanup_data[] = ['type' => 'response', 'id' => $response->result->id];
+            foreach ($response->result->output as $output__value) {
+                if (__x(@$output__value->type) && $output__value->type === 'message') {
+                    if (__x(@$output__value->content)) {
+                        foreach ($output__value->content as $content__value) {
+                            if (__x(@$content__value->text)) {
+                                $output_text = $content__value->text;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
-
-            if ($status === 'completed') {
-                break;
-            }
-            if ($status === 'failed') {
-                $return['response'] = $response->result->last_error->code;
-                return $return;
-            }
-            if ($status === 'expired') {
-                return $return;
-            }
-            sleep(1);
         }
 
-        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id . '/messages', null, 'GET', [
-            'Authorization' => 'Bearer ' . $this->api_key,
-            'OpenAI-Beta' => 'assistants=v2'
-        ]);
-        $this->log('5:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
-
-        if (
-            __nx(@$response) ||
-            __nx(@$response->result) ||
-            __nx(@$response->result->data) ||
-            __nx(@$response->result->data[0]) ||
-            __nx(@$response->result->data[0]->content) ||
-            __nx(@$response->result->data[0]->content[0]) ||
-            __nx(@$response->result->data[0]->content[0]->text) ||
-            __nx(@$response->result->data[0]->content[0]->text->value)
-        ) {
-            $this->log('1:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
+        if (__nx(@$output_text)) {
+            $this->log($response, 'failed');
             return $return;
         }
-        $return['response'] = $response->result->data[0]->content[0]->text->value;
+
+        $return['response'] = $output_text;
         $return['success'] = true;
 
         // parse json
-        if (strpos(trim($return['response']), '```json') === 0 || __string_is_json($return['response'])) {
-            $return['response'] = json_decode(
-                trim(rtrim(ltrim(ltrim(trim($return['response']), '```json'), '```'), '```'))
-            );
-        }
+        $return['response'] = $this->parseJson($return['response']);
 
         return $return;
     }
 
     public function cleanup()
     {
-        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id . '/messages', null, 'GET', [
-            'Authorization' => 'Bearer ' . $this->api_key,
-            'OpenAI-Beta' => 'assistants=v2'
-        ]);
-        if (__x($response) && __x($response->result) && __x($response->result->data)) {
-            foreach ($response->result->data as $data__value) {
-                if (__x($data__value->content)) {
-                    foreach ($data__value->content as $content__value) {
-                        if (
-                            $content__value->type === 'image_file' &&
-                            __x($content__value->image_file) &&
-                            __x($content__value->image_file->file_id)
-                        ) {
-                            $response2 = __curl(
-                                'https://api.openai.com/v1/files/' . $content__value->image_file->file_id,
-                                null,
-                                'DELETE',
-                                [
-                                    'Authorization' => 'Bearer ' . $this->api_key
-                                ]
-                            );
-                        }
-                    }
-                }
-                if (__x($data__value->attachments)) {
-                    foreach ($data__value->attachments as $attachments__value) {
-                        if (__x($attachments__value->file_id)) {
-                            $response2 = __curl(
-                                'https://api.openai.com/v1/files/' . $attachments__value->file_id,
-                                null,
-                                'DELETE',
-                                [
-                                    'Authorization' => 'Bearer ' . $this->api_key
-                                ]
-                            );
-                        }
-                    }
-                }
+        foreach ($this->cleanup_data as $cleanup_data__value) {
+            if ($cleanup_data__value['type'] === 'file') {
+                $response = __curl($this->url . '/files/' . $cleanup_data__value['id'], null, 'DELETE', [
+                    'Authorization' => 'Bearer ' . $this->api_key
+                ]);
+            }
+            if ($cleanup_data__value['type'] === 'response') {
+                $response = __curl($this->url . '/responses/' . $cleanup_data__value['id'], null, 'DELETE', [
+                    'Authorization' => 'Bearer ' . $this->api_key
+                ]);
             }
         }
-
-        $response = __curl('https://api.openai.com/v1/threads/' . $this->thread_id, null, 'DELETE', [
-            'Authorization' => 'Bearer ' . $this->api_key,
-            'OpenAI-Beta' => 'assistants=v2'
-        ]);
-
-        $response = __curl('https://api.openai.com/v1/assistants/' . $this->assistant_id, null, 'DELETE', [
-            'Authorization' => 'Bearer ' . $this->api_key,
-            'OpenAI-Beta' => 'assistants=v2'
+        $response = __curl($this->url . '/conversations/' . $this->conversation_id, null, 'DELETE', [
+            'Authorization' => 'Bearer ' . $this->api_key
         ]);
     }
 
     public function cleanup_all()
     {
         while (1 === 1) {
-            $response = __curl('https://api.openai.com/v1/assistants', ['limit' => 100], 'GET', [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'OpenAI-Beta' => 'assistants=v2'
+            $response = __curl($this->url . '/files', ['limit' => 10000], 'GET', [
+                'Authorization' => 'Bearer ' . $this->api_key
             ]);
             if (__x($response) && __x($response->result) && __x($response->result->data)) {
                 foreach ($response->result->data as $res__value) {
                     if (__x(@$res__value->id)) {
-                        $response2 = __curl('https://api.openai.com/v1/assistants/' . $res__value->id, null, 'DELETE', [
-                            'Authorization' => 'Bearer ' . $this->api_key,
-                            'OpenAI-Beta' => 'assistants=v2'
-                        ]);
-                    }
-                }
-                $this->log('deleted ' . count($response->result->data) . ' assistants');
-            } else {
-                break;
-            }
-        }
-
-        while (1 === 1) {
-            $response = __curl('https://api.openai.com/v1/files', ['limit' => 10000], 'GET', [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'OpenAI-Beta' => 'assistants=v2'
-            ]);
-            if (__x($response) && __x($response->result) && __x($response->result->data)) {
-                foreach ($response->result->data as $res__value) {
-                    if (__x(@$res__value->id)) {
-                        $response2 = __curl('https://api.openai.com/v1/files/' . $res__value->id, null, 'DELETE', [
-                            'Authorization' => 'Bearer ' . $this->api_key,
-                            'OpenAI-Beta' => 'assistants=v2'
+                        $response2 = __curl($this->url . '/files/' . $res__value->id, null, 'DELETE', [
+                            'Authorization' => 'Bearer ' . $this->api_key
                         ]);
                     }
                 }
@@ -6972,27 +6883,26 @@ class ai_chatgpt extends ai
             }
         }
     }
-
-    public function enable_log($filename)
-    {
-        $this->log = $filename;
-    }
-
-    public function disable_log()
-    {
-        $this->log = null;
-    }
 }
 
 class ai_claude extends ai
 {
-    public function __construct($model, $temperature, $api_key, $session_id)
+    public $name = 'claude';
+    public $url = 'https://api.anthropic.com/v1';
+
+    public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null)
     {
         if ($model === null) {
-            $model = 'claude-3-5-sonnet-20240620';
+            $model = 'claude-opus-4-1';
         }
         if ($temperature === null) {
             $temperature = 1.0;
+        }
+        if ($name !== null) {
+            $this->name = $name;
+        }
+        if ($url !== null) {
+            $this->url = $url;
         }
 
         $this->model = $model;
@@ -7008,24 +6918,11 @@ class ai_claude extends ai
         }
     }
 
-    public function ask($prompt = null, $files = null)
-    {
-        $return = ['success' => false];
-        $max_tries = 3;
-        while ($return['success'] === false && $max_tries > 0) {
-            $this->log(serialize($this));
-            $this->log('TRIES LEFT: ' . $max_tries);
-            $return = $this->askThis($prompt, $files, $max_tries === 3);
-            $max_tries--;
-        }
-        return $return;
-    }
-
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true)
     {
         $return = ['response' => null, 'success' => false];
 
-        if (__nx($this->model) || __nx($this->temperature) || __nx($this->api_key) || __nx($this->session_id)) {
+        if (__nx($this->model) || __nx($this->api_key) || __nx($this->session_id)) {
             $return['response'] = 'data missing.';
             return $return;
         }
@@ -7085,7 +6982,7 @@ class ai_claude extends ai
         }
 
         $response = __curl(
-            'https://api.anthropic.com/v1/messages',
+            $this->url . '/messages',
             [
                 'model' => $this->model,
                 'max_tokens' => 1024,
@@ -7099,16 +6996,20 @@ class ai_claude extends ai
             ]
         );
 
-        $this->log('5:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize(self::$sessions[$this->session_id])));
+        $this->log(self::$sessions[$this->session_id], 'response');
 
-        if (
-            __nx(@$response) ||
-            __nx(@$response->result) ||
-            __nx(@$response->result->content) ||
-            __nx(@$response->result->content[0]) ||
-            __nx(@$response->result->content[0]->text)
-        ) {
-            $this->log('2:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
+        $output_text = null;
+        if (__x(@$response) && __x(@$response->result) && __x(@$response->result->content)) {
+            foreach ($response->result->content as $content__value) {
+                if (__x(@$content__value->text)) {
+                    $output_text = $content__value->text;
+                    break;
+                }
+            }
+        }
+
+        if (__nx(@$output_text)) {
+            $this->log($response, 'failed');
             if (
                 __x(@$response) &&
                 __x(@$response->result) &&
@@ -7118,12 +7019,12 @@ class ai_claude extends ai
                 __x(@$response->result->type->error->type) &&
                 @$response->result->type->error->type === 'overloaded_error'
             ) {
-                $this->log('2:: overload detected. pausing...');
+                $this->log('overload detected. pausing...');
                 sleep(5);
             }
             return $return;
         }
-        $return['response'] = $response->result->content[0]->text;
+        $return['response'] = $output_text;
         $return['success'] = true;
 
         self::$sessions[$this->session_id][] = [
@@ -7132,11 +7033,7 @@ class ai_claude extends ai
         ];
 
         // parse json
-        if (strpos(trim($return['response']), '```json') === 0 || __string_is_json($return['response'])) {
-            $return['response'] = json_decode(
-                trim(rtrim(ltrim(ltrim(trim($return['response']), '```json'), '```'), '```'))
-            );
-        }
+        $return['response'] = $this->parseJson($return['response']);
 
         return $return;
     }
@@ -7150,27 +7047,26 @@ class ai_claude extends ai
     {
         $this->cleanup();
     }
-
-    public function enable_log($filename)
-    {
-        $this->log = $filename;
-    }
-
-    public function disable_log()
-    {
-        $this->log = null;
-    }
 }
 
 class ai_gemini extends ai
 {
-    public function __construct($model, $temperature, $api_key, $session_id)
+    public $name = 'gemini';
+    public $url = 'https://generativelanguage.googleapis.com/v1beta';
+
+    public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null)
     {
         if ($model === null) {
-            $model = 'gemini-1.5-flash';
+            $model = 'gemini-2.5-pro';
         }
         if ($temperature === null) {
             $temperature = 1.0;
+        }
+        if ($name !== null) {
+            $this->name = $name;
+        }
+        if ($url !== null) {
+            $this->url = $url;
         }
 
         $this->model = $model;
@@ -7186,24 +7082,11 @@ class ai_gemini extends ai
         }
     }
 
-    public function ask($prompt = null, $files = null)
-    {
-        $return = ['success' => false];
-        $max_tries = 3;
-        while ($return['success'] === false && $max_tries > 0) {
-            $this->log(serialize($this));
-            $this->log('TRIES LEFT: ' . $max_tries);
-            $return = $this->askThis($prompt, $files, $max_tries === 3);
-            $max_tries--;
-        }
-        return $return;
-    }
-
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true)
     {
         $return = ['response' => null, 'success' => false];
 
-        if (__nx($this->model) || __nx($this->temperature) || __nx($this->api_key) || __nx($this->session_id)) {
+        if (__nx($this->model) || __nx($this->api_key) || __nx($this->session_id)) {
             $return['response'] = 'data missing.';
             return $return;
         }
@@ -7243,10 +7126,7 @@ class ai_gemini extends ai
         }
 
         $response = __curl(
-            'https://generativelanguage.googleapis.com/v1beta/models/' .
-                $this->model .
-                ':generateContent?key=' .
-                $this->api_key,
+            $this->url . '/models/' . $this->model . ':generateContent?key=' . $this->api_key,
             [
                 'contents' => self::$sessions[$this->session_id],
                 'generationConfig' => [
@@ -7257,22 +7137,27 @@ class ai_gemini extends ai
             null
         );
 
-        $this->log('5:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize(self::$sessions[$this->session_id])));
+        $this->log(self::$sessions[$this->session_id], 'response');
 
-        if (
-            __nx(@$response) ||
-            __nx(@$response->result) ||
-            __nx(@$response->result->candidates) ||
-            __nx(@$response->result->candidates[0]) ||
-            __nx(@$response->result->candidates[0]->content) ||
-            __nx(@$response->result->candidates[0]->content->parts) ||
-            __nx(@$response->result->candidates[0]->content->parts[0]) ||
-            __nx(@$response->result->candidates[0]->content->parts[0]->text)
-        ) {
-            $this->log('3:: ' . str_replace(["\r\n", "\r", "\n"], ' ', serialize($response)));
+        $output_text = null;
+        if (__x(@$response) && __x(@$response->result) && __x(@$response->result->candidates)) {
+            foreach ($response->result->candidates as $candidates__value) {
+                if (__x(@$candidates__value->content) && __x(@$candidates__value->content->parts)) {
+                    foreach ($candidates__value->content->parts as $parts__value) {
+                        if (__x(@$parts__value->text)) {
+                            $output_text = $parts__value->text;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (__nx($output_text)) {
+            $this->log($response, 'failed');
             return $return;
         }
-        $return['response'] = $response->result->candidates[0]->content->parts[0]->text;
+        $return['response'] = $output_text;
         $return['success'] = true;
 
         self::$sessions[$this->session_id][] = [
@@ -7281,11 +7166,7 @@ class ai_gemini extends ai
         ];
 
         // parse json
-        if (strpos(trim($return['response']), '```json') === 0 || __string_is_json($return['response'])) {
-            $return['response'] = json_decode(
-                trim(rtrim(ltrim(ltrim(trim($return['response']), '```json'), '```'), '```'))
-            );
-        }
+        $return['response'] = $this->parseJson($return['response']);
 
         return $return;
     }
@@ -7298,15 +7179,5 @@ class ai_gemini extends ai
     public function cleanup_all()
     {
         $this->cleanup();
-    }
-
-    public function enable_log($filename)
-    {
-        $this->log = $filename;
-    }
-
-    public function disable_log()
-    {
-        $this->log = null;
     }
 }

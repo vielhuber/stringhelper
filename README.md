@@ -535,9 +535,9 @@ __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', '*
 
 // work conveniently with all major ai apis
 $ai = __ai(
-    service: 'chatgpt', // chatgpt|claude|gemini
-    model: 'gpt-4o', // gpt-4o|claude-sonnet-4-20250514|gemini-2.5-flash-preview-05-20|...
-    temperature: 0.7, // controls the randomness of the text generated
+    service: 'chatgpt', // chatgpt|gemini|claude|xai|deepseek
+    model: 'gpt-5', // gpt-5|gemini-2.5-pro|claude-opus-4-1|grok-4|deepseek-chat|...
+    temperature: 1.0, // controls the randomness of the text generated
     api_key: '**API Key**'
 );
 $ai->ask('Wer wurde 2018 Fußball-Weltmeister?');
