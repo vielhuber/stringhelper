@@ -989,18 +989,18 @@ house'
     function test__ai_all()
     {
         $stats = [];
-        $run_count = 2;
+        $run_count = 3;
         for ($i = 0; $i < $run_count; $i++) {
-            //$this->test__ai_chatgpt($stats);
+            $this->test__ai_chatgpt($stats);
         }
         for ($i = 0; $i < $run_count; $i++) {
-            //$this->test__ai_claude($stats);
+            $this->test__ai_claude($stats);
         }
         for ($i = 0; $i < $run_count; $i++) {
-            //$this->test__ai_gemini($stats);
+            $this->test__ai_gemini($stats);
         }
         for ($i = 0; $i < $run_count; $i++) {
-            //$this->test__ai_xai($stats);
+            $this->test__ai_xai($stats);
         }
         for ($i = 0; $i < $run_count; $i++) {
             $this->test__ai_deepseek($stats);
