@@ -553,6 +553,15 @@ $ai = __ai(
 );
 $ai->ask('Was habe ich vorher gefragt?');
   // ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true]
+
+$ai->add_mcp('mcp-1', [
+    'url' => 'https://modelcontextprotocol.io/mcp',
+    'authorization_token' = '...'
+])
+$ai->ask('Die lautet die aktuelle Protokollversion von MCP?')
+  // ['response' => '2025-06-18', 'success' => true]
+$ai->remove_mcp('mcp-1');
+
 $ai->cleanup(); // (remotely) deletes the data of the current session
 $ai->cleanup_all(); // (remotely) deletes all data
 $ai->enable_log('output.log');

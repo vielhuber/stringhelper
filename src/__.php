@@ -6580,6 +6580,7 @@ abstract class ai
     public $model = null;
     public $temperature = null;
     public $api_key = null;
+    public $mcp = [];
 
     public $session_id = null;
     public static $sessions = [];
@@ -6613,6 +6614,16 @@ abstract class ai
     }
     abstract public function cleanup();
     abstract public function cleanup_all();
+    public function add_mcp($name, $args)
+    {
+        $this->mcp[$name] = $args;
+    }
+    public function remove_mcp($name)
+    {
+        if (array_key_exists($name, $this->mcp)) {
+            unset($this->mcp[$name]);
+        }
+    }
     public function enable_log($filename)
     {
         $this->log = $filename;
@@ -6981,22 +6992,32 @@ class ai_claude extends ai
             }
         }
 
-        $response = __curl(
-            $this->url . '/messages',
-            [
-                'model' => $this->model,
-                'max_tokens' => 1024,
-                'messages' => self::$sessions[$this->session_id],
-                'temperature' => $this->temperature
-            ],
-            'POST',
-            [
-                'x-api-key' => $this->api_key,
-                'anthropic-version' => '2023-06-01'
-            ]
-        );
+        $args = [
+            'model' => $this->model,
+            'max_tokens' => 1024,
+            'messages' => self::$sessions[$this->session_id],
+            'temperature' => $this->temperature
+        ];
+        if (!empty($this->mcp)) {
+            $args['mcp_servers'] = [];
+            foreach ($this->mcp as $mcp__key => $mcp__value) {
+                if (!isset($mcp__value['type'])) {
+                    $mcp__value['type'] = 'url';
+                }
+                if (!isset($mcp__value['name'])) {
+                    $mcp__value['name'] = $mcp__key;
+                }
+                $args['mcp_servers'][] = $mcp__value;
+            }
+        }
 
-        $this->log(self::$sessions[$this->session_id], 'response');
+        $response = __curl($this->url . '/messages', $args, 'POST', [
+            'x-api-key' => $this->api_key,
+            'anthropic-version' => '2023-06-01',
+            'anthropic-beta' => 'mcp-client-2025-04-04'
+        ]);
+
+        $this->log([$response, self::$sessions[$this->session_id]], 'response');
 
         $output_text = null;
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->content)) {
@@ -7137,7 +7158,7 @@ class ai_gemini extends ai
             null
         );
 
-        $this->log(self::$sessions[$this->session_id], 'response');
+        $this->log([$response, self::$sessions[$this->session_id]], 'response');
 
         $output_text = null;
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->candidates)) {

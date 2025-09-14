@@ -1022,14 +1022,7 @@ house'
     {
         $this->ai_test_prepare(
             'chatgpt',
-            [
-                //'gpt-5',
-                //'gpt-5-mini',
-                'gpt-5-nano'
-                //gpt-4.1',
-                //'gpt-4o',
-                //'gpt-4o-mini'
-            ],
+            ['gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'gpt-4.1', 'gpt-4o', 'gpt-4o-mini'],
             @$_SERVER['OPENAI_API_KEY'],
             $stats
         );
@@ -1040,11 +1033,11 @@ house'
         $this->ai_test_prepare(
             'claude',
             [
-                //'claude-opus-4-1',
-                //'claude-opus-4-0',
-                'claude-sonnet-4-0'
-                //'claude-3-7-sonnet-latest',
-                //'claude-3-5-haiku-latest'
+                'claude-opus-4-1',
+                'claude-opus-4-0',
+                'claude-sonnet-4-0',
+                'claude-3-7-sonnet-latest',
+                'claude-3-5-haiku-latest'
             ],
             @$_SERVER['CLAUDE_API_KEY'],
             $stats
@@ -1056,11 +1049,11 @@ house'
         $this->ai_test_prepare(
             'gemini',
             [
-                //'gemini-2.5-pro',
-                'gemini-2.5-flash'
-                //'gemini-2.5-flash-lite',
-                //'gemini-2.0-flash',
-                //'gemini-2.0-flash-lite'
+                'gemini-2.5-pro',
+                'gemini-2.5-flash',
+                'gemini-2.5-flash-lite',
+                'gemini-2.0-flash',
+                'gemini-2.0-flash-lite'
             ],
             @$_SERVER['GOOGLE_GEMINI_API_KEY'],
             $stats
@@ -1071,12 +1064,7 @@ house'
     {
         $this->ai_test_prepare(
             'xai',
-            [
-                //'grok-code-fast-1',
-                'grok-4'
-                //'grok-3',
-                //'grok-3-mini'
-            ],
+            ['grok-code-fast-1', 'grok-4', 'grok-3', 'grok-3-mini'],
             @$_SERVER['XAI_API_KEY'],
             $stats
         );
@@ -1086,10 +1074,7 @@ house'
     {
         $this->ai_test_prepare(
             'deepseek',
-            [
-                //'deepseek-reasoner',
-                'deepseek-chat'
-            ],
+            ['deepseek-reasoner', 'deepseek-chat'],
             @$_SERVER['DEEPSEEK_API_KEY'],
             $stats
         );
@@ -1118,52 +1103,63 @@ house'
         $ai = __ai($service, $model, 1.0, $api_key);
         $ai->enable_log('tests/ai.log');
 
-        $this->log('#1');
-        $return = $ai->ask('Wer wurde 2018 Fußball-Weltmeister? Antworte bitte kurz.');
-        //$this->log($return);
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
-        );
+        $supported = true;
+        if ($supported === true) {
+            $return = $ai->ask('Wer wurde 2018 Fußball-Weltmeister? Antworte bitte kurz.');
+            //$this->log($return);
+            $this->assertThat(
+                $return['response'],
+                $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
+            );
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #1 (simple)');
 
-        $this->log('#2');
-        $return = $ai->ask('Was habe ich vorher gefragt?');
-        //$this->log($return);
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr(
-                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Frankreich'),
-                $this->stringContains('französisch'),
-                $this->stringContains('Weltmeister')
-            )
-        );
+        $supported = true;
+        if ($supported === true) {
+            $return = $ai->ask('Was habe ich vorher gefragt?');
+            //$this->log($return);
+            $this->assertThat(
+                $return['response'],
+                $this->logicalOr(
+                    $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                    $this->stringContains('Frankreich'),
+                    $this->stringContains('französisch'),
+                    $this->stringContains('Weltmeister')
+                )
+            );
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #2 (simple)');
 
-        $this->log('#3');
-        $return = $ai->ask('Welchen Satz hast Du exakt zuvor geschrieben?');
-        //$this->log($return);
-        $this->assertThat(
-            $return['response'],
-            $this->logicalOr(
-                $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
-                $this->stringContains('Frankreich'),
-                $this->stringContains('französisch'),
-                $this->stringContains('Weltmeister')
-            )
-        );
+        $supported = true;
+        if ($supported === true) {
+            $return = $ai->ask('Welchen Satz hast Du exakt zuvor geschrieben?');
+            //$this->log($return);
+            $this->assertThat(
+                $return['response'],
+                $this->logicalOr(
+                    $this->stringContains('Wer wurde 2018 Fußball-Weltmeister?'),
+                    $this->stringContains('Frankreich'),
+                    $this->stringContains('französisch'),
+                    $this->stringContains('Weltmeister')
+                )
+            );
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #3 (memory)');
 
-        $this->log('#4');
-        $return = $ai->ask('Ich heiße David mit Vornamen. Bitte merk Dir das!');
-        //$this->log($return);
-        $ai = __ai($service, null, null, $api_key, $ai->session_id);
-        $ai->enable_log('tests/ai.log');
-        $return = $ai->ask('Wie heiße ich mit Vornamen?');
-        //$this->log($return);
-        $this->assertStringContainsString('David', $return['response']);
+        $supported = true;
+        if ($supported === true) {
+            $return = $ai->ask('Ich heiße David mit Vornamen. Bitte merk Dir das!');
+            //$this->log($return);
+            $ai = __ai($service, $model, 1.0, $api_key, $ai->session_id);
+            $ai->enable_log('tests/ai.log');
+            $return = $ai->ask('Wie heiße ich mit Vornamen?');
+            //$this->log($return);
+            $this->assertStringContainsString('David', $return['response']);
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #4 (memory)');
 
-        // image / document support only for some services
-        if (!in_array($service, ['deepseek'])) {
-            $this->log('#5');
+        $supported = in_array($service, ['chatgpt', 'claude', 'gemini', 'xai']);
+        if ($supported === true) {
             $return = $ai->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
             $this->assertThat(
                 $return['response'],
@@ -1175,8 +1171,11 @@ house'
                     $this->stringContains('Tulipan')
                 )
             );
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #5 (image)');
 
-            $this->log('#5');
+        $supported = in_array($service, ['chatgpt', 'claude', 'gemini', 'xai']);
+        if ($supported === true) {
             $return = $ai->ask('Welches Bild habe ich im Gesprächsverlauf hochgeladen?');
             $this->assertThat(
                 $return['response'],
@@ -1188,18 +1187,24 @@ house'
                     $this->stringContains('Tulipan')
                 )
             );
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #6 (image)');
 
-            $this->log('#6');
+        $supported = in_array($service, ['chatgpt', 'claude', 'gemini']);
+        if ($supported === true) {
             $return = $ai->ask(
                 'Wie lautet die Kundennummer (Key: customer_nr)? Wann wurde der Brief verfasst (Key: date)? Von wem wurde der Brief verfasst (Key: author)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
                 'tests/assets/lorem.pdf'
             );
-            $this->log($return);
+            //$this->log($return);
             $this->assertContains($return['response']->customer_nr ?? '', ['F123465789']);
             $this->assertContains($return['response']->date ?? '', ['31. Oktober 2018', 'Oktober 2018']);
             $this->assertContains($return['response']->author ?? '', ['David Vielhuber']);
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #7 (pdf)');
 
-            $this->log('#7');
+        $supported = in_array($service, ['chatgpt', 'claude', 'gemini']);
+        if ($supported === true) {
             $return = $ai->ask(
                 'Wie lautet die Kundennummer (Key: customer_nr)? Wie lautet die Zählernummer (Key: meter_number)? Welche Blume ist auf dem Bild zu sehen (Key: flower)? Bitte antworte nur im JSON-Format. Wenn Du unsicher bist, gib den wahrscheinlichsten Wert zurück. Wenn Du einen Wert gar nicht findest, gib einen leeren String zurück.',
                 [
@@ -1209,11 +1214,25 @@ house'
                     'tests/assets/not_existing.jpg'
                 ]
             );
-            $this->log($return);
+            //$this->log($return);
             $this->assertContains($return['response']->customer_nr ?? '', ['F123465789']);
             $this->assertContains($return['response']->meter_number ?? '', ['123456789']);
             $this->assertContains($return['response']->flower ?? '', ['Tulpe', 'Tulpen', 'Tulip', 'Tulipe', 'Tulipan']);
         }
+        $this->log(($supported ? '✅' : '❌') . ' #8 (image+pdf)');
+
+        $supported = in_array($service, ['claude']);
+        if ($supported === true) {
+            $ai->add_mcp('mcp-1', [
+                'url' => 'https://modelcontextprotocol.io/mcp'
+            ]);
+            $return = $ai->ask(
+                'Die lautet die aktuelle Protokollversion von MCP? Antworte ausschließlich mit einem Datum.'
+            );
+            $this->assertContains($return['response'] ?? '', ['2025-06-18', '18.06.2025']);
+            $ai->remove_mcp('mcp-1');
+        }
+        $this->log(($supported ? '✅' : '❌') . ' #9 (mcp)');
 
         $ai->cleanup();
     }
