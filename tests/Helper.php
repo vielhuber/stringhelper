@@ -19,9 +19,6 @@ require_once '../src/functions.php';
         width:100%;
         height:100%;
     }
-	body
-    {
-    }
     textarea
     {
         font-size:9px;
@@ -61,6 +58,7 @@ $items = [
     '$_GET[\'undefined\']' => 'error',
     '@$_GET[\'undefined\']' => @$_GET['undefined']
 ];
+echo '<h2>existence matrix</h2>';
 echo '<textarea>';
 function outputRow($input)
 {
@@ -184,6 +182,15 @@ function outputRow($input)
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
+    } elseif (!$input) {
+        echo 'true';
+    } else {
+        echo 'false';
+    }
+    echo '</sub>';
+    echo ' | <sub>';
+    if ($input === 'error') {
+        echo 'error';
     } else {
         echo $input ? 'true' : 'false';
     }
@@ -201,7 +208,15 @@ function outputRow($input)
     echo ($input ?? true) === false ? 'true' : 'false';
     echo '</sub>';
     echo ' | <sub>';
+    echo ($input ?? '') === '' ? 'true' : 'false';
+    echo '</sub>';
+    echo ' | <sub>';
+    echo ($input ?? '') == '' ? 'true' : 'false';
+    echo '</sub>';
+    echo ' | <sub>';
     if ($input === 'error') {
+        echo 'error';
+    } elseif (!is_countable($input)) {
         echo 'error';
     } elseif (@count($input) > 0) {
         echo 'true';
@@ -230,27 +245,30 @@ function outputRow($input)
     echo ' |';
 }
 echo '| ';
-echo '| <sub>__x()</sub> ';
-echo '| <sub>__true()</sub> ';
-echo '| <sub>__false()</sub> ';
-echo '| <sub>!== null</sub> ';
-echo '| <sub>!= null</sub> ';
-echo '| <sub>!== false</sub> ';
-echo '| <sub>!= false</sub> ';
-echo '| <sub>=== true</sub> ';
-echo '| <sub>== true</sub> ';
-echo '| <sub>!is_null()</sub> ';
-echo '| <sub>isset()</sub> ';
-echo '| <sub>!empty()</sub> ';
-echo '| <sub>if/else</sub> ';
-echo '| <sub>?true:false</sub> ';
-echo '| <sub>(??true) === true</sub> ';
-echo '| <sub>(??true) == true</sub> ';
-echo '| <sub>(??true) === false</sub> ';
-echo '| <sub>(??true) == false</sub> ';
-echo '| <sub>count() > 0</sub> ';
-echo '| <sub>!= \'\'</sub> ';
-echo '| <sub>!== \'\'</sub> ';
+echo '| <sub>__x($)</sub> ';
+echo '| <sub>__true($)</sub> ';
+echo '| <sub>__false($)</sub> ';
+echo '| <sub>$ !== null</sub> ';
+echo '| <sub>$ != null</sub> ';
+echo '| <sub>$ !== false</sub> ';
+echo '| <sub>$ != false</sub> ';
+echo '| <sub>$ === true</sub> ';
+echo '| <sub>$ == true</sub> ';
+echo '| <sub>!is_null($)</sub> ';
+echo '| <sub>isset($)</sub> ';
+echo '| <sub>!empty($)</sub> ';
+echo '| <sub>if($)</sub> ';
+echo '| <sub>if(!$)</sub> ';
+echo '| <sub>($)?true:false</sub> ';
+echo '| <sub>($??true) === true</sub> ';
+echo '| <sub>($??true) == true</sub> ';
+echo '| <sub>($??true) === false</sub> ';
+echo '| <sub>($??true) == false</sub> ';
+echo '| <sub>($??\'\') === \'\'</sub> ';
+echo '| <sub>($??\'\') == \'\'</sub> ';
+echo '| <sub>count($) > 0</sub> ';
+echo '| <sub>$ != \'\'</sub> ';
+echo '| <sub>$ !== \'\'</sub> ';
 echo '|';
 echo PHP_EOL;
 echo '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
@@ -261,6 +279,7 @@ foreach ($items as $items__key => $items__value) {
 }
 echo '</textarea>';
 
+echo '<h2>loose comparison matrix</h2>';
 echo '<textarea>';
 echo '| <sub>==</sub> ';
 foreach ($items as $items__key => $items__value) {

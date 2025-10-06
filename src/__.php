@@ -21,12 +21,15 @@ class __
         if (is_array($input) && count($input) === 1 && array_values($input)[0] instanceof \__empty_helper) {
             return false;
         }
+        /** @disregard */
         if ($input instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0) {
             return false;
         }
+        /** @disregard */
         if ($input instanceof \Illuminate\Database\Eloquent\Collection && $input->count() === 0) {
             return false;
         }
+        /** @disregard */
         if ($input instanceof \Illuminate\Support\Collection && $input->count() === 0) {
             return false;
         }
@@ -65,12 +68,15 @@ class __
         if (is_array($input) && count($input) === 1 && array_values($input)[0] instanceof \__empty_helper) {
             return false;
         }
+        /** @disregard */
         if ($input instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo && $input->count() === 0) {
             return false;
         }
+        /** @disregard */
         if ($input instanceof \Illuminate\Database\Eloquent\Collection && $input->count() === 0) {
             return false;
         }
+        /** @disregard */
         if ($input instanceof \Illuminate\Support\Collection && $input->count() === 0) {
             return false;
         }
@@ -149,6 +155,7 @@ class __
 
     public static function x_all(...$args)
     {
+        /** @disregard */
         if (self::x(@$args[0]) && $args[0] instanceof \Illuminate\Support\Collection) {
             $args[0] = $args[0]->toArray();
         }
@@ -170,6 +177,7 @@ class __
 
     public static function x_one(...$args)
     {
+        /** @disregard */
         if (self::x(@$args[0]) && $args[0] instanceof \Illuminate\Support\Collection) {
             $args[0] = $args[0]->toArray();
         }
@@ -186,6 +194,7 @@ class __
 
     public static function true_one(...$args)
     {
+        /** @disregard */
         if (self::x(@$args[0]) && $args[0] instanceof \Illuminate\Support\Collection) {
             $args[0] = $args[0]->toArray();
         }
@@ -202,6 +211,7 @@ class __
 
     public static function false_one(...$args)
     {
+        /** @disregard */
         if (self::x(@$args[0]) && $args[0] instanceof \Illuminate\Support\Collection) {
             $args[0] = $args[0]->toArray();
         }
@@ -218,6 +228,7 @@ class __
 
     public static function true_all(...$args)
     {
+        /** @disregard */
         if (self::x(@$args[0]) && $args[0] instanceof \Illuminate\Support\Collection) {
             $args[0] = $args[0]->toArray();
         }
@@ -234,6 +245,7 @@ class __
 
     public static function false_all(...$args)
     {
+        /** @disregard */
         if (self::x(@$args[0]) && $args[0] instanceof \Illuminate\Support\Collection) {
             $args[0] = $args[0]->toArray();
         }
@@ -3063,6 +3075,7 @@ class __
 
     public static function remove_empty($a, $additional = null, $callback = null)
     {
+        /** @disregard */
         if (
             ($a instanceof \Illuminate\Database\Eloquent\Collection || $a instanceof \Illuminate\Support\Collection) &&
             $a->count() > 0
@@ -3262,6 +3275,7 @@ class __
         if (is_object($a) && !empty((array) $a)) {
             return true;
         }
+        /** @disregard */
         if (
             ($a instanceof \Illuminate\Database\Eloquent\Collection || $a instanceof \Illuminate\Support\Collection) &&
             $a->count() > 0
@@ -6141,6 +6155,7 @@ class __
         if (!isset($info['APP13'])) {
             // this works and does not change the compression
             if (extension_loaded('imagick')) {
+                /** @disregard */
                 $img = new \Imagick($filename);
                 $profiles = $img->getImageProfiles('icc', true);
                 $img->stripImage();
@@ -6824,7 +6839,7 @@ class ai_chatgpt extends ai
         );
         $this->log($response, 'response');
 
-        $output_text = null;
+        $output_text = '';
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->output)) {
             $this->cleanup_data[] = ['type' => 'response', 'id' => $response->result->id];
             foreach ($response->result->output as $output__value) {
@@ -6832,8 +6847,10 @@ class ai_chatgpt extends ai
                     if (__x(@$output__value->content)) {
                         foreach ($output__value->content as $content__value) {
                             if (__x(@$content__value->text)) {
-                                $output_text = $content__value->text;
-                                break;
+                                if (__x($output_text)) {
+                                    $output_text .= PHP_EOL . '---' . PHP_EOL;
+                                }
+                                $output_text .= $content__value->text;
                             }
                         }
                     }
@@ -7019,14 +7036,51 @@ class ai_claude extends ai
 
         $this->log([$response, self::$sessions[$this->session_id]], 'response');
 
-        $output_text = null;
+        $output_text = '';
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->content)) {
             foreach ($response->result->content as $content__value) {
                 if (__x(@$content__value->text)) {
-                    $output_text = $content__value->text;
-                    break;
+                    if (__x($output_text)) {
+                        $output_text .= PHP_EOL . '---' . PHP_EOL;
+                    }
+                    $output_text .= $content__value->text;
                 }
             }
+        }
+
+        // handle stop reason
+        if (
+            __x(@$response) &&
+            __x(@$response->result) &&
+            __x(@$response->result->stop_reason) &&
+            $response->result->stop_reason === 'pause_turn'
+        ) {
+            $this->log('pause_turn detected');
+            $args['messages'][] = [
+                'role' => 'assistant',
+                'content' => $response->result->content
+            ];
+            $response_continue = __curl($this->url . '/messages', $args, 'POST', [
+                'x-api-key' => $this->api_key,
+                'anthropic-version' => '2023-06-01',
+                'anthropic-beta' => 'mcp-client-2025-04-04'
+            ]);
+            $this->log([$response_continue, $args], 'continuation response');
+            if (
+                __x(@$response_continue) &&
+                __x(@$response_continue->result) &&
+                __x(@$response_continue->result->content)
+            ) {
+                foreach ($response_continue->result->content as $content__value) {
+                    if (__x(@$content__value->text)) {
+                        if (__x($output_text)) {
+                            $output_text .= PHP_EOL . '---' . PHP_EOL;
+                        }
+                        $output_text .= $content__value->text;
+                    }
+                }
+            }
+            $response = $response_continue;
         }
 
         if (__nx(@$output_text)) {
@@ -7036,9 +7090,9 @@ class ai_claude extends ai
                 __x(@$response->result) &&
                 __x(@$response->result->type) &&
                 @$response->result->type === 'error' &&
-                __x(@$response->result->type->error) &&
-                __x(@$response->result->type->error->type) &&
-                @$response->result->type->error->type === 'overloaded_error'
+                __x(@$response->result->error) &&
+                __x(@$response->result->error->type) &&
+                @$response->result->error->type === 'overloaded_error'
             ) {
                 $this->log('overload detected. pausing...');
                 sleep(5);
@@ -7160,14 +7214,16 @@ class ai_gemini extends ai
 
         $this->log([$response, self::$sessions[$this->session_id]], 'response');
 
-        $output_text = null;
+        $output_text = '';
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->candidates)) {
             foreach ($response->result->candidates as $candidates__value) {
                 if (__x(@$candidates__value->content) && __x(@$candidates__value->content->parts)) {
                     foreach ($candidates__value->content->parts as $parts__value) {
                         if (__x(@$parts__value->text)) {
-                            $output_text = $parts__value->text;
-                            break;
+                            if (__x($output_text)) {
+                                $output_text .= PHP_EOL . PHP_EOL . PHP_EOL . '---' . PHP_EOL . PHP_EOL . PHP_EOL;
+                            }
+                            $output_text .= $parts__value->text;
                         }
                     }
                 }

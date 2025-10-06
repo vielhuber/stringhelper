@@ -1756,7 +1756,7 @@ if (!class_exists('__empty_helper')) {
 if (!class_exists('ExtendedException')) {
     class ExtendedException extends \Exception
     {
-        public function __construct($message = null, $code = 0, Exception $previous = null)
+        public function __construct($message = null, $code = 0, ?Exception $previous = null)
         {
             if (!is_string($message)) {
                 $message = serialize($message);

@@ -247,6 +247,7 @@ class Test extends \PHPUnit\Framework\TestCase
         foreach (__e($array) as $array__key => $array__value) {
             $this->assertTrue(false);
         }
+        /** @disregard */
         foreach (__e(@$array2) as $array2__key => $array2__value) {
             $this->assertTrue(false);
         }
@@ -270,6 +271,7 @@ class Test extends \PHPUnit\Framework\TestCase
         foreach (__i($array) as $array__key => $array__value) {
             $this->assertTrue(false);
         }
+        /** @disregard */
         foreach (__i(@$array2) as $array2__key => $array2__value) {
             $this->assertTrue(false);
         }
@@ -277,27 +279,34 @@ class Test extends \PHPUnit\Framework\TestCase
 
     function test__stfu()
     {
+        /** @disregard */
         if (__x(@$var)) {
             $this->assertTrue(false);
         }
+        /** @disregard */
         if (__nx(@$var)) {
             $this->assertTrue(true);
         }
+        /** @disregard */
         if (__true(@$var)) {
             $this->assertTrue(false);
         }
+        /** @disregard */
         if (__false(@$var)) {
             $this->assertTrue(true);
         }
+        /** @disregard */
         if (@$var === 'foo') {
             $this->assertTrue(false);
         }
         if (@$_GET['number'] == 1337) {
             $this->assertTrue(false);
         }
+        /** @disregard */
         foreach (__e(@$array) as $array__key => $array__value) {
             $this->assertTrue(false);
         }
+        /** @disregard */
         $this->assertSame(__v(@$var), null);
     }
 
@@ -984,6 +993,25 @@ house'
             __rrmdir('tests/assets/zip/unzip');
             $this->assertSame($files_in_folder_1, $files_in_folder_2);
         }
+    }
+
+    function test__ai_mcp()
+    {
+        $ai = __ai('claude', 'claude-sonnet-4-0', 1.0, @$_SERVER['CLAUDE_API_KEY']);
+        $ai->enable_log('tests/ai.log');
+        $ai->add_mcp('mcp-1', [
+            'url' => 'https://rebuhleiv.xyz/mcp'
+        ]);
+        $return = $ai->ask(
+            '
+Gehe mit dem Browser auf https://vielhuber.dev/42
+und erstelle einen neuen
+Blogbeitrag mit dem Inhalt "TEST" und dem Titel "TEST" und speichere ihn.
+
+Steuere beim Einfügen des Contents den Gutenberg-Editor am besten per JavaScript direkt.
+'
+        );
+        __d($return);
     }
 
     function test__ai_all()
@@ -2700,6 +2728,7 @@ data-attr="foo">
         } catch (\ExtendedException $t) {
             $this->assertSame(__exception_message($t), 'foo');
         }
+        /** @disregard */
         try {
             throw new \Exception('bar');
         } catch (\ExceptionExtended $t) {
