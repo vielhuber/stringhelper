@@ -197,10 +197,7 @@ function outputRow($input)
     }
     echo '</sub>';
     echo ' | <sub>';
-    echo ($input ?? true) === true ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
-    echo '</sub>';
-    echo ' | <sub>';
-    echo ($input ?? true) == true ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
+    echo $input ?? '' ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
     echo '</sub>';
     echo ' | <sub>';
     echo ($input ?? '') !== '' ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
