@@ -21,8 +21,9 @@ require_once '../src/functions.php';
     }
     textarea
     {
-        font-size:9px;
+        font-size:8px;
         font-family:sans-serif;
+        letter-spacing:-1px;
         width:100%;
         height:50%;
     }
@@ -66,152 +67,146 @@ function outputRow($input)
     if ($input === 'error') {
         echo 'error';
     } elseif (__x($input)) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif (__true($input)) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif (__false($input)) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input !== null) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input != null) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input !== false) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input != false) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input === true) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input == true) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif (!is_null($input)) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     } elseif (isset($input)) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     } elseif (!empty($input)) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif (!$input) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } else {
-        echo $input ? 'true' : 'false';
+        echo $input ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
-    echo ($input ?? true) === true ? 'true' : 'false';
+    echo ($input ?? true) === true ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
     echo '</sub>';
     echo ' | <sub>';
-    echo ($input ?? true) == true ? 'true' : 'false';
+    echo ($input ?? true) == true ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
     echo '</sub>';
     echo ' | <sub>';
-    echo ($input ?? true) === false ? 'true' : 'false';
+    echo ($input ?? '') !== '' ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
     echo '</sub>';
     echo ' | <sub>';
-    echo ($input ?? true) === false ? 'true' : 'false';
-    echo '</sub>';
-    echo ' | <sub>';
-    echo ($input ?? '') === '' ? 'true' : 'false';
-    echo '</sub>';
-    echo ' | <sub>';
-    echo ($input ?? '') == '' ? 'true' : 'false';
+    echo ($input ?? '') != '' ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
@@ -219,27 +214,27 @@ function outputRow($input)
     } elseif (!is_countable($input)) {
         echo 'error';
     } elseif (@count($input) > 0) {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input != '') {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' | <sub>';
     if ($input === 'error') {
         echo 'error';
     } elseif ($input !== '') {
-        echo 'true';
+        echo 'true' . (__x($input) ? '✅' : '❌');
     } else {
-        echo 'false';
+        echo 'false' . (!__x($input) ? '✅' : '❌');
     }
     echo '</sub>';
     echo ' |';
@@ -260,12 +255,9 @@ echo '| <sub>!empty($)</sub> ';
 echo '| <sub>if($)</sub> ';
 echo '| <sub>if(!$)</sub> ';
 echo '| <sub>($)?true:false</sub> ';
-echo '| <sub>($??true) === true</sub> ';
-echo '| <sub>($??true) == true</sub> ';
-echo '| <sub>($??true) === false</sub> ';
-echo '| <sub>($??true) == false</sub> ';
-echo '| <sub>($??\'\') === \'\'</sub> ';
-echo '| <sub>($??\'\') == \'\'</sub> ';
+echo '| <sub>if($??\'\')</sub> ';
+echo '| <sub>if(($??\'\') !== \'\')</sub> ';
+echo '| <sub>if(($??\'\') != \'\')</sub> ';
 echo '| <sub>count($) > 0</sub> ';
 echo '| <sub>$ != \'\'</sub> ';
 echo '| <sub>$ !== \'\'</sub> ';
