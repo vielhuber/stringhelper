@@ -437,6 +437,59 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__baseurl(true), 'https://github.com/vielhuber/stringhelper');
     }
 
+    function test__log()
+    {
+        __log_begin('foo');
+        $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_begin('bar');
+        $this->assertSame(count($GLOBALS['performance']), 2);
+        __log_begin('');
+        $this->assertSame(count($GLOBALS['performance']), 3);
+        __log_end();
+        $this->assertSame(count($GLOBALS['performance']), 2);
+        __log_end();
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        $this->assertSame(__log_end()['message'], 'foo');
+        $this->assertSame(count($GLOBALS['performance']), 0);
+
+        __log_begin('foo');
+        $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_begin('bar');
+        $this->assertSame($GLOBALS['performance'][1]['message'], 'bar');
+        $this->assertSame(count($GLOBALS['performance']), 2);
+        __log_end('foo');
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_end('bar');
+        $this->assertSame(count($GLOBALS['performance']), 0);
+
+        __log_begin();
+        $this->assertSame($GLOBALS['performance'][0]['message'], null);
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_begin();
+        $this->assertSame($GLOBALS['performance'][1]['message'], null);
+        $this->assertSame(count($GLOBALS['performance']), 2);
+        __log_end();
+        $this->assertSame(count($GLOBALS['performance']), 1);
+        __log_end();
+        $this->assertSame(count($GLOBALS['performance']), 0);
+
+        __log_begin();
+        sleep(1);
+        $data = __log_end(null, false);
+        $this->assertTrue(is_float($data['time']));
+        $this->assertTrue($data['message'] === null);
+        $this->assertSame(intval(round($data['time'])), 1);
+
+        __log_begin('foo');
+        sleep(2);
+        $data = __log_end('foo', false);
+        $this->assertTrue(is_float($data['time']));
+        $this->assertSame($data['message'], 'foo');
+        $this->assertSame(intval(round($data['time'])), 2);
+    }
+
     function test__phone_normalize()
     {
         $this->assertSame(__phone_normalize(null), '');
@@ -4648,47 +4701,6 @@ baz'
             ),
             true
         );
-
-        __log_begin('foo');
-        $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');
-        $this->assertSame(count($GLOBALS['performance']), 1);
-        __log_begin('bar');
-        $this->assertSame(count($GLOBALS['performance']), 2);
-        __log_begin('');
-        $this->assertSame(count($GLOBALS['performance']), 3);
-        __log_end();
-        $this->assertSame(count($GLOBALS['performance']), 2);
-        __log_end();
-        $this->assertSame(count($GLOBALS['performance']), 1);
-        $this->assertSame(__log_end()['message'], 'foo');
-        $this->assertSame(count($GLOBALS['performance']), 0);
-
-        __log_begin('foo');
-        $this->assertSame($GLOBALS['performance'][0]['message'], 'foo');
-        $this->assertSame(count($GLOBALS['performance']), 1);
-        __log_begin('bar');
-        $this->assertSame($GLOBALS['performance'][1]['message'], 'bar');
-        $this->assertSame(count($GLOBALS['performance']), 2);
-        __log_end('foo');
-        $this->assertSame(count($GLOBALS['performance']), 1);
-        __log_end('bar');
-        $this->assertSame(count($GLOBALS['performance']), 0);
-
-        __log_begin();
-        $this->assertSame($GLOBALS['performance'][0]['message'], null);
-        $this->assertSame(count($GLOBALS['performance']), 1);
-        __log_begin();
-        $this->assertSame($GLOBALS['performance'][1]['message'], null);
-        $this->assertSame(count($GLOBALS['performance']), 2);
-        __log_end();
-        $this->assertSame(count($GLOBALS['performance']), 1);
-        __log_end();
-        $this->assertSame(count($GLOBALS['performance']), 0);
-
-        __log_begin();
-        sleep(1);
-        $data = __log_end(null, false);
-        $this->assertSame(intval(round($data['time'])), 1);
     }
 
     function test__class_usage()

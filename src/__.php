@@ -5781,9 +5781,16 @@ class __
             return null;
         }
         $message = $GLOBALS['performance'][$performance_active_key]['message'];
-        $time = number_format(microtime(true) - $GLOBALS['performance'][$performance_active_key]['time'], 5);
+        $time = microtime(true) - $GLOBALS['performance'][$performance_active_key]['time'];
+        $time = round($time, 5);
+        $time = (float) $time;
         if ($echo === true) {
-            echo 'script' . ($message != '' ? ' ' . $message : '') . ' execution time: ' . $time . ' seconds' . PHP_EOL;
+            echo 'script' .
+                ($message != '' ? ' ' . $message : '') .
+                ' execution time: ' .
+                number_format($time, 5, '.', '') .
+                ' seconds' .
+                PHP_EOL;
         }
         unset($GLOBALS['performance'][$performance_active_key]);
         $GLOBALS['performance'] = array_values($GLOBALS['performance']);
