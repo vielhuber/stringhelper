@@ -4,6 +4,7 @@
     "printWidth": 120,
     "trailingComma": "none",
     "trailingCommaPHP": false,
-    "phpVersion": "8.1",
-    "arrowParens": "avoid"
+    "phpVersion": "8.3",
+    "arrowParens": "avoid",
+    "plugins": ["@prettier/plugin-php"]
 }

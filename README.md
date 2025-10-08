@@ -538,7 +538,16 @@ $ai = __ai(
     service: 'chatgpt', // chatgpt|gemini|claude|xai|deepseek
     model: 'gpt-5', // gpt-5|gemini-2.5-pro|claude-opus-4-1|grok-4|deepseek-chat|...
     temperature: 1.0, // controls the randomness of the text generated
-    api_key: '**API Key**'
+    api_key: '**API Key**',
+    session_id: null, // submit session to continue a conversation (see $ai->session_id)
+    log: 'output.log',
+    max_tries = 3,
+    mcp_servers: [
+        [
+            'url' => 'https://modelcontextprotocol.io/mcp',
+            'authorization_token' = '...'
+        ]
+    ],
 );
 $ai->ask('Wer wurde 2018 Fußball-Weltmeister?');
   // ['response' => 'Frankreich.', 'success' => true]
@@ -548,24 +557,11 @@ $ai->ask('Wie lautet das erste Wort in der PDF?', 'lorem.pdf');
   // ['response' => 'Das erste Wort lautet "Lorem".', 'success' => true]
 $ai->ask('Fasse die folgenden Dokumente zusammen.', ['1.pdf','2.jpg']);
   // ['response' => '...', 'success' => true]
-$ai = __ai(
-    session_id: $ai->session_id // submit session to continue a conversation afterwards ($ai->session_id)
-);
 $ai->ask('Was habe ich vorher gefragt?');
   // ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true]
 
-$ai->add_mcp('mcp-1', [
-    'url' => 'https://modelcontextprotocol.io/mcp',
-    'authorization_token' = '...'
-])
-$ai->ask('Die lautet die aktuelle Protokollversion von MCP?')
-  // ['response' => '2025-06-18', 'success' => true]
-$ai->remove_mcp('mcp-1');
-
 $ai->cleanup(); // (remotely) deletes the data of the current session
 $ai->cleanup_all(); // (remotely) deletes all data
-$ai->enable_log('output.log');
-$ai->disable_log();
 
 // remove emojis from string
 __remove_emoji('Lorem 🤷 ipsum ❤ dolor 🥺 med') // Lorem  ipsum  dolor  med

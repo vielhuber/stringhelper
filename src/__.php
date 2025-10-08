@@ -2199,21 +2199,36 @@ class __
         return $response->result[0]->translations[0]->text;
     }
 
-    public static function chatgpt($model = null, $temperature = null, $api_key = null, $session_id = null)
-    {
-        return new ai_chatgpt($model, $temperature, $api_key, $session_id);
+    public static function chatgpt(
+        $model = null,
+        $temperature = null,
+        $api_key = null,
+        $session_id = null,
+        $log = null,
+        $max_tries = null,
+        $mcp_servers = null
+    ) {
+        return new ai_chatgpt($model, $temperature, $api_key, $session_id, $log, $max_tries, $mcp_servers);
     }
 
-    public static function ai($service, $model = null, $temperature = null, $api_key = null, $session_id = null)
-    {
+    public static function ai(
+        $service,
+        $model = null,
+        $temperature = null,
+        $api_key = null,
+        $session_id = null,
+        $log = null,
+        $max_tries = null,
+        $mcp_servers = null
+    ) {
         if ($service === 'chatgpt') {
-            return new ai_chatgpt($model, $temperature, $api_key, $session_id);
+            return new ai_chatgpt($model, $temperature, $api_key, $session_id, $log, $max_tries, $mcp_servers);
         }
         if ($service === 'claude') {
-            return new ai_claude($model, $temperature, $api_key, $session_id);
+            return new ai_claude($model, $temperature, $api_key, $session_id, $log, $max_tries, $mcp_servers);
         }
         if ($service === 'gemini') {
-            return new ai_gemini($model, $temperature, $api_key, $session_id);
+            return new ai_gemini($model, $temperature, $api_key, $session_id, $log, $max_tries, $mcp_servers);
         }
         if ($service === 'xai') {
             // compatible with anthropic api
@@ -2222,6 +2237,9 @@ class __
                 $temperature,
                 $api_key,
                 $session_id,
+                $log,
+                $max_tries,
+                $mcp_servers,
                 'xai',
                 'https://api.x.ai/v1',
                 'grok-4'
@@ -2234,6 +2252,9 @@ class __
                 $temperature,
                 $api_key,
                 $session_id,
+                $log,
+                $max_tries,
+                $mcp_servers,
                 'deepseek',
                 'https://api.deepseek.com/anthropic'
             );
@@ -6597,12 +6618,12 @@ abstract class ai
     public $name = null;
     public $url = null;
 
-    public $log = null;
-
     public $model = null;
     public $temperature = null;
     public $api_key = null;
-    public $mcp = [];
+    public $log = null;
+    public $max_tries = null;
+    public $mcp_servers = null;
 
     public $session_id = null;
     public static $sessions = [];
@@ -6610,18 +6631,29 @@ abstract class ai
     public $conversation_id = null;
     public $cleanup_data = [];
 
-    abstract public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null);
+    abstract public function __construct(
+        $model,
+        $temperature,
+        $api_key,
+        $session_id,
+        $log = null,
+        $max_tries = null,
+        $mcp_servers = null,
+        $name = null,
+        $url = null
+    );
     public function ask($prompt = null, $files = null)
     {
         $return = ['success' => false];
-        $max_tries = 3;
+        $max_tries = $this->max_tries;
         while ($return['success'] === false && $max_tries > 0) {
             //$this->log($this, 'ask');
-            $this->log($prompt, 'ask');
-            if ($max_tries < 3) {
+            //$this->log($prompt, 'ask');
+            //$this->log($prompt, 'ask');
+            if ($max_tries < $this->max_tries) {
                 $this->log('tries left: ' . $max_tries);
             }
-            $return = $this->askThis($prompt, $files, $max_tries === 3);
+            $return = $this->askThis($prompt, $files, $max_tries === $this->max_tries);
             $max_tries--;
         }
         return $return;
@@ -6636,16 +6668,6 @@ abstract class ai
     }
     abstract public function cleanup();
     abstract public function cleanup_all();
-    public function add_mcp($name, $args)
-    {
-        $this->mcp[$name] = $args;
-    }
-    public function remove_mcp($name)
-    {
-        if (array_key_exists($name, $this->mcp)) {
-            unset($this->mcp[$name]);
-        }
-    }
     public function enable_log($filename)
     {
         $this->log = $filename;
@@ -6658,8 +6680,9 @@ abstract class ai
     {
         if ($this->log !== null) {
             if (!is_string($msg)) {
-                $msg = serialize($msg);
+                $msg = json_encode($msg, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             }
+            /*
             $msg = str_replace(["\r\n", "\r", "\n"], ' ', $msg);
             $msg = preg_replace_callback(
                 '/s:(\d+):"(.*?)";/s',
@@ -6668,19 +6691,21 @@ abstract class ai
                 },
                 $msg
             );
-            if ($prefix !== null) {
-                $msg = $prefix . ' ::: ' . $msg;
-            }
+            */
             $msg =
                 'ℹ️' .
                 ' ' .
                 $this->name .
-                ' ' .
+                ' - ' .
                 $this->model .
-                ' ' .
+                ' - ' .
                 date('Y-m-d H:i:s', strtotime('now')) .
-                ' ::: ' .
+                ($prefix !== null ? ' - ' . $prefix : '') .
+                ' ' .
+                'ℹ️' .
+                PHP_EOL .
                 $msg .
+                PHP_EOL .
                 PHP_EOL;
             file_put_contents($this->log, $msg, FILE_APPEND);
         }
@@ -6692,8 +6717,17 @@ class ai_chatgpt extends ai
     public $name = 'chatgpt';
     public $url = 'https://api.openai.com/v1';
 
-    public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null)
-    {
+    public function __construct(
+        $model,
+        $temperature,
+        $api_key,
+        $session_id,
+        $log = null,
+        $max_tries = null,
+        $mcp_servers = null,
+        $name = null,
+        $url = null
+    ) {
         if ($model === null) {
             $model = 'gpt-5';
         }
@@ -6706,13 +6740,20 @@ class ai_chatgpt extends ai
         if ($url !== null) {
             $this->url = $url;
         }
+        if ($log !== null) {
+            $this->log = $log;
+        }
+        $this->max_tries = $max_tries !== null ? $max_tries : 1;
+        if ($mcp_servers !== null) {
+            $this->mcp_servers = $mcp_servers;
+        }
 
         $this->model = $model;
         $this->temperature = $temperature;
         $this->api_key = $api_key;
 
         if (__nx($session_id)) {
-            $max_tries = 3;
+            $max_tries = $this->max_tries;
             while ($max_tries > 0) {
                 $response = __curl($this->url . '/conversations', [], 'POST', [
                     'Authorization' => 'Bearer ' . $this->api_key
@@ -6727,7 +6768,7 @@ class ai_chatgpt extends ai
                     break;
                 }
             }
-            $this->log($response, 'create conversation');
+            $this->log(@$response->result, 'create conversation');
             $this->conversation_id = $response->result->id;
             $this->session_id = 'conversation_id=' . $this->conversation_id;
         } else {
@@ -6804,7 +6845,7 @@ class ai_chatgpt extends ai
                 if (__nx(@$response->result) || __nx(@$response->result->id)) {
                     return $return;
                 }
-                $this->log($response, 'create file');
+                $this->log(@$response->result, 'create file');
                 $file_ids[] = ['id' => $response->result->id, 'path' => $files__value];
                 $this->cleanup_data[] = ['type' => 'file', 'id' => $response->result->id];
             }
@@ -6844,7 +6885,8 @@ class ai_chatgpt extends ai
                 'Authorization' => 'Bearer ' . $this->api_key
             ]
         );
-        $this->log($response, 'response');
+        $this->log($args, 'ask');
+        $this->log(@$response->result->output, 'response');
 
         $output_text = '';
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->output)) {
@@ -6925,10 +6967,19 @@ class ai_claude extends ai
     public $name = 'claude';
     public $url = 'https://api.anthropic.com/v1';
 
-    public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null)
-    {
+    public function __construct(
+        $model,
+        $temperature,
+        $api_key,
+        $session_id,
+        $log = null,
+        $max_tries = null,
+        $mcp_servers = null,
+        $name = null,
+        $url = null
+    ) {
         if ($model === null) {
-            $model = 'claude-opus-4-1';
+            $model = 'claude-sonnet-4-5';
         }
         if ($temperature === null) {
             $temperature = 1.0;
@@ -6938,6 +6989,13 @@ class ai_claude extends ai
         }
         if ($url !== null) {
             $this->url = $url;
+        }
+        if ($log !== null) {
+            $this->log = $log;
+        }
+        $this->max_tries = $max_tries !== null ? $max_tries : 1;
+        if ($mcp_servers !== null) {
+            $this->mcp_servers = $mcp_servers;
         }
 
         $this->model = $model;
@@ -7040,8 +7098,8 @@ class ai_claude extends ai
             'anthropic-version' => '2023-06-01',
             'anthropic-beta' => 'mcp-client-2025-04-04'
         ]);
-
-        $this->log([$response, self::$sessions[$this->session_id]], 'response');
+        $this->log(self::$sessions[$this->session_id], 'ask');
+        $this->log(@$response->result->content, 'response');
 
         $output_text = '';
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->content)) {
@@ -7072,7 +7130,7 @@ class ai_claude extends ai
                 'anthropic-version' => '2023-06-01',
                 'anthropic-beta' => 'mcp-client-2025-04-04'
             ]);
-            $this->log([$response_continue, $args], 'continuation response');
+            $this->log([@$response_continue->result->content, $args], 'continuation response');
             if (
                 __x(@$response_continue) &&
                 __x(@$response_continue->result) &&
@@ -7136,8 +7194,17 @@ class ai_gemini extends ai
     public $name = 'gemini';
     public $url = 'https://generativelanguage.googleapis.com/v1beta';
 
-    public function __construct($model, $temperature, $api_key, $session_id, $name = null, $url = null)
-    {
+    public function __construct(
+        $model,
+        $temperature,
+        $api_key,
+        $session_id,
+        $log = null,
+        $max_tries = null,
+        $mcp_servers = null,
+        $name = null,
+        $url = null
+    ) {
         if ($model === null) {
             $model = 'gemini-2.5-pro';
         }
@@ -7149,6 +7216,13 @@ class ai_gemini extends ai
         }
         if ($url !== null) {
             $this->url = $url;
+        }
+        if ($log !== null) {
+            $this->log = $log;
+        }
+        $this->max_tries = $max_tries !== null ? $max_tries : 1;
+        if ($mcp_servers !== null) {
+            $this->mcp_servers = $mcp_servers;
         }
 
         $this->model = $model;
@@ -7207,19 +7281,20 @@ class ai_gemini extends ai
             }
         }
 
+        $args = [
+            'contents' => self::$sessions[$this->session_id],
+            'generationConfig' => [
+                'temperature' => $this->temperature
+            ]
+        ];
         $response = __curl(
             $this->url . '/models/' . $this->model . ':generateContent?key=' . $this->api_key,
-            [
-                'contents' => self::$sessions[$this->session_id],
-                'generationConfig' => [
-                    'temperature' => $this->temperature
-                ]
-            ],
+            $args,
             'POST',
             null
         );
-
-        $this->log([$response, self::$sessions[$this->session_id]], 'response');
+        $this->log(self::$sessions[$this->session_id], 'ask');
+        $this->log(@$response->result->candidates, 'response');
 
         $output_text = '';
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->candidates)) {

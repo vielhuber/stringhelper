@@ -541,8 +541,16 @@ if (!function_exists('__chatgpt')) {
 }
 
 if (!function_exists('__ai')) {
-    function __ai($service, $model = null, $temperature = null, $api_key = null, $session_id = null)
-    {
+    function __ai(
+        $service,
+        $model = null,
+        $temperature = null,
+        $api_key = null,
+        $session_id = null,
+        $log = null,
+        $max_tries = null,
+        $mcp_servers = null
+    ) {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'ai'], func_get_args());
     }
 }
