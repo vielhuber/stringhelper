@@ -594,12 +594,14 @@ class __
                     $str = self::trim_whitespace($str);
                 }
             }
-            $str .= ' ' . $chars;
+            if ($chars !== '' && $chars !== null) {
+                $str .= ' ' . $chars;
+            }
         }
         return $str;
     }
 
-    public static function trim_whitespace($str)
+    public static function trim_whitespace($str, $max_runs = 10)
     {
         if ($str === null || $str === true || $str === false || !is_string($str) || $str === '') {
             return $str;
@@ -612,7 +614,19 @@ class __
         // then preg_replace will return an empty string,
         // regardless of whether there were any matches.
         if ($str_new === null) {
-            return self::trim_whitespace(self::to_utf8($str));
+            if ($max_runs === 0) {
+                return trim($str);
+            }
+            if (\preg_last_error() === PREG_BAD_UTF8_ERROR || \preg_last_error() === PREG_BAD_UTF8_OFFSET_ERROR) {
+                $str = self::to_utf8($str);
+            }
+            if (\preg_last_error() === PREG_BACKTRACK_LIMIT_ERROR) {
+                ini_set('pcre.backtrack_limit', ini_get('pcre.backtrack_limit') * 10);
+            }
+            if (\preg_last_error() === PREG_RECURSION_LIMIT_ERROR) {
+                ini_set('pcre.recursion_limit', ini_get('pcre.recursion_limit') * 10);
+            }
+            return self::trim_whitespace($str, $max_runs - 1);
         }
         return $str_new;
     }

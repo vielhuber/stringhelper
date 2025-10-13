@@ -369,6 +369,18 @@ class Test extends \PHPUnit\Framework\TestCase
             str_repeat('aaaaaaaaa ', 4) . '…'
         );
         $this->assertSame(__truncate_string('Lorem ipsum dolor sit amet, consectetuer.', 20), 'Lorem ipsum dolor ...');
+
+        // test bad utf8
+        $this->assertSame(
+            __truncate_string("&nbsp;Hallo \xC3\x28 Welt und&nbsp;&nbsp; willkommen!", 20, ''),
+            __to_utf8("Hallo \xC3\x28 Welt")
+        );
+
+        // test performance
+        set_time_limit(10);
+        for ($i = 1; $i <= 3; $i++) {
+            $this->assertSame(strlen(__truncate_string(str_repeat('a', pow(500, $i)), 50, '')), 50);
+        }
     }
 
     function test__url()
@@ -2232,6 +2244,12 @@ string'
         $this->assertSame(__trim_whitespace("\t"), '');
         $this->assertSame(__trim_whitespace(' '), '');
         $this->assertSame(__trim_whitespace(__utf8_decode(' FOO Ä BAR ')), 'FOO Ä BAR');
+
+        /* if backtrack limit was exhausted */
+        $this->assertSame(
+            __trim_whitespace('&nbsp;test' . str_repeat('a', pow(500, 3))),
+            'test' . str_repeat('a', pow(500, 3))
+        );
     }
 
     function test__extract_title_from_url()
