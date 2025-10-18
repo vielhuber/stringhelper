@@ -1010,23 +1010,6 @@ house'
         }
     }
 
-    function test__ai_mcp()
-    {
-        $ai = __ai('claude', 'claude-sonnet-4-0', 1.0, @$_SERVER['CLAUDE_API_KEY'], 'tests/ai.log', [
-            'url' => 'https://rebuhleiv.xyz/mcp'
-        ]);
-        $return = $ai->ask(
-            '
-Gehe mit dem Browser auf https://vielhuber.dev/42
-und erstelle einen neuen
-Blogbeitrag mit dem Inhalt "TEST" und dem Titel "TEST" und speichere ihn.
-
-Steuere beim Einfügen des Contents den Gutenberg-Editor am besten per JavaScript direkt.
-'
-        );
-        __d($return);
-    }
-
     function test__ai_all()
     {
         $stats = [];
@@ -1063,7 +1046,17 @@ Steuere beim Einfügen des Contents den Gutenberg-Editor am besten per JavaScrip
     {
         $this->ai_test_prepare(
             'chatgpt',
-            ['gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'gpt-4.1', 'gpt-4o', 'gpt-4o-mini'],
+
+            [
+                'gpt-5-nano'
+                /*
+                'gpt-5-mini'
+                'gpt-5',
+                'gpt-4.1',
+                'gpt-4o',
+                'gpt-4o-mini'
+                */
+            ],
             @$_SERVER['OPENAI_API_KEY'],
             $stats
         );
@@ -1074,12 +1067,15 @@ Steuere beim Einfügen des Contents den Gutenberg-Editor am besten per JavaScrip
         $this->ai_test_prepare(
             'claude',
             [
+                'claude-haiku-4-5'
+                /*
                 'claude-sonnet-4-5',
                 'claude-sonnet-4-0',
                 'claude-opus-4-1',
                 'claude-opus-4-0',
                 'claude-3-7-sonnet-latest',
                 'claude-3-5-haiku-latest'
+                */
             ],
             @$_SERVER['CLAUDE_API_KEY'],
             $stats
@@ -1261,18 +1257,44 @@ Steuere beim Einfügen des Contents den Gutenberg-Editor am besten per JavaScrip
         }
         $this->log(($supported ? '✅' : '❌') . ' #8 (image+pdf)');
 
-        $supported = in_array($service, ['claude']);
+        $supported = in_array($service, ['chatgpt', 'claude']);
         if ($supported === true) {
-            /*
-            $ai->add_mcp('mcp-1', [
-                'url' => 'https://modelcontextprotocol.io/mcp'
-            ]);
-            $return = $ai->ask(
-                'Die lautet die aktuelle Protokollversion von MCP? Antworte ausschließlich mit einem Datum.'
+            $return = __curl(
+                @$_SERVER['MCP_SERVER_AUTH_TOKEN_URL'],
+                [
+                    'client_id' => @$_SERVER['MCP_SERVER_AUTH_TOKEN_CLIENT_ID'],
+                    'client_secret' => @$_SERVER['MCP_SERVER_AUTH_TOKEN_CLIENT_SECRET'],
+                    'audience' => @$_SERVER['MCP_SERVER_AUTH_TOKEN_AUDIENCE'],
+                    'grant_type' => 'client_credentials'
+                ],
+                'POST'
             );
-            $this->assertContains($return['response'] ?? '', ['2025-06-18', '18.06.2025']);
-            $ai->remove_mcp('mcp-1');
-            */
+            $mcp_servers = [];
+            foreach (explode(',', @$_SERVER['MCP_SERVER_URLS']) as $urls__value) {
+                $mcp_servers[] = [
+                    'url' => $urls__value,
+                    'authorization_token' => $return->result->access_token
+                ];
+            }
+            // clear log
+            //file_put_contents('tests/ai.log', '');
+            //file_put_contents('tests/ai.log', $return->result->access_token);
+            $ai = __ai($service, $model, 1.0, $api_key, null, 'tests/ai.log', 1, $mcp_servers);
+            $return = $ai->ask('
+                Was ist das Gegenteil von "hell"?
+                Antworte bitte kurz.
+            ');
+            $this->assertThat($return['response'], $this->stringContains('dunkel'));
+            $return = $ai->ask('
+                Welche Dateien befinden sich auf meinem PC im Ordner:
+                /var/www/stringhelper?
+            ');
+            $this->assertThat($return['response'], $this->stringContains('.env.example'));
+            $return = $ai->ask('
+                Gibt es mehr als 1000 Kunden in der Datenbank?
+                Schau in die Datenbanktabelle "customer".
+            ');
+            $this->assertThat($return['response'], $this->stringContains('ja'));
         }
         $this->log(($supported ? '✅' : '❌') . ' #9 (mcp)');
 

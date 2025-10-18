@@ -6759,7 +6759,11 @@ class ai_chatgpt extends ai
         }
         $this->max_tries = $max_tries !== null ? $max_tries : 1;
         if ($mcp_servers !== null) {
-            $this->mcp_servers = $mcp_servers;
+            if (is_array(current($mcp_servers))) {
+                $this->mcp_servers = $mcp_servers;
+            } else {
+                $this->mcp_servers = [$mcp_servers];
+            }
         }
 
         $this->model = $model;
@@ -6808,8 +6812,13 @@ class ai_chatgpt extends ai
         // trim prompt
         $prompt = __trim_whitespace(__trim_every_line($prompt));
 
-        $args = [];
-        $args[] = [
+        $args = [
+            'model' => $this->model,
+            'temperature' => $this->temperature,
+            'input' => [],
+            'conversation' => $this->conversation_id
+        ];
+        $args['input'][] = [
             'role' => 'user',
             'content' => $prompt
         ];
@@ -6864,8 +6873,8 @@ class ai_chatgpt extends ai
                 $this->cleanup_data[] = ['type' => 'file', 'id' => $response->result->id];
             }
 
-            $args[0]['content'] = [];
-            $args[0]['content'][] = ['type' => 'input_text', 'text' => $prompt];
+            $args['input'][0]['content'] = [];
+            $args['input'][0]['content'][] = ['type' => 'input_text', 'text' => $prompt];
 
             foreach ($file_ids as $file_ids__value) {
                 if (
@@ -6873,12 +6882,12 @@ class ai_chatgpt extends ai
                     stripos($file_ids__value['path'], '.jpeg') !== false ||
                     stripos($file_ids__value['path'], '.png') !== false
                 ) {
-                    $args[0]['content'][] = [
+                    $args['input'][0]['content'][] = [
                         'type' => 'input_image',
                         'file_id' => $file_ids__value['id']
                     ];
                 } else {
-                    $args[0]['content'][] = [
+                    $args['input'][0]['content'][] = [
                         'type' => 'input_file',
                         'file_id' => $file_ids__value['id']
                     ];
@@ -6886,20 +6895,41 @@ class ai_chatgpt extends ai
             }
         }
 
-        $response = __curl(
-            $this->url . '/responses',
-            [
-                'model' => $this->model,
-                'temperature' => $this->temperature,
-                'input' => $args,
-                'conversation' => $this->conversation_id
-            ],
-            'POST',
-            [
-                'Authorization' => 'Bearer ' . $this->api_key
-            ]
-        );
+        if (!empty($this->mcp_servers)) {
+            $args['tools'] = [];
+            foreach ($this->mcp_servers as $mcp__key => $mcp__value) {
+                if (!isset($mcp__value['type'])) {
+                    $mcp__value['type'] = 'mcp';
+                }
+                if (!isset($mcp__value['require_approval'])) {
+                    $mcp__value['require_approval'] = 'never';
+                }
+                if (isset($mcp__value['name']) && !isset($mcp__value['server_label'])) {
+                    $mcp__value['server_label'] = $mcp__value['name'];
+                    unset($mcp__value['name']);
+                }
+                if (isset($mcp__value['authorization_token']) && !isset($mcp__value['authorization'])) {
+                    $mcp__value['authorization'] = $mcp__value['authorization_token'];
+                    unset($mcp__value['authorization_token']);
+                }
+                if (isset($mcp__value['url']) && !isset($mcp__value['server_url'])) {
+                    $mcp__value['server_url'] = $mcp__value['url'];
+                    unset($mcp__value['url']);
+                }
+                if (!isset($mcp__value['server_label'])) {
+                    $mcp__value['server_label'] = 'mcp-server-' . ($mcp__key + 1);
+                }
+                if (isset($mcp__value['server_url'])) {
+                    $mcp__value['server_url'] = rtrim($mcp__value['server_url'], '/') . '/';
+                }
+                $args['tools'][] = $mcp__value;
+            }
+        }
+
         $this->log($args, 'ask');
+        $response = __curl($this->url . '/responses', $args, 'POST', [
+            'Authorization' => 'Bearer ' . $this->api_key
+        ]);
         $this->log(@$response->result->output, 'response');
 
         $output_text = '';
@@ -7009,7 +7039,11 @@ class ai_claude extends ai
         }
         $this->max_tries = $max_tries !== null ? $max_tries : 1;
         if ($mcp_servers !== null) {
-            $this->mcp_servers = $mcp_servers;
+            if (is_array(current($mcp_servers))) {
+                $this->mcp_servers = $mcp_servers;
+            } else {
+                $this->mcp_servers = [$mcp_servers];
+            }
         }
 
         $this->model = $model;
@@ -7094,26 +7128,29 @@ class ai_claude extends ai
             'messages' => self::$sessions[$this->session_id],
             'temperature' => $this->temperature
         ];
-        if (!empty($this->mcp)) {
+        if (!empty($this->mcp_servers)) {
             $args['mcp_servers'] = [];
-            foreach ($this->mcp as $mcp__key => $mcp__value) {
+            foreach ($this->mcp_servers as $mcp__key => $mcp__value) {
                 if (!isset($mcp__value['type'])) {
                     $mcp__value['type'] = 'url';
                 }
                 if (!isset($mcp__value['name'])) {
-                    $mcp__value['name'] = $mcp__key;
+                    $mcp__value['name'] = 'mcp-server-' . ($mcp__key + 1);
+                }
+                if (isset($mcp__value['url'])) {
+                    $mcp__value['url'] = rtrim($mcp__value['url'], '/') . '/';
                 }
                 $args['mcp_servers'][] = $mcp__value;
             }
         }
 
+        $this->log($args, 'ask');
         $response = __curl($this->url . '/messages', $args, 'POST', [
             'x-api-key' => $this->api_key,
             'anthropic-version' => '2023-06-01',
             'anthropic-beta' => 'mcp-client-2025-04-04'
         ]);
-        $this->log(self::$sessions[$this->session_id], 'ask');
-        $this->log(@$response->result->content, 'response');
+        $this->log(@$response->result, 'response');
 
         $output_text = '';
         if (__x(@$response) && __x(@$response->result) && __x(@$response->result->content)) {
@@ -7135,31 +7172,11 @@ class ai_claude extends ai
             $response->result->stop_reason === 'pause_turn'
         ) {
             $this->log('pause_turn detected');
-            $args['messages'][] = [
+            self::$sessions[$this->session_id][] = [
                 'role' => 'assistant',
                 'content' => $response->result->content
             ];
-            $response_continue = __curl($this->url . '/messages', $args, 'POST', [
-                'x-api-key' => $this->api_key,
-                'anthropic-version' => '2023-06-01',
-                'anthropic-beta' => 'mcp-client-2025-04-04'
-            ]);
-            $this->log([@$response_continue->result->content, $args], 'continuation response');
-            if (
-                __x(@$response_continue) &&
-                __x(@$response_continue->result) &&
-                __x(@$response_continue->result->content)
-            ) {
-                foreach ($response_continue->result->content as $content__value) {
-                    if (__x(@$content__value->text)) {
-                        if (__x($output_text)) {
-                            $output_text .= PHP_EOL . '---' . PHP_EOL;
-                        }
-                        $output_text .= $content__value->text;
-                    }
-                }
-            }
-            $response = $response_continue;
+            return $this->askThis($prompt, $files, false);
         }
 
         if (__nx(@$output_text)) {
@@ -7183,7 +7200,7 @@ class ai_claude extends ai
 
         self::$sessions[$this->session_id][] = [
             'role' => 'assistant',
-            'content' => $return['response']
+            'content' => $response->result->content
         ];
 
         // parse json
@@ -7236,7 +7253,11 @@ class ai_gemini extends ai
         }
         $this->max_tries = $max_tries !== null ? $max_tries : 1;
         if ($mcp_servers !== null) {
-            $this->mcp_servers = $mcp_servers;
+            if (is_array(current($mcp_servers))) {
+                $this->mcp_servers = $mcp_servers;
+            } else {
+                $this->mcp_servers = [$mcp_servers];
+            }
         }
 
         $this->model = $model;
@@ -7301,13 +7322,13 @@ class ai_gemini extends ai
                 'temperature' => $this->temperature
             ]
         ];
+        $this->log($args, 'ask');
         $response = __curl(
             $this->url . '/models/' . $this->model . ':generateContent?key=' . $this->api_key,
             $args,
             'POST',
             null
         );
-        $this->log(self::$sessions[$this->session_id], 'ask');
         $this->log(@$response->result->candidates, 'response');
 
         $output_text = '';
