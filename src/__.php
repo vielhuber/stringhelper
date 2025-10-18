@@ -6665,7 +6665,7 @@ abstract class ai
             //$this->log($prompt, 'ask');
             //$this->log($prompt, 'ask');
             if ($max_tries < $this->max_tries) {
-                $this->log('tries left: ' . $max_tries);
+                $this->log('⚠️ tries left: ' . $max_tries);
             }
             $return = $this->askThis($prompt, $files, $max_tries === $this->max_tries);
             $max_tries--;
@@ -7357,10 +7357,13 @@ class ai_gemini extends ai
         $return['success'] = true;
         $return['content'] = @$response->result->candidates;
 
-        self::$sessions[$this->session_id][] = [
-            'role' => 'model',
-            'parts' => @$response->result->candidates
-        ];
+        if (__x(@$response) && __x(@$response->result) && __x(@$response->result->candidates)) {
+            foreach ($response->result->candidates as $candidates__value) {
+                if (__x(@$candidates__value->content)) {
+                    self::$sessions[$this->session_id][] = $candidates__value->content;
+                }
+            }
+        }
 
         // parse json
         $return['response'] = $this->parseJson($return['response']);
