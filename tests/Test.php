@@ -1403,7 +1403,7 @@ house'
 
         $ai->cleanup();
 
-        return $fail_count;
+        return [$success_count, $fail_count];
     }
 
     function test__translate_deepl()
