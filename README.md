@@ -551,15 +551,15 @@ $ai = __ai(
     ],
 );
 $ai->ask('Wer wurde 2018 Fußball-Weltmeister?');
-  // ['response' => 'Frankreich.', 'success' => true]
+  // ['response' => 'Frankreich.', 'success' => true, 'content' => [...]]
 $ai->ask('Was ist auf dem Bild zu sehen?', 'lorem.jpg');
-  // ['response' => 'Auf dem Bild ist eine Katze zu sehen.', 'success' => true]
+  // ['response' => 'Auf dem Bild ist eine Katze zu sehen.', 'success' => true, 'content' => [...]]
 $ai->ask('Wie lautet das erste Wort in der PDF?', 'lorem.pdf');
-  // ['response' => 'Das erste Wort lautet "Lorem".', 'success' => true]
+  // ['response' => 'Das erste Wort lautet "Lorem".', 'success' => true, 'content' => [...]]
 $ai->ask('Fasse die folgenden Dokumente zusammen.', ['1.pdf','2.jpg']);
-  // ['response' => '...', 'success' => true]
+  // ['response' => '...', 'success' => true, 'content' => [...]]
 $ai->ask('Was habe ich vorher gefragt?');
-  // ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true]
+  // ['response' => 'Du hast gefragt: "Wie lautet das erste Wort in der PDF?"', 'success' => true, 'content' => [...]]
 
 $ai->cleanup(); // (remotely) deletes the data of the current session
 $ai->cleanup_all(); // (remotely) deletes all data

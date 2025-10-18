@@ -6658,7 +6658,7 @@ abstract class ai
     );
     public function ask($prompt = null, $files = null)
     {
-        $return = ['success' => false];
+        $return = ['response' => null, 'success' => false, 'content' => []];
         $max_tries = $this->max_tries;
         while ($return['success'] === false && $max_tries > 0) {
             //$this->log($this, 'ask');
@@ -6797,7 +6797,7 @@ class ai_chatgpt extends ai
 
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true)
     {
-        $return = ['response' => null, 'success' => false];
+        $return = ['response' => null, 'success' => false, 'content' => []];
 
         if (__nx($this->model) || __nx($this->api_key) || __nx($this->session_id) || __nx($this->conversation_id)) {
             $return['response'] = 'data missing.';
@@ -6958,6 +6958,7 @@ class ai_chatgpt extends ai
 
         $return['response'] = $output_text;
         $return['success'] = true;
+        $return['content'] = @$response->result->output;
 
         // parse json
         $return['response'] = $this->parseJson($return['response']);
@@ -7061,7 +7062,7 @@ class ai_claude extends ai
 
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true)
     {
-        $return = ['response' => null, 'success' => false];
+        $return = ['response' => null, 'success' => false, 'content' => []];
 
         if (__nx($this->model) || __nx($this->api_key) || __nx($this->session_id)) {
             $return['response'] = 'data missing.';
@@ -7197,6 +7198,7 @@ class ai_claude extends ai
         }
         $return['response'] = $output_text;
         $return['success'] = true;
+        $return['content'] = @$response->result->content;
 
         self::$sessions[$this->session_id][] = [
             'role' => 'assistant',
@@ -7275,7 +7277,7 @@ class ai_gemini extends ai
 
     public function askThis($prompt = null, $files = null, $add_prompt_to_session = true)
     {
-        $return = ['response' => null, 'success' => false];
+        $return = ['response' => null, 'success' => false, 'content' => []];
 
         if (__nx($this->model) || __nx($this->api_key) || __nx($this->session_id)) {
             $return['response'] = 'data missing.';
@@ -7353,10 +7355,11 @@ class ai_gemini extends ai
         }
         $return['response'] = $output_text;
         $return['success'] = true;
+        $return['content'] = @$response->result->candidates;
 
         self::$sessions[$this->session_id][] = [
             'role' => 'model',
-            'parts' => [['text' => $return['response']]]
+            'parts' => @$response->result->candidates
         ];
 
         // parse json

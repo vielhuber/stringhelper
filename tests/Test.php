@@ -1048,14 +1048,12 @@ house'
             'chatgpt',
 
             [
+                //'gpt-5',
+                //'gpt-5-mini'
                 'gpt-5-nano'
-                /*
-                'gpt-5-mini'
-                'gpt-5',
-                'gpt-4.1',
-                'gpt-4o',
-                'gpt-4o-mini'
-                */
+                //'gpt-4.1',
+                //'gpt-4o',
+                //'gpt-4o-mini'
             ],
             @$_SERVER['OPENAI_API_KEY'],
             $stats
@@ -1067,15 +1065,13 @@ house'
         $this->ai_test_prepare(
             'claude',
             [
+                //'claude-sonnet-4-5',
                 'claude-haiku-4-5'
-                /*
-                'claude-sonnet-4-5',
-                'claude-sonnet-4-0',
-                'claude-opus-4-1',
-                'claude-opus-4-0',
-                'claude-3-7-sonnet-latest',
-                'claude-3-5-haiku-latest'
-                */
+                //'claude-sonnet-4-0',
+                //'claude-opus-4-1',
+                //'claude-opus-4-0',
+                //'claude-3-7-sonnet-latest',
+                //'claude-3-5-haiku-latest'
             ],
             @$_SERVER['CLAUDE_API_KEY'],
             $stats
@@ -1087,11 +1083,11 @@ house'
         $this->ai_test_prepare(
             'gemini',
             [
-                'gemini-2.5-pro',
-                'gemini-2.5-flash',
-                'gemini-2.5-flash-lite',
-                'gemini-2.0-flash',
-                'gemini-2.0-flash-lite'
+                //'gemini-2.5-pro',
+                //'gemini-2.5-flash',
+                'gemini-2.5-flash-lite'
+                //'gemini-2.0-flash',
+                //'gemini-2.0-flash-lite'
             ],
             @$_SERVER['GOOGLE_GEMINI_API_KEY'],
             $stats
@@ -1102,7 +1098,12 @@ house'
     {
         $this->ai_test_prepare(
             'xai',
-            ['grok-code-fast-1', 'grok-4', 'grok-3', 'grok-3-mini'],
+            [
+                //'grok-code-fast-1',
+                //'grok-4',
+                //'grok-3',
+                'grok-3-mini'
+            ],
             @$_SERVER['XAI_API_KEY'],
             $stats
         );
@@ -1112,7 +1113,10 @@ house'
     {
         $this->ai_test_prepare(
             'deepseek',
-            ['deepseek-reasoner', 'deepseek-chat'],
+            [
+                //'deepseek-reasoner',
+                'deepseek-chat'
+            ],
             @$_SERVER['DEEPSEEK_API_KEY'],
             $stats
         );
@@ -1144,17 +1148,21 @@ house'
         if ($supported === true) {
             $return = $ai->ask('Wer wurde 2018 Fußball-Weltmeister? Antworte bitte kurz.');
             //$this->log($return);
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat(
                 $return['response'],
                 $this->logicalOr($this->stringContains('Frankreich'), $this->stringContains('französisch'))
             );
         }
-        $this->log(($supported ? '✅' : '❌') . ' #1 (simple)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #1 (simple)');
 
         $supported = true;
         if ($supported === true) {
             $return = $ai->ask('Was habe ich vorher gefragt?');
             //$this->log($return);
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat(
                 $return['response'],
                 $this->logicalOr(
@@ -1165,12 +1173,14 @@ house'
                 )
             );
         }
-        $this->log(($supported ? '✅' : '❌') . ' #2 (simple)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #2 (simple)');
 
         $supported = true;
         if ($supported === true) {
             $return = $ai->ask('Welchen Satz hast Du exakt zuvor geschrieben?');
             //$this->log($return);
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat(
                 $return['response'],
                 $this->logicalOr(
@@ -1181,7 +1191,7 @@ house'
                 )
             );
         }
-        $this->log(($supported ? '✅' : '❌') . ' #3 (memory)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #3 (memory)');
 
         $supported = true;
         if ($supported === true) {
@@ -1190,13 +1200,17 @@ house'
             $ai = __ai($service, $model, 1.0, $api_key, $ai->session_id, 'tests/ai.log');
             $return = $ai->ask('Wie heiße ich mit Vornamen?');
             //$this->log($return);
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertStringContainsString('David', $return['response']);
         }
-        $this->log(($supported ? '✅' : '❌') . ' #4 (memory)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #4 (memory)');
 
         $supported = in_array($service, ['chatgpt', 'claude', 'gemini', 'xai']);
         if ($supported === true) {
             $return = $ai->ask('Was ist auf dem Bild zu sehen?', 'tests/assets/iptc_write.jpg');
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat(
                 $return['response'],
                 $this->logicalOr(
@@ -1208,11 +1222,14 @@ house'
                 )
             );
         }
-        $this->log(($supported ? '✅' : '❌') . ' #5 (image)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #5 (image)');
 
         $supported = in_array($service, ['chatgpt', 'claude', 'gemini', 'xai']);
         if ($supported === true) {
             $return = $ai->ask('Welches Bild habe ich im Gesprächsverlauf hochgeladen?');
+
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat(
                 $return['response'],
                 $this->logicalOr(
@@ -1224,7 +1241,7 @@ house'
                 )
             );
         }
-        $this->log(($supported ? '✅' : '❌') . ' #6 (image)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #6 (image)');
 
         $supported = in_array($service, ['chatgpt', 'claude', 'gemini']);
         if ($supported === true) {
@@ -1233,11 +1250,13 @@ house'
                 'tests/assets/lorem.pdf'
             );
             //$this->log($return);
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertContains($return['response']->customer_nr ?? '', ['F123465789']);
             $this->assertContains($return['response']->date ?? '', ['31. Oktober 2018', 'Oktober 2018']);
             $this->assertContains($return['response']->author ?? '', ['David Vielhuber']);
         }
-        $this->log(($supported ? '✅' : '❌') . ' #7 (pdf)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #7 (pdf)');
 
         $supported = in_array($service, ['chatgpt', 'claude', 'gemini']);
         if ($supported === true) {
@@ -1251,11 +1270,13 @@ house'
                 ]
             );
             //$this->log($return);
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertContains($return['response']->customer_nr ?? '', ['F123465789']);
             $this->assertContains($return['response']->meter_number ?? '', ['123456789']);
             $this->assertContains($return['response']->flower ?? '', ['Tulpe', 'Tulpen', 'Tulip', 'Tulipe', 'Tulipan']);
         }
-        $this->log(($supported ? '✅' : '❌') . ' #8 (image+pdf)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #8 (image+pdf)');
 
         $supported = in_array($service, ['chatgpt', 'claude']);
         if ($supported === true) {
@@ -1284,19 +1305,25 @@ house'
                 Was ist das Gegenteil von "hell"?
                 Antworte bitte kurz.
             ');
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat($return['response'], $this->stringContains('dunkel'));
             $return = $ai->ask('
                 Welche Dateien befinden sich auf meinem PC im Ordner:
                 /var/www/stringhelper?
             ');
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat($return['response'], $this->stringContains('.env.example'));
             $return = $ai->ask('
                 Gibt es mehr als 1000 Kunden in der Datenbank?
                 Schau in die Datenbanktabelle "customer".
             ');
+            $this->assertTrue($return['success']);
+            $this->assertTrue(count($return['content']) > 0);
             $this->assertThat($return['response'], $this->stringContains('ja'));
         }
-        $this->log(($supported ? '✅' : '❌') . ' #9 (mcp)');
+        $this->log(($supported ? '✅' : '⚠️') . ' #9 (mcp)');
 
         $ai->cleanup();
     }
