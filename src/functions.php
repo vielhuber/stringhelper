@@ -533,28 +533,6 @@ if (!function_exists('__translate_deepl')) {
     }
 }
 
-if (!function_exists('__chatgpt')) {
-    function __chatgpt($model = null, $temperature = null, $api_key = null, $session_id = null)
-    {
-        return call_user_func_array(['\vielhuber\stringhelper\__', 'chatgpt'], func_get_args());
-    }
-}
-
-if (!function_exists('__ai')) {
-    function __ai(
-        $service,
-        $model = null,
-        $temperature = null,
-        $api_key = null,
-        $session_id = null,
-        $log = null,
-        $max_tries = null,
-        $mcp_servers = null
-    ) {
-        return call_user_func_array(['\vielhuber\stringhelper\__', 'ai'], func_get_args());
-    }
-}
-
 if (!function_exists('__first_char_is_uppercase')) {
     function __first_char_is_uppercase($str)
     {
