@@ -4918,7 +4918,8 @@ class __
         $basic_auth = null,
         $cookies = null,
         $follow_redirects = true,
-        $proxy = null
+        $proxy = null,
+        $stream_callback = null
     ) {
         // guess method based on data
         if ($method === null) {
@@ -4934,12 +4935,21 @@ class __
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // don't verify certificate
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1); // this sometimes is needed
+
+        // support streaming
+        if ($stream_callback !== null && is_callable($stream_callback)) {
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
+            curl_setopt($curl, CURLOPT_WRITEFUNCTION, function ($curl, $chunk) use ($stream_callback) {
+                return $stream_callback($chunk);
+            });
+        } else {
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        }
 
         if ($follow_redirects === true) {
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);

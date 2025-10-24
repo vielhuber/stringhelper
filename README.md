@@ -1246,7 +1246,11 @@ __curl(
     ['username' => 'password'], // basic authentication
     ['foo' => 'bar'], // cookies
     true, // follow redirects
-    'username:password@192.168.178.1:8080' // use proxy (username, password and port are optional)
+    'username:password@192.168.178.1:8080', // use proxy (username, password and port are optional)
+    function($chunk) { // optional support for streaming
+        echo $chunk;
+        return strlen($chunk);
+    }
 )
 __curl('https://httpbin.org/anything') // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ], "url": "..."}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST') //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ], "url": "..."}
