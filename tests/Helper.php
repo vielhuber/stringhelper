@@ -72,7 +72,7 @@ $items = [
     '\'b:0;\'' => 'b:0;'
 ];
 $output = '';
-$output .= '| ';
+$output .= '| ∃ ';
 $output .= '| <sub>if(__x($))</sub> ';
 $output .= '| <sub>if(__true($))</sub> ';
 $output .= '| <sub>if(__false($))</sub> ';
@@ -99,15 +99,10 @@ $output .= '|';
 $output .= PHP_EOL;
 $output .=
     '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
-$counter = 0;
 foreach ($items as $items__key => $items__value) {
-    $counter++;
     $output .= PHP_EOL;
     $output .= '| <sub>' . $items__key . '</sub>';
     $output .= outputRow($items__value);
-    if ($counter === 10) {
-        $output .= PHP_EOL . PHP_EOL;
-    }
 }
 outputAsHtml($output, 'existence matrix');
 writeToReadme($output, 'existence matrix');
