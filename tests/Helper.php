@@ -48,28 +48,28 @@ $items = [
     'null' => null,
     'false' => false,
     'true' => true,
-    '[]' => [],
-    '[\'\']' => [''],
     '0' => 0,
     '1' => 1,
     '-1' => -1,
+    '[]' => [],
     '\'0\'' => '0',
     '\'1\'' => '1',
     '\'-1\'' => '-1',
     '\'\'' => '',
-    '\' \'' => ' ',
-    '\'null\'' => 'null',
     '\'false\'' => 'false',
     '\'true\'' => 'true',
     '\'str\'' => 'str',
+    '\'null\'' => 'null',
+    'new stdClass' => new stdClass(),
+    '$_GET[\'undefined\']' => 'error',
+    '@$_GET[\'undefined\']' => @$_GET['undefined'],
+    '[\'\']' => [''],
+    '\' \'' => ' ',
     '[0,1]' => [0, 1],
     '[0]' => [0],
     '\'a:0:{}\'' => 'a:0:{}',
     '\'b:1;\'' => 'b:1;',
-    '\'b:0;\'' => 'b:0;',
-    'new stdClass' => new stdClass(),
-    '$_GET[\'undefined\']' => 'error',
-    '@$_GET[\'undefined\']' => @$_GET['undefined']
+    '\'b:0;\'' => 'b:0;'
 ];
 $output = '';
 $output .= '| ';
@@ -87,6 +87,7 @@ $output .= '| <sub>if(isset($))</sub> ';
 $output .= '| <sub>if(!empty($))</sub> ';
 $output .= '| <sub>if($)</sub> ';
 $output .= '| <sub>if(!$)</sub> ';
+$output .= '| <sub>if(!!$)</sub> ';
 $output .= '| <sub>($)?true:false</sub> ';
 $output .= '| <sub>if($??\'\'))</sub> ';
 $output .= '| <sub>if(($??\'\') !== \'\'))</sub> ';
@@ -98,17 +99,27 @@ $output .= '|';
 $output .= PHP_EOL;
 $output .=
     '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |';
+$counter = 0;
 foreach ($items as $items__key => $items__value) {
+    $counter++;
     $output .= PHP_EOL;
     $output .= '| <sub>' . $items__key . '</sub>';
     $output .= outputRow($items__value);
+    if ($counter === 10) {
+        $output .= PHP_EOL . PHP_EOL;
+    }
 }
 outputAsHtml($output, 'existence matrix');
 writeToReadme($output, 'existence matrix');
 
 foreach (['loose', 'strict'] as $modes__value) {
     $output = '';
-    $output .= '| <sub>==</sub> ';
+    $output .= '| <sub>';
+    if ($modes__value === 'strict') {
+        $output .= '=';
+    }
+    $output .= '==';
+    $output .= '</sub> ';
     foreach ($items as $items__key => $items__value) {
         $output .= '| <sub>' . $items__key . '</sub> ';
     }
@@ -183,176 +194,208 @@ function writeToReadme($output, $headline)
 }
 function outputRow($input)
 {
+    $icon_yes = '✅';
+    $icon_no = '❌';
+    if (
+        $input === [''] ||
+        $input === ' ' ||
+        $input === [0, 1] ||
+        $input === [0] ||
+        $input === 'a:0:{}' ||
+        $input === 'b:1;' ||
+        $input === 'b:0;'
+    ) {
+        $icon_no = '⚠️';
+    }
+
     $output = '';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif (__x($input)) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif (__true($input)) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif (__false($input)) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input !== null) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input != null) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input !== false) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input != false) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input === true) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input == true) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif (!is_null($input)) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     } elseif (isset($input)) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     } elseif (!empty($input)) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif (!$input) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
+    } elseif (!!$input) {
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= $input ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
-    $output .= $input ?? '' ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
+    if ($input === 'error') {
+        $output .= 'error' . $icon_no;
+    } else {
+        $output .= $input
+            ? 'true' . (__x($input) ? $icon_yes : $icon_no)
+            : 'false' . (!__x($input) ? $icon_yes : $icon_no);
+    }
     $output .= '</sub>';
     $output .= ' | <sub>';
-    $output .= ($input ?? '') !== '' ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
+    $output .=
+        $input ?? '' ? 'true' . (__x($input) ? $icon_yes : $icon_no) : 'false' . (!__x($input) ? $icon_yes : $icon_no);
     $output .= '</sub>';
     $output .= ' | <sub>';
-    $output .= ($input ?? '') != '' ? 'true' . (__x($input) ? '✅' : '❌') : 'false' . (!__x($input) ? '✅' : '❌');
+    $output .=
+        ($input ?? '') !== ''
+            ? 'true' . (__x($input) ? $icon_yes : $icon_no)
+            : 'false' . (!__x($input) ? $icon_yes : $icon_no);
+    $output .= '</sub>';
+    $output .= ' | <sub>';
+    $output .=
+        ($input ?? '') != ''
+            ? 'true' . (__x($input) ? $icon_yes : $icon_no)
+            : 'false' . (!__x($input) ? $icon_yes : $icon_no);
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif (!is_countable($input)) {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif (@count($input) > 0) {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input != '') {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {
-        $output .= 'error';
+        $output .= 'error' . $icon_no;
     } elseif ($input !== '') {
-        $output .= 'true' . (__x($input) ? '✅' : '❌');
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
     } else {
-        $output .= 'false' . (!__x($input) ? '✅' : '❌');
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
     }
     $output .= '</sub>';
     $output .= ' |';
