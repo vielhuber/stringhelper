@@ -71,6 +71,7 @@ $items = [
     '\'b:1;\'' => 'b:1;',
     '\'b:0;\'' => 'b:0;'
 ];
+
 $output = '';
 $output .= '| ∃ ';
 $output .= '| <sub>if(__x($))</sub> ';
@@ -106,6 +107,157 @@ foreach ($items as $items__key => $items__value) {
 }
 outputAsHtml($output, 'existence matrix');
 writeToReadme($output, 'existence matrix');
+
+$output = '';
+$output .= '| = ';
+$output .= '| <sub>if(__true($))</sub> ';
+$output .= '| <sub>if($ === true)</sub> ';
+$output .= '| <sub>if($ == true)</sub> ';
+$output .= '| <sub>if($ !== false)</sub> ';
+$output .= '| <sub>if($ != false)</sub> ';
+$output .= '| <sub>if(__true($??\'\'))</sub> ';
+$output .= '| <sub>if(__true($??true))</sub> ';
+$output .= '| <sub>if(__false($))</sub> ';
+$output .= '| <sub>if($ === false)</sub> ';
+$output .= '| <sub>if($ == false)</sub> ';
+$output .= '| <sub>if($ !== true)</sub> ';
+$output .= '| <sub>if($ != true)</sub> ';
+$output .= '| <sub>if(__false($??\'\')</sub> ';
+$output .= '| <sub>if(__false($??true)</sub> ';
+$output .= '|';
+$output .= PHP_EOL;
+$output .= '| --- ' . str_repeat('| --- ', count($items)) . '|';
+foreach ($items as $items__key => $items__value) {
+    $icon_yes = '✅';
+    $icon_no = '❌';
+
+    $output .= PHP_EOL;
+    $output .= '| <sub>' . $items__key . '</sub>';
+
+    if ($items__value === 'error') {
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= __true($undefined ?? '') === __true(null) ? $icon_yes : $icon_no;
+        $output .= __true($undefined ?? '') ? 'true' : 'false';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= __true($undefined ?? true) === __true(null) ? $icon_yes : $icon_no;
+        $output .= __true($undefined ?? true) ? 'true' : 'false';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= $icon_no . 'error';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= __false($undefined ?? '') === __false(null) ? $icon_yes : $icon_no;
+        $output .= __false($undefined ?? '') ? 'false' : 'true';
+        $output .= '</sub>';
+        $output .= '| <sub>';
+        $output .= __false($undefined ?? true) === __false(null) ? $icon_yes : $icon_no;
+        $output .= __false($undefined ?? true) ? 'false' : 'true';
+        $output .= '</sub>';
+        continue;
+    }
+
+    $output .= '| <sub>';
+    $output .= __true($items__value) === __true($items__value) ? $icon_yes : $icon_no;
+    $output .= __true($items__value) ? 'true' : 'false';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value === true) === __true($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value === true ? 'true' : 'false';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value == true) === __true($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value == true ? 'true' : 'false';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value !== false) === __true($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value !== false ? 'true' : 'false';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value != false) === __true($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value != false ? 'true' : 'false';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= __true($items__value ?? '') === __true($items__value) ? $icon_yes : $icon_no;
+    $output .= __true($items__value ?? '') ? 'true' : 'false';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= __true($items__value ?? true) === __true($items__value) ? $icon_yes : $icon_no;
+    $output .= __true($items__value ?? true) ? 'true' : 'false';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= __false($items__value) === __false($items__value) ? $icon_yes : $icon_no;
+    $output .= __false($items__value) ? 'false' : 'true';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value === false) === __false($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value === false ? 'false' : 'true';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value == false) === __false($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value == false ? 'false' : 'true';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value !== true) === __false($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value !== true ? 'false' : 'true';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= ($items__value != true) === __false($items__value) ? $icon_yes : $icon_no;
+    $output .= $items__value != true ? 'false' : 'true';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= __false($items__value ?? '') === __false($items__value) ? $icon_yes : $icon_no;
+    $output .= __false($items__value ?? '') ? 'false' : 'true';
+    $output .= '</sub>';
+
+    $output .= '| <sub>';
+    $output .= __false($items__value ?? true) === __false($items__value) ? $icon_yes : $icon_no;
+    $output .= __false($items__value ?? true) ? 'false' : 'true';
+    $output .= '</sub>';
+
+    $output .= ' |';
+}
+outputAsHtml($output, 'truth matrix');
+//writeToReadme($output, 'truth matrix');
 
 foreach (['loose', 'strict'] as $modes__value) {
     $output = '';
