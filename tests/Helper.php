@@ -93,6 +93,7 @@ $output .= '| <sub>($)?true:false</sub> ';
 $output .= '| <sub>if($??\'\'))</sub> ';
 $output .= '| <sub>if(($??\'\') !== \'\'))</sub> ';
 $output .= '| <sub>if(($??\'\') != \'\'))</sub> ';
+$output .= '| <sub>if($ > 0)</sub> ';
 $output .= '| <sub>if(count($) > 0)</sub> ';
 $output .= '| <sub>if($ != \'\')</sub> ';
 $output .= '| <sub>if($ !== \'\')</sub> ';
@@ -257,7 +258,7 @@ foreach ($items as $items__key => $items__value) {
     $output .= ' |';
 }
 outputAsHtml($output, 'truth matrix');
-//writeToReadme($output, 'truth matrix');
+writeToReadme($output, 'truth matrix');
 
 foreach (['loose', 'strict'] as $modes__value) {
     $output = '';
@@ -296,8 +297,8 @@ foreach (['loose', 'strict'] as $modes__value) {
         }
         $output .= ' |';
     }
-    outputAsHtml($output, $modes__value . ' comparison matrix');
-    writeToReadme($output, $modes__value . ' comparison matrix');
+    outputAsHtml($output, 'comparison matrix (' . $modes__value . ')');
+    writeToReadme($output, 'comparison matrix (' . $modes__value . ')');
 }
 
 function outputAsHtml($output, $headline)
@@ -515,6 +516,17 @@ function outputRow($input)
         ($input ?? '') != ''
             ? 'true' . (__x($input) ? $icon_yes : $icon_no)
             : 'false' . (!__x($input) ? $icon_yes : $icon_no);
+    $output .= '</sub>';
+    $output .= ' | <sub>';
+    if ($input === 'error') {
+        $output .= 'error' . $icon_no;
+    } elseif ($input instanceof stdClass) {
+        $output .= 'error' . $icon_no;
+    } elseif ($input > 0) {
+        $output .= 'true' . (__x($input) ? $icon_yes : $icon_no);
+    } else {
+        $output .= 'false' . (!__x($input) ? $icon_yes : $icon_no);
+    }
     $output .= '</sub>';
     $output .= ' | <sub>';
     if ($input === 'error') {

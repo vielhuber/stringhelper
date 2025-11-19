@@ -6,7 +6,8 @@ env:
     MICROSOFT_TRANSLATION_API_KEY: ${{ secrets.MICROSOFT_TRANSLATION_API_KEY }}
     DEEPL_TRANSLATION_API_KEY: ${{ secrets.DEEPL_TRANSLATION_API_KEY }}
 
-on: [push]
+on:
+    workflow_dispatch:
 
 jobs:
     build-test:
