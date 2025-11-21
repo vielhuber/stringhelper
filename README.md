@@ -1263,7 +1263,8 @@ if( ($foo->prop??'') === 'foo' ) { }
 if( $foo?->someFun1()?->someFun2()?->getName() === 'foo' ) { }
 ```
 
-these recommendations ground on the fact, that php has a lot of pitfalls, for example when comparing loosely.
+these recommendations ground on the fact, that php has a lot of pitfalls,\
+for example when comparing loosely:
 
 ```php
 if( 0 == 'true' ) // true
@@ -1296,7 +1297,13 @@ $b == $c; // true
 $c == $a; // false
 ```
 
-you should also **not** use the `@`-operator (stfu-operator), which hides errors. be aware of its pitfalls and be careful when using `@$a['undefined']`, there can be 2 possible errors: a missing variable or a missing index. if $a is a string, `@$a['undefined']` evaluates to `$a[0]` since php coerces `undefined` to `0` and therefore exists. don't use the operator before function calls (`@__x($a['undefined']`). another caveat is that the `@`-operator does not catch any fatal runtime errors since php 8 anymore.
+you should also **not** use the `@`-operator (stfu-operator), which hides errors:
+
+```php
+@$a
+```
+
+be aware of its pitfalls and be careful when using `@$a['undefined']`, there can be 2 possible errors: a missing variable or a missing index. if $a is a string, `@$a['undefined']` evaluates to `$a[0]` since php coerces `undefined` to `0` and therefore exists. don't use the operator before function calls (`@__x($a['undefined']`). another caveat is that the `@`-operator does not catch any fatal runtime errors since php 8 anymore.
 
 ## appendix
 
