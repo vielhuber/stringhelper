@@ -1233,9 +1233,37 @@ there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp)
 copy `.env.example` to `.env`, fill in values, install dependencies\
 with `composer install` and run `./vendor/bin/phpunit`.
 
-## notes
+## recommendations
 
-php has a lot of pitfalls, when comparing loosely.
+### existence
+
+```php
+if ($foo) {} # ⚠️ be aware of: unknown/0/"0"
+if ($_GET['foo'] ?? '') {} # ⚠️ be aware of: 0/"0"
+if ($foo->prop ?? '') {} # ⚠️ be aware of: 0/"0"
+if ($foo?->someFun()) {} # ⚠️ be aware of: 0/"0"
+if ($foo ?? '' && $foo !== 0 && $foo !== '0') {}
+```
+
+### truthness
+
+```php
+if ($foo === true) {}
+if (($_GET['foo'] ?? '') === '1') {} // $_GET variables are always strings
+if (($foo->prop ?? '') === true) {}
+if ($foo?->someFun1()?->someFun2()?->getName() === true) {}
+```
+
+### comparison
+
+```php
+if( $foo === 'foo' ) { }
+if( ($_GET['foo']??'') === 'foo' ) { }
+if( ($foo->prop??'') === 'foo' ) { }
+if( $foo?->someFun1()?->someFun2()?->getName() === 'foo' ) { }
+```
+
+these recommendations ground on the fact, that php has a lot of pitfalls, for example when comparing loosely.
 
 ```php
 if( 0 == 'true' ) // true
@@ -1268,37 +1296,7 @@ $b == $c; // true
 $c == $a; // false
 ```
 
-you should *not* use the @-operator (stfu-operator), which hides errors. be aware of its pitfalls and be careful when using @\$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. if $a is a string, @\$a['undefined'] evaluates to $a[0] since php coerces 'undefined' to 0 and therefore exists. don't use the operator before function calls (@\_\_x(\$a['undefined']). another caveat is that the @-operator does not catch any fatal runtime errors since php 8 anymore.
-
-to overcome this and other issues, we use the following patterns:
-
-### existence
-
-```php
-if ($foo) {} # ⚠️ be aware of: unknown/0/"0"
-if ($_GET['foo'] ?? '') {} # ⚠️ be aware of: 0/"0"
-if ($foo->prop ?? '') {} # ⚠️ be aware of: 0/"0"
-if ($foo?->someFun()) {} # ⚠️ be aware of: 0/"0"
-if ($foo ?? '' && $foo !== 0 && $foo !== '0') {}
-```
-
-### truthness
-
-```php
-if ($foo === true) {}
-if (($_GET['foo'] ?? '') === '1') {} // $_GET variables are always strings
-if (($foo->prop ?? '') === true) {}
-if ($foo?->someFun1()?->someFun2()?->getName() === true) {}
-```
-
-### comparison
-
-```php
-if( $foo === 'foo' ) { }
-if( ($\_GET['foo']??'') === 'foo' ) { }
-if( ($foo->prop??'') === 'foo' ) { }
-if( $foo?->someFun1()?->someFun2()?->getName() === 'foo' ) { }
-```
+you should also **not** use the `@`-operator (stfu-operator), which hides errors. be aware of its pitfalls and be careful when using `@$a['undefined']`, there can be 2 possible errors: a missing variable or a missing index. if $a is a string, `@$a['undefined']` evaluates to `$a[0]` since php coerces `undefined` to `0` and therefore exists. don't use the operator before function calls (`@__x($a['undefined']`). another caveat is that the `@`-operator does not catch any fatal runtime errors since php 8 anymore.
 
 ## appendix
 
