@@ -15,6 +15,51 @@ composer require vielhuber/stringhelper
 ## usage
 
 ```php
+// check existence
+if (__x($var)) { }
+if (__x(@$var)) { }
+
+// check non-existence
+if (__nx($var)) { }
+if (__nx(@$var)) { }
+
+// check existence (without stfu-operator)
+if (__rx($var)) { }
+if (__fx(fn() => $var)) { }
+if (__fx(fn()=>$var) { }
+if (__fx(fn()=>$var['foo']['bar']['baz']) { }
+if (__fx(fn()=>$var()) { }
+if (__fx(function () use (&$var) { return $var['foo']['bar']['baz']; })) { } // php <7.4
+
+__rx($var) // false
+__rx($var['foo']['bar']['baz']) // false (works with undefined variables, because of pass by reference
+__nrx($var) // true
+// be aware that undefined variables are defined as null by php after the check:
+array_key_exists('foo', get_defined_vars()); // false
+__rx($foo);
+array_key_exists('foo', get_defined_vars()); // true
+
+// check non-existence (without stfu-operator)
+if (__rnx($var)) { }
+if (__fnx(fn() => $var)) { }
+
+// get variable if exists, otherwise null
+__v( $var )
+
+// get variable if exists, otherwise 'default'
+__v( $var, 'default' )
+
+// get first variable that exists, otherwise null
+__v( $var1, $var2, $var3 )
+
+// get variable if exists, otherwise the empty object
+__e( $var )
+__e( $var, 'default' )
+__e( $var1, $var2, $var3 )
+
+// loop only if exists
+foreach (__e($array) as $array__key => $array__value) { }
+
 // check if all variables exist
 if( __x_all('foo', 'bar', null) ) // false
 if( __x_all(['foo', 'bar', null]) ) // false
@@ -30,6 +75,14 @@ if( __x_one(['foo', 'bar']) ) // true
 if( __x_one(['', null]) ) // false
 if( __nx_one('foo', 'bar') ) // false
 if( __nx_one('', null) ) // true
+
+// check truthness
+if( __true($var) ) {}
+if( __false($var) ) {}
+
+// be aware, that true is not always the logic negation of false
+__true(null) // false
+__false(null) // false
 
 // check truthness of all variables
 if( __true_all(true, true, true) ) // true
@@ -857,13 +910,13 @@ $_GET = ['foo' => 'bar', 'page_id' => '13'];
 ___($_GET, 'foo') // 'bar'
 ___($_GET, 'page_id') // 13 (integer-like strings are automatically converted)
 ___($_GET, 'bar') // null
-$this->assertSame(___($_POST, 'unknown'), null);
-$this->assertSame(___($_SERVER, 'unknown'), null);
-$this->assertSame(___($_FILES, 'unknown'), null);
-$this->assertSame(___($_COOKIE, 'unknown'), null);
-$this->assertSame(___($_REQUEST, 'unknown'), null);
-$this->assertSame(___($_ENV, 'unknown'), null);
-$this->assertSame(___($GLOBALS, 'unknown'), null);
+___($_POST, 'unknown') // null
+___($_SERVER, 'unknown') // null
+___($_FILES, 'unknown') // null
+___($_COOKIE, 'unknown') // null
+___($_REQUEST, 'unknown') // null
+___($_ENV, 'unknown') // null
+___($GLOBALS, 'unknown') // null
 
 // clean up post/get from malicious content using filter_var_array
 $_GET = ['page_id' => '13', 'code' => '<h1>Hello World!</h1>'];
@@ -1182,38 +1235,9 @@ with `composer install` and run `./vendor/bin/phpunit`.
 
 ## notes
 
-### existence
+php has a lot of pitfalls, when comparing loosely.
 
 ```php
-// check existence
-if (__x($var)) {
-}
-if (__x(@$var)) {
-}
-
-// check non-existence
-if (__nx($var)) {
-}
-if (__nx(@$var)) {
-}
-
-// check existence (without stfu-operator)
-if (__rx($var)) {
-}
-if (__fx(fn() => $var)) {
-}
-
-// check non-existence (without stfu-operator)
-if (__rnx($var)) {
-}
-if (__fnx(fn() => $var)) {
-}
-```
-
-### equality
-
-```php
-// php has a lot of pitfalls, when comparing loosely
 if( 0 == 'true' ) // true
 if( 0 == 'str' ) // true
 if( 'null' == null ) // false
@@ -1231,208 +1255,49 @@ if( 0 == '' ) // true
 if( 0 == ' ' ) // true
 if( -1 == true ) // true
 if( '-1' == true ) // true
+```
 
-// this non-strict equality is symmetric, but not transitive
-$a = ''; $b = 0; $c = 'oh';
+this non-strict equality is symmetric, but not transitive:
+
+```php
+$a = '';
+$b = 0;
+$c = 'oh';
 $a == $b; // true
 $b == $c; // true
 $c == $a; // false
-
-// to overcome this issue, we...
-
-// ...use strict comparison when possible
-if( $var === 'foo' ) {}
-
-// ...use loose comparison when appropriate
-if( $_GET['number'] == 1337 ) {}
-
-// ...check for truthness / falsiness with these helper methods
-if( __true($var) ) {}
-
-if( __false($var) ) {}
-
-// be aware, that __true is not always the logic negation of __false
-__true(null) // false
-__false(null) // false
 ```
 
-### value
+you should *not* use the @-operator (stfu-operator), which hides errors. be aware of its pitfalls and be careful when using @\$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. if $a is a string, @\$a['undefined'] evaluates to $a[0] since php coerces 'undefined' to 0 and therefore exists. don't use the operator before function calls (@\_\_x(\$a['undefined']). another caveat is that the @-operator does not catch any fatal runtime errors since php 8 anymore.
+
+to overcome this and other issues, we use the following patterns:
+
+### existence
 
 ```php
-// get variable if exists, otherwise null
-__v( $var )
-
-// get variable if exists, otherwise 'default'
-__v( $var, 'default' )
-
-// get first variable that exists, otherwise null
-__v( $var1, $var2, $var3 )
-
-// get variable if exists, otherwise the empty object
-__e( $var )
-__e( $var, 'default' )
-__e( $var1, $var2, $var3 )
+if ($foo) {} # ⚠️ be aware of: unknown/0/"0"
+if ($_GET['foo'] ?? '') {} # ⚠️ be aware of: 0/"0"
+if ($foo->prop ?? '') {} # ⚠️ be aware of: 0/"0"
+if ($foo?->someFun()) {} # ⚠️ be aware of: 0/"0"
+if ($foo ?? '' && $foo !== 0 && $foo !== '0') {}
 ```
 
-### loop
+### truthness
 
 ```php
-// loop only if exists
-foreach (__e($array) as $array__key => $array__value) {
-}
+if ($foo === true) {}
+if (($_GET['foo'] ?? '') === '1') {} // $_GET variables are always strings
+if (($foo->prop ?? '') === true) {}
+if ($foo?->someFun1()?->someFun2()?->getName() === true) {}
 ```
 
-### try
+### comparison
 
 ```php
-// if you are unsure, if a variable is even set before checking its existence,
-// simply prefix it with the stfu-operator @
-if( __x(@$var) ) {}
-if( __nx(@$var) ) {}
-if( __true(@$var) ) {}
-if( __false(@$var) ) {}
-if( @$var === 'foo' ) {}
-if( @$_GET['number'] == 1337 ) {}
-echo __v(@$var)
-foreach( __e(@$array) as $array__key=>$array__value) {}
-```
-
-A short note on the usage of @: In this concept we use @-operator that hides errors. We are aware of its potential misuse and also of its benefits.
-
-Be careful when using @\$a['undefined'], there can be 2 possible errors: a missing variable or a missing index. In both cases, we intentionally prevent the parser from stopping and catch the resulting null value. Be aware: If $a is a string, @\$a['undefined'] evaluates to $a[0] since php coerces 'undefined' to 0 and therefore exists.
-
-Another general rule of thumb: Don't use the operator before function calls (@\_\_x(\$a['undefined']).
-
-A caveat is that the @-operator does not catch any fatal runtime errors since PHP 8 anymore.\
-For that there is also another more sophisticated way of checking the existence of variables:
-
-If `$var` is totally undefined, the following expressions evaluate correctly to false:
-
-```php
-__fx(fn()=>$var)
-__fx(fn()=>$var['foo']['bar']['baz'])
-__fx(fn()=>$var())
-```
-
-Be aware that arrow functions are only available from php 7.4; Prior versions should use:
-
-```php
-__fx(function () use (&$var) {
-    return $var['foo']['bar']['baz'];
-});
-```
-
-Another approach is to pass (potentially undefined) variables by reference to the `rx`/`nrx`-helpers:
-
-```php
-__rx($var) // false
-__rx($var['foo']['bar']['baz']) // false
-__nrx($var) // true
-```
-
-Be aware that undefined variables are defined as null by php after the check:
-
-```php
-array_key_exists('foo', get_defined_vars()); // false
-__rx($foo);
-array_key_exists('foo', get_defined_vars()); // true
-```
-
-If the array is already defined (e.g. at working with superglobals)\
-and you are unsure, if the key is defined, you also can use the `_`-helper:
-
-```php
-___($_GET, 'foo');
-___($_POST, 'bar');
-___($_SERVER, 'HTTP_HOST');
-// ...
-```
-
-Since php 7.0 the previous methods are not recommended anymore.
-
-Simply use
-
-```php
-$foo['bar']['baz'] ?? '';
-```
-
-for any (defined or undefined) variable.
-
-### classes
-
-```php
-// consider the following laravelish code
-class Person {
-    public $id;
-
-    function __construct($id) { $this->id = $id; }
-
-    static function find($id) {
-        // mock example (normally lookup in database)
-        if( $id === 1 || $id === 2 ) { return new Person($id); }
-        else { return null; }
-    }
-
-    function getAddress() {
-        if( $this->id === 1 ) { return new Address(); }
-        else { return null; }
-    }
-}
-class Address {
-    function getCountry() { return new Country(); }
-}
-class Country {
-    function getName() { return 'Germany'; }
-}
-echo Person::find(1)->getAddress()->getCountry()->getName(); // 'Germany'
-echo Person::find(2)->getAddress()->getCountry()->getName(); // fails because person with id 2 has no address
-echo Person::find(3)->getAddress()->getCountry()->getName(); // fails because person with id 3 does not even exist
-
-// due to the fact that the null propagating method call operator
-// (https://wiki.php.net/rfc/nullsafe_calls) is still a rfc, we cannot write
-echo Person::find(3)?->getAddress()?->getCountry()?->getName(); // null
-
-// we therefore return a null model object
-class Person {
-    public $id;
-
-    function __construct($id) { $this->id = $id; }
-
-    static function find($id) {
-        if( $id === 1 || $id === 2 ) { return new Person($id); }
-        else { return __empty(); }
-    }
-    function getAddress() {
-        if( $this->id === 1 ) { return new Address(); }
-        else { return __empty(); }
-    }
-}
-class Address {
-    function getCountry() { return new Country(); }
-}
-class Country {
-    function getName() { return 'Germany'; }
-}
-
-// this empty helper object is quite useful for returning an empty class which is callable with undefined functions
-__empty()
-
-// we can no conveniently call those chains...
-echo Person::find(1)->getAddress()->getCountry()->getName(); // 'Germany'
-echo Person::find(2)->getAddress()->getCountry()->getName(); // ''
-echo Person::find(3)->getAddress()->getCountry()->getName(); // ''
-
-// ...check for existence...
-if( __x(Person::find(1)->getAddress()->getCountry()->getName()) ) {}
-
-// ...check for strict equality...
-if( Person::find(1)->getAddress()->getCountry()->getName() === 'Germany' ) {}
-
-// ...get a value...
-echo __v( Person::find(1)->getAddress()->getCountry()->getName(), 'default' );
-
-// ...and loop when possible
-foreach( Person::find(1)->getAddress()->getCountry() as $value ) {}
+if( $foo === 'foo' ) { }
+if( ($\_GET['foo']??'') === 'foo' ) { }
+if( ($foo->prop??'') === 'foo' ) { }
+if( $foo?->someFun1()?->someFun2()?->getName() === 'foo' ) { }
 ```
 
 ## appendix
