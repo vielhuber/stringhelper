@@ -3,7 +3,7 @@ use vielhuber\stringhelper\__;
 
 class Test extends \PHPUnit\Framework\TestCase
 {
-    private $httpbin = 'https://httpbin.org';
+    private $httpbin = 'https://httpbun.com';
 
     public static function setUpBeforeClass(): void
     {
@@ -377,10 +377,12 @@ class Test extends \PHPUnit\Framework\TestCase
         );
 
         // test performance
+        $previous_time_limit = ini_get('max_execution_time');
         set_time_limit(10);
         for ($i = 1; $i <= 3; $i++) {
             $this->assertSame(strlen(__truncate_string(str_repeat('a', pow(500, $i)), 50, '')), 50);
         }
+        set_time_limit($previous_time_limit);
     }
 
     function test__url()
@@ -408,11 +410,11 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(count($GLOBALS['performance']), 2);
         __log_begin('');
         $this->assertSame(count($GLOBALS['performance']), 3);
-        __log_end();
+        __log_end(null, false);
         $this->assertSame(count($GLOBALS['performance']), 2);
-        __log_end();
+        __log_end(null, false);
         $this->assertSame(count($GLOBALS['performance']), 1);
-        $this->assertSame(__log_end()['message'], 'foo');
+        $this->assertSame(__log_end(null, false)['message'], 'foo');
         $this->assertSame(count($GLOBALS['performance']), 0);
 
         __log_begin('foo');
@@ -421,9 +423,9 @@ class Test extends \PHPUnit\Framework\TestCase
         __log_begin('bar');
         $this->assertSame($GLOBALS['performance'][1]['message'], 'bar');
         $this->assertSame(count($GLOBALS['performance']), 2);
-        __log_end('foo');
+        __log_end('foo', false);
         $this->assertSame(count($GLOBALS['performance']), 1);
-        __log_end('bar');
+        __log_end('bar', false);
         $this->assertSame(count($GLOBALS['performance']), 0);
 
         __log_begin();
@@ -432,9 +434,9 @@ class Test extends \PHPUnit\Framework\TestCase
         __log_begin();
         $this->assertSame($GLOBALS['performance'][1]['message'], null);
         $this->assertSame(count($GLOBALS['performance']), 2);
-        __log_end();
+        __log_end(null, false);
         $this->assertSame(count($GLOBALS['performance']), 1);
-        __log_end();
+        __log_end(null, false);
         $this->assertSame(count($GLOBALS['performance']), 0);
 
         __log_begin();
@@ -676,6 +678,7 @@ multiline string
                         'Das ist das <span>Haus</span> vom Nikolaus',
                         [
                             'This is the <span>house</span> of Santa Claus',
+                            'This is the <span>house</span> of Saint Nicholas.',
                             'This is Santa\'s <span>house</span>',
                             'This is Santa&#39;s <span>house</span>',
                             'This is Santa Claus&#39; <span>house</span>',
@@ -688,6 +691,7 @@ multiline string
                         'Das ist das <span class="notranslate">Haus</span> vom Nikolaus',
                         [
                             'This is the <span class="notranslate">Haus</span> of Santa Claus',
+                            'This is the <span class="notranslate">Haus</span> of Saint Nicholas.',
                             'This is Santa\'s <span class="notranslate">Haus</span>',
                             'This is Santa&#39;s <span class="notranslate">Haus</span>',
                             'This is Santa Claus&#39; <span class="notranslate">Haus</span>',
@@ -730,7 +734,8 @@ multiline string
                             'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in virtually all areas and is now far superior.',
                             'Since <a>ES6</a> <a>, VanillaJS</a> has been on par with the original <a>jQuery</a> in virtually all areas and is now far superior.',
                             'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.',
-                            'Since <a>ES6</a> <a>, VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.'
+                            'Since <a>ES6</a> <a>, VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.',
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been virtually on par with the veteran <a>jQuery</a> in all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -746,7 +751,8 @@ multiline string
                             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in almost all areas and is now far superior.',
                             'Since <a p="2">ES6</a> <a p="1">, VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in almost all areas and is now far superior.',
                             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.',
-                            'Since <a p="2">ES6</a> <a p="1">, VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.'
+                            'Since <a p="2">ES6</a> <a p="1">, VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.',
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been virtually on par with the veteran <a p="3">jQuery</a> in all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -798,7 +804,10 @@ multiline string
                     ],
                     [
                         '<span>Haus</span><span>Das ist ein Haus. Und noch ein Haus.</span>',
-                        '<span>House</span> <span>this is a house. And another house.</span>',
+                        [
+                            '<span>House</span> <span>this is a house. And another house.</span>',
+                            '<span>House.</span> <span>That&#39;s a house. And another house.</span>'
+                        ],
                         'de',
                         'en'
                     ]
@@ -1377,7 +1386,9 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame(
             in_array($response->url, [
                 $this->httpbin . '/get',
-                str_replace('https://', 'http://', $this->httpbin) . '/get'
+                str_replace('https://', 'http://', $this->httpbin) . '/get',
+                $this->httpbin . '/anything',
+                str_replace('https://', 'http://', $this->httpbin) . '/anything'
             ]),
             true
         );
@@ -1654,10 +1665,12 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
 
     function test__extract_urls_from_sitemap()
     {
-        $urls = __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml');
+        $urls = __extract_urls_from_sitemap('https://vielhuber.de/post-sitemap.xml');
         $this->assertSame(count($urls) > 100, true);
-        $this->assertSame(in_array('https://vielhuber.de/impressum/', $urls), true);
         $this->assertSame(in_array('https://vielhuber.de/blog/google-translation-api-hacking/', $urls), true);
+        $urls = __extract_urls_from_sitemap('https://vielhuber.de/page-sitemap.xml');
+        $this->assertSame(in_array('https://vielhuber.de/impressum/', $urls), true);
+        $urls = __extract_urls_from_sitemap('https://vielhuber.de/category-sitemap.xml');
         $this->assertSame(in_array('https://vielhuber.de/blog/', $urls), true);
 
         $this->assertSame(__extract_urls_from_sitemap('https://vielhuber.de/map.xml'), []);
@@ -1667,7 +1680,7 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame(__extract_urls_from_sitemap(false), []);
         $this->assertSame(__extract_urls_from_sitemap('foo'), []);
 
-        $urls = __extract_urls_from_sitemap('https://vielhuber.de/sitemap_index.xml', null, true);
+        $urls = __extract_urls_from_sitemap('https://vielhuber.de/post-sitemap.xml', null, true);
         $this->assertSame(count($urls) > 100, true);
         $this->assertSame(count($urls[0]) === 2, true);
         $this->assertSame(strpos($urls[0]['url'], 'https://') !== false, true);
@@ -1782,16 +1795,20 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
                     [
                         '*' => [
                             'dom' => function ($DOMDocument, $DOMXPath) {
-                                $DOMXPath->query('/html/body//div')[0]->setAttribute('data-bar', 'baz');
+                                $DOMXPath
+                                    ->query(
+                                        '/html/body//*[contains(concat(" ", normalize-space(@class), " "), " container ")]'
+                                    )[0]
+                                    ->setAttribute('data-bar', 'baz');
                             }
                         ]
                     ],
-                    '<div>',
-                    '<div data-bar="baz">'
+                    '<div class="container"',
+                    '<div class="container" data-bar="baz"'
                 ],
                 [
                     [
-                        'html' => [
+                        'vielhuber' => [
                             'replacements' => [['</head>', '<style>.ads { display:none; }</style></head>']]
                         ]
                     ],
@@ -1800,7 +1817,7 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
                 ],
                 [
                     [
-                        '/h.{1}ml/' => [
+                        '/v.{1}elhuber/' => [
                             'replacements' => [['</head>', '<style>.ads { display:none; }</style></head>']]
                         ]
                     ],
@@ -1820,8 +1837,8 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
             as $tests__value
         ) {
             $this->assertSame(
-                trim(__reverse_proxy($this->httpbin . '/html', $tests__value[0], false)),
-                trim(str_replace($tests__value[1], $tests__value[2], __curl($this->httpbin . '/html')->result))
+                trim(__reverse_proxy('https://vielhuber.de', $tests__value[0], false)),
+                trim(str_replace($tests__value[1], $tests__value[2], __curl('https://vielhuber.de')->result))
             );
         }
     }
@@ -3314,7 +3331,7 @@ data-attr="foo">
         }
     }
 
-    function test___()
+    function test__underscore()
     {
         $_GET = ['page_id' => '13', 'foo' => '0', 'bar' => null, 42 => 'baz'];
         $this->assertSame(___($_GET, 'page_id'), 13);
@@ -3343,6 +3360,9 @@ data-attr="foo">
         __clean_up_post();
         $this->assertSame($_GET, ['page_id' => '13', 'code' => 'Hello World!']);
         $this->assertSame($_POST, ['foo' => 'bar', 42 => '']);
+        // reset
+        $_GET = [];
+        $_POST = [];
     }
 
     function test__validate_date()

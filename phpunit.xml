@@ -3,6 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     bootstrap="src/__.php"
     colors="true"
+    testdox="true"
     stopOnFailure="true"
     displayDetailsOnTestsThatTriggerWarnings="true"
     displayDetailsOnTestsThatTriggerDeprecations="true"

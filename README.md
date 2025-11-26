@@ -1231,7 +1231,7 @@ there is also a javascript implemenation [hlp](https://github.com/vielhuber/hlp)
 ## testing
 
 copy `.env.example` to `.env`, fill in values, install dependencies\
-with `composer install` and run `./vendor/bin/phpunit`.
+with `composer install` and run `./vendor/bin/phpunit --debug`.
 
 ## recommendations
 

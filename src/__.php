@@ -1228,7 +1228,7 @@ class __
 
     public static function remove_accents($string, $replace_umlauts = false)
     {
-        if (!preg_match('/[\x80-\xff]/', $string)) {
+        if (!is_string($string) || !preg_match('/[\x80-\xff]/', $string)) {
             return $string;
         }
 
@@ -4488,14 +4488,14 @@ class __
     public static function extract_urls_from_sitemap($url, $basic_auth = null, $include_last_modified = false)
     {
         // auto detect basic auth
-        if ($basic_auth === null && strpos($url, '@') !== false) {
+        if ($basic_auth === null && is_string($url) && strpos($url, '@') !== false) {
             preg_match_all('/^https?:\/\/(.+)?:(.+)?@.*$/', $url, $matches, PREG_SET_ORDER);
             if (!empty($matches) && !empty($matches[0])) {
                 $basic_auth = $matches[0][1] . ':' . $matches[0][2];
             }
         }
         // inject basic auth in url
-        if ($basic_auth !== null && strpos($url, '@') === false) {
+        if ($basic_auth !== null && is_string($url) && strpos($url, '@') === false) {
             $url = str_replace('http://', 'http://' . $basic_auth . '@', $url);
             $url = str_replace('https://', 'https://' . $basic_auth . '@', $url);
         }
@@ -4508,6 +4508,11 @@ class __
             }
 
             $data = self::fetch($url);
+
+            if (!is_string($data) || strpos($data, '<?xml') === false) {
+                return $return;
+            }
+
             $data = @simplexml_load_string($data);
 
             // fallback
