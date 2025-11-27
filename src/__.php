@@ -2864,6 +2864,12 @@ class __
     public static function progress($done, $total, $info = '', $width = 50, $char = '=')
     {
         $perc = round(($done * 100) / $total);
+        if ($perc < 0) {
+            $perc = 0;
+        }
+        if ($perc > 100) {
+            $perc = 100;
+        }
         $bar = round(($width * $perc) / 100);
         echo sprintf(
             "%s[%s%s] %s\r",
