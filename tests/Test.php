@@ -3445,9 +3445,9 @@ bar'
 
     function test__strftime()
     {
-        setlocale(LC_TIME, 'en_US.utf8', 'en_US', 'C');
+        setlocale(LC_TIME, 'en_US.UTF-8', 'en_US.utf8', 'en_US', 'en', 'C');
         $this->assertSame(__strftime('%A, %d. %B %Y', strtotime('2001-01-01')), 'Monday, 01. January 2001');
-        setlocale(LC_TIME, 'de_DE.utf8');
+        setlocale(LC_TIME, 'de_DE.UTF-8', 'de_DE.utf8', 'de_DE', 'de');
         $this->assertSame(__strftime('%A, %d. %B %Y', strtotime('2001-01-01')), 'Montag, 01. Januar 2001');
     }
 
