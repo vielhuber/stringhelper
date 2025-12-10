@@ -414,10 +414,14 @@ __decode_data(array_key_first($_POST['foo'])) // ['foo' => 'bar', 'bar' => 'baz'
 foreach($a as $a__value) { $index[__encode_data($a__value['foo'],$a__value['bar'])] = null; }
 foreach($b as $b__value) { if(array_key_exists(__encode_data($b__value['foo'],$b__value['bar']),$index)) { /* ... */ } }
 
-// generate uuid/guid v4
+// generate uuid v4 / guid
 __uuid() // 19028aea-ccb6-4b32-9e5d-1243c3a77bb1
+__uuid(version: 4) // 0d77fbce-0b5b-42fe-bfea-dfe04cfbffe8
 
-// validate uuid v4
+// generate uuid v7
+__uuid(version: 7) // 019b0872-43bc-72d2-9882-a578fdb5c405
+
+// validate uuid v4+v7
 __validate_uuid('19028aea-ccb6-4b32-9e5d-1243c3a77bb1') // true
 __validate_uuid('00000000-0000-0000-0000-000000000000') // false
 __validate_uuid('00000000-0000-0000-0000-000000000000', false) // true (weak check)

@@ -5249,12 +5249,46 @@ class __
         return 'unknown';
     }
 
-    public static function uuid()
+    public static function uuid($version = null)
     {
-        $data = random_bytes(16);
-        $data[6] = chr((ord($data[6]) & 0x0f) | 0x40); // set version to 0100
-        $data[8] = chr((ord($data[8]) & 0x3f) | 0x80); // set bits 6-7 to 10
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        if ($version === null || $version === 4) {
+            $data = random_bytes(16);
+            $data[6] = chr((ord($data[6]) & 0x0f) | 0x40);
+            $data[8] = chr((ord($data[8]) & 0x3f) | 0x80);
+            $uuid = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        } elseif ($version === 7) {
+            static $last_unix_ms = null;
+            static $sequence = 0;
+            $unix_ms = (int) (microtime(true) * 1000);
+            if ($unix_ms === $last_unix_ms) {
+                $sequence++;
+                $sequence &= 0x3fff;
+                if ($sequence === 0) {
+                    $unix_ms++;
+                }
+            } else {
+                $sequence = random_int(0, 0x3fff);
+                $last_unix_ms = $unix_ms;
+            }
+            $time_high = ($unix_ms >> 16) & 0xffffffff;
+            $time_low = $unix_ms & 0xffff;
+            $time_hi_and_version = ($time_low & 0x0fff) | (0x7 << 12);
+            $clock_seq_hi_and_reserved = ($sequence & 0x3fff) | 0x8000;
+            $rand_bytes = random_bytes(6);
+            $rand_hex = bin2hex($rand_bytes);
+            $uuid = sprintf(
+                '%08x-%04x-%04x-%04x-%012s',
+                $time_high,
+                $time_low,
+                $time_hi_and_version,
+                $clock_seq_hi_and_reserved,
+                $rand_hex
+            );
+        } else {
+            throw new \Exception('invalid version');
+        }
+
+        return $uuid;
     }
 
     public static function validate_uuid($str, $strict_check = true)
@@ -5263,7 +5297,7 @@ class __
             return false;
         }
         if ($strict_check === true) {
-            $regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
+            $regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[47][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
         } else {
             $regex = '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i';
         }

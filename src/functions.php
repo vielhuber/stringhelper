@@ -1344,7 +1344,7 @@ if (!function_exists('__os')) {
 }
 
 if (!function_exists('__uuid')) {
-    function __uuid()
+    function __uuid($version = null)
     {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'uuid'], func_get_args());
     }

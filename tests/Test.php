@@ -3832,6 +3832,17 @@ Dies ist ein Test für falsche Umlaute.'
         $this->assertSame(__validate_uuid(null), false);
         $this->assertSame(__validate_uuid(true), false);
         $this->assertSame(__validate_uuid(false), false);
+
+        for ($i = 0; $i < 100; $i++) {
+            $uuid1 = __uuid(7);
+            $uuid2 = __uuid(7);
+            $this->assertTrue($uuid2 > $uuid1);
+            $this->assertTrue(__validate_uuid($uuid1));
+            $this->assertTrue(__validate_uuid($uuid2));
+        }
+
+        $this->expectException(Throwable::class);
+        __uuid(42);
     }
 
     function test__input()
