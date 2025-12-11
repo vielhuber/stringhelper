@@ -2341,7 +2341,7 @@ class __
             return $str;
         }
         $str = preg_replace_callback(
-            '/(?:^|_)([\p{Ll}])/u',
+            '/(?:^|_|-)([\p{Ll}])/u',
             function ($m) {
                 return self::set_first_char_uppercase($m[1]);
             },

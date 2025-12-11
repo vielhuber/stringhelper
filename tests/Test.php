@@ -3697,6 +3697,10 @@ bar'
         $this->assertSame(__pascal_case('foo_bar_baz'), 'FooBarBaz');
         $this->assertSame(__pascal_case('foo__bar_baz'), 'Foo_BarBaz');
         $this->assertSame(__pascal_case('üfoo_äbar'), 'ÜfooÄbar');
+        $this->assertSame(__pascal_case('foo-bar'), 'FooBar');
+        $this->assertSame(__pascal_case('foo-bar-baz'), 'FooBarBaz');
+        $this->assertSame(__pascal_case('foo--bar-baz'), 'Foo-BarBaz');
+        $this->assertSame(__pascal_case('üfoo-äbar'), 'ÜfooÄbar');
         $this->assertSame(__pascal_case(''), '');
         $this->assertSame(__pascal_case(null), null);
         $this->assertSame(__pascal_case(true), true);
