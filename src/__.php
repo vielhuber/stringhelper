@@ -2335,6 +2335,21 @@ class __
         return $response->result->result->translations[0]->beams[0]->postprocessed_sentence;
     }
 
+    public static function pascal_case($str)
+    {
+        if (self::nx($str) || !is_string($str)) {
+            return $str;
+        }
+        $str = preg_replace_callback(
+            '/(?:^|_)([\p{Ll}])/u',
+            function ($m) {
+                return self::set_first_char_uppercase($m[1]);
+            },
+            $str
+        );
+        return $str;
+    }
+
     public static function first_char_is_uppercase($str)
     {
         if (self::nx($str) || !is_string($str)) {

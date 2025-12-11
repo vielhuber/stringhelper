@@ -3671,6 +3671,39 @@ bar'
         $this->assertSame(__expl(' ', [], 0), null);
     }
 
+    function test__first_char_is_uppercase()
+    {
+        $this->assertSame(__first_char_is_uppercase(true), false);
+        $this->assertSame(__first_char_is_uppercase(false), false);
+        $this->assertSame(__first_char_is_uppercase(''), false);
+        $this->assertSame(__first_char_is_uppercase('foo'), false);
+        $this->assertSame(__first_char_is_uppercase('Foo'), true);
+    }
+
+    function test__set_first_char_uppercase()
+    {
+        $this->assertSame(__set_first_char_uppercase(true), true);
+        $this->assertSame(__set_first_char_uppercase(false), false);
+        $this->assertSame(__set_first_char_uppercase(''), '');
+        $this->assertSame(__set_first_char_uppercase('foo'), 'Foo');
+        $this->assertSame(__set_first_char_uppercase('Foo'), 'Foo');
+        $this->assertSame(__set_first_char_uppercase('übel'), 'Übel');
+        $this->assertSame(__set_first_char_uppercase('Übel'), 'Übel');
+    }
+
+    function test__pascal_case()
+    {
+        $this->assertSame(__pascal_case('foo_bar'), 'FooBar');
+        $this->assertSame(__pascal_case('foo_bar_baz'), 'FooBarBaz');
+        $this->assertSame(__pascal_case('foo__bar_baz'), 'Foo_BarBaz');
+        $this->assertSame(__pascal_case('üfoo_äbar'), 'ÜfooÄbar');
+        $this->assertSame(__pascal_case(''), '');
+        $this->assertSame(__pascal_case(null), null);
+        $this->assertSame(__pascal_case(true), true);
+        $this->assertSame(__pascal_case(false), false);
+        $this->assertSame(__pascal_case([]), []);
+    }
+
     function test__encrypt_decrypt()
     {
         define('ENCRYPTION_KEY', '4736d52f85bdb63e46bf7d6d41bbd551af36e1bfb7c68164bf81e2400d291319'); // first define your encryption key (generated with hash('sha256', uniqid(mt_rand(), true)))
@@ -3927,19 +3960,6 @@ Dies ist ein Test für falsche Umlaute.'
         $this->assertSame(__date_reset_time(null), null);
         $this->assertSame(__date_reset_time(false), null);
         $this->assertSame(__date_reset_time(true), null);
-
-        $this->assertSame(__first_char_is_uppercase(true), false);
-        $this->assertSame(__first_char_is_uppercase(false), false);
-        $this->assertSame(__first_char_is_uppercase(''), false);
-        $this->assertSame(__first_char_is_uppercase('foo'), false);
-        $this->assertSame(__first_char_is_uppercase('Foo'), true);
-        $this->assertSame(__set_first_char_uppercase(true), true);
-        $this->assertSame(__set_first_char_uppercase(false), false);
-        $this->assertSame(__set_first_char_uppercase(''), '');
-        $this->assertSame(__set_first_char_uppercase('foo'), 'Foo');
-        $this->assertSame(__set_first_char_uppercase('Foo'), 'Foo');
-        $this->assertSame(__set_first_char_uppercase('übel'), 'Übel');
-        $this->assertSame(__set_first_char_uppercase('Übel'), 'Übel');
 
         $this->assertSame(mb_strlen(__random_string()), 8);
         $this->assertSame(mb_strlen(__random_string(10)), 10);

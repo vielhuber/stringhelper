@@ -600,6 +600,9 @@ __first_char_is_uppercase('bar') // true
 __set_first_char_uppercase('baz') // Baz
 __set_first_char_uppercase('übel') // Übel
 
+// convert to pascal case
+__pascal_case('foo_bar') // FooBar
+
 // convert array to object
 __array_to_object(['foo']) // {0: 'foo'}
 __array_to_object(['foo','bar']) // {0: 'foo', 1: 'bar'}

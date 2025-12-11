@@ -540,6 +540,13 @@ if (!function_exists('__first_char_is_uppercase')) {
     }
 }
 
+if (!function_exists('__pascal_case')) {
+    function __pascal_case($str)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'pascal_case'], func_get_args());
+    }
+}
+
 if (!function_exists('__set_first_char_uppercase')) {
     function __set_first_char_uppercase($str)
     {
