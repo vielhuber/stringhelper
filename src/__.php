@@ -2242,7 +2242,7 @@ class __
             $domain = 'api-free.deepl.com';
         }
         $response = self::curl(
-            'https://' . $domain . '/v2/translate?auth_key=' . $api_key,
+            'https://' . $domain . '/v2/translate',
             [
                 'text' => $str,
                 'source_lang' => $from_lng,
@@ -2253,7 +2253,9 @@ class __
                 'tag_handling' => 'xml'
             ],
             'POST',
-            null,
+            [
+                'Authorization' => 'DeepL-Auth-Key ' . $api_key
+            ],
             false,
             false,
             6,

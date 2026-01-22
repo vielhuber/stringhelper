@@ -1061,7 +1061,7 @@ house'
         try {
             __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', 'WRONG_KEY!');
         } catch (\Throwable $t) {
-            $this->assertSame(strpos($t->getMessage(), 'WRONG_KEY') !== false, true);
+            $this->assertSame(strpos($t->getMessage(), 'Forbidden') !== false, true);
         }
 
         if (isset($_SERVER['PROXY'])) {
