@@ -4470,6 +4470,58 @@ baz'
         $arr = [0 => 'foo', 1 => 'bar', 2 => 'baz'];
         $this->assertSame(__::arr_append($arr, 'gnarr', 42 % 7 === 0), __arr_append($arr, 'gnarr', 42 % 7 === 0));
     }
+
+    function test__str_singular()
+    {
+        $this->assertSame('user', __::str_singular('users'));
+        $this->assertSame('cat', __::str_singular('cats'));
+        $this->assertSame('house', __::str_singular('houses'));
+        $this->assertSame('box', __::str_singular('boxes'));
+        $this->assertSame('match', __::str_singular('matches'));
+        $this->assertSame('dish', __::str_singular('dishes'));
+        $this->assertSame('city', __::str_singular('cities'));
+        $this->assertSame('baby', __::str_singular('babies'));
+        $this->assertSame('story', __::str_singular('stories'));
+        $this->assertSame('leaf', __::str_singular('leaves'));
+        $this->assertSame('shelf', __::str_singular('shelves'));
+        $this->assertSame('wolf', __::str_singular('wolves'));
+        $this->assertSame('tomato', __::str_singular('tomatoes'));
+        $this->assertSame('potato', __::str_singular('potatoes'));
+        $this->assertSame('hero', __::str_singular('heroes'));
+        $this->assertSame('Chat', __::str_singular('Chats'));
+        $this->assertSame('ChatMessage', __::str_singular('ChatsMessages'));
+        $this->assertSame('chat-message', __::str_singular('chats-messages'));
+        $this->assertSame('chat message', __::str_singular('chats messages'));
+        $this->assertSame('', __::str_singular(''));
+        $this->assertSame(null, __::str_singular(null));
+    }
+
+    function test__str_plural()
+    {
+        $this->assertSame('users', __::str_plural('user'));
+        $this->assertSame('cats', __::str_plural('cat'));
+        $this->assertSame('houses', __::str_plural('house'));
+        $this->assertSame('boxes', __::str_plural('box'));
+        $this->assertSame('matches', __::str_plural('match'));
+        $this->assertSame('dishes', __::str_plural('dish'));
+        $this->assertSame('cities', __::str_plural('city'));
+        $this->assertSame('babies', __::str_plural('baby'));
+        $this->assertSame('stories', __::str_plural('story'));
+        $this->assertSame('leaves', __::str_plural('leaf'));
+        $this->assertSame('shelves', __::str_plural('shelf'));
+        $this->assertSame('wolves', __::str_plural('wolf'));
+        $this->assertSame('knives', __::str_plural('knife'));
+        $this->assertSame('wives', __::str_plural('wife'));
+        $this->assertSame('tomatoes', __::str_plural('tomato'));
+        $this->assertSame('potatoes', __::str_plural('potato'));
+        $this->assertSame('heroes', __::str_plural('hero'));
+        $this->assertSame('Chats', __::str_plural('Chat'));
+        $this->assertSame('ChatsMessages', __::str_plural('ChatMessage'));
+        $this->assertSame('chats-messages', __::str_plural('chat-message'));
+        $this->assertSame('chats messages', __::str_plural('chat message'));
+        $this->assertSame('', __::str_plural(''));
+        $this->assertSame(null, __::str_plural(null));
+    }
 }
 
 class Person

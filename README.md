@@ -603,6 +603,10 @@ __set_first_char_uppercase('übel') // Übel
 // convert to pascal case
 __pascal_case('foo_bar') // FooBar
 
+// convert to singular/plural form (without irregular forms)
+__str_singular('users') // user
+__str_plural('user') // users
+
 // convert array to object
 __array_to_object(['foo']) // {0: 'foo'}
 __array_to_object(['foo','bar']) // {0: 'foo', 1: 'bar'}

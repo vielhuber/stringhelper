@@ -547,6 +547,20 @@ if (!function_exists('__pascal_case')) {
     }
 }
 
+if (!function_exists('__str_singular')) {
+    function __str_singular($str)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'str_singular'], func_get_args());
+    }
+}
+
+if (!function_exists('__str_plural')) {
+    function __str_plural($str)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'str_plural'], func_get_args());
+    }
+}
+
 if (!function_exists('__set_first_char_uppercase')) {
     function __set_first_char_uppercase($str)
     {

@@ -2350,6 +2350,94 @@ class __
         return $str;
     }
 
+    public static function str_singular($str)
+    {
+        if (self::nx($str) || !is_string($str)) {
+            return $str;
+        }
+        // compound word
+        if (strpos($str, '-') !== false) {
+            $parts = explode('-', $str);
+            foreach ($parts as $key => $part) {
+                $parts[$key] = self::str_singular($part);
+            }
+            return implode('-', $parts);
+        }
+        if (strpos($str, ' ') !== false) {
+            $parts = explode(' ', $str);
+            foreach ($parts as $key => $part) {
+                $parts[$key] = self::str_singular($part);
+            }
+            return implode(' ', $parts);
+        }
+        // CamelCase/PascalCase
+        if (preg_match('/^[A-Z][a-z]+([A-Z][a-z]+)+$/', $str)) {
+            $parts = preg_split('/(?=[A-Z])/', $str, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($parts as $key => $part) {
+                $parts[$key] = self::str_singular($part);
+            }
+            return implode('', $parts);
+        }
+        $rules = [
+            '/(x|ch|ss|sh)es$/i' => '$1',
+            '/([^aeiouy]|qu)ies$/i' => '$1y',
+            '/ves$/i' => 'f',
+            '/oes$/i' => 'o',
+            '/s$/i' => ''
+        ];
+        foreach ($rules as $pattern => $replacement) {
+            if (preg_match($pattern, $str)) {
+                return preg_replace($pattern, $replacement, $str);
+            }
+        }
+        return $str;
+    }
+
+    public static function str_plural($str)
+    {
+        if (self::nx($str) || !is_string($str)) {
+            return $str;
+        }
+        // compound word
+        if (strpos($str, '-') !== false) {
+            $parts = explode('-', $str);
+            foreach ($parts as $key => $part) {
+                $parts[$key] = self::str_plural($part);
+            }
+            return implode('-', $parts);
+        }
+        if (strpos($str, ' ') !== false) {
+            $parts = explode(' ', $str);
+            foreach ($parts as $key => $part) {
+                $parts[$key] = self::str_plural($part);
+            }
+            return implode(' ', $parts);
+        }
+        // CamelCase/PascalCase
+        if (preg_match('/^[A-Z][a-z]+([A-Z][a-z]+)+$/', $str)) {
+            $parts = preg_split('/(?=[A-Z])/', $str, -1, PREG_SPLIT_NO_EMPTY);
+            foreach ($parts as $key => $part) {
+                $parts[$key] = self::str_plural($part);
+            }
+            return implode('', $parts);
+        }
+        $rules = [
+            '/(x|ch|ss|sh)$/i' => '$1es',
+            '/([^aeiouy])o$/i' => '$1oes',
+            '/([^aeiouy]|qu)y$/i' => '$1ies',
+            '/f$/i' => 'ves',
+            '/fe$/i' => 'ves',
+            '/s$/i' => 's',
+            '/$/' => 's'
+        ];
+        foreach ($rules as $pattern => $replacement) {
+            if (preg_match($pattern, $str)) {
+                return preg_replace($pattern, $replacement, $str);
+            }
+        }
+        return $str;
+    }
+
     public static function first_char_is_uppercase($str)
     {
         if (self::nx($str) || !is_string($str)) {
