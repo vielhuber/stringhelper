@@ -2467,8 +2467,11 @@ class __
 
         // replace non letter or digits by -
         $string = preg_replace('~[^\pL\d]+~u', '-', $string);
-        // transliterate
-        $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
+        // transliterate (catch iconv errors)
+        $converted = @iconv('utf-8', 'us-ascii//TRANSLIT', $string);
+        if ($converted !== false) {
+            $string = $converted;
+        }
         // remove unwanted characters
         $string = preg_replace('~[^-\w]+~', '', $string);
         // trim
