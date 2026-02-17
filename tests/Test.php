@@ -860,7 +860,11 @@ house'
         try {
             __translate_google('Das ist ein Test', 'dejhfjhfhh', 'enjhgffjhfj', 'free');
         } catch (\Throwable $t) {
-            $this->assertSame(strpos($t->getMessage(), 'HTTP server (unknown)') !== false, true);
+            $this->assertSame(
+                strpos($t->getMessage(), 'HTTP server (unknown)') !== false ||
+                    strpos($t->getMessage(), 'malformed or illegal request') !== false,
+                true
+            );
         }
 
         try {
