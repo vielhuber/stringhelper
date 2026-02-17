@@ -5212,7 +5212,6 @@ class __
         $curl_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $curl_url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
 
-        curl_close($curl);
         unset($curl); // this is important, see https://stackoverflow.com/a/77394312/2068362
 
         if ($enable_cookies === true) {
