@@ -288,6 +288,13 @@ if (!function_exists('__trim_every_line')) {
     }
 }
 
+if (!function_exists('__trim_indentation')) {
+    function __trim_indentation($str)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'trim_indentation'], func_get_args());
+    }
+}
+
 if (!function_exists('__trim')) {
     function __trim($str, $arr, $replace = '', $mode = null)
     {

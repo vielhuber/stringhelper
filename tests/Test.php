@@ -508,6 +508,42 @@ multiline string
         );
     }
 
+    function test__trim_indentation()
+    {
+        $this->assertSame(__trim_indentation("foo\n bar"), "foo\n bar");
+        $this->assertSame(__trim_indentation("foo\nbar"), "foo\nbar");
+        $this->assertSame(__trim_indentation("foo\n bar\nbaz "), "foo\n bar\nbaz");
+        $this->assertSame(
+            __trim_indentation('
+
+  multiline string
+    multiline string     
+  multiline string
+
+'),
+            '
+
+multiline string
+  multiline string
+multiline string
+
+'
+        );
+        $this->assertSame(__trim_indentation(''), '');
+        $this->assertSame(__trim_indentation(null), null);
+        $this->assertSame(__trim_indentation(false), false);
+        $this->assertSame(__trim_indentation(true), true);
+        $this->assertSame(__trim_indentation([]), []);
+        $this->assertSame(
+            __trim_indentation('
+
+'),
+            '
+
+'
+        );
+    }
+
     function test__br2nl()
     {
         $this->assertSame(__br2nl('foo<br/>bar'), "foo\nbar");

@@ -499,11 +499,26 @@ __atrim(['foo
 baz']) // ['foo','bar','baz']
 
 // trim every line in multiline string
-__trim_every_line('foo
- bar
-baz ') // foo
-//bar
-//baz
+__trim_every_line('
+    - foo
+      - bar
+    - baz
+')
+/*
+- foo
+- bar
+- baz
+*/
+__trim_indentation('
+     - foo
+       - bar
+     - baz
+')
+/*
+- foo
+  - bar
+- baz
+*/
 
 // trim like it should be:
 // - works recursively

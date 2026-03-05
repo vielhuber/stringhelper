@@ -687,6 +687,39 @@ class __
         return implode(PHP_EOL, $arr);
     }
 
+    public static function trim_indentation($str)
+    {
+        if (!is_string($str)) {
+            return $str;
+        }
+        $lines = self::split_newline($str);
+        if (!is_array($lines)) {
+            return $str;
+        }
+        $indent = PHP_INT_MAX;
+        $indents = [];
+        foreach ($lines as $lineKey => $line) {
+            if (trim($line) === '') {
+                continue;
+            }
+            $indents[$lineKey] = strlen($line) - strlen(ltrim($line));
+            if ($indents[$lineKey] < $indent) {
+                $indent = $indents[$lineKey];
+            }
+        }
+        if ($indent === PHP_INT_MAX) {
+            $indent = 0;
+        }
+        foreach ($lines as $lineKey => $line) {
+            if (trim($line) === '') {
+                $lines[$lineKey] = '';
+            } else {
+                $lines[$lineKey] = str_repeat(' ', $indents[$lineKey] - $indent) . self::trim_whitespace(ltrim($line));
+            }
+        }
+        return implode(PHP_EOL, $lines);
+    }
+
     public static function strrev($str)
     {
         if (self::nx($str) || !is_string($str)) {
