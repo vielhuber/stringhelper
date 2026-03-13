@@ -5105,6 +5105,19 @@ class __
 
         if ($follow_redirects === true) {
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+            $has_authorization_header = false;
+            if (is_array($headers)) {
+                foreach ($headers as $headers__key => $headers__value) {
+                    if (strtolower((string) $headers__key) === 'authorization') {
+                        $has_authorization_header = true;
+                        break;
+                    }
+                }
+            }
+            if ($has_authorization_header || self::x($basic_auth)) {
+                curl_setopt($curl, CURLOPT_UNRESTRICTED_AUTH, true);
+            }
         }
 
         // while you can provide your basic auth information inside the url,
