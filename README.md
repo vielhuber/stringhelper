@@ -1,4 +1,10 @@
 [![build status](https://github.com/vielhuber/stringhelper/actions/workflows/ci.yml/badge.svg)](https://github.com/vielhuber/stringhelper/actions)
+[![GitHub Tag](https://img.shields.io/github/v/tag/vielhuber/stringhelper)](https://github.com/vielhuber/stringhelper/tags)
+[![Code Style](https://img.shields.io/badge/code_style-psr--12-ff69b4.svg)](https://www.php-fig.org/psr/psr-12/)
+[![License](https://img.shields.io/github/license/vielhuber/stringhelper)](https://github.com/vielhuber/stringhelper/blob/main/LICENSE.md)
+[![Last Commit](https://img.shields.io/github/last-commit/vielhuber/stringhelper)](https://github.com/vielhuber/stringhelper/commits)
+[![PHP Version Support](https://img.shields.io/packagist/php-v/vielhuber/stringhelper)](https://packagist.org/packages/vielhuber/stringhelper)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/vielhuber/stringhelper)](https://packagist.org/packages/vielhuber/stringhelper)
 
 # ⛏️ stringhelper ⛏️
 
