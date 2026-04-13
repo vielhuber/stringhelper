@@ -10,6 +10,7 @@ class __
             $input === false ||
             $input === '' ||
             (is_string($input) && trim($input) === '') ||
+            (is_string($input) && strpos($input, "\0") !== false) ||
             (is_array($input) && empty($input)) ||
             (is_object($input) && empty((array) $input))
         ) {
