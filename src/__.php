@@ -3032,7 +3032,7 @@ class __
     public static function is_serialized($data, $weak = false)
     {
         if ($weak === false) {
-            if (!is_string($data) || $data == '') {
+            if (!is_string($data) || $data == '' || strpos($data, "\0") !== false) {
                 return false;
             }
             set_error_handler(function ($errno, $errstr) {});
@@ -3081,13 +3081,17 @@ class __
                 }
             }
             $token = $data[0];
+            // guard against null bytes and non-ascii chars that would break preg_match
+            if (!ctype_alpha($token)) {
+                return false;
+            }
             switch ($token) {
                 case 's':
                     if ($strict) {
                         if ('"' !== substr($data, -2, 1)) {
                             return false;
                         }
-                    } elseif (!str_contains($data, '"')) {
+                    } elseif (strpos($data, '"') === false) {
                         return false;
                     }
                 // Or else fall through.
@@ -4935,13 +4939,10 @@ class __
     {
         $mime = null;
         // method 1
-        if (function_exists('finfo_open')) {
+        if (class_exists('finfo')) {
             if (file_exists($filename)) {
-                $finfo = finfo_open(FILEINFO_MIME);
-                if ($finfo !== false) {
-                    $mime = finfo_file($finfo, $filename);
-                    finfo_close($finfo);
-                }
+                $finfo = new \finfo(FILEINFO_MIME);
+                $mime = $finfo->file($filename);
             }
         }
         // method 2
@@ -6357,7 +6358,8 @@ class __
             else {
                 $img = imagecreatefromjpeg($filename);
                 imagejpeg($img, $filename, -1);
-                imagedestroy($img);
+                // free GD resource/object — works in PHP 7 and 8 without triggering imagedestroy deprecation
+                unset($img);
             }
         }
 
