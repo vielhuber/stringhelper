@@ -3,7 +3,7 @@ use vielhuber\stringhelper\__;
 
 class Test extends \PHPUnit\Framework\TestCase
 {
-    private $httpbin = 'https://httpbun.com';
+    private $httpbin = 'https://httpbin.org';
 
     public static function setUpBeforeClass(): void
     {
