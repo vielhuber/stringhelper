@@ -6571,20 +6571,30 @@ class __
 
     public static function rrmdir($dir)
     {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != '.' && $object != '..') {
-                    if (filetype($dir . '/' . $object) == 'dir') {
-                        self::rrmdir($dir . '/' . $object);
-                    } else {
-                        unlink($dir . '/' . $object);
-                    }
-                }
-            }
-            reset($objects);
-            rmdir($dir);
+        // Handle symlinks before is_dir() since is_dir() follows symlinks.
+        if (is_link($dir)) {
+            return unlink($dir);
         }
+        if (!is_dir($dir)) {
+            return false;
+        }
+        $objects = scandir($dir);
+        if ($objects === false) {
+            return false;
+        }
+        foreach ($objects as $object) {
+            if ($object === '.' || $object === '..') {
+                continue;
+            }
+            $path = $dir . '/' . $object;
+            if (is_link($path) || !is_dir($path)) {
+                unlink($path);
+            } else {
+                self::rrmdir($path);
+            }
+        }
+        clearstatcache();
+        return rmdir($dir);
     }
 
     public static function is_base64_encoded($str)
