@@ -127,6 +127,24 @@ class __
         return null;
     }
 
+    public static function num($value, $default = 0)
+    {
+        if ($value === null || $value === '' || $value === false || is_array($value) || is_object($value)) {
+            return $default;
+        }
+        if (is_string($value)) {
+            $value = trim($value);
+            if ($value === '') {
+                return $default;
+            }
+            $value = str_replace(',', '.', $value);
+        }
+        if (!is_numeric($value)) {
+            return $default;
+        }
+        return $value + 0;
+    }
+
     public static function e(...$args)
     {
         foreach ($args as $arg) {
@@ -5707,7 +5725,7 @@ class __
 
         $array = [];
         if (($handle = fopen($filename, 'r')) !== false) {
-            while (($row = fgetcsv($handle, 0, $delimiter, $enclosure)) !== false) {
+            while (($row = fgetcsv($handle, 0, $delimiter, $enclosure, '\\')) !== false) {
                 // fix umlauts
                 foreach ($row as $row__key => $row__value) {
                     $row[$row__key] = self::to_utf8($row__value);
@@ -5724,7 +5742,7 @@ class __
     {
         $fp = fopen($filename, 'wb');
         foreach ($array as $array__fields) {
-            fputcsv($fp, $array__fields, $delimiter, $enclosure);
+            fputcsv($fp, $array__fields, $delimiter, $enclosure, '\\');
         }
         fclose($fp);
         return true;

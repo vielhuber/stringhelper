@@ -58,6 +58,14 @@ __v( $var, 'default' )
 // get first variable that exists, otherwise null
 __v( $var1, $var2, $var3 )
 
+// convert numeric-ish values safely to int/float, otherwise 0 or a custom default
+__num(null) // 0
+__num('') // 0
+__num('12') // 12
+__num('12,5') // 12.5
+__num('foo') // 0
+__num('foo', 7) // 7
+
 // get variable if exists, otherwise the empty object
 __e( $var )
 __e( $var, 'default' )

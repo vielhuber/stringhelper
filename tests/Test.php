@@ -221,6 +221,25 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__v(__e()), null);
     }
 
+    function test__num()
+    {
+        $this->assertSame(0, __num(null));
+        $this->assertSame(0, __num(false));
+        $this->assertSame(0, __num(''));
+        $this->assertSame(0, __num(' '));
+        $this->assertSame(0, __num('foo'));
+        $this->assertSame(7, __num('foo', 7));
+        $this->assertSame(0, __num([]));
+        $this->assertSame(0, __num(new stdClass()));
+        $this->assertSame(0, __num(0));
+        $this->assertSame(12, __num(12));
+        $this->assertSame(12, __num('12'));
+        $this->assertSame(-12, __num('-12'));
+        $this->assertSame(12.5, __num('12.5'));
+        $this->assertSame(12.5, __num('12,5'));
+        $this->assertSame(12.5, __::num('12,5'));
+    }
+
     function test__e()
     {
         $this->assertSame(__e('foo'), 'foo');

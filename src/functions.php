@@ -50,6 +50,13 @@ if (!function_exists('__v')) {
     }
 }
 
+if (!function_exists('__num')) {
+    function __num($value, $default = 0)
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'num'], func_get_args());
+    }
+}
+
 if (!function_exists('__e')) {
     function __e(...$args)
     {
