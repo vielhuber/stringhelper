@@ -200,6 +200,7 @@ __date(new DateTime('2000-01-01'), 'd.m.Y') // 01.01.2000; also accepts datetime
 __date('d.m.Y') // 01.01.2000; you can even switch arguments (they are sorted magically)
 __date('d.m.Y', 'now') // 2019-05-28
 __date('+6 months') // 2019-11-28
+setlocale(LC_TIME, 'de_DE.utf8'); __date('2001-01-01', 'l, d. F Y') // Montag, 01. Januar 2001; textual day/month names use IntlDateFormatter and respect LC_TIME
 
 // outputs a valid formatted value for input datetime-local
 __datetime('01.01.2000') // 2000-01-01T00:00

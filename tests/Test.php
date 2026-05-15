@@ -3584,6 +3584,12 @@ bar'
         $this->assertSame(__date('d.m.Y'), date('d.m.Y', strtotime('now')));
         $this->assertSame(__date('d.m.Y', 'tomorrow'), date('d.m.Y', strtotime('tomorrow')));
         $this->assertSame(__date('d.m.Y', 'tomorrow', '+ 6 months'), date('d.m.Y', strtotime('tomorrow + 6 months')));
+        $previous_locale = setlocale(LC_TIME, '0');
+        if (setlocale(LC_TIME, 'de_DE.utf8') !== false) {
+            $this->assertSame(__date('2001-01-01', 'l, d. F Y'), 'Montag, 01. Januar 2001');
+            $this->assertSame(__date('2001-01-01T12:01:02', 'd.m.Y\TH:i:s'), '01.01.2001T12:01:02');
+        }
+        setlocale(LC_TIME, $previous_locale);
         $this->assertSame(__date('+6 months'), date('Y-m-d', strtotime('now +6 months')));
         // results may vary depending on php timezone
         $this->assertContains(__date('Tue, 11 Aug 2020 17:34:23 +0200 (GMT+02:00)', 'd.m.Y H:i:s'), [
@@ -4009,7 +4015,10 @@ Dies ist ein Test für falsche Umlaute.'
         $this->assertSame(__date('yesterday'), date('Y-m-d', strtotime('yesterday')));
         $this->assertSame(__date('Yesterday'), date('Y-m-d', strtotime('Yesterday')));
         $this->assertSame(__date('+5 weeks'), date('Y-m-d', strtotime('+5 weeks')));
+        $previous_locale = setlocale(LC_TIME, '0');
+        setlocale(LC_TIME, 'C');
         $this->assertSame(__date('z vDHY'), date('z vDHY', strtotime('now')));
+        setlocale(LC_TIME, $previous_locale);
 
         $this->assertSame(__datetime('01.01.2000'), '2000-01-01T00:00');
         $this->assertSame(__datetime('01.01.2000 18:00'), '2000-01-01T18:00');

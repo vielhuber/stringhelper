@@ -4239,7 +4239,68 @@ class __
             $date = mb_substr($date, mb_strpos($date, ', ') + 2);
         }
 
-        return date($format, strtotime($date . (self::x($mod) ? ' ' . $mod : '')));
+        $timestamp = strtotime($date . (self::x($mod) ? ' ' . $mod : ''));
+        if (
+            $timestamp === false ||
+            !class_exists('\IntlDateFormatter') ||
+            !class_exists('\IntlGregorianCalendar') ||
+            !class_exists('\Locale')
+        ) {
+            return date($format, $timestamp);
+        }
+        $locale = setlocale(LC_TIME, '0');
+        if (self::nx($locale) || in_array(mb_strtolower((string) $locale), ['c', 'posix'], true)) {
+            return date($format, $timestamp);
+        }
+        if (self::os() === 'windows') {
+            $locale = self::map_locale_windows_to_unix($locale);
+        }
+        $locale = \Locale::canonicalize((string) $locale);
+        if (in_array($locale, ['c', 'posix'], true)) {
+            return date($format, $timestamp);
+        }
+        $intl_formats = [
+            'D' => 'EEE',
+            'l' => 'EEEE',
+            'M' => 'MMM',
+            'F' => 'MMMM'
+        ];
+        $out = '';
+        $datetime = null;
+        $calendar = null;
+        $format = (string) $format;
+        $format_length = strlen($format);
+        for ($i = 0; $i < $format_length; $i++) {
+            $char = $format[$i];
+            if ($char === '\\' && $i + 1 < $format_length) {
+                $out .= $format[$i + 1];
+                $i++;
+                continue;
+            }
+            if (array_key_exists($char, $intl_formats)) {
+                if ($datetime === null) {
+                    $datetime = new \DateTime('@' . $timestamp);
+                    $datetime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                    $calendar = \IntlGregorianCalendar::createInstance();
+                    if ($calendar instanceof \IntlGregorianCalendar) {
+                        $calendar->setGregorianChange(PHP_INT_MIN);
+                    }
+                }
+                $formatter = new \IntlDateFormatter(
+                    $locale,
+                    \IntlDateFormatter::NONE,
+                    \IntlDateFormatter::NONE,
+                    $datetime->getTimezone(),
+                    $calendar,
+                    $intl_formats[$char]
+                );
+                $intl_out = $formatter->format($datetime);
+                $out .= $intl_out === false ? date($char, $timestamp) : $intl_out;
+                continue;
+            }
+            $out .= date($char, $timestamp);
+        }
+        return $out;
     }
 
     public static function validate_date_format($str)
@@ -4293,7 +4354,7 @@ class __
             'r',
             'U'
         ];
-        $chars_optional = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '-', '.', ':', '/'];
+        $chars_optional = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '-', '.', ':', '/', ','];
         $min_one_needed_char = false;
         foreach (str_split($str) as $str__value) {
             if (!in_array($str__value, array_merge($chars_needed, $chars_optional))) {
