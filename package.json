@@ -4,8 +4,8 @@
     "version": "0.1.0",
     "dependencies": {},
     "devDependencies": {
-        "@prettier/plugin-php": ">=0.24",
+        "@prettier/plugin-php": ">=0.25",
         "prettier": ">=3",
-        "prettier-plugin-sh": "^0.18.0"
+        "prettier-plugin-sh": "^0.18.1"
     }
 }
