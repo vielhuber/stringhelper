@@ -370,6 +370,20 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(__cookie_get('special_cookie_name'), 'cookie_value');
     }
 
+    function test__system_messages()
+    {
+        $_COOKIE['system_messages'] = base64_encode('a:1:{i:0;O:8:"stdClass":0:{}}');
+        $this->assertSame([], @__system_messages());
+
+        @__system_message('foo', 'success');
+        $messages = @__system_messages();
+        $this->assertCount(1, $messages);
+        $this->assertSame('foo', $messages[0]->content);
+        $this->assertSame('success', $messages[0]->type);
+
+        unset($_COOKIE['system_messages']);
+    }
+
     function test__truncate_string()
     {
         $this->assertSame(__truncate_string('foo', 50), 'foo');

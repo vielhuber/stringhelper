@@ -3788,12 +3788,12 @@ class __
     public static function system_message($content, $type = 'success')
     {
         if (isset($_COOKIE['system_messages']) && $_COOKIE['system_messages'] != '') {
-            $messages = unserialize(base64_decode($_COOKIE['system_messages']));
+            $messages = self::system_messages_decode((string) $_COOKIE['system_messages']);
         } else {
             $messages = [];
         }
         $messages[] = (object) ['content' => $content, 'type' => $type];
-        $messages = base64_encode(serialize($messages));
+        $messages = base64_encode((string) json_encode($messages));
         setcookie('system_messages', $messages, time() + 60 * 60 * 24 * 1, '/');
         $_COOKIE['system_messages'] = $messages;
     }
@@ -3802,11 +3802,39 @@ class __
     {
         $messages = [];
         if (isset($_COOKIE['system_messages']) && $_COOKIE['system_messages'] != '') {
-            $messages = unserialize(base64_decode($_COOKIE['system_messages']));
+            $messages = self::system_messages_decode((string) $_COOKIE['system_messages']);
             unset($_COOKIE['system_messages']);
             setcookie('system_messages', '', time() - 3600, '/');
         }
         return $messages;
+    }
+
+    private static function system_messages_decode(string $cookie): array
+    {
+        $decoded = base64_decode($cookie, true);
+        if ($decoded === false) {
+            return [];
+        }
+        $messages = json_decode($decoded, true);
+        if (!is_array($messages)) {
+            return [];
+        }
+        return array_values(
+            array_filter(
+                array_map(static function ($message) {
+                    if (!is_array($message)) {
+                        return null;
+                    }
+                    if (!isset($message['content']) || !is_scalar($message['content'])) {
+                        return null;
+                    }
+                    if (!isset($message['type']) || !is_scalar($message['type'])) {
+                        return null;
+                    }
+                    return (object) ['content' => (string) $message['content'], 'type' => (string) $message['type']];
+                }, $messages)
+            )
+        );
     }
 
     public static function redirect_to($url = null, $code_or_seconds = null, $mode = 'php')
