@@ -1132,7 +1132,8 @@ house'
                 __translate_deepl('Das ist <br> ein<br> Haus <br> und Hund.<hr>Cool!', 'de', 'en', $api_keys__value),
                 [
                     'This is <br/> a<br/> house <br/> and dog.<hr/>Cool!',
-                    'That\'s<br/> a<br/> house<br/> and dog.<hr/>Cool!'
+                    'That\'s<br/> a<br/> house<br/> and dog.<hr/>Cool!',
+                    'This is <br/>, a<br/> house <br/> and dog.<hr/>Cool!'
                 ]
             );
         }
