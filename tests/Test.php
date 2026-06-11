@@ -1123,7 +1123,8 @@ house'
                     'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
                     'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
                     '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually in all areas the equal of the Urgestein <a p="3">jQuery</a> and now far superior.',
-                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with <a p="3">jQuery</a> in virtually all areas and is now far superior.'
+                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
+                    'Since the release of <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with the long-standing <a p="3">jQuery</a> in virtually every area and is now far superior to it.'
                 ]
             );
 
