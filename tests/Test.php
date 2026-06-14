@@ -1736,6 +1736,9 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertEquals(__decode_data(__encode_data($data)), $data);
         $this->assertEquals(__decode_data(__encode_data([])), []);
         $this->assertEquals(__decode_data(__encode_data((object) $data)), (object) $data);
+        $date = new \DateTimeImmutable('2026-06-14 12:00:00');
+        $this->assertSame('__PHP_Incomplete_Class', get_class(__decode_data(__encode_data($date))));
+        $this->assertEquals($date, __decode_data(__encode_data($date), [\DateTimeImmutable::class]));
         $this->assertEquals(__decode_data(__encode_data(null)), null);
         $this->assertEquals(__decode_data(__encode_data(true)), true);
         $this->assertEquals(__decode_data(__encode_data(false)), false);

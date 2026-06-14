@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace vielhuber\stringhelper;
 
 class __
@@ -37,7 +38,7 @@ class __
             return false;
         }
         if (self::is_serialized($input, true)) {
-            return self::x(@unserialize($input)) || self::x(@unserialize(@stripslashes($input)));
+            return self::x(self::safe_unserialize($input)) || self::x(self::safe_unserialize(stripslashes($input)));
         }
         if (is_string($input) && mb_strlen($input) === 1 && json_encode($input) === '"\ufeff"') {
             return false;
@@ -84,7 +85,7 @@ class __
             return false;
         }
         if (self::is_serialized($input, true)) {
-            return self::x(@unserialize($input));
+            return self::x(self::safe_unserialize($input));
         }
         if (json_encode($input) === '"\ufeff"') {
             return false;
@@ -322,7 +323,7 @@ class __
             return false;
         }
         if (self::is_serialized($val)) {
-            return self::true(unserialize($val));
+            return self::true(self::safe_unserialize($val));
         }
         if (is_callable($val)) {
             try {
@@ -377,7 +378,7 @@ class __
             return false;
         }
         if (self::is_serialized($val)) {
-            return self::false(unserialize($val));
+            return self::false(self::safe_unserialize($val));
         }
         if (is_callable($val)) {
             try {
@@ -2985,9 +2986,13 @@ class __
         return base64_encode(serialize($data));
     }
 
-    public static function decode_data($str)
+    public static function decode_data($str, $allowed_classes = ['stdClass'])
     {
-        return unserialize(base64_decode($str));
+        $data = base64_decode($str, true);
+        if ($data === false) {
+            return false;
+        }
+        return self::safe_unserialize($data, $allowed_classes);
     }
 
     public static function ask($question, $whitelist = [])
@@ -3053,9 +3058,7 @@ class __
             if (!is_string($data) || $data == '' || strpos($data, "\0") !== false) {
                 return false;
             }
-            set_error_handler(function ($errno, $errstr) {});
-            $unserialized = unserialize($data);
-            restore_error_handler();
+            $unserialized = self::safe_unserialize($data);
             if ($data !== 'b:0;' && $unserialized === false) {
                 return false;
             }
@@ -3126,17 +3129,18 @@ class __
             return false;
         }
 
-        /* this approach uses @ and leads to an ugly margin at the top when debug mode is on in wordpress */
-        /*
-        if (!is_string($string) || $string == '') {
-            return false;
+    }
+
+    private static function safe_unserialize($data, $allowed_classes = false)
+    {
+        set_error_handler(function ($errno, $errstr) {
+            return true;
+        });
+        try {
+            return unserialize($data, ['allowed_classes' => $allowed_classes]);
+        } finally {
+            restore_error_handler();
         }
-        $data = @unserialize($string);
-        if ($string !== 'b:0;' && $data === false) {
-            return false;
-        }
-        return true;
-        */
     }
 
     public static function is_integer($input)
@@ -5442,7 +5446,7 @@ class __
     {
         $message = $t->getMessage();
         if (self::is_serialized($message)) {
-            $message = unserialize($message);
+            $message = self::safe_unserialize($message);
         }
         return $message;
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* FUNCTIONS */
 
 if (!function_exists('__x')) {
@@ -747,7 +748,7 @@ if (!function_exists('__encode_data')) {
 }
 
 if (!function_exists('__decode_data')) {
-    function __decode_data($str)
+    function __decode_data($str, $allowed_classes = ['stdClass'])
     {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'decode_data'], func_get_args());
     }
