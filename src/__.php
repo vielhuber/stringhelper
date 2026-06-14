@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace vielhuber\stringhelper;
 
 class __
@@ -877,7 +876,7 @@ class __
         }
         // input timestamp
         if (is_numeric($date)) {
-            $date = date('Y-m-d', $date);
+            $date = date('Y-m-d', (int) $date);
         }
         // input datetime object
         if ($date instanceof \DateTime) {
@@ -3131,7 +3130,7 @@ class __
 
     }
 
-    private static function safe_unserialize($data, $allowed_classes = false)
+    private static function safe_unserialize($data, $allowed_classes = true)
     {
         set_error_handler(function ($errno, $errstr) {
             return true;
@@ -4218,7 +4217,7 @@ class __
         }
         // input timestamp
         elseif (is_numeric($date)) {
-            $date = date('Y-m-d H:i:s', $date);
+            $date = date('Y-m-d H:i:s', (int) $date);
         }
         // input datetime object
         elseif ($date instanceof \DateTime) {

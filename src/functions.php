@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* FUNCTIONS */
 
 if (!function_exists('__x')) {
