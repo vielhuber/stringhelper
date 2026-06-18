@@ -137,7 +137,48 @@ class __
             if ($value === '') {
                 return $default;
             }
-            $value = str_replace(',', '.', $value);
+            if (is_numeric($value) && preg_match('/[.,]/', $value) !== 1) {
+                return $value + 0;
+            }
+            $value = str_replace(["\xc2\xa0", "\xe2\x80\xaf"], ' ', $value);
+            $value = str_replace('−', '-', $value);
+            $value = preg_replace('/[^0-9.,+\-\'`´’ ()]/u', '', $value);
+            $value = trim($value);
+            if ($value === '' || !preg_match('/\d/', $value)) {
+                return $default;
+            }
+            $negative =
+                preg_match('/^\s*\(.*\)\s*$/', $value) === 1 ||
+                preg_match('/^\s*-/', $value) === 1 ||
+                preg_match('/-\s*$/', $value) === 1;
+            $value = str_replace(['+', '-', '(', ')', ' ', "'", '`', '´', '’'], '', $value);
+            $last_dot = strrpos($value, '.');
+            $last_comma = strrpos($value, ',');
+            if ($last_dot !== false && $last_comma !== false) {
+                $decimal_separator = $last_dot > $last_comma ? '.' : ',';
+                $thousands_separator = $decimal_separator === '.' ? ',' : '.';
+                $value = str_replace($thousands_separator, '', $value);
+                $value = str_replace($decimal_separator, '.', $value);
+            } elseif ($last_dot !== false || $last_comma !== false) {
+                $separator = $last_dot !== false ? '.' : ',';
+                $parts = explode($separator, $value);
+                $is_thousands_number =
+                    count($parts) > 1 &&
+                    strlen($parts[0]) >= 1 &&
+                    strlen($parts[0]) <= 3 &&
+                    count(array_filter(array_slice($parts, 1), function ($part) {
+                        return strlen($part) !== 3;
+                    })) === 0;
+                if ($is_thousands_number) {
+                    $value = implode('', $parts);
+                } else {
+                    $decimal_part = array_pop($parts);
+                    $value = implode('', $parts) . '.' . $decimal_part;
+                }
+            }
+            if ($negative) {
+                $value = '-' . $value;
+            }
         }
         if (!is_numeric($value)) {
             return $default;

@@ -239,6 +239,22 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(12.5, __num('12.5'));
         $this->assertSame(12.5, __num('12,5'));
         $this->assertSame(12.5, __::num('12,5'));
+        $this->assertSame(3005.0, __num('3.005,00'));
+        $this->assertSame(3005.0, __num('3,005.00'));
+        $this->assertSame(1234.56, __num('1.234,56'));
+        $this->assertSame(1234.56, __num('1,234.56'));
+        $this->assertSame(1234.56, __num('1 234,56'));
+        $this->assertSame(1234.56, __num("1'234.56"));
+        $this->assertSame(1234567.89, __num('1.234.567,89'));
+        $this->assertSame(1234567.89, __num('1,234,567.89'));
+        $this->assertSame(-1234.56, __num('-1.234,56'));
+        $this->assertSame(-1234.56, __num('−1.234,56'));
+        $this->assertSame(-1234.56, __num('1.234,56-'));
+        $this->assertSame(-1234.56, __num('(1.234,56)'));
+        $this->assertSame(1234.56, __num('1.234,56 €'));
+        $this->assertSame(1234.56, __num('EUR 1.234,56'));
+        $this->assertSame(3005, __num('3.005'));
+        $this->assertSame(12.5, __num('12.5'));
     }
 
     function test__e()
@@ -1125,7 +1141,8 @@ house'
                     'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
                     '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually in all areas the equal of the Urgestein <a p="3">jQuery</a> and now far superior.',
                     'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
-                    'Since the release of <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with the long-standing <a p="3">jQuery</a> in virtually every area and is now far superior to it.'
+                    'Since the release of <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with the long-standing <a p="3">jQuery</a> in virtually every area and is now far superior to it.',
+                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with the veteran <a p="3">jQuery</a> in virtually every area and is now far superior to it.'
                 ]
             );
 
@@ -1134,7 +1151,8 @@ house'
                 [
                     'This is <br/> a<br/> house <br/> and dog.<hr/>Cool!',
                     'That\'s<br/> a<br/> house<br/> and dog.<hr/>Cool!',
-                    'This is <br/>, a<br/> house <br/> and dog.<hr/>Cool!'
+                    'This is <br/>, a<br/> house <br/> and dog.<hr/>Cool!',
+                    'That\'s <br/>, a<br/> house <br/>, and a dog.<hr/>Cool!'
                 ]
             );
         }
