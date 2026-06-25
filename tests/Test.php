@@ -238,6 +238,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $this->assertSame(-12, __num('-12'));
         $this->assertSame(12.5, __num('12.5'));
         $this->assertSame(12.5, __num('12,5'));
+        $this->assertSame(0.333, __num('0.333'));
+        $this->assertSame(-0.333, __num('-0.333'));
+        $this->assertSame(200333.2, __num('200.333,20'));
+        $this->assertSame(-200333.31, __num('-200.333,31'));
+        $this->assertSame(200.333, __num('200.333'));
+        $this->assertSame(-200.333, __num('-200.333'));
+        $this->assertSame(200.333, __num('200,333'));
+        $this->assertSame(-200.333, __num('-200,333'));
         $this->assertSame(12.5, __::num('12,5'));
         $this->assertSame(3005.0, __num('3.005,00'));
         $this->assertSame(3005.0, __num('3,005.00'));

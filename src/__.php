@@ -163,6 +163,8 @@ class __
                 $separator = $last_dot !== false ? '.' : ',';
                 $parts = explode($separator, $value);
                 $is_thousands_number =
+                    !($separator === ',' && count($parts) === 2) &&
+                    !($separator === '.' && count($parts) === 2 && (strlen($parts[0]) === 3 || (int) $parts[0] === 0)) &&
                     count($parts) > 1 &&
                     strlen($parts[0]) >= 1 &&
                     strlen($parts[0]) <= 3 &&
