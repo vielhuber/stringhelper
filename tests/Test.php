@@ -2704,6 +2704,8 @@ data-attr="foo">
         $this->assertSame(__is_serialized((object) []), false);
         $this->assertSame(__is_serialized('idkfa'), false);
         $this->assertSame(__is_serialized('b:0;'), true);
+        $this->assertFalse(__is_serialized('s:3:"foo";trailing'));
+        $this->assertFalse(__decode_data(base64_encode('s:3:"foo";trailing')));
 
         $this->assertSame(__is_serialized('a:1:{s:3:\"foo\";s:3:\"bar\";}', true), true);
         $this->assertSame(__is_serialized('a:1:{42}', true), true);

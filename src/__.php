@@ -3175,14 +3175,20 @@ class __
 
     private static function safe_unserialize($data, $allowed_classes = true)
     {
-        set_error_handler(function ($errno, $errstr) {
+        $unserializeWarning = false;
+        set_error_handler(function ($errno, $errstr) use (&$unserializeWarning) {
+            $unserializeWarning = true;
             return true;
         });
         try {
-            return unserialize($data, ['allowed_classes' => $allowed_classes]);
+            $unserialized = unserialize($data, ['allowed_classes' => $allowed_classes]);
         } finally {
             restore_error_handler();
         }
+        if ($unserializeWarning) {
+            return false;
+        }
+        return $unserialized;
     }
 
     public static function is_integer($input)
