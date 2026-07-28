@@ -1,7 +1,7 @@
 {
     "name": "stringhelper",
     "description": "",
-    "version": "7.3.5",
+    "version": "7.3.6",
     "dependencies": {},
     "devDependencies": {
         "@prettier/plugin-php": ">=0.25",

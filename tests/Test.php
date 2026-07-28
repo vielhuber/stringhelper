@@ -1426,6 +1426,25 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $response = __curl('https://vielhuber.de');
         $this->assertTrue(strpos($response->result, '<html') !== false);
 
+        $response = __curl('https://self-signed.badssl.com/');
+        $this->assertSame(200, $response->status);
+        $response = __curl(
+            'https://self-signed.badssl.com/',
+            null,
+            null,
+            null,
+            false,
+            true,
+            60,
+            null,
+            null,
+            true,
+            null,
+            null,
+            true
+        );
+        $this->assertSame(0, $response->status);
+
         $response = __curl($this->httpbin . '/basic-auth/foo/bar');
         $this->assertSame($response->status, 401);
         $response = __curl($this->httpbin . '/basic-auth/foo/bar', null, null, null, false, true, 60, [

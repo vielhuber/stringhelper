@@ -5231,7 +5231,8 @@ class __
         $cookies = null,
         $follow_redirects = true,
         $proxy = null,
-        $stream_callback = null
+        $stream_callback = null,
+        $ssl_verify = false
     ) {
         // guess method based on data
         if ($method === null) {
@@ -5249,8 +5250,8 @@ class __
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // don't verify certificate
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, $ssl_verify);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, $ssl_verify ? 2 : 0);
         curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1); // this sometimes is needed
 
         // support streaming

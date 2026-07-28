@@ -999,22 +999,42 @@ __fetch('https://httpbin.org/anything', 'curl') // { "method": "GET", ... }
 __fetch('https://httpbin.org/anything', 'php') // { "method": "GET", ... }
 
 // do curl requests (get/post) and get status code, body and header
+
+
+
+        $url = '',
+        $data = null,
+        $method = null,
+        $headers = null,
+        $enable_cookies = false,
+        $send_as_json = true,
+        $timeout = 60,
+        $basic_auth = null,
+        $cookies = null,
+        $follow_redirects = true,
+        $proxy = null,
+        $stream_callback = null,
+        $ssl_verify = false
+
+
+
 __curl(
-    'https://httpbin.org/anything', // url
-    ['foo' => 'bar'], // data
-    'POST', // method
-    ['Bar' => 'baz'], // headers
-    false, // store and send cookies
-    true, // send as json (or application/x-www-form-urlencoded)
-    60, // timeout in seconds
-    ['username' => 'password'], // basic authentication
-    ['foo' => 'bar'], // cookies
-    true, // follow redirects
-    'username:password@192.168.178.1:8080', // use proxy (username, password and port are optional)
-    function($chunk) { // optional support for streaming
+    url: 'https://httpbin.org/anything',
+    data: ['foo' => 'bar'],
+    method: 'POST',
+    headers: ['Bar' => 'baz'],
+    enable_cookies: false, // store and send cookies
+    send_as_json: true, // or application/x-www-form-urlencoded
+    timeout: 60, // in seconds
+    basic_auth: ['username' => 'password'],
+    cookies: ['foo' => 'bar'],
+    follow_redirects: true,
+    proxy: 'username:password@192.168.178.1:8080', // username, password and port are optional
+    stream_callback: function($chunk) { // optional support for streaming
         echo $chunk;
         return strlen($chunk);
-    }
+    },
+    ssl_verify: false // verify ssl certificate
 )
 __curl('https://httpbin.org/anything') // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ], "url": "..."}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST') //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ], "url": "..."}

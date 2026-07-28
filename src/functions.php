@@ -1234,7 +1234,9 @@ if (!function_exists('__curl')) {
         $basic_auth = null,
         $cookies = null,
         $follow_redirects = true,
-        $proxy = null
+        $proxy = null,
+        $stream_callback = null,
+        $ssl_verify = false
     ) {
         return \vielhuber\stringhelper\__::curl(
             $url,
@@ -1247,7 +1249,9 @@ if (!function_exists('__curl')) {
             $basic_auth,
             $cookies,
             $follow_redirects,
-            $proxy
+            $proxy,
+            $stream_callback,
+            $ssl_verify
         );
     }
 }
