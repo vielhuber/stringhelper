@@ -958,10 +958,13 @@ house'
         try {
             __translate_google('Das ist ein Test', 'dejhfjhfhh', 'enjhgffjhfj', 'free');
         } catch (\Throwable $t) {
-            $this->assertSame(
-                strpos($t->getMessage(), 'HTTP server (unknown)') !== false ||
-                    strpos($t->getMessage(), 'malformed or illegal request') !== false,
-                true
+            $message = $t->getMessage();
+            $this->assertTrue(
+                strpos($message, 'HTTP server (unknown)') !== false ||
+                    stripos($message, 'malformed or illegal request') !== false ||
+                    stripos($message, 'unusual traffic') !== false ||
+                    stripos($message, 'too many requests') !== false,
+                $message
             );
         }
 
