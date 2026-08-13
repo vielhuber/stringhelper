@@ -1413,6 +1413,45 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame($response->result->method, 'GET');
         $this->assertSame($response->status, 200);
         $this->assertSame(!empty($response->headers), true);
+        $responses = __curl_parallel(
+            [
+                'first' => __::curl_parallel_request(url: $this->httpbin . '/anything'),
+                'second' => __curl_parallel_request(
+                    url: $this->httpbin . '/anything',
+                    data: ['request' => 'second'],
+                    method: 'POST',
+                    headers: ['X-Request' => 'second']
+                ),
+                'third' => __curl_parallel_request(
+                    url: $this->httpbin . '/anything',
+                    data: ['request' => 'third'],
+                    method: 'PUT',
+                    headers: ['X-Request' => 'third']
+                )
+            ]
+        );
+        $this->assertSame(['first', 'second', 'third'], array_keys($responses));
+        $this->assertSame('GET', $responses['first']->result->method);
+        $this->assertSame('POST', $responses['second']->result->method);
+        $this->assertSame(json_encode(['request' => 'second']), $responses['second']->result->data);
+        $this->assertSame('second', $responses['second']->result->headers->{'X-Request'});
+        $this->assertSame('PUT', $responses['third']->result->method);
+        $this->assertSame(json_encode(['request' => 'third']), $responses['third']->result->data);
+        $this->assertSame('third', $responses['third']->result->headers->{'X-Request'});
+        $this->assertNotEmpty($responses['first']->headers);
+        $this->assertSame([], __curl_parallel([]));
+        unset($GLOBALS['stringhelper-curl-cookies.txt']);
+        __curl_parallel([
+            __curl_parallel_request(
+                url: $this->httpbin . '/cookies/set?parallel_cookie=stored',
+                enable_cookies: true
+            )
+        ]);
+        $responses = __curl_parallel([
+            __curl_parallel_request(url: $this->httpbin . '/cookies', enable_cookies: true)
+        ]);
+        $this->assertSame('stored', $responses[0]->result->cookies->parallel_cookie);
+        unset($GLOBALS['stringhelper-curl-cookies.txt']);
         $response = __curl($this->httpbin . '/anything', ['foo' => 'bar'], 'POST');
         $this->assertSame($response->result->method, 'POST');
         $this->assertSame($response->result->data, json_encode(['foo' => 'bar']));

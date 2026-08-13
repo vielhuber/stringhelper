@@ -1256,6 +1256,33 @@ if (!function_exists('__curl')) {
     }
 }
 
+if (!function_exists('__curl_parallel')) {
+    function __curl_parallel(array $requests): array
+    {
+        return \vielhuber\stringhelper\__::curl_parallel($requests);
+    }
+}
+
+if (!function_exists('__curl_parallel_request')) {
+    function __curl_parallel_request(
+        string $url,
+        mixed $data = null,
+        ?string $method = null,
+        ?array $headers = null,
+        bool $enable_cookies = false,
+        bool $send_as_json = true,
+        int $timeout = 60,
+        ?array $basic_auth = null,
+        ?array $cookies = null,
+        bool $follow_redirects = true,
+        ?string $proxy = null,
+        ?callable $stream_callback = null,
+        bool $ssl_verify = false
+    ): array {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'curl_parallel_request'], func_get_args());
+    }
+}
+
 if (!function_exists('__has_basic_auth')) {
     function __has_basic_auth($url)
     {

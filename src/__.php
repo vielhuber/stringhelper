@@ -5232,7 +5232,8 @@ class __
         $follow_redirects = true,
         $proxy = null,
         $stream_callback = null,
-        $ssl_verify = false
+        $ssl_verify = false,
+        $prepare_only = false
     ) {
         // guess method based on data
         if ($method === null) {
@@ -5414,6 +5415,15 @@ class __
             return $len;
         });
 
+        if ($prepare_only === true) {
+            $prepared_request = (object) [
+                'handle' => $curl,
+                'return_transfer' => $stream_callback === null || !is_callable($stream_callback)
+            ];
+            $prepared_request->headers = &$headers;
+            return $prepared_request;
+        }
+
         $result = curl_exec($curl);
 
         $curl_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -5437,6 +5447,134 @@ class __
             'status' => $curl_status,
             'headers' => $headers,
             'url' => $curl_url
+        ];
+    }
+
+    public static function curl_parallel(array $requests): array
+    {
+        if ($requests === []) {
+            return [];
+        }
+
+        $multi_curl = curl_multi_init();
+        $curl_share = null;
+        $cookie_curl = null;
+        $prepared_requests = [];
+        $responses = [];
+        foreach ($requests as $response_key => $request) {
+            $prepared_request = self::curl(
+                $request['url'],
+                $request['data'],
+                $request['method'],
+                $request['headers'],
+                false,
+                $request['send_as_json'],
+                $request['timeout'],
+                $request['basic_auth'],
+                $request['cookies'],
+                $request['follow_redirects'],
+                $request['proxy'],
+                $request['stream_callback'],
+                $request['ssl_verify'],
+                true
+            );
+
+            if ($request['enable_cookies'] === true) {
+                if ($curl_share === null) {
+                    $curl_share = curl_share_init();
+                    curl_share_setopt($curl_share, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
+                }
+                curl_setopt($prepared_request->handle, CURLOPT_COOKIEFILE, '');
+                curl_setopt($prepared_request->handle, CURLOPT_SHARE, $curl_share);
+                if ($cookie_curl === null) {
+                    $cookie_curl = $prepared_request->handle;
+                    if (isset($GLOBALS['stringhelper-curl-cookies.txt'])) {
+                        foreach (preg_split('/\R/', $GLOBALS['stringhelper-curl-cookies.txt']) as $cookie) {
+                            if ($cookie !== '' && strpos($cookie, '# ') !== 0) {
+                                curl_setopt($cookie_curl, CURLOPT_COOKIELIST, $cookie);
+                            }
+                        }
+                    }
+                }
+            }
+
+            curl_multi_add_handle($multi_curl, $prepared_request->handle);
+            $prepared_request->key = $response_key;
+            $prepared_requests[] = $prepared_request;
+            $responses[$response_key] = null;
+        }
+
+        do {
+            $multi_status = curl_multi_exec($multi_curl, $running);
+            if ($running > 0 && curl_multi_select($multi_curl, 1.0) === -1) {
+                usleep(1000);
+            }
+        } while ($running > 0 && $multi_status === CURLM_OK);
+
+        $transfer_results = [];
+        while (($transfer = curl_multi_info_read($multi_curl)) !== false) {
+            $transfer_results[spl_object_id($transfer['handle'])] = $transfer['result'];
+        }
+
+        foreach ($prepared_requests as $prepared_request) {
+            $result = false;
+            $transfer_result = $transfer_results[spl_object_id($prepared_request->handle)] ?? CURLE_FAILED_INIT;
+            if ($multi_status === CURLM_OK && $transfer_result === CURLE_OK) {
+                $result = $prepared_request->return_transfer
+                    ? curl_multi_getcontent($prepared_request->handle)
+                    : true;
+            }
+            if (self::string_is_json($result)) {
+                $result = json_decode($result);
+            }
+            $responses[$prepared_request->key] = (object) [
+                'result' => $result,
+                'status' => curl_getinfo($prepared_request->handle, CURLINFO_HTTP_CODE),
+                'headers' => $prepared_request->headers,
+                'url' => curl_getinfo($prepared_request->handle, CURLINFO_EFFECTIVE_URL)
+            ];
+            curl_multi_remove_handle($multi_curl, $prepared_request->handle);
+        }
+
+        if ($cookie_curl !== null) {
+            $stored_cookies = curl_getinfo($cookie_curl, CURLINFO_COOKIELIST);
+            if (is_array($stored_cookies)) {
+                $GLOBALS['stringhelper-curl-cookies.txt'] = implode(PHP_EOL, $stored_cookies) . PHP_EOL;
+            }
+        }
+        curl_multi_close($multi_curl);
+        return $responses;
+    }
+
+    public static function curl_parallel_request(
+        string $url,
+        mixed $data = null,
+        ?string $method = null,
+        ?array $headers = null,
+        bool $enable_cookies = false,
+        bool $send_as_json = true,
+        int $timeout = 60,
+        ?array $basic_auth = null,
+        ?array $cookies = null,
+        bool $follow_redirects = true,
+        ?string $proxy = null,
+        ?callable $stream_callback = null,
+        bool $ssl_verify = false
+    ): array {
+        return [
+            'url' => $url,
+            'data' => $data,
+            'method' => $method,
+            'headers' => $headers,
+            'enable_cookies' => $enable_cookies,
+            'send_as_json' => $send_as_json,
+            'timeout' => $timeout,
+            'basic_auth' => $basic_auth,
+            'cookies' => $cookies,
+            'follow_redirects' => $follow_redirects,
+            'proxy' => $proxy,
+            'stream_callback' => $stream_callback,
+            'ssl_verify' => $ssl_verify
         ];
     }
 

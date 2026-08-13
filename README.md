@@ -1048,6 +1048,21 @@ __curl('https://vielhuber.de/wp-login.php', ['log' => 'username', 'pwd', 'passwo
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 // you can also hijack the current browser session if logged in
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
+// fire off parallel requests
+__curl_parallel([
+    __curl_parallel_request(
+        url: 'https://httpbin.org/anything',
+        data: ['foo' => 'bar'],
+        method: 'POST',
+        headers: ['X-Request' => 'first']
+    ),
+    __curl_parallel_request(
+        url: 'https://example.com/api',
+        data: ['baz' => 'qux'],
+        method: 'PUT',
+        headers: ['Authorization' => 'Bearer token']
+    )
+])
 
 // mime type
 __get_mime_type('foo.png') // image/png

@@ -2,7 +2,7 @@
     "name": "vielhuber/stringhelper",
     "description": "Collection of useful shorthand string related functions in PHP.",
     "require": {
-        "php": ">=7.1"
+        "php": ">=8.5"
     },
     "license": "MIT",
     "require-dev": {
