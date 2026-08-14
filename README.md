@@ -158,6 +158,15 @@ $strings = __brute_strings(
 foreach ($strings as $string) {
     echo $string . PHP_EOL; // 'aa', 'ab', 'ba', 'bb', 'aaa', 'aab', ...
 }
+$strings = __brute_strings(
+    min: 4,
+    max: 4,
+    charset: 'ab12',
+    regex_requirement: '/^(?=.*\d.*\d)(?=.*\pL.*\pL)/u' // at least two digits and two letters
+);
+foreach ($strings as $string) {
+    echo $string . PHP_EOL; // 'aa11', 'aa12', 'aa21', ...
+}
 $iterator = __brute_strings(
     min: 2,
     max: 3,

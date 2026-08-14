@@ -2387,6 +2387,28 @@ string'
         $this->assertSame('AAAAAB', $bucket->current());
         $strings = new \LimitIterator(__brute_strings(2, 2, 'ab'), offset: 1, limit: 2);
         $this->assertSame(['ab', 'ba'], iterator_to_array($strings, false));
+        $regex_requirement = '/^(?=.*\d.*\d)(?=.*\pL.*\pL)/u';
+        $strings = iterator_to_array(
+            __brute_strings(4, 4, 'ab12', regex_requirement: $regex_requirement)
+        );
+        $this->assertCount(96, $strings);
+        $this->assertSame(
+            [],
+            array_values(array_filter($strings, fn($string) => preg_match($regex_requirement, $string) !== 1))
+        );
+        $string_count = 0;
+        foreach (
+            __brute_strings(4, 4, 'ab12', bucket_size: 10, regex_requirement: $regex_requirement) as $bucket
+        ) {
+            $bucket_count = iterator_count($bucket);
+            $this->assertLessThanOrEqual(10, $bucket_count);
+            $string_count += $bucket_count;
+        }
+        $this->assertSame(96, $string_count);
+        $this->assertSame(
+            [],
+            iterator_to_array(__brute_strings(2, 2, 'ab12', regex_requirement: $regex_requirement))
+        );
     }
 
     function test__foreach_nested()

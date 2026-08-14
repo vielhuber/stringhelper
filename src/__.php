@@ -1064,7 +1064,13 @@ class __
         return implode('', $password_chars);
     }
 
-    public static function brute_strings(int $min, int $max, string $charset, ?int $bucket_size = null): \Generator
+    public static function brute_strings(
+        int $min,
+        int $max,
+        string $charset,
+        ?int $bucket_size = null,
+        ?string $regex_requirement = null
+    ): \Generator
     {
         $characters = preg_split('//u', $charset, -1, PREG_SPLIT_NO_EMPTY);
         if (
@@ -1077,7 +1083,7 @@ class __
             return;
         }
         if ($bucket_size !== null) {
-            $strings = self::brute_strings($min, $max, $charset);
+            $strings = self::brute_strings($min, $max, $charset, null, $regex_requirement);
             while ($strings->valid()) {
                 $remaining = $bucket_size;
                 yield (function () use ($strings, &$remaining): \Generator {
@@ -1104,6 +1110,9 @@ class __
                 $string = '';
                 for ($j = $base_size - 1; $j >= 0; $j--) {
                     $string .= $characters[$base[$j]];
+                }
+                if ($regex_requirement !== null && preg_match($regex_requirement, $string) !== 1) {
+                    continue;
                 }
                 yield $string;
             }
