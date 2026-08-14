@@ -1064,17 +1064,40 @@ class __
         return implode('', $password_chars);
     }
 
-    public static function brute_strings(int $min, int $max, string $charset): array
+    public static function brute_strings(int $min, int $max, string $charset, ?int $bucket_size = null): \Generator
     {
         $characters = preg_split('//u', $charset, -1, PREG_SPLIT_NO_EMPTY);
-        if ($min < 1 || $max < $min || $characters === false || $characters === []) {
-            return [];
+        if (
+            $min < 1 ||
+            $max < $min ||
+            $characters === false ||
+            $characters === [] ||
+            ($bucket_size !== null && $bucket_size < 1)
+        ) {
+            return;
+        }
+        if ($bucket_size !== null) {
+            $strings = self::brute_strings($min, $max, $charset);
+            while ($strings->valid()) {
+                $remaining = $bucket_size;
+                yield (function () use ($strings, &$remaining): \Generator {
+                    while ($remaining > 0 && $strings->valid()) {
+                        yield $strings->current();
+                        $strings->next();
+                        $remaining--;
+                    }
+                })();
+                while ($remaining > 0 && $strings->valid()) {
+                    $strings->next();
+                    $remaining--;
+                }
+            }
+            return;
         }
 
         $size = count($characters);
         $base = array_fill(0, $min, 0);
         $base_size = $min;
-        $strings = [];
         while ($base_size <= $max) {
             for ($i = 0; $i < $size; $i++) {
                 $base[0] = $i;
@@ -1082,7 +1105,7 @@ class __
                 for ($j = $base_size - 1; $j >= 0; $j--) {
                     $string .= $characters[$base[$j]];
                 }
-                $strings[] = $string;
+                yield $string;
             }
 
             $counter = 0;
@@ -1102,7 +1125,6 @@ class __
                 $base[$i] = 0;
             }
         }
-        return $strings;
     }
 
     public static function distance_haversine($p1, $p2)

@@ -2350,15 +2350,43 @@ string'
 
     function test__brute_strings()
     {
-        $this->assertSame(['a', 'b', 'aa', 'ab', 'ba', 'bb'], __brute_strings(1, 2, 'ab'));
-        $this->assertSame(['aa', 'ab', 'ba', 'bb'], __brute_strings(2, 2, 'ab'));
-        $this->assertSame(['aa', 'aaa', 'aaaa'], __brute_strings(2, 4, 'a'));
-        $this->assertSame(['ä', 'ß'], __brute_strings(1, 1, 'äß'));
-        $this->assertSame(36, count(__brute_strings(2, 3, 'abc')));
-        $this->assertSame([], __brute_strings(0, 2, 'ab'));
-        $this->assertSame([], __brute_strings(3, 2, 'ab'));
-        $this->assertSame([], __brute_strings(1, 2, ''));
-        $this->assertSame(__brute_strings(1, 2, 'ab'), __::brute_strings(1, 2, 'ab'));
+        $this->assertSame(['a', 'b', 'aa', 'ab', 'ba', 'bb'], iterator_to_array(__brute_strings(1, 2, 'ab')));
+        $this->assertSame(['aa', 'ab', 'ba', 'bb'], iterator_to_array(__brute_strings(2, 2, 'ab')));
+        $this->assertSame(['aa', 'aaa', 'aaaa'], iterator_to_array(__brute_strings(2, 4, 'a')));
+        $this->assertSame(['ä', 'ß'], iterator_to_array(__brute_strings(1, 1, 'äß')));
+        $this->assertSame(36, iterator_count(__brute_strings(2, 3, 'abc')));
+        $this->assertSame([], iterator_to_array(__brute_strings(0, 2, 'ab')));
+        $this->assertSame([], iterator_to_array(__brute_strings(3, 2, 'ab')));
+        $this->assertSame([], iterator_to_array(__brute_strings(1, 2, '')));
+        $this->assertSame(
+            iterator_to_array(__brute_strings(1, 2, 'ab')),
+            iterator_to_array(__::brute_strings(1, 2, 'ab'))
+        );
+        $strings = __brute_strings(6, 6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+        $this->assertInstanceOf(\Generator::class, $strings);
+        $this->assertSame('AAAAAA', $strings->current());
+        $strings->next();
+        $this->assertSame('AAAAAB', $strings->current());
+        $buckets = [];
+        foreach (__brute_strings(1, 2, 'ab', 2) as $bucket) {
+            $this->assertInstanceOf(\Generator::class, $bucket);
+            $buckets[] = iterator_to_array($bucket);
+        }
+        $this->assertSame([['a', 'b'], ['aa', 'ab'], ['ba', 'bb']], $buckets);
+        $buckets = [];
+        foreach (__brute_strings(1, 1, 'abc', 2) as $bucket) {
+            $buckets[] = iterator_to_array($bucket);
+        }
+        $this->assertSame([['a', 'b'], ['c']], $buckets);
+        $this->assertSame([], iterator_to_array(__brute_strings(1, 2, 'ab', 0)));
+        $buckets = __brute_strings(6, 6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 1000000);
+        $bucket = $buckets->current();
+        $this->assertInstanceOf(\Generator::class, $bucket);
+        $this->assertSame('AAAAAA', $bucket->current());
+        $bucket->next();
+        $this->assertSame('AAAAAB', $bucket->current());
+        $strings = new \LimitIterator(__brute_strings(2, 2, 'ab'), offset: 1, limit: 2);
+        $this->assertSame(['ab', 'ba'], iterator_to_array($strings, false));
     }
 
     function test__foreach_nested()

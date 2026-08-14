@@ -147,8 +147,38 @@ __password_generate(
   exclude: 'lI' // exclude confusing chars
 )
 
-// generate every string between the minimum and maximum length
-__brute_strings(min: 2, max: 3, charset: 'ab') // ['aa', 'ab', 'ba', 'bb', 'aaa', 'aab', ...]
+// lazily generate every string between the minimum and maximum length
+// generation starts when foreach requests the first value and only the current value is retained
+// a generator is an Iterator and can also be consumed manually
+$strings = __brute_strings(
+    min: 2,
+    max: 3,
+    charset: 'ab'
+);
+foreach ($strings as $string) {
+    echo $string . PHP_EOL; // 'aa', 'ab', 'ba', 'bb', 'aaa', 'aab', ...
+}
+$iterator = __brute_strings(
+    min: 2,
+    max: 3,
+    charset: 'ab'
+);
+$iterator->rewind();
+while ($iterator->valid()) {
+    echo $iterator->current() . PHP_EOL;
+    $iterator->next();
+}
+$buckets = __brute_strings(
+    min: 1,
+    max: 5,
+    charset: 'abc',
+    bucket_size: 100
+);
+foreach ($buckets as $bucket) {
+    foreach ($bucket as $string) {
+        echo $string . PHP_EOL;
+    }
+}
 
 // calculate distance in meters between two lat/lng points with the haversine formula
 __distance_haversine([48.576809, 13.403207], [48.127719, 11.575344]) // 143999

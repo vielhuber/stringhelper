@@ -373,7 +373,7 @@ if (!function_exists('__password_generate')) {
 }
 
 if (!function_exists('__brute_strings')) {
-    function __brute_strings(int $min, int $max, string $charset): array
+    function __brute_strings(int $min, int $max, string $charset, ?int $bucket_size = null): \Generator
     {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'brute_strings'], func_get_args());
     }
