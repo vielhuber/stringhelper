@@ -164,13 +164,19 @@ class __
                 $parts = explode($separator, $value);
                 $is_thousands_number =
                     !($separator === ',' && count($parts) === 2) &&
-                    !($separator === '.' && count($parts) === 2 && (strlen($parts[0]) === 3 || (int) $parts[0] === 0)) &&
+                    !(
+                        $separator === '.' &&
+                        count($parts) === 2 &&
+                        (strlen($parts[0]) === 3 || (int) $parts[0] === 0)
+                    ) &&
                     count($parts) > 1 &&
                     strlen($parts[0]) >= 1 &&
                     strlen($parts[0]) <= 3 &&
-                    count(array_filter(array_slice($parts, 1), function ($part) {
-                        return strlen($part) !== 3;
-                    })) === 0;
+                    count(
+                        array_filter(array_slice($parts, 1), function ($part) {
+                            return strlen($part) !== 3;
+                        })
+                    ) === 0;
                 if ($is_thousands_number) {
                     $value = implode('', $parts);
                 } else {
@@ -1058,6 +1064,47 @@ class __
         return implode('', $password_chars);
     }
 
+    public static function brute_strings(int $min, int $max, string $charset): array
+    {
+        $characters = preg_split('//u', $charset, -1, PREG_SPLIT_NO_EMPTY);
+        if ($min < 1 || $max < $min || $characters === false || $characters === []) {
+            return [];
+        }
+
+        $size = count($characters);
+        $base = array_fill(0, $min, 0);
+        $base_size = $min;
+        $strings = [];
+        while ($base_size <= $max) {
+            for ($i = 0; $i < $size; $i++) {
+                $base[0] = $i;
+                $string = '';
+                for ($j = $base_size - 1; $j >= 0; $j--) {
+                    $string .= $characters[$base[$j]];
+                }
+                $strings[] = $string;
+            }
+
+            $counter = 0;
+            for ($i = 0; $i < $base_size; $i++) {
+                if ($base[$i] !== $size - 1) {
+                    break;
+                }
+                $counter++;
+            }
+            if ($counter === $base_size) {
+                $base = array_fill(0, $base_size + 1, 0);
+                $base_size = count($base);
+                continue;
+            }
+            $base[$counter]++;
+            for ($i = 0; $i < $counter; $i++) {
+                $base[$i] = 0;
+            }
+        }
+        return $strings;
+    }
+
     public static function distance_haversine($p1, $p2)
     {
         if (
@@ -1899,7 +1946,8 @@ class __
         if (preg_match('/\R/u', $str) === 1) {
             $translations = [];
             foreach (preg_split('/\R/u', $str) as $line) {
-                $translations[] = $line === '' ? '' : self::translate_google_inofficial($line, $from_lng, $to_lng, $proxy);
+                $translations[] =
+                    $line === '' ? '' : self::translate_google_inofficial($line, $from_lng, $to_lng, $proxy);
             }
             return implode(PHP_EOL, $translations);
         }
@@ -2165,7 +2213,7 @@ class __
                     $a11 = $a11 >> 1;
                     $a11 &= 2147483647;
                     $a11 |= 0x40000000;
-                    $a11 = $a11 >> $c12 - 1;
+                    $a11 = $a11 >> ($c12 - 1);
                 } else {
                     $a11 = $a11 >> $c12;
                 }
@@ -2196,7 +2244,7 @@ class __
                 $a11 = $a11 >> 1;
                 $a11 &= 2147483647;
                 $a11 |= 0x40000000;
-                $a11 = $a11 >> $c12 - 1;
+                $a11 = $a11 >> ($c12 - 1);
             } else {
                 $a11 = $a11 >> $c12;
             }
@@ -3179,7 +3227,6 @@ class __
             }
             return false;
         }
-
     }
 
     private static function safe_unserialize($data, $allowed_classes = true)
@@ -4031,7 +4078,7 @@ class __
             if ($calendar instanceof \IntlGregorianCalendar) {
                 $calendar->setGregorianChange(PHP_INT_MIN);
             }
-            return (new \IntlDateFormatter($locale, $date_type, $time_type, $tz, $calendar, $pattern))->format(
+            return new \IntlDateFormatter($locale, $date_type, $time_type, $tz, $calendar, $pattern)->format(
                 $timestamp
             );
         };
@@ -5404,7 +5451,7 @@ class __
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
             }
         }
-        if ($enable_cookies === true) {
+        if ($enable_cookies === true && $prepare_only === false) {
             $cookie_filename = 'stringhelper-curl-cookies.txt';
             if (isset($GLOBALS[$cookie_filename])) {
                 file_put_contents($cookie_filename, $GLOBALS[$cookie_filename]);
@@ -5427,6 +5474,7 @@ class __
         if ($prepare_only === true) {
             $prepared_request = (object) [
                 'handle' => $curl,
+                'enable_cookies' => $enable_cookies,
                 'return_transfer' => $stream_callback === null || !is_callable($stream_callback)
             ];
             $prepared_request->headers = &$headers;
@@ -5470,25 +5518,8 @@ class __
         $cookie_curl = null;
         $prepared_requests = [];
         $responses = [];
-        foreach ($requests as $response_key => $request) {
-            $prepared_request = self::curl(
-                $request['url'],
-                $request['data'],
-                $request['method'],
-                $request['headers'],
-                false,
-                $request['send_as_json'],
-                $request['timeout'],
-                $request['basic_auth'],
-                $request['cookies'],
-                $request['follow_redirects'],
-                $request['proxy'],
-                $request['stream_callback'],
-                $request['ssl_verify'],
-                true
-            );
-
-            if ($request['enable_cookies'] === true) {
+        foreach ($requests as $response_key => $prepared_request) {
+            if ($prepared_request->enable_cookies === true) {
                 if ($curl_share === null) {
                     $curl_share = curl_share_init();
                     curl_share_setopt($curl_share, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
@@ -5529,9 +5560,7 @@ class __
             $result = false;
             $transfer_result = $transfer_results[spl_object_id($prepared_request->handle)] ?? CURLE_FAILED_INIT;
             if ($multi_status === CURLM_OK && $transfer_result === CURLE_OK) {
-                $result = $prepared_request->return_transfer
-                    ? curl_multi_getcontent($prepared_request->handle)
-                    : true;
+                $result = $prepared_request->return_transfer ? curl_multi_getcontent($prepared_request->handle) : true;
             }
             if (self::string_is_json($result)) {
                 $result = json_decode($result);
@@ -5553,38 +5582,6 @@ class __
         }
         curl_multi_close($multi_curl);
         return $responses;
-    }
-
-    public static function curl_parallel_request(
-        string $url,
-        mixed $data = null,
-        ?string $method = null,
-        ?array $headers = null,
-        bool $enable_cookies = false,
-        bool $send_as_json = true,
-        int $timeout = 60,
-        ?array $basic_auth = null,
-        ?array $cookies = null,
-        bool $follow_redirects = true,
-        ?string $proxy = null,
-        ?callable $stream_callback = null,
-        bool $ssl_verify = false
-    ): array {
-        return [
-            'url' => $url,
-            'data' => $data,
-            'method' => $method,
-            'headers' => $headers,
-            'enable_cookies' => $enable_cookies,
-            'send_as_json' => $send_as_json,
-            'timeout' => $timeout,
-            'basic_auth' => $basic_auth,
-            'cookies' => $cookies,
-            'follow_redirects' => $follow_redirects,
-            'proxy' => $proxy,
-            'stream_callback' => $stream_callback,
-            'ssl_verify' => $ssl_verify
-        ];
     }
 
     public static function has_basic_auth($url)

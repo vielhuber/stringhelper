@@ -147,6 +147,9 @@ __password_generate(
   exclude: 'lI' // exclude confusing chars
 )
 
+// generate every string between the minimum and maximum length
+__brute_strings(min: 2, max: 3, charset: 'ab') // ['aa', 'ab', 'ba', 'bb', 'aaa', 'aab', ...]
+
 // calculate distance in meters between two lat/lng points with the haversine formula
 __distance_haversine([48.576809, 13.403207], [48.127719, 11.575344]) // 143999
 
@@ -999,25 +1002,6 @@ __fetch('https://httpbin.org/anything', 'curl') // { "method": "GET", ... }
 __fetch('https://httpbin.org/anything', 'php') // { "method": "GET", ... }
 
 // do curl requests (get/post) and get status code, body and header
-
-
-
-        $url = '',
-        $data = null,
-        $method = null,
-        $headers = null,
-        $enable_cookies = false,
-        $send_as_json = true,
-        $timeout = 60,
-        $basic_auth = null,
-        $cookies = null,
-        $follow_redirects = true,
-        $proxy = null,
-        $stream_callback = null,
-        $ssl_verify = false
-
-
-
 __curl(
     url: 'https://httpbin.org/anything',
     data: ['foo' => 'bar'],
@@ -1034,7 +1018,8 @@ __curl(
         echo $chunk;
         return strlen($chunk);
     },
-    ssl_verify: false // verify ssl certificate
+    ssl_verify: false, // verify ssl certificate
+    prepare_only: false // return a prepared request for __curl_parallel
 )
 __curl('https://httpbin.org/anything') // {"status": 200, "result": { "method": "GET", ... }, "headers": [ ... ], "url": "..."}
 __curl('https://httpbin.org/anything', ['foo' => 'bar'], 'POST') //  {"status": 200, "result": { "method": "POST", "data": {"foo": "bar"}, ... }, "headers": [ ... ], "url": "..."}
@@ -1050,17 +1035,19 @@ __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, true)
 __curl('https://vielhuber.de/wp-admin/options.php', null, 'GET', null, false, false, 60, null, $_COOKIE)
 // fire off parallel requests
 __curl_parallel([
-    __curl_parallel_request(
+    __curl(
         url: 'https://httpbin.org/anything',
         data: ['foo' => 'bar'],
         method: 'POST',
-        headers: ['X-Request' => 'first']
+        headers: ['X-Request' => 'first'],
+        prepare_only: true
     ),
-    __curl_parallel_request(
+    __curl(
         url: 'https://example.com/api',
         data: ['baz' => 'qux'],
         method: 'PUT',
-        headers: ['Authorization' => 'Bearer token']
+        headers: ['Authorization' => 'Bearer token'],
+        prepare_only: true
     )
 ])
 

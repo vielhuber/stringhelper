@@ -1416,18 +1416,20 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame($response->status, 200);
         $this->assertSame(!empty($response->headers), true);
         $responses = __curl_parallel([
-            'first' => __::curl_parallel_request(url: $this->httpbin . '/anything'),
-            'second' => __curl_parallel_request(
+            'first' => __curl(url: $this->httpbin . '/anything', prepare_only: true),
+            'second' => __curl(
                 url: $this->httpbin . '/anything',
                 data: ['request' => 'second'],
                 method: 'POST',
-                headers: ['X-Request' => 'second']
+                headers: ['X-Request' => 'second'],
+                prepare_only: true
             ),
-            'third' => __curl_parallel_request(
+            'third' => __curl(
                 url: $this->httpbin . '/anything',
                 data: ['request' => 'third'],
                 method: 'PUT',
-                headers: ['X-Request' => 'third']
+                headers: ['X-Request' => 'third'],
+                prepare_only: true
             )
         ]);
         $this->assertSame(['first', 'second', 'third'], array_keys($responses));
@@ -1442,9 +1444,15 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame([], __curl_parallel([]));
         unset($GLOBALS['stringhelper-curl-cookies.txt']);
         __curl_parallel([
-            __curl_parallel_request(url: $this->httpbin . '/cookies/set?parallel_cookie=stored', enable_cookies: true)
+            __curl(
+                url: $this->httpbin . '/cookies/set?parallel_cookie=stored',
+                enable_cookies: true,
+                prepare_only: true
+            )
         ]);
-        $responses = __curl_parallel([__curl_parallel_request(url: $this->httpbin . '/cookies', enable_cookies: true)]);
+        $responses = __curl_parallel([
+            __curl(url: $this->httpbin . '/cookies', enable_cookies: true, prepare_only: true)
+        ]);
         $this->assertSame('stored', $responses[0]->result->cookies->parallel_cookie);
         unset($GLOBALS['stringhelper-curl-cookies.txt']);
         $response = __curl($this->httpbin . '/anything', ['foo' => 'bar'], 'POST');
@@ -2338,6 +2346,19 @@ string'
             true
         );
         $this->assertEquals(preg_match('/l|I]/', __password_generate(20, ['a-z', 'A-Z', '0-9', '$!?'], 'lI')), false);
+    }
+
+    function test__brute_strings()
+    {
+        $this->assertSame(['a', 'b', 'aa', 'ab', 'ba', 'bb'], __brute_strings(1, 2, 'ab'));
+        $this->assertSame(['aa', 'ab', 'ba', 'bb'], __brute_strings(2, 2, 'ab'));
+        $this->assertSame(['aa', 'aaa', 'aaaa'], __brute_strings(2, 4, 'a'));
+        $this->assertSame(['ä', 'ß'], __brute_strings(1, 1, 'äß'));
+        $this->assertSame(36, count(__brute_strings(2, 3, 'abc')));
+        $this->assertSame([], __brute_strings(0, 2, 'ab'));
+        $this->assertSame([], __brute_strings(3, 2, 'ab'));
+        $this->assertSame([], __brute_strings(1, 2, ''));
+        $this->assertSame(__brute_strings(1, 2, 'ab'), __::brute_strings(1, 2, 'ab'));
     }
 
     function test__foreach_nested()

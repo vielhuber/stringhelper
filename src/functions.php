@@ -372,6 +372,13 @@ if (!function_exists('__password_generate')) {
     }
 }
 
+if (!function_exists('__brute_strings')) {
+    function __brute_strings(int $min, int $max, string $charset): array
+    {
+        return call_user_func_array(['\vielhuber\stringhelper\__', 'brute_strings'], func_get_args());
+    }
+}
+
 if (!function_exists('__distance_haversine')) {
     function __distance_haversine($p1, $p2)
     {
@@ -1236,7 +1243,8 @@ if (!function_exists('__curl')) {
         $follow_redirects = true,
         $proxy = null,
         $stream_callback = null,
-        $ssl_verify = false
+        $ssl_verify = false,
+        $prepare_only = false
     ) {
         return \vielhuber\stringhelper\__::curl(
             $url,
@@ -1251,7 +1259,8 @@ if (!function_exists('__curl')) {
             $follow_redirects,
             $proxy,
             $stream_callback,
-            $ssl_verify
+            $ssl_verify,
+            $prepare_only
         );
     }
 }
@@ -1260,26 +1269,6 @@ if (!function_exists('__curl_parallel')) {
     function __curl_parallel(array $requests): array
     {
         return \vielhuber\stringhelper\__::curl_parallel($requests);
-    }
-}
-
-if (!function_exists('__curl_parallel_request')) {
-    function __curl_parallel_request(
-        string $url,
-        mixed $data = null,
-        ?string $method = null,
-        ?array $headers = null,
-        bool $enable_cookies = false,
-        bool $send_as_json = true,
-        int $timeout = 60,
-        ?array $basic_auth = null,
-        ?array $cookies = null,
-        bool $follow_redirects = true,
-        ?string $proxy = null,
-        ?callable $stream_callback = null,
-        bool $ssl_verify = false
-    ): array {
-        return call_user_func_array(['\vielhuber\stringhelper\__', 'curl_parallel_request'], func_get_args());
     }
 }
 
