@@ -763,13 +763,7 @@ multiline string
 
     function test__translate_google()
     {
-        foreach (
-            [
-                /*'free',*/
-                $_SERVER['GOOGLE_TRANSLATION_API_KEY']
-            ]
-            as $api_keys__value
-        ) {
+        foreach (['free', $_SERVER['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
             foreach (
                 [
                     [
@@ -780,7 +774,8 @@ multiline string
                             'This is Santa\'s <span>house</span>',
                             'This is Santa&#39;s <span>house</span>',
                             'This is Santa Claus&#39; <span>house</span>',
-                            'This is Santa Claus&#39;s <span>house</span>'
+                            'This is Santa Claus&#39;s <span>house</span>',
+                            'This is Santa Claus\' <span>house</span>'
                         ],
                         'de',
                         'en'
@@ -793,7 +788,8 @@ multiline string
                             'This is Santa\'s <span class="notranslate">Haus</span>',
                             'This is Santa&#39;s <span class="notranslate">Haus</span>',
                             'This is Santa Claus&#39; <span class="notranslate">Haus</span>',
-                            'This is Santa Claus&#39;s <span class="notranslate">Haus</span>'
+                            'This is Santa Claus&#39;s <span class="notranslate">Haus</span>',
+                            'This is Santa Claus\' <span class="notranslate">Haus</span>'
                         ],
                         'de',
                         'en'
@@ -816,7 +812,7 @@ multiline string
                     ],
                     [
                         'Sein oder Nichtsein; das ist hier die Frage.',
-                        'To be or not to be; that is the question.',
+                        ['To be or not to be; that is the question.', 'To be or not to be; that is the question here.'],
                         'de',
                         'en'
                     ],
@@ -833,7 +829,8 @@ multiline string
                             'Since <a>ES6</a> <a>, VanillaJS</a> has been on par with the original <a>jQuery</a> in virtually all areas and is now far superior.',
                             'Since <a>ES6,</a> <a>VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.',
                             'Since <a>ES6</a> <a>, VanillaJS</a> has been on par with the original <a>jQuery</a> in almost all areas and is now far superior.',
-                            'Since <a>ES6,</a> <a>VanillaJS</a> has been virtually on par with the veteran <a>jQuery</a> in all areas and is now far superior.'
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been virtually on par with the veteran <a>jQuery</a> in all areas and is now far superior.',
+                            'Since <a>ES6,</a> <a>VanillaJS</a> has been on a par with the veteran <a>jQuery</a> in virtually all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -850,7 +847,8 @@ multiline string
                             'Since <a p="2">ES6</a> <a p="1">, VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in almost all areas and is now far superior.',
                             'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.',
                             'Since <a p="2">ES6</a> <a p="1">, VanillaJS</a> has been on par with the original <a p="3">jQuery</a> in virtually all areas and is now far superior.',
-                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been virtually on par with the veteran <a p="3">jQuery</a> in all areas and is now far superior.'
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been virtually on par with the veteran <a p="3">jQuery</a> in all areas and is now far superior.',
+                            'Since <a p="2">ES6,</a> <a p="1">VanillaJS</a> has been on a par with the veteran <a p="3">jQuery</a> in virtually all areas and is now far superior.'
                         ],
                         'de',
                         'en'
@@ -939,6 +937,16 @@ multiline string
             $this->assertSame(__translate_google('', 'de', 'en', $api_keys__value), '');
         }
 
+        $this->assertSame('This is a test', __translate_google('Das ist ein Test', 'de', 'en', 'free'));
+        $this->assertContains(__translate_google('Hund' . PHP_EOL . 'Haus', 'de', 'en', 'free'), [
+            'Dog' . PHP_EOL . 'House',
+            'Dog' . PHP_EOL . 'house'
+        ]);
+        $this->assertContains(__translate_google('<b>Haus</b><span>Hund</span>', 'de', 'en', 'free'), [
+            '<b>House</b><span>Dog</span>',
+            '<b>House</b> <span>dog</span>'
+        ]);
+
         $this->assertContains(
             __translate_google(
                 'Hund
@@ -975,13 +983,7 @@ house'
         }
 
         if (isset($_SERVER['PROXY'])) {
-            foreach (
-                [
-                    $_SERVER['GOOGLE_TRANSLATION_API_KEY']
-                    /*'free'*/
-                ]
-                as $api_keys__value
-            ) {
+            foreach ([$_SERVER['GOOGLE_TRANSLATION_API_KEY'], 'free'] as $api_keys__value) {
                 $this->assertSame(__translate_google('Haus', 'de', 'en', $api_keys__value, $_SERVER['PROXY']), 'House');
             }
         }
@@ -1413,23 +1415,21 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame($response->result->method, 'GET');
         $this->assertSame($response->status, 200);
         $this->assertSame(!empty($response->headers), true);
-        $responses = __curl_parallel(
-            [
-                'first' => __::curl_parallel_request(url: $this->httpbin . '/anything'),
-                'second' => __curl_parallel_request(
-                    url: $this->httpbin . '/anything',
-                    data: ['request' => 'second'],
-                    method: 'POST',
-                    headers: ['X-Request' => 'second']
-                ),
-                'third' => __curl_parallel_request(
-                    url: $this->httpbin . '/anything',
-                    data: ['request' => 'third'],
-                    method: 'PUT',
-                    headers: ['X-Request' => 'third']
-                )
-            ]
-        );
+        $responses = __curl_parallel([
+            'first' => __::curl_parallel_request(url: $this->httpbin . '/anything'),
+            'second' => __curl_parallel_request(
+                url: $this->httpbin . '/anything',
+                data: ['request' => 'second'],
+                method: 'POST',
+                headers: ['X-Request' => 'second']
+            ),
+            'third' => __curl_parallel_request(
+                url: $this->httpbin . '/anything',
+                data: ['request' => 'third'],
+                method: 'PUT',
+                headers: ['X-Request' => 'third']
+            )
+        ]);
         $this->assertSame(['first', 'second', 'third'], array_keys($responses));
         $this->assertSame('GET', $responses['first']->result->method);
         $this->assertSame('POST', $responses['second']->result->method);
@@ -1442,14 +1442,9 @@ foo_10_bar_10_baz_12_gnarr_13_gnaz
         $this->assertSame([], __curl_parallel([]));
         unset($GLOBALS['stringhelper-curl-cookies.txt']);
         __curl_parallel([
-            __curl_parallel_request(
-                url: $this->httpbin . '/cookies/set?parallel_cookie=stored',
-                enable_cookies: true
-            )
+            __curl_parallel_request(url: $this->httpbin . '/cookies/set?parallel_cookie=stored', enable_cookies: true)
         ]);
-        $responses = __curl_parallel([
-            __curl_parallel_request(url: $this->httpbin . '/cookies', enable_cookies: true)
-        ]);
+        $responses = __curl_parallel([__curl_parallel_request(url: $this->httpbin . '/cookies', enable_cookies: true)]);
         $this->assertSame('stored', $responses[0]->result->cookies->parallel_cookie);
         unset($GLOBALS['stringhelper-curl-cookies.txt']);
         $response = __curl($this->httpbin . '/anything', ['foo' => 'bar'], 'POST');

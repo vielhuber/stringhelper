@@ -1896,6 +1896,13 @@ class __
     public static function translate_google_inofficial($str, $from_lng, $to_lng, $proxy = null)
     {
         /* more info: https://vielhuber.de/blog/google-translate-api-hacking */
+        if (preg_match('/\R/u', $str) === 1) {
+            $translations = [];
+            foreach (preg_split('/\R/u', $str) as $line) {
+                $translations[] = $line === '' ? '' : self::translate_google_inofficial($line, $from_lng, $to_lng, $proxy);
+            }
+            return implode(PHP_EOL, $translations);
+        }
         $str = self::translate_google_inofficial_parse_result_pre($str);
         $args = [
             'anno' => 3,
@@ -1904,7 +1911,6 @@ class __
             'format' => 'html',
             'v' => '1.0',
             'key' => 'AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw',
-            'logld' => 'vTE_20200210_00',
             'sl' => $from_lng,
             'tl' => $to_lng,
             'sp' => 'nmt',
@@ -2065,12 +2071,11 @@ class __
     private static function translate_google_inofficial_generate_tkk($proxy = null)
     {
         $cache = sys_get_temp_dir() . '/tkk.cache';
-        if (
-            file_exists($cache) &&
-            filemtime($cache) > strtotime('now - 1 hour') &&
-            self::x(file_get_contents($cache))
-        ) {
-            return file_get_contents($cache);
+        if (file_exists($cache) && filemtime($cache) > strtotime('now - 1 hour')) {
+            $tkk = file_get_contents($cache);
+            if (is_string($tkk) && preg_match('/^\d+\.\d+$/', $tkk) === 1) {
+                return $tkk;
+            }
         }
         $data = self::curl(
             'https://translate.googleapis.com/translate_a/element.js',
@@ -2086,9 +2091,13 @@ class __
             $proxy
         );
         $response = $data->result;
-        $pos1 = mb_strpos($response, 'c._ctkk=\'') + mb_strlen('c._ctkk=\'');
-        $pos2 = mb_strpos($response, '\'', $pos1);
-        $tkk = mb_substr($response, $pos1, $pos2 - $pos1);
+        if (
+            preg_match("/c\._ctkk='(\d+\.\d+)'/", $response, $matches) !== 1 &&
+            preg_match('/\\\\x22(\d+\.\d+)\\\\x22/', $response, $matches) !== 1
+        ) {
+            self::exception('Unable to generate Google Translate token');
+        }
+        $tkk = $matches[1];
         file_put_contents($cache, $tkk);
         return $tkk;
     }
