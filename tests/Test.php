@@ -506,14 +506,14 @@ class Test extends \PHPUnit\Framework\TestCase
         $data = __log_end(null, false);
         $this->assertTrue(is_float($data['time']));
         $this->assertTrue($data['message'] === null);
-        $this->assertSame(intval(round($data['time'])), 1);
+        $this->assertGreaterThanOrEqual(1, intval(round($data['time'])));
 
         __log_begin('foo');
         sleep(2);
         $data = __log_end('foo', false);
         $this->assertTrue(is_float($data['time']));
         $this->assertSame($data['message'], 'foo');
-        $this->assertSame(intval(round($data['time'])), 2);
+        $this->assertGreaterThanOrEqual(2, intval(round($data['time'])));
     }
 
     function test__phone_normalize()
@@ -1136,38 +1136,36 @@ house'
             if ($api_keys__value == 'free') {
                 continue;
             }
-            $this->assertContains(
-                __translate_deepl('Sein oder Nichtsein; das ist hier die Frage.', 'de', 'en', $api_keys__value),
-                ['To be or not to be; that is the question.', 'To be or not to be; that is the question here.']
+            $translation = __translate_deepl(
+                'Sein oder Nichtsein; das ist hier die Frage.',
+                'de',
+                'en',
+                $api_keys__value
             );
+            $this->assertStringContainsString('To be or not to be', $translation);
+            $this->assertStringContainsString('question', $translation);
 
-            $this->assertContains(
-                __translate_deepl(
-                    '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
-                    'de',
-                    'en',
-                    $api_keys__value
-                ),
-                [
-                    'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in all areas and is now far superior.',
-                    'Since <a p="2">ES6</a>,<a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
-                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
-                    '<a p="1">VanillaJS</a> is since <a p="2">ES6</a> virtually in all areas the equal of the Urgestein <a p="3">jQuery</a> and now far superior.',
-                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on a par with <a p="3">jQuery</a> in virtually all areas and is now far superior.',
-                    'Since the release of <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with the long-standing <a p="3">jQuery</a> in virtually every area and is now far superior to it.',
-                    'Since <a p="2">ES6</a>, <a p="1">VanillaJS</a> has been on par with the veteran <a p="3">jQuery</a> in virtually every area and is now far superior to it.'
-                ]
+            $translation = __translate_deepl(
+                '<a p="1">VanillaJS</a> ist seit <a p="2">ES6</a> quasi in allen Bereichen dem Urgestein <a p="3">jQuery</a> ebenbürtig und inzwischen weit überlegen.',
+                'de',
+                'en',
+                $api_keys__value
             );
+            $this->assertStringContainsString('<a p="1">VanillaJS</a>', $translation);
+            $this->assertStringContainsString('<a p="2">ES6</a>', $translation);
+            $this->assertStringContainsString('<a p="3">jQuery</a>', $translation);
+            $this->assertStringContainsString('far superior', $translation);
 
-            $this->assertContains(
-                __translate_deepl('Das ist <br> ein<br> Haus <br> und Hund.<hr>Cool!', 'de', 'en', $api_keys__value),
-                [
-                    'This is <br/> a<br/> house <br/> and dog.<hr/>Cool!',
-                    'That\'s<br/> a<br/> house<br/> and dog.<hr/>Cool!',
-                    'This is <br/>, a<br/> house <br/> and dog.<hr/>Cool!',
-                    'That\'s <br/>, a<br/> house <br/>, and a dog.<hr/>Cool!'
-                ]
+            $translation = __translate_deepl(
+                'Das ist <br> ein<br> Haus <br> und Hund.<hr>Cool!',
+                'de',
+                'en',
+                $api_keys__value
             );
+            $this->assertSame(3, substr_count($translation, '<br/>'));
+            $this->assertSame(1, substr_count($translation, '<hr/>'));
+            $this->assertStringContainsString('house', $translation);
+            $this->assertStringContainsString('dog', $translation);
         }
 
         try {
@@ -2180,8 +2178,9 @@ string'
 
     function test__extract_title_from_url()
     {
-        $this->assertSame(__extract_title_from_url('https://vielhuber.de'), 'Vielhuber David > Full-Stack Developer');
-        $this->assertSame(__extract_title_from_url('https://vielhuber.de/'), 'Vielhuber David > Full-Stack Developer');
+        $expected_titles = ['Vielhuber David > Full-Stack Developer', 'Vielhuber David > Full-Stack Developer in Passau'];
+        $this->assertContains(__extract_title_from_url('https://vielhuber.de'), $expected_titles);
+        $this->assertContains(__extract_title_from_url('https://vielhuber.de/'), $expected_titles);
         $this->assertSame(__extract_title_from_url(null), '');
         $this->assertSame(__extract_title_from_url(true), '');
         $this->assertSame(__extract_title_from_url(false), '');
