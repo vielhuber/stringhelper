@@ -2337,12 +2337,16 @@ class __
 
     public static function translate_microsoft_inofficial($str, $from_lng, $to_lng, $proxy = null)
     {
+        $headers = [
+            'User-Agent' =>
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
+        ];
         $response = self::curl(
             'https://www.bing.com/translator',
             null,
             'GET',
-            null,
-            false,
+            $headers,
+            true,
             true,
             6,
             null,
@@ -2363,17 +2367,27 @@ class __
             return null;
         }
         $iid = $matches[1];
+        preg_match('/params_AbusePreventionHelper\s*=\s*(\[[^\]]+\])/', $html, $matches);
+        $authentication = isset($matches[1]) ? json_decode($matches[1]) : null;
+        if (!is_array($authentication) || !isset($authentication[0], $authentication[1])) {
+            self::exception($response);
+            return null;
+        }
+        $headers['Referer'] = 'https://www.bing.com/translator';
 
         $response = self::curl(
-            'https://www.bing.com/ttranslatev3?isVertical=1&IG=' . $ig . '&IID=' . $iid,
+            'https://www.bing.com/ttranslatev3?isVertical=1&IG=' . $ig . '&IID=' . $iid . '&SFX=1',
             [
                 'fromLang' => $from_lng,
                 'text' => $str,
-                'to' => $to_lng
+                'to' => $to_lng,
+                'tryFetchingGenderDebiasedTranslations' => true,
+                'token' => $authentication[1],
+                'key' => $authentication[0]
             ],
             'POST',
-            null,
-            false,
+            $headers,
+            true,
             false,
             6,
             null,
