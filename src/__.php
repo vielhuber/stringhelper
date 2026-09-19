@@ -215,7 +215,7 @@ class __
         return [];
     }
 
-    public static function empty()
+    public static function empty(): \__empty_helper
     {
         return new \__empty_helper();
     }

@@ -72,7 +72,7 @@ if (!function_exists('__i')) {
 }
 
 if (!function_exists('__empty')) {
-    function __empty()
+    function __empty(): \__empty_helper
     {
         return call_user_func_array(['\vielhuber\stringhelper\__', 'empty'], func_get_args());
     }
