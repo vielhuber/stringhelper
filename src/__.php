@@ -1806,10 +1806,6 @@ class __
             return $dom;
         }
 
-        /* this is deprecated, use drop in */
-        //$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
-        $html = mb_encode_numericentity($html, [0x80, 0x10ffff, 0, 0x1fffff], 'UTF-8', true);
-
         $has_wrapper = strpos($html, '<html') !== false;
         if ($has_wrapper === false) {
             $html = '<!DOCTYPE html><html data-please-remove-wrapper><body>' . $html . '</body></html>';
@@ -1861,7 +1857,17 @@ class __
             $html = str_replace($complete, $simple, $html);
         }
 
-        @$dom->loadHTML($html);
+        // a leading BOM forces UTF-8 even when the document declares a different charset
+        @$dom->loadHTML("\u{FEFF}" . $html);
+        $dom->encoding = 'UTF-8';
+
+        // an inline stylesheet BOM would otherwise become part of the first selector
+        foreach ($dom->getElementsByTagName('style') as $style) {
+            if (!str_starts_with($style->textContent, "\u{FEFF}")) {
+                continue;
+            }
+            $style->textContent = substr($style->textContent, strlen("\u{FEFF}"));
+        }
         return $dom;
     }
 
