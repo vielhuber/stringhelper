@@ -761,6 +761,61 @@ multiline string
         $this->assertSame(__dom_to_str($domdocument), 'Test');
     }
 
+    public function test__str_to_dom_preserves_unicode_rawtext(): void
+    {
+        $style =
+            'pre code.hljs{display:block}pre code.hljs::before{content:"„Grüße 😀 ' . "\u{FEFF}" . ' &#xFEFF; &amp;"}';
+        $script = "\u{FEFF}" . 'let greeting = "Grüße 😀 ' . "\u{FEFF}" . ' &#xFEFF; &amp;";';
+        $text = "\u{FEFF}" . 'Grüße 😀 ' . "\u{FEFF}";
+        $code = '&lt;style&gt;' . "\u{FEFF}" . 'Grüße&lt;/style&gt;&amp;#xFEFF;';
+
+        foreach (
+            [
+                '%s',
+                '<!DOCTYPE html><html><head></head><body>%s</body></html>',
+                '<html><head><meta charset="utf-8"></head><body>%s</body></html>',
+                '<html><head><meta charset="iso-8859-1"></head><body>%s</body></html>',
+                '<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head><body>%s</body></html>'
+            ]
+            as $template
+        ) {
+            foreach (["\u{FEFF}", ''] as $bom) {
+                $html = sprintf(
+                    $template,
+                    '<STYLE>' .
+                        $bom .
+                        $style .
+                        '</STYLE><script>' .
+                        $script .
+                        '</script><p data-label="Grüße">' .
+                        $text .
+                        '</p><pre><code class="hljs">' .
+                        $code .
+                        '</code></pre>'
+                );
+                $dom = __str_to_dom($html);
+                $this->assertInstanceOf(\DOMDocument::class, $dom);
+                $this->assertSame($style, $dom->getElementsByTagName('style')->item(0)->textContent);
+                $this->assertSame($script, $dom->getElementsByTagName('script')->item(0)->textContent);
+                $this->assertSame($text, $dom->getElementsByTagName('p')->item(0)->textContent);
+                $this->assertSame('Grüße', $dom->getElementsByTagName('p')->item(0)->getAttribute('data-label'));
+                $this->assertSame(
+                    '<style>' . "\u{FEFF}" . 'Grüße</style>&#xFEFF;',
+                    $dom->getElementsByTagName('code')->item(0)->textContent
+                );
+                $xpath = new \DOMXPath($dom);
+                $this->assertSame(0, $xpath->query('//pre/code/*')->length);
+
+                $output = __dom_to_str($dom);
+                $this->assertStringContainsString('<style>' . $style . '</style>', $output);
+                $this->assertStringContainsString('<script>' . $script . '</script>', $output);
+                $this->assertStringContainsString('<code class="hljs">' . $code . '</code>', $output);
+                $this->assertStringNotContainsString('data-please-remove-wrapper', $output);
+                $this->assertStringNotContainsString('<!--remove-->', $output);
+            }
+        }
+    }
+
     function test__translate_google()
     {
         foreach (['free', $_SERVER['GOOGLE_TRANSLATION_API_KEY']] as $api_keys__value) {
