@@ -1810,11 +1810,14 @@ class __
         if ($has_wrapper === false) {
             $html = '<!DOCTYPE html><html data-please-remove-wrapper><body>' . $html . '</body></html>';
         }
-        if (mb_strpos($html, '</head>') !== false) {
-            $html = str_replace(
-                '</head>',
-                '<!--remove--><meta http-equiv="Content-type" content="text/html; charset=utf-8" /><!--/remove--></head>',
-                $html
+        // older libxml versions give the first charset declaration precedence over a BOM
+        $headPattern = '/<!--.*?-->(*SKIP)(*F)|(<head(?:\s+(?:[^>"\']|"[^"]*"|\'[^\']*\')*)?>)/is';
+        if (preg_match($headPattern, $html) === 1) {
+            $html = preg_replace(
+                $headPattern,
+                '$1<!--remove--><meta http-equiv="Content-type" content="text/html; charset=utf-8" /><!--/remove-->',
+                $html,
+                1
             );
         } elseif (mb_strpos($html, '<body') !== false) {
             $html = str_replace(
@@ -1857,7 +1860,6 @@ class __
             $html = str_replace($complete, $simple, $html);
         }
 
-        // a leading BOM forces UTF-8 even when the document declares a different charset
         @$dom->loadHTML("\u{FEFF}" . $html);
         $dom->encoding = 'UTF-8';
 
