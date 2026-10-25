@@ -1,11 +1,11 @@
 {
     "name": "stringhelper",
     "description": "",
-    "version": "7.4.7",
+    "version": "7.4.8",
     "dependencies": {},
     "devDependencies": {
-        "@prettier/plugin-php": ">=0.25",
+        "@prettier/plugin-php": ">=0.26",
         "prettier": ">=3",
-        "prettier-plugin-sh": "^0.18.1"
+        "prettier-plugin-sh": "^0.20.2"
     }
 }
